@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PEPIDI_0._5.Models
+namespace PEPIDI.Models
 {
     public class LinhaPedidoInfo
     {

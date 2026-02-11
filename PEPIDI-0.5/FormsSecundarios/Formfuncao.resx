@@ -120,4 +120,15 @@
   <metadata name="guna2BorderlessForm1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="lblFechar.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAADbSURBVFhH7ddhCsIwDAXgHc37jMEQEUSE3TwSbaU+M9d21T0lH/jHpMG+4qxd55xzLouI7PC9
+        Wi1n3YjIJHcXrJXSGWHWhLUqutswMDpjTy5dC7PaJJnsOjphzxJdAzNWn8YTY/dH7JmjvbC2+hTeMlI4
+        YA/SHlhTnH4RI4099kRag97s1FcxUhmNnhF6FtNuykhnSGoD1GZT/igjpT68Ui/pfpWRVuqR6qaM1FSP
+        fZuh/oDUR0z9JaF+zFA/qKl/6qgvC9TXLeoL669c+Xn/NEXNdtt4lnPO/bsr3hz969q6wS4AAAAASUVO
+        RK5CYII=
+</value>
+  </data>
 </root>

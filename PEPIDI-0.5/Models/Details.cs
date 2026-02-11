@@ -2,7 +2,7 @@
 using System;
 using System.Data.SqlClient;
 
-namespace PEPIDI_0._5.Models
+namespace PEPIDI.Models
 {
     internal static class Details
     {

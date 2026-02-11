@@ -1,6 +1,8 @@
 ﻿using iText.Kernel.Pdf.Canvas.Wmf;
-using PEPIDI_0._5.Models;
+using PEPIDI.Models;
 using PEPIDI.Organizers;
+using PEPIDI_0._5.UCs.DGVS;
+using PEPIDI_0._5.UCs.UcsSecundarios;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,17 +37,16 @@ namespace PEPIDI.UCs.UcsSecundarios
             var info = Details.GetInfoGestor(IDGestor);
             NomeGestor = info.Nome;
             GereEstado(Estado);
-            CarregarPPacote(dgvPedidos, ID);
-            Configura(dgvPedidos);
-            Configura(dgvDevolucoes);
+
+            //Configura(dgvPedidos);
+            //Configura(dgvDevolucoes);
         }
+
 
         private void Configura(PEPIDIDataGridView dgv)
         {
             // 1. A Grid NÃO pode ser ReadOnly no geral, senão a Combo não abre
             dgv.ReadOnly = false;
-
-            
         }
 
         private void GereEstado(string estado)
@@ -54,6 +55,7 @@ namespace PEPIDI.UCs.UcsSecundarios
             {
                 btnAprovar.Text = "Aprovar";
                 btnReprovar.Enabled = true;
+                CarregarPPacote(pnlConteudo, ID, estado);
             }
             else if (estado == "Aprovado")
             {
@@ -68,277 +70,139 @@ namespace PEPIDI.UCs.UcsSecundarios
             }
         }
 
-        public void CarregarPPacote(PEPIDIDataGridView dgv, int idPedido)
+        public void CarregarPPacote(FlowLayoutPanel pnlConteudo, int idPedido, string estado)
         {
-            dgv.DataSource = null;
-            dgv.Rows.Clear();
-            dgv.Columns.Clear();
+            // 1. Limpeza e Reset
+            pnlConteudo.Controls.Clear();
+            pnlConteudo.AutoScroll = false; // Importante: O pai NÃO faz scroll
+            pnlConteudo.WrapContents = false;
+            pnlConteudo.Padding = new Padding(0);
+            pnlConteudo.Margin = new Padding(0);
 
-            VerComentario(idPedido);
-
+            // 2. Busca os dados primeiro
+            DataTable dt = new DataTable();
             using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("sp_DetalhesDoPedido", conn)
-                {
-                    CommandType = CommandType.StoredProcedure
-                };
+                SqlCommand cmd = new SqlCommand("sp_DetalhesDoPedido", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@IDPedido", idPedido);
-
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
                 adapter.Fill(dt);
-
-                dgv.DataSource = dt;
-
-                //AdicionarColunaQuantidade(dgv);
-                //AdicionarColunaTamanho(dgv);
-
-                foreach (DataGridViewColumn col in dgv.Columns)
-                    col.SortMode = DataGridViewColumnSortMode.NotSortable;
             }
 
-            // usamos SEMPRE o field 'estado', não o parâmetro
-            var eAtual = (Estado ?? "").Trim();
+            // Se não houver dados, sai ou mostra mensagem
+            if (dt.Rows.Count == 0) return;
 
-            if (eAtual.Equals("Pendente", StringComparison.OrdinalIgnoreCase))
+            // 3. TLP MESTRE (O Esqueleto)
+            TableLayoutPanel tlpMestre = new TableLayoutPanel();
+            tlpMestre.Name = "tlpMestre";
+            tlpMestre.ColumnCount = 1;
+            tlpMestre.RowCount = 2;
+            tlpMestre.RowStyles.Add(new RowStyle(SizeType.AutoSize)); // Linha 0: Cabeçalho
+            tlpMestre.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); // Linha 1: Dados
+            tlpMestre.Margin = new Padding(0);
+            tlpMestre.Padding = new Padding(0);
+
+            // --- CORREÇÃO DO ECRÃ BRANCO ---
+            // Forçamos o tamanho do TLP a ser igual ao do FlowPanel pai
+            tlpMestre.Width = pnlConteudo.ClientSize.Width;
+            tlpMestre.Height = pnlConteudo.ClientSize.Height;
+
+            // --- LÓGICA DE ALINHAMENTO (Cabeçalho vs Scroll) ---
+            // Se tivermos mais de 5 linhas, assumimos que vai aparecer scroll vertical.
+            // Ajusta o '5' conforme a altura das tuas linhas.
+            bool vaiTerScroll = dt.Rows.Count > 5;
+            int paddingScroll = vaiTerScroll ? SystemInformation.VerticalScrollBarWidth : 0;
+
+            // A. CABEÇALHO
+            CabecalhoPedido cabecalho = new CabecalhoPedido();
+            cabecalho.Dock = DockStyle.Top;
+            cabecalho.Margin = new Padding(0);
+            // Adiciona margem à direita para compensar a barra de scroll
+            cabecalho.Padding = new Padding(0, 0, paddingScroll, 0);
+
+            tlpMestre.Controls.Add(cabecalho, 0, 0);
+
+            // B. PAINEL DE SCROLL (Panel Normal)
+            Panel pnlScroll = new Panel();
+            pnlScroll.Dock = DockStyle.Fill;
+            pnlScroll.AutoScroll = true; // O painel gere o scroll
+            pnlScroll.Margin = new Padding(0);
+            pnlScroll.Padding = new Padding(0);
+
+            // C. DADOS (Tabela interna)
+            TableLayoutPanel tlpDados = new TableLayoutPanel();
+            tlpDados.Name = "tlpDados";
+            tlpDados.AutoSize = true;
+            tlpDados.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlpDados.Dock = DockStyle.Top;
+            tlpDados.ColumnCount = 1;
+            tlpDados.RowCount = 0;
+            tlpDados.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlpDados.Margin = new Padding(0);
+            tlpDados.Padding = new Padding(0);
+
+            foreach (DataRow row in dt.Rows)
             {
-                if (dgv.Columns.Contains("TamanhoAtualizado"))
-                    dgv.Columns["TamanhoAtualizado"].Visible = false;
+                string modelo = row["Modelo"].ToString();
+                string tamanho = row["Tamanho"].ToString();
+                int quantDisp = Convert.ToInt32(row["QuantidadeDisponivel"]);
+                int quantSelecionada = row.Table.Columns.Contains("QuantidadePedida") ? Convert.ToInt32(row["QuantidadePedida"]) : 0;
 
-                if (dgv.Columns.Contains("QuantidadePedida"))
-                    dgv.Columns["QuantidadePedida"].Visible = false;
+                LinhaItem novaLinha = new LinhaItem(modelo, tamanho, quantDisp, quantSelecionada);
+                novaLinha.Dock = DockStyle.Fill;
+                // Margem 0 para garantir que ocupa a largura total disponível
+                novaLinha.Margin = new Padding(0);
 
-                if (dgv.Columns.Contains("ID"))
-                    dgv.Columns["ID"].Visible = false;
-
-                if (dgv.Columns.Contains("Modelo"))
-                    dgv.Columns["Modelo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-                if (dgv.Columns.Contains("Quantidade"))
-                    dgv.Columns["Quantidade"].DisplayIndex = dgv.Columns.Count - 1;
-
-                if (dgv.Columns.Contains("QuantidadeDisponivel"))
-                    dgv.Columns["QuantidadeDisponivel"].HeaderText = "Quant. Disp.";
-
-                // preencher combo de quantidade depois do binding
-                dgv.BeginInvoke(new Action(() =>
-                {
-                    //FillComboQuanty(dgv);
-                }));
-            }
-            else if (eAtual.Equals("Aprovado", StringComparison.OrdinalIgnoreCase))
-            {
-                if (dgv.Columns.Contains("TamanhoAtualizado"))
-                    dgv.Columns["TamanhoAtualizado"].Visible = true;
-
-                if (dgv.Columns.Contains("QuantidadePedida"))
-                    dgv.Columns["QuantidadePedida"].Visible = true;
-
-                if (dgv.Columns.Contains("Quantidade"))
-                    dgv.Columns["Quantidade"].Visible = false;
-
-                if (dgv.Columns.Contains("Tamanho"))
-                    dgv.Columns["Tamanho"].Visible = false;
-
-                if (dgv.Columns.Contains("ID"))
-                    dgv.Columns["ID"].Visible = false;
-
-                if (dgv.Columns.Contains("Modelo"))
-                    dgv.Columns["Modelo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-                if (dgv.Columns.Contains("Modelo") && dgv.Columns.Contains("TamanhoAtualizado"))
-                {
-                    int idxModelo = dgv.Columns["Modelo"].DisplayIndex;
-                    dgv.Columns["TamanhoAtualizado"].DisplayIndex = idxModelo + 1;
-                }
-
-                if (dgv.Columns.Contains("TamanhoAtualizado"))
-                    dgv.Columns["TamanhoAtualizado"].HeaderCell.Style.Alignment =
-                        DataGridViewContentAlignment.MiddleCenter;
-
-                // preencher combo de tamanho depois do binding
-                dgv.BeginInvoke(new Action(() =>
-                {
-                    //FillComboSize(dgv);
-                }));
+                tlpDados.RowCount++;
+                tlpDados.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                tlpDados.Controls.Add(novaLinha, 0, tlpDados.RowCount - 1);
             }
 
-            // devolução de roupa
-            //CarregarRoupaPacote(dgvDevolucoes, idPedido);
+            // Montar a Boneca Russa
+            pnlScroll.Controls.Add(tlpDados);
+            tlpMestre.Controls.Add(pnlScroll, 0, 1);
 
-            // === AJUSTE VISUAL DAS COLUNAS ===
-            try
-            {
-                // Evita auto-sizing automático lento
-                dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            // 4. ADICIONAR AO PAI (Só no final!)
+            pnlConteudo.Controls.Add(tlpMestre);
 
-                // Define manualmente proporções (ajusta à tua DGV)
-                if (dgv.Columns.Contains("Modelo"))
-                {
-                    dgv.Columns["Modelo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                    dgv.Columns["Modelo"].MinimumWidth = 180;
-                }
+            // 5. Ativar Scroll do Rato e Garantir Redimensionamento
+            AtivarScrollComRato(tlpDados, pnlScroll);
 
-                if (dgv.Columns.Contains("Tamanho") || dgv.Columns.Contains("TamanhoAtualizado"))
-                {
-                    var col = dgv.Columns.Contains("TamanhoAtualizado")
-                        ? dgv.Columns["TamanhoAtualizado"]
-                        : dgv.Columns["Tamanho"];
-
-                    col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-                    col.Width = 70;
-                    col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                    col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                }
-
-                if (dgv.Columns.Contains("QuantidadeDisponivel"))
-                {
-                    dgv.Columns["QuantidadeDisponivel"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-                    dgv.Columns["QuantidadeDisponivel"].Width = 100;
-                    dgv.Columns["QuantidadeDisponivel"].HeaderText = "Quant. Disp.";
-                    dgv.Columns["QuantidadeDisponivel"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                }
-
-                if (dgv.Columns.Contains("QuantidadePedida"))
-                {
-                    dgv.Columns["QuantidadePedida"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-                    dgv.Columns["QuantidadePedida"].Width = 110;
-                    dgv.Columns["QuantidadePedida"].HeaderText = "Quant. Pedida";
-                    dgv.Columns["QuantidadePedida"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                }
-
-                if (dgv.Columns.Contains("Quantidade"))
-                {
-                    dgv.Columns["Quantidade"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-                    dgv.Columns["Quantidade"].Width = 90;
-                    dgv.Columns["Quantidade"].HeaderText = "Quantidade";
-                    dgv.Columns["Quantidade"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[DEBUG] Erro ao ajustar colunas: {ex.Message}");
-            }
+            // Evento de segurança para redimensionar se o utilizador mudar o tamanho da janela
+            pnlConteudo.SizeChanged += (s, e) => {
+                tlpMestre.Size = pnlConteudo.ClientSize;
+            };
         }
 
-        //private void AdicionarColunaTamanho(DataGridView dgv)
-        //{
-        //    const string nomeColuna = "TamanhoAtualizado";
+        private void AtivarScrollComRato(Control controle, Panel painelPrincipal)
+        {
+            if (controle != painelPrincipal)
+            {
+                controle.MouseWheel += (s, e) =>
+                {
+                    // Proteção contra Null Reference caso o painel tenha sido descartado
+                    if (painelPrincipal == null || painelPrincipal.IsDisposed) return;
 
-        //    if (!dgv.Columns.Contains(nomeColuna))
-        //    {
-        //        // Trocamos aqui: de DataGridViewComboBoxColumn para PEPIDIComboBoxColumn
-        //        var comboCol = new PEPIDIComboBoxColumn
-        //        {
-        //            Name = nomeColuna,
-        //            HeaderText = "Tamanho",
-        //            DisplayIndex = dgv.Columns.Count,
-        //            DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing // Ajuda a manter o look clean
-        //        };
+                    int novaPosicao = painelPrincipal.VerticalScroll.Value - e.Delta;
 
-        //        if (dgv.Columns.Contains("Quantidade") && dgv.Columns["Quantidade"] is PEPIDIComboBoxColumn qtdCol)
-        //        {
-        //            comboCol.Width = qtdCol.Width;
-        //            comboCol.DefaultCellStyle = qtdCol.DefaultCellStyle.Clone() as DataGridViewCellStyle;
-        //        }
-        //        else
-        //        {
-        //            comboCol.Width = 80; // Um pouco mais largo para tamanhos
-        //        }
+                    if (novaPosicao < painelPrincipal.VerticalScroll.Minimum)
+                        novaPosicao = painelPrincipal.VerticalScroll.Minimum;
 
-        //        // O evento EditingControlShowing continua igual para garantir o DropDownList
-        //        dgv.EditingControlShowing += (s, e) =>
-        //        {
-        //            if (e.Control is ComboBox combo && dgv.CurrentCell.OwningColumn.Name == nomeColuna)
-        //            {
-        //                combo.DropDownStyle = ComboBoxStyle.DropDownList;
-        //            }
-        //        };
-        //        dgv.Columns.Add(comboCol);
-        //    }
-        //}
+                    if (novaPosicao > painelPrincipal.VerticalScroll.Maximum)
+                        novaPosicao = painelPrincipal.VerticalScroll.Maximum;
 
-        //private void AdicionarColunaQuantidade(DataGridView dgv)
-        //{
-        //    const string nomeColuna = "Quantidade";
+                    painelPrincipal.VerticalScroll.Value = novaPosicao;
+                    painelPrincipal.PerformLayout();
+                };
+            }
 
-        //    if (!dgv.Columns.Contains(nomeColuna))
-        //    {
-        //        // Trocamos aqui também para a nossa coluna customizada
-        //        var comboCol = new PEPIDIComboBoxColumn
-        //        {
-        //            Name = nomeColuna,
-        //            HeaderText = "Quantidade",
-        //            Width = 60,
-        //            DisplayIndex = dgv.Columns.Count
-        //        };
-
-        //        dgv.EditingControlShowing += (s, e) =>
-        //        {
-        //            if (e.Control is ComboBox combo && dgv.CurrentCell.OwningColumn.Name == nomeColuna)
-        //            {
-        //                combo.DropDownStyle = ComboBoxStyle.DropDownList;
-        //            }
-        //        };
-
-        //        for (int i = 0; i <= 10; i++) // Ajustado para exemplo
-        //            comboCol.Items.Add(i.ToString());
-
-        //        dgv.Columns.Add(comboCol);
-        //    }
-        //}
-
-        //private void FillComboQuanty(DataGridView dgv)
-        //{
-        //    const string colunaOriginal = "QuantidadePedida";
-        //    const string colunaCombo = "Quantidade";
-
-        //    if (!dgv.Columns.Contains(colunaOriginal) || !dgv.Columns.Contains(colunaCombo))
-        //        return;
-
-        //    foreach (DataGridViewRow row in dgv.Rows)
-        //    {
-        //        if (row.IsNewRow) continue;
-
-        //        int quantidadeOriginal = 0;
-        //        object valOriginal = row.Cells[colunaOriginal].Value;
-
-        //        if (valOriginal != null && int.TryParse(valOriginal.ToString(), out int parsed))
-        //            quantidadeOriginal = parsed;
-
-        //        row.Cells[colunaCombo].Value = quantidadeOriginal.ToString();
-        //    }
-        //}
-
-        //private void FillComboSize(DataGridView dgv)
-        //{
-        //    foreach (DataGridViewRow row in dgv.Rows)
-        //    {
-        //        if (row.IsNewRow) continue;
-
-        //        object modeloObj = row.Cells["Modelo"].Value;
-        //        object tamanhoAtual = row.Cells["Tamanho"].Value;
-
-        //        if (modeloObj == null) continue;
-
-        //        string modelo = modeloObj.ToString();
-        //        List<string> tamanhosValidos = ObterTamanhosPorModelo(modelo);
-
-        //        // AQUI: Usamos a PEPIDIComboBoxCell em vez da default
-        //        var combo = new PEPIDIComboBoxCell();
-
-        //        foreach (var tam in tamanhosValidos)
-        //            combo.Items.Add(tam);
-
-        //        if (tamanhoAtual != null && tamanhosValidos.Contains(tamanhoAtual.ToString()))
-        //            combo.Value = tamanhoAtual.ToString();
-        //        else if (tamanhosValidos.Count > 0)
-        //            combo.Value = tamanhosValidos[0];
-
-        //        row.Cells["TamanhoAtualizado"] = combo;
-        //    }
-        //}
+            foreach (Control child in controle.Controls)
+            {
+                AtivarScrollComRato(child, painelPrincipal);
+            }
+        }
 
         public void CarregarRoupaPacote(DataGridView dgv, int idPedido)
         {
@@ -378,9 +242,6 @@ namespace PEPIDI.UCs.UcsSecundarios
                 if (dgv.Columns.Contains("QuantidadeDevolvida"))
                     dgv.Columns["QuantidadeDevolvida"].HeaderText = "Quantidade";
                 dgv.Columns["QuantidadeDevolvida"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-
-
-
             }
         }
 
@@ -433,11 +294,12 @@ namespace PEPIDI.UCs.UcsSecundarios
 
         private void close_Click(object sender, EventArgs e)
         {
-            // Remove este UC da lista de controlos do painel
-            this.Parent.Controls.Remove(this);
+            MessageBox.Show(pnlConteudo.Size.ToString());
+            //// Remove este UC da lista de controlos do painel
+            //this.Parent.Controls.Remove(this);
 
-            // Opcional: Liberta a memória
-            this.Dispose();
+            //// Opcional: Liberta a memória
+            //this.Dispose();
         }
     }
 }

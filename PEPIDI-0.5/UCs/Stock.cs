@@ -148,6 +148,7 @@ namespace PEPIDI.UCs
                         dgvStock.Columns["Tamanho"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                     }
                 }
+                dgvStock.ReadOnly = true;
             }
             catch (Exception ex)
             {

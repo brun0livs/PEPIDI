@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             tableLayoutPanel1 = new TableLayoutPanel();
             pnlDetails = new Panel();
             tableLayoutPanel2 = new TableLayoutPanel();
             lblPedidos = new Label();
-            dgvPedidos = new PEPIDI_0._5.Models.PEPIDIDataGridView();
+            dgvPedidos = new PEPIDI.Models.PEPIDIDataGridView();
             ID = new DataGridViewTextBoxColumn();
             Data = new DataGridViewTextBoxColumn();
             NrFunc = new DataGridViewTextBoxColumn();
@@ -56,8 +56,8 @@
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 55F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 64.04958F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35.9504128F));
             tableLayoutPanel1.Controls.Add(pnlDetails, 1, 0);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
@@ -72,10 +72,10 @@
             // pnlDetails
             // 
             pnlDetails.Dock = DockStyle.Fill;
-            pnlDetails.Location = new Point(1069, 0);
+            pnlDetails.Location = new Point(1244, 0);
             pnlDetails.Margin = new Padding(5, 0, 5, 10);
             pnlDetails.Name = "pnlDetails";
-            pnlDetails.Size = new Size(862, 1038);
+            pnlDetails.Size = new Size(687, 1038);
             pnlDetails.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -92,7 +92,7 @@
             tableLayoutPanel2.RowCount = 2;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 93F));
-            tableLayoutPanel2.Size = new Size(1064, 1048);
+            tableLayoutPanel2.Size = new Size(1239, 1048);
             tableLayoutPanel2.TabIndex = 1;
             // 
             // lblPedidos
@@ -102,7 +102,7 @@
             lblPedidos.Font = new Font("Roboto Medium", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblPedidos.Location = new Point(3, 0);
             lblPedidos.Name = "lblPedidos";
-            lblPedidos.Size = new Size(1058, 73);
+            lblPedidos.Size = new Size(1233, 73);
             lblPedidos.TabIndex = 0;
             lblPedidos.Text = "PEDIDOS PENDENTES";
             lblPedidos.TextAlign = ContentAlignment.MiddleLeft;
@@ -111,47 +111,48 @@
             // 
             dgvPedidos.AllowUserToAddRows = false;
             dgvPedidos.AllowUserToResizeRows = false;
-            dataGridViewCellStyle5.BackColor = Color.Transparent;
-            dgvPedidos.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.BackColor = Color.Transparent;
+            dgvPedidos.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dgvPedidos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvPedidos.BackgroundColor = Color.White;
             dgvPedidos.BorderStyle = BorderStyle.None;
             dgvPedidos.CellBorderStyle = DataGridViewCellBorderStyle.None;
             dgvPedidos.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.BackColor = Color.White;
-            dataGridViewCellStyle6.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle6.ForeColor = Color.Black;
-            dataGridViewCellStyle6.Padding = new Padding(0, 8, 0, 8);
-            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
-            dgvPedidos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = Color.White;
+            dataGridViewCellStyle2.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle2.ForeColor = Color.Black;
+            dataGridViewCellStyle2.Padding = new Padding(0, 8, 0, 8);
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dgvPedidos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvPedidos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvPedidos.Columns.AddRange(new DataGridViewColumn[] { ID, Data, NrFunc, NomeFunc, Funcao, CorHex, PedidoEstado, NomeAprovador, NomeEntrega, PDF, Check });
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = Color.Transparent;
-            dataGridViewCellStyle7.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle7.ForeColor = Color.Black;
-            dataGridViewCellStyle7.Padding = new Padding(18, 10, 18, 10);
-            dataGridViewCellStyle7.SelectionBackColor = Color.Transparent;
-            dataGridViewCellStyle7.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
-            dgvPedidos.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.Transparent;
+            dataGridViewCellStyle3.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = Color.Black;
+            dataGridViewCellStyle3.Padding = new Padding(18, 10, 18, 10);
+            dataGridViewCellStyle3.SelectionBackColor = Color.Transparent;
+            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            dgvPedidos.DefaultCellStyle = dataGridViewCellStyle3;
             dgvPedidos.Dock = DockStyle.Fill;
             dgvPedidos.EnableHeadersVisualStyles = false;
             dgvPedidos.GridColor = SystemColors.Control;
+            dgvPedidos.HeaderFontSize = 15F;
             dgvPedidos.Location = new Point(10, 83);
             dgvPedidos.Margin = new Padding(10);
             dgvPedidos.MultiSelect = false;
             dgvPedidos.Name = "dgvPedidos";
             dgvPedidos.RowHeadersVisible = false;
-            dataGridViewCellStyle8.BackColor = Color.Transparent;
-            dgvPedidos.RowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle4.BackColor = Color.Transparent;
+            dgvPedidos.RowsDefaultCellStyle = dataGridViewCellStyle4;
             dgvPedidos.RowTemplate.Height = 54;
             dgvPedidos.ScrollBars = ScrollBars.None;
             dgvPedidos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvPedidos.Size = new Size(1044, 955);
+            dgvPedidos.Size = new Size(1219, 955);
             dgvPedidos.TabIndex = 1;
             dgvPedidos.CellClick += dgvPedidos_CellClick;
             // 
@@ -261,7 +262,7 @@
         private Panel pnlDetails;
         private TableLayoutPanel tableLayoutPanel2;
         private Label lblPedidos;
-        private PEPIDI_0._5.Models.PEPIDIDataGridView dgvPedidos;
+        private PEPIDI.Models.PEPIDIDataGridView dgvPedidos;
         private DataGridViewTextBoxColumn ID;
         private DataGridViewTextBoxColumn Data;
         private DataGridViewTextBoxColumn NrFunc;

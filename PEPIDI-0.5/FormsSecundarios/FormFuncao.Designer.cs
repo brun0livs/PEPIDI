@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFuncao));
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
@@ -108,7 +109,7 @@
             lblFechar.Dock = DockStyle.Right;
             lblFechar.Font = new Font("Roboto", 18.75F);
             lblFechar.ForeColor = Color.White;
-            lblFechar.Image = Properties.Resources.Close;
+            lblFechar.Image = (Image)resources.GetObject("lblFechar.Image");
             lblFechar.Location = new Point(733, 0);
             lblFechar.Margin = new Padding(10, 0, 0, 0);
             lblFechar.Name = "lblFechar";

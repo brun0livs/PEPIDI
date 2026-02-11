@@ -19,9 +19,6 @@
     <Compile Update="FormsSecundarios\FormFuncionario.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Models\DGVTESTE.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Update="Models\PEPIDIDataGridView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -29,6 +26,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="UCs\Definicoes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UCs\DGVS\LinhaItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="UCs\Funcionarios.cs">
@@ -41,6 +41,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="UCs\Stock.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UCs\DGVS\CabecalhoPedido.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="UCs\UcsSecundarios\PedidosDetalhes.cs">

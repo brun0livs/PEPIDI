@@ -38,7 +38,7 @@
             tableLayoutPanel2 = new TableLayoutPanel();
             btnAddFuncao = new Guna.UI2.WinForms.Guna2Button();
             label1 = new Label();
-            dgvFuncoes = new PEPIDI_0._5.Models.PEPIDIDataGridView();
+            dgvFuncoes = new PEPIDI.Models.PEPIDIDataGridView();
             ID = new DataGridViewTextBoxColumn();
             Nome = new DataGridViewTextBoxColumn();
             PodeVerStock = new DataGridViewCheckBoxColumn();
@@ -295,7 +295,7 @@
         private TableLayoutPanel tableLayoutPanel2;
         private Label label1;
         private Guna.UI2.WinForms.Guna2Button btnAddFuncao;
-        private PEPIDI_0._5.Models.PEPIDIDataGridView dgvFuncoes;
+        private PEPIDI.Models.PEPIDIDataGridView dgvFuncoes;
         private DataGridViewTextBoxColumn ID;
         private DataGridViewTextBoxColumn Nome;
         private DataGridViewCheckBoxColumn PodeVerStock;

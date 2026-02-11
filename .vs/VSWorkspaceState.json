@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\PEPIDI-0.5",
+    "\\PEPIDI-0.5\\UCs"
   ],
+  "SelectedNode": "\\PEPIDI-0.5\\UCs\\Pedidos.Designer.cs",
   "PreviewInSolutionExplorer": false
 }

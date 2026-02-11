@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Guna.UI2.WinForms;
 
-namespace PEPIDI_0._5.Models
+namespace PEPIDI.Models
 {
     // 1. A COLUNA
     public class GunaColumn : DataGridViewComboBoxColumn

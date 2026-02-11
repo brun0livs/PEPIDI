@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Funcionarios));
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
@@ -104,8 +105,9 @@
             txtPesquisa.Font = new Font("Roboto", 18.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtPesquisa.ForeColor = Color.Black;
             txtPesquisa.HoverState.BorderColor = Color.Gray;
-            txtPesquisa.IconRight = Properties.Resources.Lupa;
+            txtPesquisa.IconRight = (Image)resources.GetObject("txtPesquisa.IconRight");
             txtPesquisa.IconRightOffset = new Point(10, 0);
+            txtPesquisa.IconRightSize = new Size(25, 25);
             txtPesquisa.Location = new Point(655, 10);
             txtPesquisa.Margin = new Padding(10);
             txtPesquisa.MaxLength = 16;
@@ -186,6 +188,7 @@
             dgvFuncs.Dock = DockStyle.Fill;
             dgvFuncs.EnableHeadersVisualStyles = false;
             dgvFuncs.GridColor = SystemColors.Control;
+            dgvFuncs.HeaderFontSize = 15F;
             dgvFuncs.Location = new Point(10, 83);
             dgvFuncs.Margin = new Padding(10, 10, 10, 0);
             dgvFuncs.MultiSelect = false;
@@ -220,7 +223,7 @@
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
         private Label label1;
-        private PEPIDI_0._5.Models.PEPIDIDataGridView dgvFuncs;
+        private PEPIDI.Models.PEPIDIDataGridView dgvFuncs;
         private Guna.UI2.WinForms.Guna2Button btnAddFunc;
         private Guna.UI2.WinForms.Guna2TextBox txtPesquisa;
     }

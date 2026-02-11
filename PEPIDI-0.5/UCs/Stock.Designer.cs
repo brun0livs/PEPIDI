@@ -28,13 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             tableLayoutPanel1 = new TableLayoutPanel();
+            dgvStock = new PEPIDI.Models.PEPIDIDataGridView();
             tableLayoutPanel2 = new TableLayoutPanel();
             label1 = new Label();
             cmbVisoes = new Guna.UI2.WinForms.Guna2ComboBox();
             tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvStock).BeginInit();
             tableLayoutPanel2.SuspendLayout();
             SuspendLayout();
             // 
@@ -42,6 +48,7 @@
             // 
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(dgvStock, 0, 1);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
@@ -61,6 +68,53 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Size = new Size(1936, 1048);
             tableLayoutPanel1.TabIndex = 0;
+            // 
+            // dgvStock
+            // 
+            dgvStock.AllowUserToAddRows = false;
+            dgvStock.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.BackColor = Color.Transparent;
+            dgvStock.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dgvStock.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvStock.BackgroundColor = Color.White;
+            dgvStock.BorderStyle = BorderStyle.None;
+            dgvStock.CellBorderStyle = DataGridViewCellBorderStyle.None;
+            dgvStock.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = Color.White;
+            dataGridViewCellStyle2.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle2.ForeColor = Color.Black;
+            dataGridViewCellStyle2.Padding = new Padding(0, 8, 0, 8);
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dgvStock.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dgvStock.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.Transparent;
+            dataGridViewCellStyle3.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = Color.Black;
+            dataGridViewCellStyle3.Padding = new Padding(18, 10, 18, 10);
+            dataGridViewCellStyle3.SelectionBackColor = Color.Transparent;
+            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            dgvStock.DefaultCellStyle = dataGridViewCellStyle3;
+            dgvStock.Dock = DockStyle.Fill;
+            dgvStock.EnableHeadersVisualStyles = false;
+            dgvStock.GridColor = SystemColors.Control;
+            dgvStock.HeaderFontSize = 15F;
+            dgvStock.Location = new Point(10, 83);
+            dgvStock.Margin = new Padding(10, 10, 10, 0);
+            dgvStock.MultiSelect = false;
+            dgvStock.Name = "dgvStock";
+            dgvStock.RowHeadersVisible = false;
+            dataGridViewCellStyle4.BackColor = Color.Transparent;
+            dgvStock.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dgvStock.RowTemplate.Height = 54;
+            dgvStock.ScrollBars = ScrollBars.None;
+            dgvStock.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvStock.Size = new Size(1916, 965);
+            dgvStock.TabIndex = 2;
             // 
             // tableLayoutPanel2
             // 
@@ -132,6 +186,7 @@
             Size = new Size(1936, 1048);
             Load += Stock_Load;
             tableLayoutPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvStock).EndInit();
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             ResumeLayout(false);
@@ -143,6 +198,6 @@
         private TableLayoutPanel tableLayoutPanel2;
         private Label label1;
         private Guna.UI2.WinForms.Guna2ComboBox cmbVisoes;
-        private PEPIDI_0._5.Models.PEPIDIDataGridView dgvStock;
+        private Models.PEPIDIDataGridView dgvStock;
     }
 }

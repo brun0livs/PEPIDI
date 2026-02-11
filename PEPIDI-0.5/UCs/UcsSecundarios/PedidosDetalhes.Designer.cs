@@ -28,30 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PedidosDetalhes));
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges23 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges24 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Curvas = new Guna.UI2.WinForms.Guna2Panel();
             Orientacao1 = new TableLayoutPanel();
-            dgvDevolucoes = new PEPIDI_0._5.Models.PEPIDIDataGridView();
-            dgvPedidos = new PEPIDI_0._5.Models.PEPIDIDataGridView();
+            pnlDevolucao = new Panel();
             Devolucao = new Guna.UI2.WinForms.Guna2Panel();
             tableLayoutPanel2 = new TableLayoutPanel();
             label4 = new Label();
@@ -64,10 +56,9 @@
             btnReprovar = new Guna.UI2.WinForms.Guna2Button();
             txtObs = new Guna.UI2.WinForms.Guna2TextBox();
             lblClose = new Label();
+            pnlConteudo = new FlowLayoutPanel();
             Curvas.SuspendLayout();
             Orientacao1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvDevolucoes).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)dgvPedidos).BeginInit();
             Devolucao.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             pnlPedidos.SuspendLayout();
@@ -81,11 +72,11 @@
             Curvas.BorderRadius = 15;
             Curvas.BorderThickness = 1;
             Curvas.Controls.Add(Orientacao1);
-            Curvas.CustomizableEdges = customizableEdges11;
+            Curvas.CustomizableEdges = customizableEdges13;
             Curvas.Dock = DockStyle.Fill;
             Curvas.Location = new Point(0, 0);
             Curvas.Name = "Curvas";
-            Curvas.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            Curvas.ShadowDecoration.CustomizableEdges = customizableEdges14;
             Curvas.Size = new Size(600, 850);
             Curvas.TabIndex = 0;
             // 
@@ -94,12 +85,12 @@
             Orientacao1.BackColor = Color.Transparent;
             Orientacao1.ColumnCount = 1;
             Orientacao1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Orientacao1.Controls.Add(dgvDevolucoes, 0, 3);
-            Orientacao1.Controls.Add(dgvPedidos, 0, 1);
+            Orientacao1.Controls.Add(pnlDevolucao, 0, 3);
             Orientacao1.Controls.Add(Devolucao, 0, 2);
             Orientacao1.Controls.Add(pnlPedidos, 0, 0);
             Orientacao1.Controls.Add(tableLayoutPanel1, 0, 5);
             Orientacao1.Controls.Add(txtObs, 0, 4);
+            Orientacao1.Controls.Add(pnlConteudo, 0, 1);
             Orientacao1.Dock = DockStyle.Fill;
             Orientacao1.Font = new Font("Roboto Medium", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Orientacao1.ForeColor = Color.White;
@@ -116,115 +107,27 @@
             Orientacao1.Size = new Size(600, 850);
             Orientacao1.TabIndex = 3;
             // 
-            // dgvDevolucoes
+            // pnlDevolucao
             // 
-            dgvDevolucoes.AllowUserToAddRows = false;
-            dgvDevolucoes.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = Color.Transparent;
-            dgvDevolucoes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgvDevolucoes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvDevolucoes.BackgroundColor = Color.White;
-            dgvDevolucoes.BorderStyle = BorderStyle.None;
-            dgvDevolucoes.CellBorderStyle = DataGridViewCellBorderStyle.None;
-            dgvDevolucoes.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = Color.White;
-            dataGridViewCellStyle2.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = Color.Black;
-            dataGridViewCellStyle2.Padding = new Padding(0, 8, 0, 8);
-            dataGridViewCellStyle2.SelectionBackColor = Color.Transparent;
-            dataGridViewCellStyle2.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvDevolucoes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            dgvDevolucoes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.Transparent;
-            dataGridViewCellStyle3.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle3.ForeColor = Color.Black;
-            dataGridViewCellStyle3.Padding = new Padding(18, 10, 18, 10);
-            dataGridViewCellStyle3.SelectionBackColor = Color.Transparent;
-            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            dgvDevolucoes.DefaultCellStyle = dataGridViewCellStyle3;
-            dgvDevolucoes.Dock = DockStyle.Fill;
-            dgvDevolucoes.EditMode = DataGridViewEditMode.EditOnEnter;
-            dgvDevolucoes.EnableHeadersVisualStyles = false;
-            dgvDevolucoes.GridColor = SystemColors.Control;
-            dgvDevolucoes.HeaderFontSize = 11F;
-            dgvDevolucoes.Location = new Point(10, 382);
-            dgvDevolucoes.Margin = new Padding(10, 10, 10, 0);
-            dgvDevolucoes.MultiSelect = false;
-            dgvDevolucoes.Name = "dgvDevolucoes";
-            dgvDevolucoes.RowHeadersVisible = false;
-            dataGridViewCellStyle4.BackColor = Color.Transparent;
-            dgvDevolucoes.RowsDefaultCellStyle = dataGridViewCellStyle4;
-            dgvDevolucoes.RowTemplate.Height = 54;
-            dgvDevolucoes.ScrollBars = ScrollBars.None;
-            dgvDevolucoes.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvDevolucoes.Size = new Size(580, 244);
-            dgvDevolucoes.TabIndex = 7;
-            // 
-            // dgvPedidos
-            // 
-            dgvPedidos.AllowUserToAddRows = false;
-            dgvPedidos.AllowUserToResizeRows = false;
-            dataGridViewCellStyle5.BackColor = Color.Transparent;
-            dgvPedidos.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
-            dgvPedidos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvPedidos.BackgroundColor = Color.White;
-            dgvPedidos.BorderStyle = BorderStyle.None;
-            dgvPedidos.CellBorderStyle = DataGridViewCellBorderStyle.None;
-            dgvPedidos.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.BackColor = Color.White;
-            dataGridViewCellStyle6.Font = new Font("Roboto", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle6.ForeColor = Color.Black;
-            dataGridViewCellStyle6.Padding = new Padding(0, 8, 0, 8);
-            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
-            dgvPedidos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
-            dgvPedidos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = Color.Transparent;
-            dataGridViewCellStyle7.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle7.ForeColor = Color.Black;
-            dataGridViewCellStyle7.Padding = new Padding(18, 10, 18, 10);
-            dataGridViewCellStyle7.SelectionBackColor = Color.Transparent;
-            dataGridViewCellStyle7.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
-            dgvPedidos.DefaultCellStyle = dataGridViewCellStyle7;
-            dgvPedidos.Dock = DockStyle.Fill;
-            dgvPedidos.EditMode = DataGridViewEditMode.EditOnEnter;
-            dgvPedidos.EnableHeadersVisualStyles = false;
-            dgvPedidos.GridColor = SystemColors.Control;
-            dgvPedidos.HeaderFontSize = 9F;
-            dgvPedidos.Location = new Point(10, 69);
-            dgvPedidos.Margin = new Padding(10, 10, 10, 0);
-            dgvPedidos.MultiSelect = false;
-            dgvPedidos.Name = "dgvPedidos";
-            dgvPedidos.RowHeadersVisible = false;
-            dataGridViewCellStyle8.BackColor = Color.Transparent;
-            dgvPedidos.RowsDefaultCellStyle = dataGridViewCellStyle8;
-            dgvPedidos.RowTemplate.Height = 54;
-            dgvPedidos.ScrollBars = ScrollBars.None;
-            dgvPedidos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvPedidos.Size = new Size(580, 244);
-            dgvPedidos.TabIndex = 6;
+            pnlDevolucao.Dock = DockStyle.Fill;
+            pnlDevolucao.Location = new Point(3, 375);
+            pnlDevolucao.Name = "pnlDevolucao";
+            pnlDevolucao.Size = new Size(594, 248);
+            pnlDevolucao.TabIndex = 9;
             // 
             // Devolucao
             // 
             Devolucao.BorderRadius = 15;
             Devolucao.Controls.Add(tableLayoutPanel2);
-            customizableEdges1.BottomLeft = false;
-            customizableEdges1.BottomRight = false;
-            Devolucao.CustomizableEdges = customizableEdges1;
+            customizableEdges15.BottomLeft = false;
+            customizableEdges15.BottomRight = false;
+            Devolucao.CustomizableEdges = customizableEdges15;
             Devolucao.Dock = DockStyle.Fill;
             Devolucao.FillColor = Color.Gray;
             Devolucao.Location = new Point(0, 313);
             Devolucao.Margin = new Padding(0);
             Devolucao.Name = "Devolucao";
-            Devolucao.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            Devolucao.ShadowDecoration.CustomizableEdges = customizableEdges16;
             Devolucao.Size = new Size(600, 59);
             Devolucao.TabIndex = 2;
             // 
@@ -260,15 +163,15 @@
             // 
             pnlPedidos.BorderRadius = 15;
             pnlPedidos.Controls.Add(OrientacaoPedidos);
-            customizableEdges3.BottomLeft = false;
-            customizableEdges3.BottomRight = false;
-            pnlPedidos.CustomizableEdges = customizableEdges3;
+            customizableEdges17.BottomLeft = false;
+            customizableEdges17.BottomRight = false;
+            pnlPedidos.CustomizableEdges = customizableEdges17;
             pnlPedidos.Dock = DockStyle.Fill;
             pnlPedidos.FillColor = Color.Gray;
             pnlPedidos.Location = new Point(0, 0);
             pnlPedidos.Margin = new Padding(0);
             pnlPedidos.Name = "pnlPedidos";
-            pnlPedidos.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            pnlPedidos.ShadowDecoration.CustomizableEdges = customizableEdges18;
             pnlPedidos.Size = new Size(600, 59);
             pnlPedidos.TabIndex = 0;
             // 
@@ -308,7 +211,7 @@
             close.BackColor = Color.Transparent;
             close.Cursor = Cursors.Hand;
             close.Dock = DockStyle.Fill;
-            close.Image = Properties.Resources.Close;
+            close.Image = (Image)resources.GetObject("close.Image");
             close.Location = new Point(510, 0);
             close.Margin = new Padding(0);
             close.Name = "close";
@@ -337,7 +240,7 @@
             // btnAprovar
             // 
             btnAprovar.BorderRadius = 10;
-            btnAprovar.CustomizableEdges = customizableEdges5;
+            btnAprovar.CustomizableEdges = customizableEdges19;
             btnAprovar.DisabledState.BorderColor = Color.DarkGray;
             btnAprovar.DisabledState.CustomBorderColor = Color.DarkGray;
             btnAprovar.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -349,7 +252,7 @@
             btnAprovar.Location = new Point(306, 15);
             btnAprovar.Margin = new Padding(10, 15, 10, 15);
             btnAprovar.Name = "btnAprovar";
-            btnAprovar.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            btnAprovar.ShadowDecoration.CustomizableEdges = customizableEdges20;
             btnAprovar.Size = new Size(187, 47);
             btnAprovar.TabIndex = 9;
             btnAprovar.Text = "Aprovar";
@@ -357,7 +260,7 @@
             // btnReprovar
             // 
             btnReprovar.BorderRadius = 10;
-            btnReprovar.CustomizableEdges = customizableEdges7;
+            btnReprovar.CustomizableEdges = customizableEdges21;
             btnReprovar.DisabledState.BorderColor = Color.DarkGray;
             btnReprovar.DisabledState.CustomBorderColor = Color.DarkGray;
             btnReprovar.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -369,7 +272,7 @@
             btnReprovar.Location = new Point(99, 15);
             btnReprovar.Margin = new Padding(10, 15, 10, 15);
             btnReprovar.Name = "btnReprovar";
-            btnReprovar.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            btnReprovar.ShadowDecoration.CustomizableEdges = customizableEdges22;
             btnReprovar.Size = new Size(187, 47);
             btnReprovar.TabIndex = 7;
             btnReprovar.Text = "Reprovar";
@@ -378,7 +281,7 @@
             // 
             txtObs.BorderColor = Color.FromArgb(224, 224, 224);
             txtObs.BorderRadius = 15;
-            txtObs.CustomizableEdges = customizableEdges9;
+            txtObs.CustomizableEdges = customizableEdges23;
             txtObs.DefaultText = "";
             txtObs.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             txtObs.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
@@ -396,7 +299,7 @@
             txtObs.PlaceholderForeColor = Color.Silver;
             txtObs.PlaceholderText = "Observações";
             txtObs.SelectedText = "";
-            txtObs.ShadowDecoration.CustomizableEdges = customizableEdges10;
+            txtObs.ShadowDecoration.CustomizableEdges = customizableEdges24;
             txtObs.Size = new Size(580, 121);
             txtObs.TabIndex = 5;
             // 
@@ -407,6 +310,15 @@
             lblClose.Name = "lblClose";
             lblClose.Size = new Size(0, 33);
             lblClose.TabIndex = 1;
+            // 
+            // pnlConteudo
+            // 
+            pnlConteudo.Dock = DockStyle.Fill;
+            pnlConteudo.Location = new Point(0, 59);
+            pnlConteudo.Margin = new Padding(0);
+            pnlConteudo.Name = "pnlConteudo";
+            pnlConteudo.Size = new Size(600, 254);
+            pnlConteudo.TabIndex = 10;
             // 
             // PedidosDetalhes
             // 
@@ -422,8 +334,6 @@
             Load += PedidosDetalhes_Load;
             Curvas.ResumeLayout(false);
             Orientacao1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgvDevolucoes).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dgvPedidos).EndInit();
             Devolucao.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
@@ -450,7 +360,7 @@
         private Guna.UI2.WinForms.Guna2Button btnAprovar;
         private Guna.UI2.WinForms.Guna2Button btnReprovar;
         private Guna.UI2.WinForms.Guna2TextBox txtObs;
-        private PEPIDI_0._5.Models.PEPIDIDataGridView dgvDevolucoes;
-        private PEPIDI_0._5.Models.PEPIDIDataGridView dgvPedidos;
+        private Panel pnlDevolucao;
+        private FlowLayoutPanel pnlConteudo;
     }
 }

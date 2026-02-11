@@ -1,9 +1,10 @@
 ﻿using Guna.UI2.WinForms;
 using PEPIDI.Organizers;
-using PEPIDI_0._5.Models;
+using PEPIDI.Models;
 using System;
 using System.Drawing; // Necessário para HorizontalAlignment não dar erro de ambiguidade
 using System.Windows.Forms;
+using PEPIDI_0._5.UCs.DGVS;
 
 namespace PEPIDI
 {
@@ -214,11 +215,14 @@ namespace PEPIDI
                 case "pedidos aprovados":
                     AbrirControl(new UCs.Pedidos(IDGestor, "Aprovado"));
                     break;
-                case "definições":
-                    AbrirControl(new UCs.Definicoes(IDGestor));
+                case "criar artigos":
+                    //AbrirControl();
                     break;
                 case "funções":
                     AbrirControl(new UCs.Funcoes(IDGestor));
+                    break;
+                case "definições":
+                    AbrirControl(new UCs.Definicoes(IDGestor));
                     break;
                 default:
                     // Caso tenhas botões sem case, não faz nada
