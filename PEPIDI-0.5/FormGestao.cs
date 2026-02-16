@@ -4,7 +4,7 @@ using PEPIDI.Models;
 using System;
 using System.Drawing; // Necessário para HorizontalAlignment não dar erro de ambiguidade
 using System.Windows.Forms;
-using PEPIDI_0._5.UCs.DGVS;
+using PEPIDI.UCs.DGVS;
 
 namespace PEPIDI
 {

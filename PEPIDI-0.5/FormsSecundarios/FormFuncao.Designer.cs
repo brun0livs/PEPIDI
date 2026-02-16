@@ -334,6 +334,7 @@
             ClientSize = new Size(800, 450);
             Controls.Add(tableLayoutPanel1);
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "FormFuncao";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Formfuncao";

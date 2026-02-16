@@ -1,28 +1,28 @@
-﻿using iText.Kernel.Pdf.Canvas.Wmf;
+﻿using PEPIDI.FormsSecundarios;
 using PEPIDI.Models;
 using PEPIDI.Organizers;
-using PEPIDI_0._5.UCs.DGVS;
-using PEPIDI_0._5.UCs.UcsSecundarios;
+using PEPIDI.UCs.DGVS;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PEPIDI.UCs.UcsSecundarios
 {
-    public partial class PedidosDetalhes : UserControl
+    public partial class PedidosDetalhes : UserControl, IMessageFilter
     {
         int ID;
         int IDGestor;
         string NomeGestor;
         string Estado;
+
+        // Controlo de Fluxo para o MX Master 3S
+        private DateTime lastScrollTime = DateTime.Now;
+        private int scrollCount = 0;
+        private const int MaxScrollMessages = 20;
 
         public PedidosDetalhes(int _ID, int _IDGestor, string _Estado)
         {
@@ -34,272 +34,316 @@ namespace PEPIDI.UCs.UcsSecundarios
 
         private void PedidosDetalhes_Load(object sender, EventArgs e)
         {
+            // Ativa o filtro global que impede a recursividade
+            Application.AddMessageFilter(this);
+
             var info = Details.GetInfoGestor(IDGestor);
             NomeGestor = info.Nome;
             GereEstado(Estado);
-
-            //Configura(dgvPedidos);
-            //Configura(dgvDevolucoes);
         }
 
-
-        private void Configura(PEPIDIDataGridView dgv)
+        protected override void OnHandleDestroyed(EventArgs e)
         {
-            // 1. A Grid NÃO pode ser ReadOnly no geral, senão a Combo não abre
-            dgv.ReadOnly = false;
+            // Remove o filtro ao fechar para evitar que a app tente dar scroll a um painel que já não existe
+            Application.RemoveMessageFilter(this);
+            base.OnHandleDestroyed(e);
         }
+
+        // Este método captura o scroll antes de ele chegar aos botões e causar o StackOverflow
+        public bool PreFilterMessage(ref Message m)
+        {
+            // WM_MOUSEWHEEL = 0x020A
+            if (m.Msg == 0x020A && pnlScroll != null && pnlScroll.IsHandleCreated)
+            {
+                Point pos = PointToClient(Cursor.Position);
+
+                if (this.ClientRectangle.Contains(pos))
+                {
+                    TimeSpan elapsed = DateTime.Now - lastScrollTime;
+                    if (elapsed.TotalMilliseconds > 100)
+                    {
+                        scrollCount = 0;
+                        lastScrollTime = DateTime.Now;
+                    }
+
+                    if (scrollCount < MaxScrollMessages)
+                    {
+                        scrollCount++;
+                        // Envia o scroll diretamente para o pnlScroll sem passar pelos filhos
+                        SendMessage(pnlScroll.Handle, m.Msg, m.WParam, m.LParam);
+                    }
+
+                    // "Mata" a mensagem original. Isto impede que o evento suba na hierarquia e crash o programa.
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
 
         private void GereEstado(string estado)
         {
+            label1.Text = (estado == "Aprovado") ? "Selecionar" : "Quantidade";
+
             if (estado == "Pendente")
             {
                 btnAprovar.Text = "Aprovar";
                 btnReprovar.Enabled = true;
-                CarregarPPacote(pnlConteudo, ID, estado);
             }
             else if (estado == "Aprovado")
             {
                 btnAprovar.Text = "Finalizar";
                 btnReprovar.Enabled = true;
-
             }
             else
             {
                 btnAprovar.Text = "Comprovativo";
                 btnReprovar.Enabled = false;
             }
+
+            CarregarPPacote(pnlConteudo, ID, estado, pnlScroll, tlpLinhas);
+            VerComentario(ID);
         }
 
-        public void CarregarPPacote(FlowLayoutPanel pnlConteudo, int idPedido, string estado)
+        public void CarregarPPacote(Panel pnlConteudo, int idPedido, string estado, Panel pnlScroll, TableLayoutPanel tlpLinhas)
         {
-            // 1. Limpeza e Reset
-            pnlConteudo.Controls.Clear();
-            pnlConteudo.AutoScroll = false; // Importante: O pai NÃO faz scroll
-            pnlConteudo.WrapContents = false;
-            pnlConteudo.Padding = new Padding(0);
-            pnlConteudo.Margin = new Padding(0);
+            tlpLinhas.Controls.Clear();
+            tlpLinhas.RowCount = 0;
+            tlpLinhas.RowStyles.Clear();
 
-            // 2. Busca os dados primeiro
-            DataTable dt = new DataTable();
-            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("sp_DetalhesDoPedido", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@IDPedido", idPedido);
-                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                adapter.Fill(dt);
-            }
-
-            // Se não houver dados, sai ou mostra mensagem
-            if (dt.Rows.Count == 0) return;
-
-            // 3. TLP MESTRE (O Esqueleto)
-            TableLayoutPanel tlpMestre = new TableLayoutPanel();
-            tlpMestre.Name = "tlpMestre";
-            tlpMestre.ColumnCount = 1;
-            tlpMestre.RowCount = 2;
-            tlpMestre.RowStyles.Add(new RowStyle(SizeType.AutoSize)); // Linha 0: Cabeçalho
-            tlpMestre.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); // Linha 1: Dados
-            tlpMestre.Margin = new Padding(0);
-            tlpMestre.Padding = new Padding(0);
-
-            // --- CORREÇÃO DO ECRÃ BRANCO ---
-            // Forçamos o tamanho do TLP a ser igual ao do FlowPanel pai
-            tlpMestre.Width = pnlConteudo.ClientSize.Width;
-            tlpMestre.Height = pnlConteudo.ClientSize.Height;
-
-            // --- LÓGICA DE ALINHAMENTO (Cabeçalho vs Scroll) ---
-            // Se tivermos mais de 5 linhas, assumimos que vai aparecer scroll vertical.
-            // Ajusta o '5' conforme a altura das tuas linhas.
-            bool vaiTerScroll = dt.Rows.Count > 5;
-            int paddingScroll = vaiTerScroll ? SystemInformation.VerticalScrollBarWidth : 0;
-
-            // A. CABEÇALHO
-            CabecalhoPedido cabecalho = new CabecalhoPedido();
-            cabecalho.Dock = DockStyle.Top;
-            cabecalho.Margin = new Padding(0);
-            // Adiciona margem à direita para compensar a barra de scroll
-            cabecalho.Padding = new Padding(0, 0, paddingScroll, 0);
-
-            tlpMestre.Controls.Add(cabecalho, 0, 0);
-
-            // B. PAINEL DE SCROLL (Panel Normal)
-            Panel pnlScroll = new Panel();
-            pnlScroll.Dock = DockStyle.Fill;
-            pnlScroll.AutoScroll = true; // O painel gere o scroll
-            pnlScroll.Margin = new Padding(0);
-            pnlScroll.Padding = new Padding(0);
-
-            // C. DADOS (Tabela interna)
-            TableLayoutPanel tlpDados = new TableLayoutPanel();
-            tlpDados.Name = "tlpDados";
-            tlpDados.AutoSize = true;
-            tlpDados.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tlpDados.Dock = DockStyle.Top;
-            tlpDados.ColumnCount = 1;
-            tlpDados.RowCount = 0;
-            tlpDados.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tlpDados.Margin = new Padding(0);
-            tlpDados.Padding = new Padding(0);
-
-            foreach (DataRow row in dt.Rows)
-            {
-                string modelo = row["Modelo"].ToString();
-                string tamanho = row["Tamanho"].ToString();
-                int quantDisp = Convert.ToInt32(row["QuantidadeDisponivel"]);
-                int quantSelecionada = row.Table.Columns.Contains("QuantidadePedida") ? Convert.ToInt32(row["QuantidadePedida"]) : 0;
-
-                LinhaItem novaLinha = new LinhaItem(modelo, tamanho, quantDisp, quantSelecionada);
-                novaLinha.Dock = DockStyle.Fill;
-                // Margem 0 para garantir que ocupa a largura total disponível
-                novaLinha.Margin = new Padding(0);
-
-                tlpDados.RowCount++;
-                tlpDados.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-                tlpDados.Controls.Add(novaLinha, 0, tlpDados.RowCount - 1);
-            }
-
-            // Montar a Boneca Russa
-            pnlScroll.Controls.Add(tlpDados);
-            tlpMestre.Controls.Add(pnlScroll, 0, 1);
-
-            // 4. ADICIONAR AO PAI (Só no final!)
-            pnlConteudo.Controls.Add(tlpMestre);
-
-            // 5. Ativar Scroll do Rato e Garantir Redimensionamento
-            AtivarScrollComRato(tlpDados, pnlScroll);
-
-            // Evento de segurança para redimensionar se o utilizador mudar o tamanho da janela
-            pnlConteudo.SizeChanged += (s, e) => {
-                tlpMestre.Size = pnlConteudo.ClientSize;
-            };
-        }
-
-        private void AtivarScrollComRato(Control controle, Panel painelPrincipal)
-        {
-            if (controle != painelPrincipal)
-            {
-                controle.MouseWheel += (s, e) =>
-                {
-                    // Proteção contra Null Reference caso o painel tenha sido descartado
-                    if (painelPrincipal == null || painelPrincipal.IsDisposed) return;
-
-                    int novaPosicao = painelPrincipal.VerticalScroll.Value - e.Delta;
-
-                    if (novaPosicao < painelPrincipal.VerticalScroll.Minimum)
-                        novaPosicao = painelPrincipal.VerticalScroll.Minimum;
-
-                    if (novaPosicao > painelPrincipal.VerticalScroll.Maximum)
-                        novaPosicao = painelPrincipal.VerticalScroll.Maximum;
-
-                    painelPrincipal.VerticalScroll.Value = novaPosicao;
-                    painelPrincipal.PerformLayout();
-                };
-            }
-
-            foreach (Control child in controle.Controls)
-            {
-                AtivarScrollComRato(child, painelPrincipal);
-            }
-        }
-
-        public void CarregarRoupaPacote(DataGridView dgv, int idPedido)
-        {
-            dgv.DataSource = null;
-            dgv.Rows.Clear();
-            dgv.Columns.Clear();
-
-            dgv.AutoGenerateColumns = true;
+            pnlScroll.Size = tlpDesign.GetControlFromPosition(0, 1).Size;
 
             using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("sp_DetalhesDaDevolucao", conn)
-                {
-                    CommandType = CommandType.StoredProcedure
-                };
+                SqlCommand cmd = new SqlCommand("sp_DetalhesDoPedido", conn) { CommandType = CommandType.StoredProcedure };
                 cmd.Parameters.AddWithValue("@IDPedido", idPedido);
-
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
 
-                dgv.DataSource = dt;
+                foreach (DataRow row in dt.Rows)
+                {
+                    int idEpi = Convert.ToInt32(row["ID"]);
+                    string modelo = row["Modelo"].ToString();
+                    string tamanho = row["Tamanho"].ToString();
+                    int quantDisp = Convert.ToInt32(row["QuantidadeDisponivel"]);
+                    int quantPedida = row.Table.Columns.Contains("QuantidadePedida") ? Convert.ToInt32(row["QuantidadePedida"]) : 0;
 
-                // esconder ID automaticamente
-                if (dgv.Columns.Contains("ID"))
-                    dgv.Columns["ID"].Visible = false;
+                    LinhaItem novaLinha = new LinhaItem(modelo, tamanho, quantDisp, quantPedida, estado);
+                    novaLinha.IDEPI = idEpi;
+                    novaLinha.QuantidadeOriginal = quantPedida;
+                    novaLinha.QuantidadeAlterada += Linha_QuantidadeAlterada; // Liga o evento de log
+                    novaLinha.Dock = DockStyle.Top;
 
-                if (dgv.Columns.Contains("Modelo"))
-                    dgv.Columns["Modelo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    tlpLinhas.RowCount++;
+                    tlpLinhas.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                    tlpLinhas.Controls.Add(novaLinha, 0, tlpLinhas.RowCount - 1);
+                }
+            }
+            tlpLinhas.Width = pnlScroll.Width - 5;
+        }
 
-                if (dgv.Columns.Contains("Tamanho"))
-                    dgv.Columns["Tamanho"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                dgv.Columns["Tamanho"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        private void Linha_QuantidadeAlterada(object sender, EventArgs e)
+        {
+            if (sender is LinhaItem linha)
+            {
+                string logBusca = $"{linha.M} ({linha.T})";
+                List<string> linhasLog = txtObs.Lines.ToList();
 
+                // Limpa registos antigos para evitar duplicados
+                linhasLog.RemoveAll(l => l.Contains(logBusca));
 
-                if (dgv.Columns.Contains("QuantidadeDevolvida"))
-                    dgv.Columns["QuantidadeDevolvida"].HeaderText = "Quantidade";
-                dgv.Columns["QuantidadeDevolvida"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                if (linha.QuantidadeSelecionada != linha.QuantidadeOriginal)
+                {
+                    string autor = NomeGestor;
+                    string notaExtra = "";
+
+                    // Subverificação: Só o PEPIDI assume se o stock for 0
+                    if (linha.QuantidadeSelecionada == 0 && linha.QD == 0)
+                    {
+                        autor = "PEPIDI";
+                        notaExtra = " (falta de stock)";
+                    }
+
+                    string novaNota = $"[{autor}]: Alterou {logBusca} de {linha.QuantidadeOriginal} para {linha.QuantidadeSelecionada}{notaExtra}";
+                    linhasLog.Add(novaNota);
+                }
+                txtObs.Lines = linhasLog.ToArray();
             }
         }
 
+        // Outros métodos necessários
         private void VerComentario(int idPedido)
         {
             txtObs.Text = string.Empty;
             using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
             {
                 conn.Open();
-
                 SqlCommand cmd = new SqlCommand("SELECT Notas FROM PedidoRegistos WHERE ID = @ID", conn);
                 cmd.Parameters.AddWithValue("@ID", idPedido);
-
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    if (reader.Read())
-                    {
-                        txtObs.Text = reader["Notas"].ToString();
-                    }
-                    else
-                    {
-                        txtObs.Text = null;
-                    }
+                    if (reader.Read()) txtObs.Text = reader["Notas"].ToString();
                 }
             }
-        }
-
-        private List<string> ObterTamanhosPorModelo(string modelo)
-        {
-            var tamanhos = new List<string>();
-
-            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("sp_GetTamanhosPorModelo", conn)
-                {
-                    CommandType = CommandType.StoredProcedure
-                };
-                cmd.Parameters.AddWithValue("@Modelo", modelo);
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                        tamanhos.Add(reader["Tamanho"].ToString());
-                }
-            }
-
-            return tamanhos;
         }
 
         private void close_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(pnlConteudo.Size.ToString());
-            //// Remove este UC da lista de controlos do painel
-            //this.Parent.Controls.Remove(this);
+            // Verifica se o controlo tem um pai (o painel onde o inseriste)
+            if (this.Parent != null)
+            {
+                this.Parent.Controls.Remove(this);
+                this.Dispose(); // Liberta a memória para não ter lag (mais para o meu rato)
+            }
+        }
 
-            //// Opcional: Liberta a memória
-            //this.Dispose();
+        private void btnAprovar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+                {
+                    conn.Open();
+                    SqlTransaction trans = conn.BeginTransaction();
+
+                    try
+                    {
+                        // 1. ATUALIZAR ITENS
+                        foreach (Control c in tlpLinhas.Controls)
+                        {
+                            if (c is LinhaItem linha)
+                            {
+                                SqlCommand cmdItem = new SqlCommand("sp_AtualizarQuantidadePedidoPacote", conn, trans)
+                                {
+                                    CommandType = CommandType.StoredProcedure
+                                };
+
+                                cmdItem.Parameters.AddWithValue("@IDPedido", ID);
+                                // Aqui usamos o IDEPI. Se não o tiveres, usamos Modelo/Tamanho como filtro
+                                cmdItem.Parameters.AddWithValue("@IDEPI", linha.IDEPI);
+                                cmdItem.Parameters.AddWithValue("@NovaQuantidade", linha.QuantidadeSelecionada);
+
+                                cmdItem.ExecuteNonQuery();
+                            }
+                        }
+
+                        // 2. NOTAS NA APROVAÇÃO (O que tu querias!)
+                        // Gravamos o conteúdo TOTAL da txtObs, incluindo as notas do PEPIDI
+                        string notaFinal = txtObs.Text.Trim();
+
+                        // 3. ATUALIZAR ESTADO DO PEDIDO
+                        string sqlPedido = @"UPDATE PedidoRegistos 
+                                   SET Estado = 'Aprovado', 
+                                       Aprovacao = @Aprovador, 
+                                       Notas = @Notas,
+                                       AlteracaoData = GETDATE(),
+                                       AlteradoPor = @Aprovador
+                                   WHERE ID = @ID";
+
+                        SqlCommand cmdPedido = new SqlCommand(sqlPedido, conn, trans);
+                        cmdPedido.Parameters.AddWithValue("@ID", ID);
+                        cmdPedido.Parameters.AddWithValue("@Aprovador", IDGestor);
+                        cmdPedido.Parameters.AddWithValue("@Notas", notaFinal); // Grava tudo o que vês no ecrã
+
+                        cmdPedido.ExecuteNonQuery();
+
+                        trans.Commit();
+                        MessageBox.Show("Pedido aprovado com sucesso!", "Aprovado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        this.Parent.Controls.Remove(this);
+                        this.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        trans.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+            catch (Exception ex) { MessageBox.Show("Erro ao aprovar: " + ex.Message); }
+        }
+
+        private void btnReprovar_Click(object sender, EventArgs e)
+        {
+            string justificativaFinal = "";
+
+            // 1. ANALISAR O CONTEÚDO ATUAL DA TXTOBS
+            // Filtramos para ignorar o que o programa escreve sozinho (Logs de Stock / PEPIDI)
+            List<string> linhasAtuais = txtObs.Lines.ToList();
+
+            // Pegamos apenas em linhas que NÃO são logs automáticos e NÃO estão vazias
+            var linhasManuais = linhasAtuais.Where(l =>
+                !l.Contains("Alterou") &&
+                !l.Contains("(falta de stock)") &&
+                !string.IsNullOrWhiteSpace(l)
+            ).ToList();
+
+            if (linhasManuais.Count > 0)
+            {
+                // CASO A: O utilizador já escreveu o motivo diretamente na txtObs
+                // Pegamos no texto manual (limpando possíveis prefixos que já lá estejam)
+                string textoPuro = string.Join(" ", linhasManuais).Replace($"[{NomeGestor}]:", "").Trim();
+                justificativaFinal = $"[{NomeGestor}]: MOTIVO REPROVAÇÃO - {textoPuro}";
+            }
+            else
+            {
+                // CASO B: A txtObs está vazia ou só tem logs do PEPIDI
+                // Abrimos o formulário com o efeito de sombra (Overlay)
+                using (Form overlay = new Form())
+                {
+                    overlay.StartPosition = FormStartPosition.Manual;
+                    overlay.FormBorderStyle = FormBorderStyle.None;
+                    overlay.Opacity = 0.50d;
+                    overlay.BackColor = Color.Black;
+                    overlay.ShowInTaskbar = false;
+                    Form formPrincipal = this.FindForm();
+                    overlay.Location = formPrincipal.Location;
+                    overlay.Size = formPrincipal.Size;
+                    overlay.Show(formPrincipal);
+
+                    using (FormMotivo frm = new FormMotivo())
+                    {
+                        if (frm.ShowDialog(overlay) == DialogResult.OK)
+                        {
+                            justificativaFinal = $"[{NomeGestor}]: MOTIVO REPROVAÇÃO - {frm.Motivo}";
+                        }
+                        else
+                        {
+                            overlay.Close();
+                            return; // Cancelou
+                        }
+                    }
+                    overlay.Close();
+                }
+            }
+
+            ExecutarReprovacao(justificativaFinal);
+        }
+
+        private void ExecutarReprovacao(string notaLimpa)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+                {
+                    conn.Open();
+                    // Gravamos apenas a nota formatada, descartando todo o lixo da txtObs
+                    SqlCommand cmd = new SqlCommand("UPDATE PedidoRegistos SET Estado = 'Reprovado', Notas = @Notas WHERE ID = @ID", conn);
+                    cmd.Parameters.AddWithValue("@ID", ID);
+                    cmd.Parameters.AddWithValue("@Notas", notaLimpa);
+
+                    cmd.ExecuteNonQuery();
+                    MessageBox.Show("Pedido reprovado com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    this.Parent.Controls.Remove(this);
+                    this.Dispose();
+                }
+            }
+            catch (Exception ex) { MessageBox.Show("Erro ao reprovar: " + ex.Message); }
         }
     }
 }

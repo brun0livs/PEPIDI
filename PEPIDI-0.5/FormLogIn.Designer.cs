@@ -1,4 +1,4 @@
-﻿namespace PEPIDI_0._5_Beta
+﻿namespace PEPIDI
 {
     partial class FrmLogIn
     {
@@ -30,6 +30,7 @@
         {
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmLogIn));
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
@@ -37,7 +38,6 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmLogIn));
             tableLayoutPanel1 = new TableLayoutPanel();
             guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             tableLayoutPanel2 = new TableLayoutPanel();
@@ -104,7 +104,7 @@
             // 
             // guna2CirclePictureBox1
             // 
-            guna2CirclePictureBox1.BackgroundImage = PEPIDI.Properties.Resources.logo;
+            guna2CirclePictureBox1.BackgroundImage = (Image)resources.GetObject("guna2CirclePictureBox1.BackgroundImage");
             guna2CirclePictureBox1.BackgroundImageLayout = ImageLayout.Zoom;
             guna2CirclePictureBox1.Dock = DockStyle.Fill;
             guna2CirclePictureBox1.FillColor = Color.Transparent;
@@ -178,6 +178,7 @@
             pbPass.Font = new Font("Roboto", 11.25F);
             pbPass.ForeColor = Color.Black;
             pbPass.HoverState.BorderColor = Color.Gray;
+            pbPass.IconRight = (Image)resources.GetObject("pbPass.IconRight");
             pbPass.IconRightOffset = new Point(10, 0);
             pbPass.Location = new Point(0, 58);
             pbPass.Margin = new Padding(0);

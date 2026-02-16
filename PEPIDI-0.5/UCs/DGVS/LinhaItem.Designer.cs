@@ -1,4 +1,4 @@
-﻿namespace PEPIDI_0._5.UCs.DGVS
+﻿namespace PEPIDI.UCs.DGVS
 {
     partial class LinhaItem
     {
@@ -28,16 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
             lblQuantDisp = new Label();
             lblTamanho = new Label();
             lblModelo = new Label();
             cmbQuant = new Guna.UI2.WinForms.Guna2ComboBox();
+            chkEntregar = new Guna.UI2.WinForms.Guna2CustomCheckBox();
             guna2Panel1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
@@ -47,34 +50,35 @@
             guna2Panel1.BackColor = Color.Transparent;
             guna2Panel1.BorderRadius = 16;
             guna2Panel1.Controls.Add(tableLayoutPanel1);
-            guna2Panel1.CustomizableEdges = customizableEdges3;
+            guna2Panel1.CustomizableEdges = customizableEdges5;
             guna2Panel1.Dock = DockStyle.Fill;
             guna2Panel1.FillColor = Color.FromArgb(224, 224, 224);
             guna2Panel1.Location = new Point(0, 0);
             guna2Panel1.Margin = new Padding(3, 4, 3, 4);
             guna2Panel1.Name = "guna2Panel1";
-            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges6;
             guna2Panel1.Size = new Size(594, 40);
             guna2Panel1.TabIndex = 0;
             // 
             // tableLayoutPanel1
             // 
-            tableLayoutPanel1.ColumnCount = 4;
+            tableLayoutPanel1.ColumnCount = 5;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
             tableLayoutPanel1.Controls.Add(lblQuantDisp, 2, 0);
             tableLayoutPanel1.Controls.Add(lblTamanho, 1, 0);
             tableLayoutPanel1.Controls.Add(lblModelo, 0, 0);
             tableLayoutPanel1.Controls.Add(cmbQuant, 3, 0);
+            tableLayoutPanel1.Controls.Add(chkEntregar, 4, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 73F));
             tableLayoutPanel1.Size = new Size(594, 40);
             tableLayoutPanel1.TabIndex = 1;
             // 
@@ -137,14 +141,37 @@
             cmbQuant.Margin = new Padding(25, 3, 25, 0);
             cmbQuant.Name = "cmbQuant";
             cmbQuant.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            cmbQuant.Size = new Size(71, 35);
+            cmbQuant.Size = new Size(9, 35);
             cmbQuant.TabIndex = 3;
             cmbQuant.TextAlign = HorizontalAlignment.Center;
+            cmbQuant.SelectedIndexChanged += cmbQuant_SelectedIndexChanged;
+            // 
+            // chkEntregar
+            // 
+            chkEntregar.Checked = true;
+            chkEntregar.CheckedState.BorderColor = Color.FromArgb(94, 148, 255);
+            chkEntregar.CheckedState.BorderRadius = 2;
+            chkEntregar.CheckedState.BorderThickness = 0;
+            chkEntregar.CheckedState.FillColor = Color.FromArgb(94, 148, 255);
+            chkEntregar.CustomizableEdges = customizableEdges3;
+            chkEntregar.Dock = DockStyle.Fill;
+            chkEntregar.Location = new Point(541, 9);
+            chkEntregar.Margin = new Padding(9);
+            chkEntregar.Name = "chkEntregar";
+            chkEntregar.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            chkEntregar.Size = new Size(44, 22);
+            chkEntregar.TabIndex = 4;
+            chkEntregar.Text = "guna2CustomCheckBox1";
+            chkEntregar.UncheckedState.BorderColor = Color.FromArgb(125, 137, 149);
+            chkEntregar.UncheckedState.BorderRadius = 2;
+            chkEntregar.UncheckedState.BorderThickness = 0;
+            chkEntregar.UncheckedState.FillColor = Color.FromArgb(125, 137, 149);
             // 
             // LinhaItem
             // 
             AutoScaleDimensions = new SizeF(8F, 18F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.White;
             Controls.Add(guna2Panel1);
             Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Margin = new Padding(3, 4, 3, 2);
@@ -165,5 +192,6 @@
         private Label lblTamanho;
         private Label lblModelo;
         private Guna.UI2.WinForms.Guna2ComboBox cmbQuant;
+        private Guna.UI2.WinForms.Guna2CustomCheckBox chkEntregar;
     }
 }

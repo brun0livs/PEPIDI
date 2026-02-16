@@ -1,4 +1,4 @@
-﻿namespace PEPIDI_0._5.UCs.UcsSecundarios
+﻿namespace PEPIDI.UCs.UcsSecundarios
 {
     partial class CabecalhoPedido
     {
@@ -32,10 +32,10 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
-            label1 = new Label();
-            lblQuantDisp = new Label();
-            lblTamanho = new Label();
             lblModelo = new Label();
+            lblTamanho = new Label();
+            lblQuantDisp = new Label();
+            label1 = new Label();
             guna2Panel1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
@@ -47,10 +47,10 @@
             guna2Panel1.CustomBorderThickness = new Padding(0, 0, 0, 1);
             guna2Panel1.CustomizableEdges = customizableEdges1;
             guna2Panel1.Dock = DockStyle.Fill;
-            guna2Panel1.Location = new Point(0, 0);
+            guna2Panel1.Location = new Point(0, 10);
             guna2Panel1.Name = "guna2Panel1";
             guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            guna2Panel1.Size = new Size(683, 40);
+            guna2Panel1.Size = new Size(683, 30);
             guna2Panel1.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -61,10 +61,10 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
-            tableLayoutPanel1.Controls.Add(label1, 3, 0);
-            tableLayoutPanel1.Controls.Add(lblQuantDisp, 2, 0);
-            tableLayoutPanel1.Controls.Add(lblTamanho, 1, 0);
             tableLayoutPanel1.Controls.Add(lblModelo, 0, 0);
+            tableLayoutPanel1.Controls.Add(lblTamanho, 1, 0);
+            tableLayoutPanel1.Controls.Add(lblQuantDisp, 2, 0);
+            tableLayoutPanel1.Controls.Add(label1, 3, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(0);
@@ -72,50 +72,8 @@
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 73F));
-            tableLayoutPanel1.Size = new Size(683, 40);
+            tableLayoutPanel1.Size = new Size(683, 30);
             tableLayoutPanel1.TabIndex = 5;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Dock = DockStyle.Fill;
-            label1.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
-            label1.ForeColor = Color.FromArgb(64, 64, 64);
-            label1.Location = new Point(548, 0);
-            label1.Margin = new Padding(3, 0, 3, 5);
-            label1.Name = "label1";
-            label1.Size = new Size(132, 35);
-            label1.TabIndex = 3;
-            label1.Text = "Quantidade";
-            label1.TextAlign = ContentAlignment.BottomCenter;
-            // 
-            // lblQuantDisp
-            // 
-            lblQuantDisp.AutoSize = true;
-            lblQuantDisp.Dock = DockStyle.Fill;
-            lblQuantDisp.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
-            lblQuantDisp.ForeColor = Color.FromArgb(64, 64, 64);
-            lblQuantDisp.Location = new Point(412, 0);
-            lblQuantDisp.Margin = new Padding(3, 0, 3, 5);
-            lblQuantDisp.Name = "lblQuantDisp";
-            lblQuantDisp.Size = new Size(130, 35);
-            lblQuantDisp.TabIndex = 2;
-            lblQuantDisp.Text = "Quant. Disp";
-            lblQuantDisp.TextAlign = ContentAlignment.BottomCenter;
-            // 
-            // lblTamanho
-            // 
-            lblTamanho.AutoSize = true;
-            lblTamanho.Dock = DockStyle.Fill;
-            lblTamanho.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
-            lblTamanho.ForeColor = Color.FromArgb(64, 64, 64);
-            lblTamanho.Location = new Point(276, 0);
-            lblTamanho.Margin = new Padding(3, 0, 3, 5);
-            lblTamanho.Name = "lblTamanho";
-            lblTamanho.Size = new Size(130, 35);
-            lblTamanho.TabIndex = 1;
-            lblTamanho.Text = "Tamanho";
-            lblTamanho.TextAlign = ContentAlignment.BottomCenter;
             // 
             // lblModelo
             // 
@@ -126,10 +84,52 @@
             lblModelo.Location = new Point(3, 0);
             lblModelo.Margin = new Padding(3, 0, 3, 5);
             lblModelo.Name = "lblModelo";
-            lblModelo.Size = new Size(267, 35);
+            lblModelo.Size = new Size(267, 25);
             lblModelo.TabIndex = 0;
             lblModelo.Text = "Modelo";
             lblModelo.TextAlign = ContentAlignment.BottomCenter;
+            // 
+            // lblTamanho
+            // 
+            lblTamanho.AutoSize = true;
+            lblTamanho.Dock = DockStyle.Fill;
+            lblTamanho.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
+            lblTamanho.ForeColor = Color.FromArgb(64, 64, 64);
+            lblTamanho.Location = new Point(276, 0);
+            lblTamanho.Margin = new Padding(3, 0, 3, 5);
+            lblTamanho.Name = "lblTamanho";
+            lblTamanho.Size = new Size(130, 25);
+            lblTamanho.TabIndex = 1;
+            lblTamanho.Text = "Tamanho";
+            lblTamanho.TextAlign = ContentAlignment.BottomCenter;
+            // 
+            // lblQuantDisp
+            // 
+            lblQuantDisp.AutoSize = true;
+            lblQuantDisp.Dock = DockStyle.Fill;
+            lblQuantDisp.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
+            lblQuantDisp.ForeColor = Color.FromArgb(64, 64, 64);
+            lblQuantDisp.Location = new Point(412, 0);
+            lblQuantDisp.Margin = new Padding(3, 0, 3, 5);
+            lblQuantDisp.Name = "lblQuantDisp";
+            lblQuantDisp.Size = new Size(130, 25);
+            lblQuantDisp.TabIndex = 2;
+            lblQuantDisp.Text = "Quant. Disp";
+            lblQuantDisp.TextAlign = ContentAlignment.BottomCenter;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Dock = DockStyle.Fill;
+            label1.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
+            label1.ForeColor = Color.FromArgb(64, 64, 64);
+            label1.Location = new Point(548, 0);
+            label1.Margin = new Padding(3, 0, 3, 5);
+            label1.Name = "label1";
+            label1.Size = new Size(132, 25);
+            label1.TabIndex = 3;
+            label1.Text = "Quantidade";
+            label1.TextAlign = ContentAlignment.BottomCenter;
             // 
             // CabecalhoPedido
             // 
@@ -137,7 +137,9 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             Controls.Add(guna2Panel1);
+            Margin = new Padding(0);
             Name = "CabecalhoPedido";
+            Padding = new Padding(0, 10, 0, 0);
             Size = new Size(683, 40);
             guna2Panel1.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);

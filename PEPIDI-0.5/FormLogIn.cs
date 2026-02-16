@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Security.Policy;
 
-namespace PEPIDI_0._5_Beta
+namespace PEPIDI
 {
     public partial class FrmLogIn : Form
     {
@@ -38,7 +38,7 @@ namespace PEPIDI_0._5_Beta
                     cmd.ExecuteNonQuery();
                     MessageBox.Show("Dispositivo registado com sucesso.");
                 }
-                 Entrar(Convert.ToInt32(userTxt), passTxt);
+                Entrar(Convert.ToInt32(userTxt), passTxt);
             }
             catch { MessageBox.Show("Valores Inválidos"); }
         }

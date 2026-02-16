@@ -5,10 +5,10 @@
   },
   "projects": {
     "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\PEPIDI-0.5.csproj": {
-      "version": "1.0.0",
+      "version": "0.5.0",
       "restore": {
         "projectUniqueName": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\PEPIDI-0.5.csproj",
-        "projectName": "PEPIDI-0.5",
+        "projectName": "PEPIDI",
         "projectPath": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\PEPIDI-0.5.csproj",
         "packagesPath": "C:\\Users\\bruno.oliveira\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\obj\\",

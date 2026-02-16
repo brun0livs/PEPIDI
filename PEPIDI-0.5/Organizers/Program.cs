@@ -1,9 +1,8 @@
 using Microsoft.VisualBasic.Logging;
 using PEPIDI;
 using PEPIDI.Organizers;
-using PEPIDI_0._5;
 
-namespace PEPIDI_0._5.Organizers
+namespace PEPIDI.Organizers
 {
     internal static class Program
     {
@@ -42,10 +41,10 @@ namespace PEPIDI_0._5.Organizers
             }
 
             GetConn.ConnectionString = connString;
-            int nr = 1077;
-            Application.Run(new FormGestao(nr, PermissoesPerfil.VerPermissoes(nr)));
+            //int nr = 1077;
+            //Application.Run(new FormGestao(nr, PermissoesPerfil.VerPermissoes(nr)));
             //Application.Run(new FrmConsumosDetalhados(1016));
-            //Application.Run(new FrmLogIn());
+            Application.Run(new FrmLogIn());
             //Application.Run(new Finalizacao(24, 666));
             //Application.Run(new FrmCv());
         }

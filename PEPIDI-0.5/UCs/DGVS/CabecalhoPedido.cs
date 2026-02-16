@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PEPIDI_0._5.UCs.UcsSecundarios
+namespace PEPIDI.UCs.UcsSecundarios
 {
     public partial class CabecalhoPedido : UserControl
     {

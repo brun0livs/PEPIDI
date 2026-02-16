@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "g+0F1GhVcHY=",
+  "dgSpecHash": "sWrK+OGyO30=",
   "success": true,
-  "projectFilePath": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\PEPIDI-0.5.csproj",
+  "projectFilePath": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\PEPIDI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\bruno.oliveira\\.nuget\\packages\\guna.ui2.winforms\\2.0.4.7\\guna.ui2.winforms.2.0.4.7.nupkg.sha512",
     "C:\\Users\\bruno.oliveira\\.nuget\\packages\\itext\\9.5.0\\itext.9.5.0.nupkg.sha512",

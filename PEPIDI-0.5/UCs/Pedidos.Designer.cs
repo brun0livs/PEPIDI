@@ -219,7 +219,7 @@
             // 
             // NomeEntrega
             // 
-            NomeEntrega.HeaderText = "Entrga";
+            NomeEntrega.HeaderText = "Entrega";
             NomeEntrega.Name = "NomeEntrega";
             NomeEntrega.ReadOnly = true;
             NomeEntrega.Visible = false;
@@ -237,6 +237,7 @@
             Check.HeaderText = "Selecionar";
             Check.Name = "Check";
             Check.Visible = false;
+            Check.Width = 83;
             // 
             // Pedidos
             // 
