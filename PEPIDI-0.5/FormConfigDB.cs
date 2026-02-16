@@ -13,7 +13,7 @@ namespace PEPIDI
     public partial class FormConfigDB : Form
     {
         public string ConnectionStringFinal { get; private set; }
-
+        EfeitoUI M = new EfeitoUI();
         public FormConfigDB()
         {
             InitializeComponent();
@@ -33,7 +33,7 @@ namespace PEPIDI
 
             if (string.IsNullOrWhiteSpace(servidor) || string.IsNullOrWhiteSpace(baseDados))
             {
-                MessageBox.Show("Servidor e Base de Dados são obrigatórios.");
+                M.AbrirMensagem("Servidor e Base de Dados são obrigatórios.", "Informação");
                 return;
             }
 
@@ -48,7 +48,7 @@ namespace PEPIDI
 
                 if (string.IsNullOrWhiteSpace(utilizador) || string.IsNullOrWhiteSpace(senha))
                 {
-                    MessageBox.Show("Preencha o utilizador e a palavra-passe.");
+                    M.AbrirMensagem("Preencha o utilizador e a palavra-passe.", "Informação");
                     return;
                 }
 
@@ -57,11 +57,6 @@ namespace PEPIDI
 
             this.DialogResult = DialogResult.OK;
             this.Close();
-        }
-
-        private void FormConfigDB_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

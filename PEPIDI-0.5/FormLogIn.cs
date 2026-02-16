@@ -10,7 +10,7 @@ namespace PEPIDI
     public partial class FrmLogIn : Form
     {
         readonly PEPIDI.Organizers.Hash hash = new();
-
+        EfeitoUI M = new EfeitoUI();
         public FrmLogIn()
         {
             InitializeComponent();
@@ -36,17 +36,17 @@ namespace PEPIDI
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
-                    MessageBox.Show("Dispositivo registado com sucesso.");
+                    M.AbrirMensagem("Dispositivo registado com sucesso.", "Erro");
                 }
                 Entrar(Convert.ToInt32(userTxt), passTxt);
             }
-            catch { MessageBox.Show("Valores Inválidos"); }
+            catch { M.AbrirMensagem("Valores Inválidos", "Erro"); }
         }
 
         private void Entrar(int user, string pass)
         {
+            // 1. Gera o Hash para comparar com a BD
             string HPass = hash.GerarHashSenha(pass);
-
             Debug.WriteLine(HPass);
 
             using SqlConnection connection = new(GetConn.ConnectionString);
@@ -54,52 +54,53 @@ namespace PEPIDI
             {
                 connection.Open();
 
-                // 1. ALTERADO: Em vez de SELECT COUNT(*), fazemos SELECT Nr (ou ID)
-                // Assim apanhamos logo o ID do utilizador para usar nas permissões
+                // Query optimizada para contar registos que coincidem com User e Pass
                 string query = "SELECT COUNT(*) FROM LogIn WHERE Nr = @username AND Password = @password";
 
                 using SqlCommand command = new(query, connection);
                 command.Parameters.AddWithValue("@username", user);
                 command.Parameters.AddWithValue("@password", HPass);
 
-                // O ExecuteScalar devolve a primeira coluna (o ID) ou null se não encontrar
+                // ExecuteScalar devolve o resultado da primeira coluna (o COUNT)
                 object result = command.ExecuteScalar();
 
-                if (result != null) // Se result não for null, o login é válido
+                // 2. CORREÇÃO CRÍTICA: Convertemos para int e verificamos se é > 0
+                // O COUNT(*) nunca é null, é 0 quando falha
+                int count = (result != null) ? Convert.ToInt32(result) : 0;
+
+                if (count > 0)
                 {
+                    // SUCESSO: Limpar campos para segurança antes de mudar de ecrã
                     txtUser.Text = "";
                     pbPass.Text = "";
 
-                    // 2. ALTERADO: Chamamos a classe correta e passamos o ID (int)
-                    // Certifica-te que adicionaste 'using PEPIDI.Organizers;' no topo
+                    // 3. Carregar permissões e redirecionar conforme o perfil
                     var permissoes = PermissoesPerfil.VerPermissoes(user);
 
                     if (permissoes.PodeSubmeter)
                     {
-                        // Nota: Provavelmente vais querer passar o 'idUsuario' aqui também
                         AbreFormUserPedido(user);
                     }
                     else
                     {
-                        // E aqui também, para o gestor saber quem está logado
                         AbreFormUserGestor(user, permissoes);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Credenciais inválidas.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    pass = string.Empty;
-                    pbPass.Focus();
+                    // FALHA: Credenciais erradas
+                    M.AbrirMensagem("Credenciais inválidas. Verifique o NMEC e a Password.", "Erro");
                     pbPass.Text = "";
+                    pbPass.Focus();
                 }
             }
             catch (SqlException ex)
             {
-                MessageBox.Show("Erro de base de dados: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                M.AbrirMensagem("Erro de ligação à base de dados:\n" + ex.Message, "Erro de SQL");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                M.AbrirMensagem("Ocorreu um erro inesperado:\n" + ex.Message, "Erro Crítico");
             }
         }
 
@@ -115,7 +116,7 @@ namespace PEPIDI
             catch (Exception ex)
             {
                 // Exibe o erro ou registra no log para análise
-                MessageBox.Show($"Erro ao abrir o formulário: {ex.Message}");
+                M.AbrirMensagem($"Erro ao abrir o formulário: {ex.Message}", "Erro");
             }
         }
 
@@ -129,7 +130,7 @@ namespace PEPIDI
             catch (Exception ex)
             {
                 // Exibe o erro ou registra no log para análise
-                MessageBox.Show($"Erro ao abrir o formulário: {ex.Message}");
+                M.AbrirMensagem($"Erro ao abrir o formulário: {ex.Message}", "Erro");
             }
         }
 

@@ -13,9 +13,9 @@ namespace PEPIDI.UCs
 {
     public partial class Pedidos : UserControl
     {
-        int IDGestor;
-        private GestorDePedidos gdp;
-        string estado;
+        readonly int IDGestor;
+        readonly private GestorDePedidos gdp;
+        readonly string estado;
 
         public Pedidos(int _IDGestor, string _estado)
         {
@@ -93,7 +93,7 @@ namespace PEPIDI.UCs
             if (dgv.Columns.Contains("CorHex")) dgv.Columns["CorHex"].Visible = false;
         }
 
-        private void dgvPedidos_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void DgvPedidos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {

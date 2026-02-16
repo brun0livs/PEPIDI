@@ -18,6 +18,7 @@ namespace PEPIDI.UCs.UcsSecundarios
         int IDGestor;
         string NomeGestor;
         string Estado;
+        EfeitoUI M = new EfeitoUI();
 
         // Controlo de Fluxo para o MX Master 3S
         private DateTime lastScrollTime = DateTime.Now;
@@ -252,7 +253,7 @@ namespace PEPIDI.UCs.UcsSecundarios
                         cmdPedido.ExecuteNonQuery();
 
                         trans.Commit();
-                        MessageBox.Show("Pedido aprovado com sucesso!", "Aprovado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        M.AbrirMensagem("Pedido aprovado com sucesso!", "Aprovado");
 
                         this.Parent.Controls.Remove(this);
                         this.Dispose();
@@ -264,7 +265,7 @@ namespace PEPIDI.UCs.UcsSecundarios
                     }
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Erro ao aprovar: " + ex.Message); }
+            catch (Exception ex) { M.AbrirMensagem("Erro ao aprovar: " + ex.Message, "Erro"); }
         }
 
         private void btnReprovar_Click(object sender, EventArgs e)
@@ -337,13 +338,13 @@ namespace PEPIDI.UCs.UcsSecundarios
                     cmd.Parameters.AddWithValue("@Notas", notaLimpa);
 
                     cmd.ExecuteNonQuery();
-                    MessageBox.Show("Pedido reprovado com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    M.AbrirMensagem("Pedido reprovado com sucesso.", "Sucesso");
 
                     this.Parent.Controls.Remove(this);
                     this.Dispose();
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Erro ao reprovar: " + ex.Message); }
+            catch (Exception ex) { M.AbrirMensagem("Erro ao reprovar: " + ex.Message, "Erro"); }
         }
     }
 }

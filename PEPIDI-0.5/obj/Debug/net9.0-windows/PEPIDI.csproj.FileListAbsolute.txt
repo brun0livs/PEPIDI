@@ -65,3 +65,4 @@ C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\P
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\PEPIDI.genruntimeconfig.cache
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\ref\PEPIDI.dll
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\PEPIDI.FormsSecundarios.FormMotivo.resources
+C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\PEPIDI.FormsSecundarios.MSGBX.resources

@@ -17,6 +17,7 @@ namespace PEPIDI.UCs
         private readonly string _cs = GetConn.ConnectionString;
         private DataTable _dtQueries;
         private PermissoesPerfil permissoes;
+        EfeitoUI M = new EfeitoUI();
 
         public Stock(PermissoesPerfil _permissoes)
         {
@@ -81,8 +82,7 @@ namespace PEPIDI.UCs
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro a carregar visões:" + Environment.NewLine + ex.Message, "PEPIDI",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                M.AbrirMensagem("Erro a carregar visões:" + Environment.NewLine + ex.Message, "Erro");
             }
         }
 
@@ -100,7 +100,7 @@ namespace PEPIDI.UCs
             if (sql == "ACTION_GERIR")
             {
                 // new FormGerir().ShowDialog(); // Abre o teu form aqui
-                MessageBox.Show("Janela de Gestão de Filtros.", "PEPIDI");
+                M.AbrirMensagem("Janela de Gestão de Filtros.", "PEPIDI");
                 return;
             }
 
@@ -152,8 +152,7 @@ namespace PEPIDI.UCs
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao aplicar visão: " + Environment.NewLine + ex.Message, "PEPIDI",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                M.AbrirMensagem("Erro ao aplicar visão: " + Environment.NewLine + ex.Message, "Erro");
             }
         }
     }

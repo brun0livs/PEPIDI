@@ -14,6 +14,7 @@ namespace PEPIDI.Organizers
         public const int MODO_TAMANHO = 2;
         public const int MODO_AMBOS = 3;
         public Dictionary<int, int> quantidadesSelecionadas = new Dictionary<int, int>();
+        EfeitoUI M = new EfeitoUI();
 
         public DataTable CarregarPedidosPorEstado(string estado)
         {
@@ -92,7 +93,7 @@ namespace PEPIDI.Organizers
                     if (faltas.Count > 0)
                     {
                         tran.Rollback();
-                        MessageBox.Show("Falta de stock:\n\n" + string.Join("\n", faltas), "Erro de Stock", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        M.AbrirMensagem("Falta de stock:\n\n" + string.Join("\n", faltas), "Erro de Stock");
                         return;
                     }
 
@@ -121,12 +122,12 @@ namespace PEPIDI.Organizers
                     aprova.ExecuteNonQuery();
 
                     tran.Commit();
-                    MessageBox.Show("Pedido aprovado com sucesso!", "Aprovado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    M.AbrirMensagem("Pedido aprovado com sucesso!", "Aprovado");
                 }
                 catch (Exception ex)
                 {
                     tran.Rollback();
-                    MessageBox.Show("Erro ao aprovar pedido: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    M.AbrirMensagem("Erro ao aprovar pedido: " + ex.Message, "Erro");
                 }
             }
         }
@@ -262,7 +263,7 @@ namespace PEPIDI.Organizers
                     cmd.ExecuteNonQuery();
                 }
 
-                MessageBox.Show("Pedido reprovado com sucesso!", "Reprovado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                M.AbrirMensagem("Pedido reprovado com sucesso!", "Reprovado");
             }
         }
     }

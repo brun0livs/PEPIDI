@@ -28,19 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
             lblQuantDisp = new Label();
             lblTamanho = new Label();
             lblModelo = new Label();
             cmbQuant = new Guna.UI2.WinForms.Guna2ComboBox();
-            chkEntregar = new Guna.UI2.WinForms.Guna2CustomCheckBox();
+            chkEntregar = new CheckBox();
             guna2Panel1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
@@ -50,13 +48,13 @@
             guna2Panel1.BackColor = Color.Transparent;
             guna2Panel1.BorderRadius = 16;
             guna2Panel1.Controls.Add(tableLayoutPanel1);
-            guna2Panel1.CustomizableEdges = customizableEdges5;
+            guna2Panel1.CustomizableEdges = customizableEdges3;
             guna2Panel1.Dock = DockStyle.Fill;
             guna2Panel1.FillColor = Color.FromArgb(224, 224, 224);
             guna2Panel1.Location = new Point(0, 0);
             guna2Panel1.Margin = new Padding(3, 4, 3, 4);
             guna2Panel1.Name = "guna2Panel1";
-            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges4;
             guna2Panel1.Size = new Size(594, 40);
             guna2Panel1.TabIndex = 0;
             // 
@@ -144,28 +142,20 @@
             cmbQuant.Size = new Size(9, 35);
             cmbQuant.TabIndex = 3;
             cmbQuant.TextAlign = HorizontalAlignment.Center;
-            cmbQuant.SelectedIndexChanged += cmbQuant_SelectedIndexChanged;
+            cmbQuant.SelectedIndexChanged += CmbQuant_SelectedIndexChanged;
             // 
             // chkEntregar
             // 
-            chkEntregar.Checked = true;
-            chkEntregar.CheckedState.BorderColor = Color.FromArgb(94, 148, 255);
-            chkEntregar.CheckedState.BorderRadius = 2;
-            chkEntregar.CheckedState.BorderThickness = 0;
-            chkEntregar.CheckedState.FillColor = Color.FromArgb(94, 148, 255);
-            chkEntregar.CustomizableEdges = customizableEdges3;
+            chkEntregar.AutoSize = true;
+            chkEntregar.CheckAlign = ContentAlignment.MiddleCenter;
             chkEntregar.Dock = DockStyle.Fill;
-            chkEntregar.Location = new Point(541, 9);
-            chkEntregar.Margin = new Padding(9);
+            chkEntregar.Font = new Font("Roboto", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            chkEntregar.Location = new Point(532, 0);
+            chkEntregar.Margin = new Padding(0);
             chkEntregar.Name = "chkEntregar";
-            chkEntregar.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            chkEntregar.Size = new Size(44, 22);
+            chkEntregar.Size = new Size(62, 40);
             chkEntregar.TabIndex = 4;
-            chkEntregar.Text = "guna2CustomCheckBox1";
-            chkEntregar.UncheckedState.BorderColor = Color.FromArgb(125, 137, 149);
-            chkEntregar.UncheckedState.BorderRadius = 2;
-            chkEntregar.UncheckedState.BorderThickness = 0;
-            chkEntregar.UncheckedState.FillColor = Color.FromArgb(125, 137, 149);
+            chkEntregar.UseVisualStyleBackColor = true;
             // 
             // LinhaItem
             // 
@@ -192,6 +182,6 @@
         private Label lblTamanho;
         private Label lblModelo;
         private Guna.UI2.WinForms.Guna2ComboBox cmbQuant;
-        private Guna.UI2.WinForms.Guna2CustomCheckBox chkEntregar;
+        private CheckBox chkEntregar;
     }
 }

@@ -13,12 +13,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
+
 namespace PEPIDI.FormsSecundarios
 {
     public partial class FormFuncionario : Form
     {
         private int? NMEC = null;
         private int? IDGestor;
+        EfeitoUI M = new EfeitoUI();
 
         public FormFuncionario(int? _nr = null, int? _IDGestor = null)
         {
@@ -67,7 +69,7 @@ namespace PEPIDI.FormsSecundarios
                     {
                         if (!rd.Read())
                         {
-                            MessageBox.Show($"Funcionário com Nº {nr} não encontrado.", "PEPIDI");
+                            M.AbrirMensagem($"Funcionário com Nº {nr} não encontrado.", "Erro");
                             return;
                         }
 
@@ -118,7 +120,7 @@ namespace PEPIDI.FormsSecundarios
             catch (Exception ex)
             {
                 Debug.WriteLine("[EditFunc] Erro em CarregarFun(): " + ex);
-                MessageBox.Show("Erro ao carregar funcionário: " + ex.Message, "PEPIDI");
+                M.AbrirMensagem("Erro ao carregar funcionário: " + ex.Message, "Erro");
             }
         }
 
@@ -137,51 +139,85 @@ namespace PEPIDI.FormsSecundarios
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
-            using (SqlCommand cmd = new SqlCommand("sp_UPSERT_FUNC", conn))
+            // 1. Validação prévia de campos obrigatórios no C# para poupar ida ao SQL
+            if (string.IsNullOrWhiteSpace(txtNr.Text) || string.IsNullOrWhiteSpace(txtNome.Text))
             {
-                cmd.CommandType = CommandType.StoredProcedure;
+                M.AbrirMensagem("O Número e o Nome são obrigatórios.", "Dados em Falta");
+                return;
+            }
 
-                // --- 1. IDs e Campos Obrigatórios ---
-                if (this.NMEC == null) cmd.Parameters.AddWithValue("@Nr", txtNr.Text);
-                else cmd.Parameters.AddWithValue("@Nr", this.NMEC);
-
-                cmd.Parameters.AddWithValue("@Nome", txtNome.Text);
-
-                // Para a ComboBox da Função, enviamos o SelectedValue (o ID da função)
-                // Se a combo estiver vazia, cuidado para não dar erro
-                if (cmbFuncoes.SelectedValue != null)
-                    cmd.Parameters.AddWithValue("@FuncaoId", Convert.ToInt32(cmbFuncoes.SelectedValue));
-                else
-                    cmd.Parameters.AddWithValue("@FuncaoId", DBNull.Value);
-
-                // --- 2. Os Tamanhos (Textos das ComboBoxes) ---
-                // Aqui usamos .Text ou .SelectedItem.ToString()
-                cmd.Parameters.AddWithValue("@TShirt", cmbTshirt.Text);
-                cmd.Parameters.AddWithValue("@Casaco", cmbCasaco.Text);
-                cmd.Parameters.AddWithValue("@PoloMCurta", cmbPolo.Text);
-                cmd.Parameters.AddWithValue("@PoloMCompr", cmbPolomc.Text);
-                cmd.Parameters.AddWithValue("@Calca", cmbCalca.Text);
-                cmd.Parameters.AddWithValue("@Sapato", cmbSapato.Text);
-
-                // --- 3. Outros Dados ---
-                cmd.Parameters.AddWithValue("@DtAdmiss", dtpDataAdmiss.Value);
-                cmd.Parameters.AddWithValue("@Estab", cmbEstab.Text);
-                cmd.Parameters.AddWithValue("@CriadoPor", this.IDGestor); // O teu ID de gestor
-
-                try
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+                using (SqlCommand cmd = new SqlCommand("sp_UPSERT_FUNC", conn))
                 {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // 2. DEFINIR O MODO (A chave de tudo!)
+                    // Se NMEC tem valor, estamos a editar ('U'). Se for null, é novo ('I').
+                    bool isEdicao = this.NMEC.HasValue;
+                    cmd.Parameters.AddWithValue("@Modo", isEdicao ? "U" : "I");
+
+                    // 3. Identificação
+                    // Se for edição, usamos o NMEC guardado. Se for novo, usamos o da caixa de texto.
+                    int nrFunc = isEdicao ? this.NMEC.Value : int.Parse(txtNr.Text);
+                    cmd.Parameters.AddWithValue("@Nr", nrFunc);
+
+                    // 4. Dados Pessoais
+                    cmd.Parameters.AddWithValue("@Nome", txtNome.Text.Trim());
+                    cmd.Parameters.AddWithValue("@FuncaoId", cmbFuncoes.SelectedValue ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Estab", cmbEstab.Text.Trim());
+
+                    // Tratamento da Data de Admissão (pode ser nula?)
+                    if (dtpDataAdmiss.Checked)
+                        cmd.Parameters.AddWithValue("@DtAdmiss", dtpDataAdmiss.Value);
+                    else
+                        cmd.Parameters.AddWithValue("@DtAdmiss", DBNull.Value);
+
+                    // 5. Fardamento (Tratamento de Strings Vazias vs Nulos)
+                    // Função auxiliar para limpar a tralha das combos
+                    object GetParam(string text) => string.IsNullOrWhiteSpace(text) ? (object)DBNull.Value : text;
+
+                    cmd.Parameters.AddWithValue("@TShirt", GetParam(cmbTshirt.Text));
+                    cmd.Parameters.AddWithValue("@Casaco", GetParam(cmbCasaco.Text));
+                    cmd.Parameters.AddWithValue("@PoloMCurta", GetParam(cmbPolo.Text));
+                    cmd.Parameters.AddWithValue("@PoloMCompr", GetParam(cmbPolomc.Text));
+
+                    // Tratamento especial para Calça e Sapato que são INT na BD
+                    // Se o texto não for número, manda NULL
+                    if (int.TryParse(cmbCalca.Text, out int calcaVal))
+                        cmd.Parameters.AddWithValue("@Calca", calcaVal);
+                    else
+                        cmd.Parameters.AddWithValue("@Calca", DBNull.Value);
+
+                    if (int.TryParse(cmbSapato.Text, out int sapatoVal))
+                        cmd.Parameters.AddWithValue("@Sapato", sapatoVal);
+                    else
+                        cmd.Parameters.AddWithValue("@Sapato", DBNull.Value);
+
+                    // 6. Auditoria
+                    if (isEdicao)
+                        cmd.Parameters.AddWithValue("@AlteradoPor", this.IDGestor ?? (object)DBNull.Value);
+                    else
+                        cmd.Parameters.AddWithValue("@CriadoPor", this.IDGestor ?? (object)DBNull.Value);
+
                     conn.Open();
-                    var res = cmd.ExecuteScalar(); // Recebe o novo ID
-                    MessageBox.Show($"Funcionário gravado com sucesso! ID: {res}");
+                    cmd.ExecuteNonQuery();
+
+                    M.AbrirMensagem(isEdicao ? "Dados atualizados com sucesso!" : "Funcionário criado com sucesso!", "Sucesso");
 
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erro ao guardar: " + ex.Message);
-                }
+            }
+            catch (SqlException ex)
+            {
+                // Apanha o erro do RAISERROR (Ex: "Número já existe")
+                M.AbrirMensagem(ex.Message, "Erro de Validação");
+            }
+            catch (Exception ex)
+            {
+                M.AbrirMensagem("Erro inesperado: " + ex.Message, "Erro");
             }
         }
 
@@ -214,8 +250,9 @@ namespace PEPIDI.FormsSecundarios
                     }
                     else
                     {
+                        
                         // Se NÃO encontrou, mostra erro e fecha ou seleciona o vazio
-                        MessageBox.Show("Erro Crítico: A função 'Produção' não existe na Base de Dados!", "Erro de Configuração", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        M.AbrirMensagem("Erro Crítico: A função 'Produção' não existe na Base de Dados!", "Erro de Configuração");
 
                         // Opcional: Selecionar o vazio para não dar erro visual
                         cmbFuncoes.SelectedValue = -1;
@@ -223,7 +260,7 @@ namespace PEPIDI.FormsSecundarios
                 }
                 catch (Exception ex)   
                 {
-                    MessageBox.Show("Erro ao carregar funções: " + ex.Message);
+                    M.AbrirMensagem("Erro ao carregar funções: " + ex.Message, "Erro");
                 }
             }
         }

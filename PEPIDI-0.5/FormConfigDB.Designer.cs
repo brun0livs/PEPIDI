@@ -224,7 +224,6 @@
             Name = "FormConfigDB";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "PEPIDI | Configuração da Base de Dados";
-            Load += FormConfigDB_Load;
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             ResumeLayout(false);

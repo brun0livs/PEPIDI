@@ -20,6 +20,7 @@ namespace PEPIDI.UCs
         private ContextMenuStrip _menuAcoes;
         private int _rowMenu = -1;
         int IDGestor;
+        EfeitoUI M = new EfeitoUI();
 
         public Funcionarios(int _IDGestor)
         {
@@ -126,7 +127,7 @@ namespace PEPIDI.UCs
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Erro ao editar no formulário: {ex.Message}");
+                        M.AbrirMensagem($"Erro ao editar no formulário: {ex.Message}", "Erro");
                     }
                     break;
                 case "Historico":
@@ -145,12 +146,12 @@ namespace PEPIDI.UCs
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Erro ao analisar Consumos: {ex.Message}");
+                        M.AbrirMensagem($"Erro ao analisar Consumos: {ex.Message}", "Erro");
                     }
                     break;
 
                 case "ReporPass":
-                    MessageBox.Show($"Password reposta para o funcionário #{id}", "PEPIDI");
+                    M.AbrirMensagem($"Password reposta para o funcionário #{id}", "PEPIDI");
                     break;
             }
         }

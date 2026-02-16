@@ -13,6 +13,7 @@ namespace PEPIDI.FormsSecundarios
     public partial class FormMotivo : Form
     {
         public string Motivo { get; private set; }
+        EfeitoUI M = new EfeitoUI();
 
         public FormMotivo()
         {
@@ -29,7 +30,7 @@ namespace PEPIDI.FormsSecundarios
         {
             if (string.IsNullOrWhiteSpace(txtMotivo.Text))
             {
-                MessageBox.Show("Por favor, escreva o motivo.");
+                M.AbrirMensagem("Por favor, escreva o motivo.", "Falta de Preenchimento");
                 return;
             }
             Motivo = txtMotivo.Text;

@@ -12,6 +12,7 @@ namespace PEPIDI
 {
     internal class MostraRoupa
     {
+        EfeitoUI M = new EfeitoUI();
         List<int> ids = new List<int>();
         List<string> modelos = new List<string>();
         List<string> tamanhos = new List<string>();
@@ -47,13 +48,6 @@ namespace PEPIDI
                     }
                 }
             }
-
-            if (resultado.Count == 0)
-            {
-                MessageBox.Show("Nenhum dado encontrado para o funcionário.",
-                    "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
             return resultado; // nunca devolve null
         }
 
@@ -88,16 +82,6 @@ namespace PEPIDI
                     }
                 }
             }
-
-            if (resultado.Count == 0)
-            {
-                MessageBox.Show(
-                    "Nenhum produto usado encontrado para o funcionário.",
-                    "Aviso",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-            }
-
             return resultado; // nunca null
         }
 
@@ -133,7 +117,7 @@ namespace PEPIDI
 
             if (dt.Rows.Count == 0)
             {
-                var resultado = MessageBox.Show("Nenhum produto usado encontrado para o funcionário.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                var resultado = M.AbrirMensagem("Nenhum produto usado encontrado para o funcionário.", "Aviso");
 
                 if (resultado == DialogResult.OK)
                     form.Close();
@@ -323,7 +307,7 @@ namespace PEPIDI
             bool temQuantidade = vals.Any(v => int.TryParse(v, out int q) && q > 0);
             if (!temQuantidade)
             {
-                MessageBox.Show("Não há peças para entregar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                M.AbrirMensagem("Não há peças para entregar.", "Aviso");
                 return;
             }
 
@@ -396,14 +380,14 @@ namespace PEPIDI
                     tran.Commit();
 
                     // 👉 5. Sucesso
-                    MessageBox.Show("Entrega registada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    M.AbrirMensagem("Entrega registada com sucesso!", "Sucesso");
                     form.DialogResult = DialogResult.OK;
                     form.Close();
                 }
                 catch (Exception ex)
                 {
                     tran.Rollback();
-                    MessageBox.Show("Erro ao registar entrega: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    M.AbrirMensagem("Erro ao registar entrega: " + ex.Message, "Erro");
                 }
             }
 
@@ -424,7 +408,7 @@ namespace PEPIDI
                 bool temQuantidade = vals.Any(v => int.TryParse(v, out int q) && q > 0);
                 if (!temQuantidade)
                 {
-                    MessageBox.Show("Não há quantidades válidas para submeter.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    M.AbrirMensagem("Não há quantidades válidas para submeter.", "Aviso");
                     return;
                 }
 
@@ -497,12 +481,12 @@ namespace PEPIDI
                     }
 
                     tran.Commit();
-                    MessageBox.Show("Pedido submetido com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    M.AbrirMensagem("Pedido submetido com sucesso!", "Sucesso");
                 }
                 catch (Exception ex)
                 {
                     tran.Rollback();
-                    MessageBox.Show("Erro ao submeter pedido: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    M.AbrirMensagem("Erro ao submeter pedido: " + ex.Message, "Erro");
                 }
             }
 

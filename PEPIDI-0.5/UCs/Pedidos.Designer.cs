@@ -154,7 +154,7 @@
             dgvPedidos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvPedidos.Size = new Size(1219, 955);
             dgvPedidos.TabIndex = 1;
-            dgvPedidos.CellClick += dgvPedidos_CellClick;
+            dgvPedidos.CellClick += DgvPedidos_CellClick;
             // 
             // ID
             // 

@@ -10,6 +10,7 @@ namespace PEPIDI.Organizers
 {
     public class MostrarFuncionarios
     {
+        EfeitoUI M = new EfeitoUI();
         public DataTable CarregarFuncionarios(string pesquisa = "")
         {
             DataTable dt = new DataTable();
@@ -30,7 +31,7 @@ namespace PEPIDI.Organizers
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Erro ao pesquisar: " + ex.Message);
+                    M.AbrirMensagem("Erro ao pesquisar: " + ex.Message, "Erro");
                 }
             }
             return dt;

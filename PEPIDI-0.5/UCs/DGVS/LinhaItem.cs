@@ -110,12 +110,12 @@
             cmbQuant.Text = (QA > limiteMaximo) ? limiteMaximo.ToString() : QA.ToString();
         }
 
-        private void cmbQuant_SelectedIndexChanged(object sender, EventArgs e)
+        private void CmbQuant_SelectedIndexChanged(object sender, EventArgs e)
         {
             QuantidadeAlterada?.Invoke(this, EventArgs.Empty);
         }
 
-        private void chkEntregar_CheckedChanged(object sender, EventArgs e)
+        private void ChkEntregar_CheckedChanged(object sender, EventArgs e)
         {
             // Muda a cor da linha se for desmarcado para feedback visual rápido
             this.BackColor = chkEntregar.Checked ? Color.FromArgb(224, 224, 224) : Color.MistyRose;

@@ -1,4 +1,5 @@
-﻿using PEPIDI.Models;
+﻿using PEPIDI.FormsSecundarios;
+using PEPIDI.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ namespace PEPIDI
         private int _nrFunc;
         private Form _loginForm;
         private MostraRoupa _mr;
+        EfeitoUI M = new EfeitoUI();
         private enum ModoPedidos
         {
             Pedido,
@@ -75,11 +77,10 @@ namespace PEPIDI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
+                M.AbrirMensagem(
                     "Erro em Pedidos_Load / CarregarLinhas:\n\n" + ex,
-                    "Erro",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                    "Erro");
+                    
             }
         }
 
@@ -193,28 +194,44 @@ namespace PEPIDI
 
         private void NavButtons_Click(object sender, EventArgs e)
         {
-            // 1) Guardar o estado do modo ATUAL (antes de mudar)
-            GuardarEstadoModoAtual();
+            // 1. Cast para Guna2Button ou CheckBox (conforme o que usas no Designer)
+            var btnClicado = sender as Guna.UI2.WinForms.Guna2Button; // Ajusta se for outro tipo
 
-            // 2) Agora sim, muda o modo
-            if (sender == Nav1)
+            // 2. Se o botão já estiver selecionado ou não for Nav1/Nav2, ignora ou fecha
+            if (btnClicado == null || (btnClicado != Nav1 && btnClicado != Nav2))
             {
-                Nav2.Checked = false;
-                Nav1.Checked = true;
-                _modoAtual = ModoPedidos.Pedido;
-            }
-            else if (sender == Nav2)
-            {
-                Nav1.Checked = false;
-                Nav2.Checked = true;
-                _modoAtual = ModoPedidos.Devolucao;
-            }
-            else
-            {
-                Close();
+                if (sender != Nav1 && sender != Nav2) Close();
                 return;
             }
 
+            // 3. Definir o modo alvo baseado no botão clicado
+            ModoPedidos modoAlvo = (btnClicado == Nav1) ? ModoPedidos.Pedido : ModoPedidos.Devolucao;
+
+            // 4. EVITAR DUPLICADO: Se já estamos nesse modo, não fazemos nada
+            if (modoAlvo == _modoAtual) return;
+
+            // 5. Validação específica para Devolução
+            if (modoAlvo == ModoPedidos.Devolucao)
+            {
+                var itensUsados = _mr.ObterRoupaUsadaPorFuncionarioNovo(_nrFunc);
+                if (itensUsados == null || itensUsados.Count == 0)
+                {
+                    // Mostra a mensagem APENAS UMA VEZ
+                    M.AbrirMensagem("Nenhum produto usado encontrado para o funcionário.",
+                                    "Aviso");
+
+                    // Reverte o estado visual sem disparar o clique novamente
+                    Nav1.Checked = true;
+                    Nav2.Checked = false;
+                    return;
+                }
+            }
+
+            // 6. Se passou a validação, troca o modo
+            GuardarEstadoModoAtual();
+            _modoAtual = modoAlvo;
+
+            // Atualiza os botões (garante que apenas o correto fica Checked)
             AtualizarNavButtons();
             CarregarLinhas();
         }
@@ -268,7 +285,7 @@ namespace PEPIDI
 
                 if (!itensPedido.Any() && !itensDevolucao.Any())
                 {
-                    MessageBox.Show("Nenhum item com quantidade > 0 para submeter.");
+                    M.AbrirMensagem("Nenhum item com quantidade > 0 para submeter.", "Informação");
                     return;
                 }
 
@@ -280,7 +297,7 @@ namespace PEPIDI
                     int idEpi = _mr.ResolveEpiIdPorModeloTamanho(it.Modelo, it.Tamanho);
                     if (idEpi <= 0)
                     {
-                        MessageBox.Show($"Não encontrei EPI para {it.Modelo} - {it.Tamanho}. Operação cancelada.");
+                        M.AbrirMensagem($"Não encontrei EPI para {it.Modelo} - {it.Tamanho}. Operação cancelada.", "Erro");
                         return;
                     }
 
@@ -293,15 +310,15 @@ namespace PEPIDI
                     int maxDevolver = _mr.GetConsumidoDisponivel(_nrFunc, it.IdEpiOriginal);
                     if (it.Quantidade > maxDevolver)
                     {
-                        MessageBox.Show(
-                            $"{it.Modelo} {it.Tamanho}: a devolver {it.Quantidade} excede o usado ({maxDevolver}).");
+                        M.AbrirMensagem(
+                            $"{it.Modelo} {it.Tamanho}: a devolver {it.Quantidade} excede o usado ({maxDevolver}).", "Erro");
                         return;
                     }
 
                     int idRoupa = _mr.ResolveRoupaIdPorModeloTamanho(it.Modelo, it.Tamanho);
                     if (idRoupa <= 0)
                     {
-                        MessageBox.Show($"Não encontrei Roupa para {it.Modelo} - {it.Tamanho}. Operação cancelada.");
+                        M.AbrirMensagem($"Não encontrei Roupa para {it.Modelo} - {it.Tamanho}. Operação cancelada.", "Erro");
                         return;
                     }
 
@@ -329,15 +346,13 @@ namespace PEPIDI
                 if (listaDevInsert.Any())
                     _mr.SubmeterEntregaParaPedidoReg(idPedReg, listaDevInsert);
 
-                MessageBox.Show($"Registado no pedido nº {idPedReg}.", "Sucesso");
+                M.AbrirMensagem("Pedido submetido com sucesso!", "Sucesso");
 
-                // Limpa sessão e volta a carregar linhas “virgens”
-                _sessao = new SessaoPedido();
-                CarregarLinhas();
+                this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao submeter: " + ex.Message, "Erro");
+                M.AbrirMensagem("Erro ao submeter pedido:\n\n" + ex, "Erro");
             }
         }
     }

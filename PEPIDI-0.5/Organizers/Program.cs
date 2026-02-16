@@ -35,7 +35,8 @@ namespace PEPIDI.Organizers
                 }
                 else
                 {
-                    MessageBox.Show("Configura??o cancelada. A encerrar...");
+                    EfeitoUI M = new EfeitoUI();
+                    M.AbrirMensagem("Configurção cancelada.\nA encerrar...", "Erro");
                     return;
                 }
             }
