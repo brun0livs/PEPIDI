@@ -2,6 +2,25 @@
   "version": 3,
   "targets": {
     "net9.0-windows7.0": {
+      "Guna.Charts.WinForms/1.1.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Management": "7.0.0"
+        },
+        "compile": {
+          "lib/net7.0-windows7.0/Guna.Charts.WinForms.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0-windows7.0/Guna.Charts.WinForms.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WindowsForms"
+        ]
+      },
       "Guna.UI2.WinForms/2.0.4.7": {
         "type": "package",
         "dependencies": {
@@ -641,7 +660,7 @@
           "lib/netstandard1.3/System.Collections.NonGeneric.dll": {}
         }
       },
-      "System.Data.SqlClient/4.9.0": {
+      "System.Data.SqlClient/4.9.1": {
         "type": "package",
         "dependencies": {
           "runtime.native.System.Data.SqlClient.sni": "4.4.0"
@@ -1622,6 +1641,36 @@
     }
   },
   "libraries": {
+    "Guna.Charts.WinForms/1.1.0": {
+      "sha512": "qHGw3SusTcgUJFWfB91dQKwMxb0+4YBqPqrsFv7oo6E9Ap1OPsuWLafcJTtOzpxRmf8Umns5++xmcZtgL93q1A==",
+      "type": "package",
+      "path": "guna.charts.winforms/1.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "README.md",
+        "guna.charts.winforms.1.1.0.nupkg.sha512",
+        "guna.charts.winforms.nuspec",
+        "icon.png",
+        "lib/net40/Guna.Charts.WinForms.dll",
+        "lib/net40/Guna.Charts.WinForms.xml",
+        "lib/net45/Guna.Charts.WinForms.dll",
+        "lib/net45/Guna.Charts.WinForms.xml",
+        "lib/net461/Guna.Charts.WinForms.dll",
+        "lib/net461/Guna.Charts.WinForms.xml",
+        "lib/net472/Guna.Charts.WinForms.dll",
+        "lib/net472/Guna.Charts.WinForms.xml",
+        "lib/net48/Guna.Charts.WinForms.dll",
+        "lib/net48/Guna.Charts.WinForms.xml",
+        "lib/net6.0-windows7.0/Guna.Charts.WinForms.dll",
+        "lib/net6.0-windows7.0/Guna.Charts.WinForms.xml",
+        "lib/net7.0-windows7.0/Guna.Charts.WinForms.dll",
+        "lib/net7.0-windows7.0/Guna.Charts.WinForms.xml",
+        "lib/netcoreapp3.1/Guna.Charts.WinForms.dll",
+        "lib/netcoreapp3.1/Guna.Charts.WinForms.xml"
+      ]
+    },
     "Guna.UI2.WinForms/2.0.4.7": {
       "sha512": "8BdBYsfnntuICbFMHIZsd5morwURN8Ucsvq7wJeyLV1Z1ze6CAIxVKEirufgjGIiXfF0M0sCr9EVFloZSazWew==",
       "type": "package",
@@ -2580,10 +2629,10 @@
         "system.collections.nongeneric.nuspec"
       ]
     },
-    "System.Data.SqlClient/4.9.0": {
-      "sha512": "j4KJO+vC62NyUtNHz854njEqXbT8OmAa5jb1nrGfYWBOcggyYUQE0w/snXeaCjdvkSKWuUD+hfvlbN8pTrJTXg==",
+    "System.Data.SqlClient/4.9.1": {
+      "sha512": "A7RK9I4UaVHJ407GTfy37S4ABHt1+lZ+/uoA54zTv0XaaWgHO5BtXSMzMVqB6socIHEeeK5K1YRgaxCEfD79wQ==",
       "type": "package",
-      "path": "system.data.sqlclient/4.9.0",
+      "path": "system.data.sqlclient/4.9.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2609,7 +2658,7 @@
         "runtimes/win/lib/net6.0/System.Data.SqlClient.xml",
         "runtimes/win/lib/net8.0/System.Data.SqlClient.dll",
         "runtimes/win/lib/net8.0/System.Data.SqlClient.xml",
-        "system.data.sqlclient.4.9.0.nupkg.sha512",
+        "system.data.sqlclient.4.9.1.nupkg.sha512",
         "system.data.sqlclient.nuspec"
       ]
     },
@@ -5364,8 +5413,9 @@
   },
   "projectFileDependencyGroups": {
     "net9.0-windows7.0": [
+      "Guna.Charts.WinForms >= 1.1.0",
       "Guna.UI2.WinForms >= 2.0.4.7",
-      "System.Data.SqlClient >= 4.9.0",
+      "System.Data.SqlClient >= 4.9.1",
       "itext >= 9.5.0"
     ]
   },
@@ -5420,13 +5470,17 @@
       "net9.0-windows7.0": {
         "targetAlias": "net9.0-windows",
         "dependencies": {
+          "Guna.Charts.WinForms": {
+            "target": "Package",
+            "version": "[1.1.0, )"
+          },
           "Guna.UI2.WinForms": {
             "target": "Package",
             "version": "[2.0.4.7, )"
           },
           "System.Data.SqlClient": {
             "target": "Package",
-            "version": "[4.9.0, )"
+            "version": "[4.9.1, )"
           },
           "itext": {
             "target": "Package",

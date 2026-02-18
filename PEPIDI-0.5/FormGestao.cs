@@ -43,6 +43,31 @@ namespace PEPIDI
                     btn.Tag = btn.Text; // Salva o texto inicial na Tag
                 }
             }
+            AbrirPrimeiraPermissao();
+        }
+
+        private void AbrirPrimeiraPermissao()
+        {
+            // Lista ordenada pela prioridade que queres dar (do mais importante para o menos)
+            // Nav1 = Stock, Nav2 = Funcionários, Nav3 = Pendentes, etc.
+            Guna2Button[] botoesNavegacao = { Nav1, Nav2, Nav3, Nav4, Nav5, Nav6, Nav7, Nav9 };
+
+            foreach (var btn in botoesNavegacao)
+            {
+                // Se o botão estiver Visível (significa que tem permissão), clica nele!
+                if (btn.Visible)
+                {
+                    // Simula o clique para ativar a cor, o ícone e carregar a UC
+                    Nav_Clicked(btn, EventArgs.Empty);
+                    return; // Sai do método assim que encontrar o primeiro
+                }
+            }
+
+            // Se chegar aqui, é porque não tem permissão nenhuma (exceto Sair)
+            // Podes usar a tua classe M (EfeitoUI) se já a tiveres instanciada globalmente
+            // ou criar uma nova instância aqui.
+            EfeitoUI M = new EfeitoUI();
+            M.AbrirMensagem("Não tem permissões para aceder a nenhum módulo.", "Aviso de Acesso");
         }
 
         public bool PodeAceder(string key)

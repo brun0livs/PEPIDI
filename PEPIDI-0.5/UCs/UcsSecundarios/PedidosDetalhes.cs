@@ -18,6 +18,10 @@ namespace PEPIDI.UCs.UcsSecundarios
         int IDGestor;
         string NomeGestor;
         string Estado;
+        // CORREÇÃO: Inicializar com string vazia ou valores por defeito
+        string NomeFuncionario = "Funcionário Desconhecido";
+        string NMEC = "0000";
+        string FuncaoFuncionario = "-";
         EfeitoUI M = new EfeitoUI();
 
         // Controlo de Fluxo para o MX Master 3S
@@ -96,7 +100,7 @@ namespace PEPIDI.UCs.UcsSecundarios
             else if (estado == "Aprovado")
             {
                 btnAprovar.Text = "Finalizar";
-                btnReprovar.Enabled = true;
+                btnReprovar.Enabled = false;
             }
             else
             {
@@ -106,6 +110,50 @@ namespace PEPIDI.UCs.UcsSecundarios
 
             CarregarPPacote(pnlConteudo, ID, estado, pnlScroll, tlpLinhas);
             VerComentario(ID);
+        }
+
+        private void CarregarDadosFuncionario(int idPedido)
+        {
+            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string sql = @"
+                SELECT F.Nome, F.Nr, F.Funcao 
+                FROM PedidoRegistos P
+                INNER JOIN Funcionarios F ON P.IdFuncionario = F.Nr 
+                WHERE P.ID = @ID";
+
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ID", idPedido);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                // Dados encontrados
+                                this.NomeFuncionario = reader["Nome"]?.ToString() ?? "Sem Nome";
+                                this.NMEC = reader["Nr"]?.ToString() ?? "0000";
+                                this.FuncaoFuncionario = reader["Funcao"]?.ToString() ?? "-";
+                            }
+                            else
+                            {
+                                // SE NÃO ENCONTRAR, DEFINIMOS VALORES PADRÃO PARA NÃO DAR ERRO
+                                this.NomeFuncionario = "Erro ao ler Funcionário";
+                                this.NMEC = "0000";
+                                this.FuncaoFuncionario = "Erro";
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log de erro (opcional) e valores seguros
+                    this.NomeFuncionario = "Erro SQL";
+                    this.NMEC = "0000";
+                }
+            }
         }
 
         public void CarregarPPacote(Panel pnlConteudo, int idPedido, string estado, Panel pnlScroll, TableLayoutPanel tlpLinhas)
@@ -204,68 +252,239 @@ namespace PEPIDI.UCs.UcsSecundarios
 
         private void btnAprovar_Click(object sender, EventArgs e)
         {
-            try
+            string estadoAtual = this.Estado.Trim();
+
+            // ==============================================================================
+            // 1. FASE DE APROVAÇÃO (Pendente -> Aprovado)
+            // ==============================================================================
+            if (estadoAtual.Equals("Pendente", StringComparison.OrdinalIgnoreCase))
             {
-                using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+                try
                 {
-                    conn.Open();
-                    SqlTransaction trans = conn.BeginTransaction();
-
-                    try
+                    using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
                     {
-                        // 1. ATUALIZAR ITENS
-                        foreach (Control c in tlpLinhas.Controls)
+                        conn.Open();
+                        SqlTransaction trans = conn.BeginTransaction();
+
+                        try
                         {
-                            if (c is LinhaItem linha)
+                            // 1. Atualizar as quantidades que o Gestor decidiu na Combo
+                            foreach (Control c in tlpLinhas.Controls)
                             {
-                                SqlCommand cmdItem = new SqlCommand("sp_AtualizarQuantidadePedidoPacote", conn, trans)
+                                if (c is LinhaItem linha)
                                 {
-                                    CommandType = CommandType.StoredProcedure
-                                };
-
-                                cmdItem.Parameters.AddWithValue("@IDPedido", ID);
-                                // Aqui usamos o IDEPI. Se não o tiveres, usamos Modelo/Tamanho como filtro
-                                cmdItem.Parameters.AddWithValue("@IDEPI", linha.IDEPI);
-                                cmdItem.Parameters.AddWithValue("@NovaQuantidade", linha.QuantidadeSelecionada);
-
-                                cmdItem.ExecuteNonQuery();
+                                    SqlCommand cmdItem = new SqlCommand("sp_AtualizarQuantidadePedidoPacote", conn, trans);
+                                    cmdItem.CommandType = CommandType.StoredProcedure;
+                                    cmdItem.Parameters.AddWithValue("@IDPedido", this.ID);
+                                    cmdItem.Parameters.AddWithValue("@IDEPI", linha.IDEPI);
+                                    cmdItem.Parameters.AddWithValue("@NovaQuantidade", linha.QuantidadeSelecionada);
+                                    cmdItem.ExecuteNonQuery();
+                                }
                             }
-                        }
 
-                        // 2. NOTAS NA APROVAÇÃO (O que tu querias!)
-                        // Gravamos o conteúdo TOTAL da txtObs, incluindo as notas do PEPIDI
-                        string notaFinal = txtObs.Text.Trim();
-
-                        // 3. ATUALIZAR ESTADO DO PEDIDO
-                        string sqlPedido = @"UPDATE PedidoRegistos 
-                                   SET Estado = 'Aprovado', 
-                                       Aprovacao = @Aprovador, 
-                                       Notas = @Notas,
-                                       AlteracaoData = GETDATE(),
-                                       AlteradoPor = @Aprovador
+                            // 2. Mudar estado para 'Aprovado'
+                            string sql = @"UPDATE PedidoRegistos 
+                                   SET Estado = 'Aprovado', Aprovacao = @Gestor, AlteracaoData = GETDATE() 
                                    WHERE ID = @ID";
 
-                        SqlCommand cmdPedido = new SqlCommand(sqlPedido, conn, trans);
-                        cmdPedido.Parameters.AddWithValue("@ID", ID);
-                        cmdPedido.Parameters.AddWithValue("@Aprovador", IDGestor);
-                        cmdPedido.Parameters.AddWithValue("@Notas", notaFinal); // Grava tudo o que vês no ecrã
+                            using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
+                            {
+                                cmd.Parameters.AddWithValue("@ID", this.ID);
+                                cmd.Parameters.AddWithValue("@Gestor", IDGestor);
+                                cmd.ExecuteNonQuery();
+                            }
 
-                        cmdPedido.ExecuteNonQuery();
+                            trans.Commit();
+                            M.AbrirMensagem("Pedido Aprovado! Agora está pronto para entrega.", "Sucesso");
 
-                        trans.Commit();
-                        M.AbrirMensagem("Pedido aprovado com sucesso!", "Aprovado");
+                            this.Parent.Controls.Remove(this);
+                            this.Dispose();
+                        }
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw ex;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    M.AbrirMensagem("Erro ao aprovar: " + ex.Message, "Erro");
+                }
+            }
 
-                        this.Parent.Controls.Remove(this);
-                        this.Dispose();
+            // ==============================================================================
+            // 2. FASE DE FINALIZAÇÃO (Aprovado -> Concluido + PDF + Stock)
+            // ==============================================================================
+            else if (estadoAtual.Equals("Aprovado", StringComparison.OrdinalIgnoreCase))
+            {
+                // --- SEGURANÇA: Garante que temos os dados do funcionário para o PDF ---
+                if (string.IsNullOrEmpty(NomeFuncionario))
+                {
+                    CarregarDadosFuncionario(this.ID);
+                }
+
+                // 1. Recolher itens selecionados para entrega
+                var listaReceber = new List<(int ID, string Artigo, string Tamanho, int Qtd)>();
+
+                foreach (Control c in tlpLinhas.Controls)
+                {
+                    if (c is LinhaItem linha)
+                    {
+                        // Verifica se a checkbox está ativa E se a quantidade é maior que 0
+                        if (linha.Selecionado && linha.QuantidadeSelecionada > 0)
+                        {
+                            listaReceber.Add((linha.IDEPI, linha.DescricaoArtigo, linha.TamanhoSelecionado, linha.QuantidadeSelecionada));
+                        }
+                    }
+                }
+
+                if (listaReceber.Count == 0)
+                {
+                    M.AbrirMensagem("Selecione pelo menos um item para entregar.", "Aviso");
+                    return;
+                }
+
+                // 2. Abrir Form de Assinatura (Namespace correto!)
+                using (var frm = new FormAssinatura(NomeFuncionario))
+                {
+                    foreach (var item in listaReceber) frm.AdicionarItemReceber(item.Artigo, item.Tamanho, item.Qtd);
+
+                    // Overlay
+                    Form overlay = new Form { BackColor = Color.Black, Opacity = 0.5, ShowInTaskbar = false, FormBorderStyle = FormBorderStyle.None, WindowState = FormWindowState.Maximized };
+                    overlay.Show();
+                    var result = frm.ShowDialog(overlay);
+                    overlay.Close();
+
+                    if (result != DialogResult.OK) return; // Cancelou
+
+                    // 3. Processar Finalização
+                    try
+                    {
+                        // A. Gerar PDF
+                        string caminhoPDF = PEPIDI.Organizers.PDFGenerator.GerarComprovativo(
+                            this.ID, NomeFuncionario, NMEC, FuncaoFuncionario,
+                            listaReceber, new List<(string, string, int)>(),
+                            frm.AssinaturaFinal
+                        );
+
+                        // B. Transação SQL
+                        using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+                        {
+                            conn.Open();
+                            SqlTransaction trans = conn.BeginTransaction();
+
+                            try
+                            {
+                                // Atualiza Estado e PDF
+                                string sqlUpdate = @"UPDATE PedidoRegistos 
+                                             SET Estado = 'Concluido', PDF = @PDF, AlteracaoData = GETDATE() 
+                                             WHERE ID = @ID";
+
+                                using (SqlCommand cmd = new SqlCommand(sqlUpdate, conn, trans))
+                                {
+                                    cmd.Parameters.AddWithValue("@ID", this.ID);
+                                    cmd.Parameters.AddWithValue("@PDF", caminhoPDF);
+                                    cmd.ExecuteNonQuery();
+                                }
+
+                                // Abate de Stock
+                                foreach (Control c in tlpLinhas.Controls)
+                                {
+                                    if (c is LinhaItem linha)
+                                    {
+                                        // Se tem check, usa a quantidade. Se não, é 0.
+                                        int qtdReal = (linha.Selecionado) ? linha.QuantidadeSelecionada : 0;
+
+                                        // 1. Grava no PedidoPacote a quantidade real entregue
+                                        SqlCommand cmdItem = new SqlCommand("sp_AtualizarQuantidadePedidoPacote", conn, trans);
+                                        cmdItem.CommandType = CommandType.StoredProcedure;
+                                        cmdItem.Parameters.AddWithValue("@IDPedido", this.ID);
+                                        cmdItem.Parameters.AddWithValue("@IDEPI", linha.IDEPI);
+                                        cmdItem.Parameters.AddWithValue("@NovaQuantidade", qtdReal);
+                                        cmdItem.ExecuteNonQuery();
+
+                                        // 2. Desconta na tabela EPI (Stock) se entregou algo
+                                        if (qtdReal > 0)
+                                        {
+                                            string sqlStock = "UPDATE EPI SET Quantidade = Quantidade - @Qtd WHERE ID = @IDEPI";
+                                            using (SqlCommand cmdStock = new SqlCommand(sqlStock, conn, trans))
+                                            {
+                                                cmdStock.Parameters.AddWithValue("@Qtd", qtdReal);
+                                                cmdStock.Parameters.AddWithValue("@IDEPI", linha.IDEPI);
+                                                cmdStock.ExecuteNonQuery();
+                                            }
+                                        }
+                                    }
+                                }
+
+                                trans.Commit();
+                                M.AbrirMensagem("Entrega finalizada com sucesso!\nPDF Gerado.", "Sucesso");
+
+                                try { System.Diagnostics.Process.Start("explorer.exe", caminhoPDF); } catch { }
+
+                                this.Parent.Controls.Remove(this);
+                                this.Dispose();
+                            }
+                            catch (Exception ex)
+                            {
+                                trans.Rollback();
+                                throw ex;
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
-                        trans.Rollback();
-                        throw ex;
+                        M.AbrirMensagem("Erro ao finalizar: " + ex.Message, "Erro Crítico");
                     }
                 }
             }
-            catch (Exception ex) { M.AbrirMensagem("Erro ao aprovar: " + ex.Message, "Erro"); }
+
+            // ==============================================================================
+            // 3. CONSULTA (Concluido -> Ver PDF)
+            // ==============================================================================
+            else
+            {
+                AbrirComprovativoExistente();
+            }
+        }
+        private void AbrirComprovativoExistente()
+        {
+            try
+            {
+                string caminhoPDF = "";
+
+                using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+                {
+                    conn.Open();
+                    // Vai buscar o caminho que guardaste na coluna PDF
+                    string sql = "SELECT PDF FROM PedidoRegistos WHERE ID = @ID";
+
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ID", this.ID);
+                        object result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            caminhoPDF = result.ToString();
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(caminhoPDF) && System.IO.File.Exists(caminhoPDF))
+                {
+                    // Abre o PDF com o visualizador padrão do Windows
+                    System.Diagnostics.Process.Start("explorer.exe", caminhoPDF);
+                }
+                else
+                {
+                    M.AbrirMensagem("O ficheiro do comprovativo não foi encontrado ou não existe.", "Erro de Ficheiro");
+                }
+            }
+            catch (Exception ex)
+            {
+                M.AbrirMensagem("Erro ao abrir comprovativo: " + ex.Message, "Erro");
+            }
         }
 
         private void btnReprovar_Click(object sender, EventArgs e)

@@ -96,6 +96,7 @@
             lblFechar.Size = new Size(67, 61);
             lblFechar.TabIndex = 1;
             lblFechar.TextAlign = ContentAlignment.MiddleLeft;
+            lblFechar.Click += btnOK_Click;
             // 
             // lblTitulo
             // 
@@ -187,6 +188,7 @@
             // 
             // guna2BorderlessForm1
             // 
+            guna2BorderlessForm1.BorderRadius = 15;
             guna2BorderlessForm1.ContainerControl = this;
             guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
             guna2BorderlessForm1.TransparentWhileDrag = true;

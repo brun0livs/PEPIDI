@@ -6,6 +6,17 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v9.0": {
+      "Guna.Charts.WinForms/1.1.0": {
+        "dependencies": {
+          "System.Management": "7.0.0"
+        },
+        "runtime": {
+          "lib/net7.0-windows7.0/Guna.Charts.WinForms.dll": {
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
+          }
+        }
+      },
       "Guna.UI2.WinForms/2.0.4.7": {
         "dependencies": {
           "System.Management": "7.0.0"
@@ -425,14 +436,14 @@
           }
         }
       },
-      "System.Data.SqlClient/4.9.0": {
+      "System.Data.SqlClient/4.9.1": {
         "dependencies": {
           "runtime.native.System.Data.SqlClient.sni": "4.4.0"
         },
         "runtime": {
           "lib/net8.0/System.Data.SqlClient.dll": {
             "assemblyVersion": "4.6.1.6",
-            "fileVersion": "4.900.24.56208"
+            "fileVersion": "4.900.126.11103"
           }
         },
         "runtimeTargets": {
@@ -440,13 +451,13 @@
             "rid": "unix",
             "assetType": "runtime",
             "assemblyVersion": "4.6.1.6",
-            "fileVersion": "4.900.24.56208"
+            "fileVersion": "4.900.126.11103"
           },
           "runtimes/win/lib/net8.0/System.Data.SqlClient.dll": {
             "rid": "win",
             "assetType": "runtime",
             "assemblyVersion": "4.6.1.6",
-            "fileVersion": "4.900.24.56208"
+            "fileVersion": "4.900.126.11103"
           }
         }
       },
@@ -885,6 +896,13 @@
     }
   },
   "libraries": {
+    "Guna.Charts.WinForms/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qHGw3SusTcgUJFWfB91dQKwMxb0+4YBqPqrsFv7oo6E9Ap1OPsuWLafcJTtOzpxRmf8Umns5++xmcZtgL93q1A==",
+      "path": "guna.charts.winforms/1.1.0",
+      "hashPath": "guna.charts.winforms.1.1.0.nupkg.sha512"
+    },
     "Guna.UI2.WinForms/2.0.4.7": {
       "type": "package",
       "serviceable": true,
@@ -1130,12 +1148,12 @@
       "path": "system.collections.nongeneric/4.3.0",
       "hashPath": "system.collections.nongeneric.4.3.0.nupkg.sha512"
     },
-    "System.Data.SqlClient/4.9.0": {
+    "System.Data.SqlClient/4.9.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-j4KJO+vC62NyUtNHz854njEqXbT8OmAa5jb1nrGfYWBOcggyYUQE0w/snXeaCjdvkSKWuUD+hfvlbN8pTrJTXg==",
-      "path": "system.data.sqlclient/4.9.0",
-      "hashPath": "system.data.sqlclient.4.9.0.nupkg.sha512"
+      "sha512": "sha512-A7RK9I4UaVHJ407GTfy37S4ABHt1+lZ+/uoA54zTv0XaaWgHO5BtXSMzMVqB6socIHEeeK5K1YRgaxCEfD79wQ==",
+      "path": "system.data.sqlclient/4.9.1",
+      "hashPath": "system.data.sqlclient.4.9.1.nupkg.sha512"
     },
     "System.Diagnostics.Process/4.3.0": {
       "type": "package",

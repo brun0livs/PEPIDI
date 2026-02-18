@@ -129,7 +129,7 @@ namespace PEPIDI.FormsSecundarios
             this.KeyPreview = true;
         }
 
-        private void SelectByText(Guna2ComboBox cb , string text)
+        private void SelectByText(Guna2ComboBox cb, string text)
         {
             if (cb == null || string.IsNullOrWhiteSpace(text)) return;
             int idx = cb.FindStringExact(text);
@@ -250,7 +250,7 @@ namespace PEPIDI.FormsSecundarios
                     }
                     else
                     {
-                        
+
                         // Se NÃO encontrou, mostra erro e fecha ou seleciona o vazio
                         M.AbrirMensagem("Erro Crítico: A função 'Produção' não existe na Base de Dados!", "Erro de Configuração");
 
@@ -258,7 +258,7 @@ namespace PEPIDI.FormsSecundarios
                         cmbFuncoes.SelectedValue = -1;
                     }
                 }
-                catch (Exception ex)   
+                catch (Exception ex)
                 {
                     M.AbrirMensagem("Erro ao carregar funções: " + ex.Message, "Erro");
                 }
@@ -272,9 +272,18 @@ namespace PEPIDI.FormsSecundarios
 
         private void FormFuncionario_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if(e.KeyChar == (char)Keys.Escape)
+            if (e.KeyChar == (char)Keys.Escape)
             {
                 this.Close();
+            }
+        }
+
+        private void txtNr_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Só aceita números (Digit) e teclas de controlo (como Backspace)
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true; // "Come" o evento, impedindo a letra de aparecer
             }
         }
     }

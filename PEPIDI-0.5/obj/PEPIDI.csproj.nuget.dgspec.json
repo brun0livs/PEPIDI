@@ -51,13 +51,17 @@
         "net9.0-windows7.0": {
           "targetAlias": "net9.0-windows",
           "dependencies": {
+            "Guna.Charts.WinForms": {
+              "target": "Package",
+              "version": "[1.1.0, )"
+            },
             "Guna.UI2.WinForms": {
               "target": "Package",
               "version": "[2.0.4.7, )"
             },
             "System.Data.SqlClient": {
               "target": "Package",
-              "version": "[4.9.0, )"
+              "version": "[4.9.1, )"
             },
             "itext": {
               "target": "Package",

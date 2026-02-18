@@ -585,6 +585,7 @@
             txtNr.Size = new Size(187, 39);
             txtNr.TabIndex = 5;
             txtNr.TextOffset = new Point(10, 0);
+            txtNr.KeyPress += txtNr_KeyPress;
             // 
             // label2
             // 
