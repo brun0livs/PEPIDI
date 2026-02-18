@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\PEPIDI-0.5",
+    "\\PEPIDI-0.5\\FormsSecundarios",
     "\\PEPIDI-0.5\\UCs"
   ],
-  "SelectedNode": "\\PEPIDI-0.5\\UCs\\Pedidos.cs",
+  "SelectedNode": "\\PEPIDI-0.5\\FormsSecundarios\\FormFuncionario.cs",
   "PreviewInSolutionExplorer": false
 }
