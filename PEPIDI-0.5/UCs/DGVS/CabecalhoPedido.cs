@@ -12,9 +12,23 @@ namespace PEPIDI.UCs.UcsSecundarios
 {
     public partial class CabecalhoPedido : UserControl
     {
-        public CabecalhoPedido()
+        public CabecalhoPedido(string estado)
         {
             InitializeComponent();
+            GereEstado(estado);
+        }
+
+        private void GereEstado(string estado)
+        {
+            if (estado == "Aprovado")
+            {
+                lblQuantDisp.Text = "Quantidade";
+                lblQuant.Text = "Selecionar";
+            }
+            else
+            {
+                return;
+            }
         }
     }
 }

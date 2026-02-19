@@ -32,10 +32,12 @@
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Pedidos));
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             tableLayoutPanel1 = new TableLayoutPanel();
             pnlDetails = new Panel();
             tableLayoutPanel2 = new TableLayoutPanel();
-            lblPedidos = new Label();
             dgvPedidos = new PEPIDI.Models.PEPIDIDataGridView();
             ID = new DataGridViewTextBoxColumn();
             Data = new DataGridViewTextBoxColumn();
@@ -48,9 +50,13 @@
             NomeEntrega = new DataGridViewTextBoxColumn();
             PDF = new DataGridViewTextBoxColumn();
             Check = new DataGridViewCheckBoxColumn();
+            tableLayoutPanel3 = new TableLayoutPanel();
+            btnRelatorio = new Guna.UI2.WinForms.Guna2Button();
+            lblPedidos = new Label();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPedidos).BeginInit();
+            tableLayoutPanel3.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -83,8 +89,8 @@
             tableLayoutPanel2.ColumnCount = 1;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel2.Controls.Add(lblPedidos, 0, 0);
             tableLayoutPanel2.Controls.Add(dgvPedidos, 0, 1);
+            tableLayoutPanel2.Controls.Add(tableLayoutPanel3, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 0);
             tableLayoutPanel2.Margin = new Padding(0);
@@ -94,18 +100,6 @@
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 93F));
             tableLayoutPanel2.Size = new Size(1239, 1048);
             tableLayoutPanel2.TabIndex = 1;
-            // 
-            // lblPedidos
-            // 
-            lblPedidos.AutoSize = true;
-            lblPedidos.Dock = DockStyle.Fill;
-            lblPedidos.Font = new Font("Roboto Medium", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblPedidos.Location = new Point(3, 0);
-            lblPedidos.Name = "lblPedidos";
-            lblPedidos.Size = new Size(1233, 73);
-            lblPedidos.TabIndex = 0;
-            lblPedidos.Text = "PEDIDOS PENDENTES";
-            lblPedidos.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // dgvPedidos
             // 
@@ -155,6 +149,8 @@
             dgvPedidos.Size = new Size(1219, 955);
             dgvPedidos.TabIndex = 1;
             dgvPedidos.CellClick += DgvPedidos_CellClick;
+            dgvPedidos.CellValueChanged += dgvPedidos_CellValueChanged;
+            dgvPedidos.CurrentCellDirtyStateChanged += dgvPedidos_CurrentCellDirtyStateChanged;
             // 
             // ID
             // 
@@ -237,7 +233,59 @@
             Check.HeaderText = "Selecionar";
             Check.Name = "Check";
             Check.Visible = false;
-            Check.Width = 83;
+            // 
+            // tableLayoutPanel3
+            // 
+            tableLayoutPanel3.ColumnCount = 2;
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 77.80468F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.1953182F));
+            tableLayoutPanel3.Controls.Add(btnRelatorio, 1, 0);
+            tableLayoutPanel3.Controls.Add(lblPedidos, 0, 0);
+            tableLayoutPanel3.Dock = DockStyle.Fill;
+            tableLayoutPanel3.Location = new Point(0, 0);
+            tableLayoutPanel3.Margin = new Padding(0);
+            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.RowCount = 1;
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel3.Size = new Size(1239, 73);
+            tableLayoutPanel3.TabIndex = 2;
+            // 
+            // btnRelatorio
+            // 
+            btnRelatorio.BorderRadius = 10;
+            btnRelatorio.CustomImages.ImageAlign = HorizontalAlignment.Left;
+            btnRelatorio.CustomizableEdges = customizableEdges1;
+            btnRelatorio.DisabledState.BorderColor = Color.DarkGray;
+            btnRelatorio.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnRelatorio.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnRelatorio.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnRelatorio.Dock = DockStyle.Fill;
+            btnRelatorio.Enabled = false;
+            btnRelatorio.FillColor = Color.FromArgb(243, 108, 33);
+            btnRelatorio.Font = new Font("Roboto", 15F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnRelatorio.ForeColor = Color.White;
+            btnRelatorio.Image = (Image)resources.GetObject("btnRelatorio.Image");
+            btnRelatorio.Location = new Point(974, 15);
+            btnRelatorio.Margin = new Padding(10, 15, 10, 15);
+            btnRelatorio.Name = "btnRelatorio";
+            btnRelatorio.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            btnRelatorio.Size = new Size(255, 43);
+            btnRelatorio.TabIndex = 10;
+            btnRelatorio.Text = "Exportar";
+            btnRelatorio.Visible = false;
+            btnRelatorio.Click += btnRecolhaArmazem_Click;
+            // 
+            // lblPedidos
+            // 
+            lblPedidos.AutoSize = true;
+            lblPedidos.Dock = DockStyle.Fill;
+            lblPedidos.Font = new Font("Roboto Medium", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblPedidos.Location = new Point(3, 0);
+            lblPedidos.Name = "lblPedidos";
+            lblPedidos.Size = new Size(958, 73);
+            lblPedidos.TabIndex = 1;
+            lblPedidos.Text = "PEDIDOS PENDENTES";
+            lblPedidos.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // Pedidos
             // 
@@ -252,8 +300,9 @@
             Load += Pedidos_Load;
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);
-            tableLayoutPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPedidos).EndInit();
+            tableLayoutPanel3.ResumeLayout(false);
+            tableLayoutPanel3.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -262,7 +311,6 @@
         private TableLayoutPanel tableLayoutPanel1;
         private Panel pnlDetails;
         private TableLayoutPanel tableLayoutPanel2;
-        private Label lblPedidos;
         private PEPIDI.Models.PEPIDIDataGridView dgvPedidos;
         private DataGridViewTextBoxColumn ID;
         private DataGridViewTextBoxColumn Data;
@@ -275,5 +323,8 @@
         private DataGridViewTextBoxColumn NomeEntrega;
         private DataGridViewTextBoxColumn PDF;
         private DataGridViewCheckBoxColumn Check;
+        private TableLayoutPanel tableLayoutPanel3;
+        private Label lblPedidos;
+        private Guna.UI2.WinForms.Guna2Button btnRelatorio;
     }
 }

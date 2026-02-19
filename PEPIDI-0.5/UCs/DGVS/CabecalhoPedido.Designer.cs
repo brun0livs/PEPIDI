@@ -28,14 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
             lblModelo = new Label();
             lblTamanho = new Label();
             lblQuantDisp = new Label();
-            label1 = new Label();
+            lblQuant = new Label();
             guna2Panel1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
@@ -45,11 +45,11 @@
             guna2Panel1.Controls.Add(tableLayoutPanel1);
             guna2Panel1.CustomBorderColor = Color.FromArgb(224, 224, 224);
             guna2Panel1.CustomBorderThickness = new Padding(0, 0, 0, 1);
-            guna2Panel1.CustomizableEdges = customizableEdges1;
+            guna2Panel1.CustomizableEdges = customizableEdges3;
             guna2Panel1.Dock = DockStyle.Fill;
             guna2Panel1.Location = new Point(0, 10);
             guna2Panel1.Name = "guna2Panel1";
-            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges4;
             guna2Panel1.Size = new Size(683, 30);
             guna2Panel1.TabIndex = 0;
             // 
@@ -64,7 +64,7 @@
             tableLayoutPanel1.Controls.Add(lblModelo, 0, 0);
             tableLayoutPanel1.Controls.Add(lblTamanho, 1, 0);
             tableLayoutPanel1.Controls.Add(lblQuantDisp, 2, 0);
-            tableLayoutPanel1.Controls.Add(label1, 3, 0);
+            tableLayoutPanel1.Controls.Add(lblQuant, 3, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(0);
@@ -117,19 +117,19 @@
             lblQuantDisp.Text = "Quant. Disp";
             lblQuantDisp.TextAlign = ContentAlignment.BottomCenter;
             // 
-            // label1
+            // lblQuant
             // 
-            label1.AutoSize = true;
-            label1.Dock = DockStyle.Fill;
-            label1.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
-            label1.ForeColor = Color.FromArgb(64, 64, 64);
-            label1.Location = new Point(548, 0);
-            label1.Margin = new Padding(3, 0, 3, 5);
-            label1.Name = "label1";
-            label1.Size = new Size(132, 25);
-            label1.TabIndex = 3;
-            label1.Text = "Quantidade";
-            label1.TextAlign = ContentAlignment.BottomCenter;
+            lblQuant.AutoSize = true;
+            lblQuant.Dock = DockStyle.Fill;
+            lblQuant.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
+            lblQuant.ForeColor = Color.FromArgb(64, 64, 64);
+            lblQuant.Location = new Point(548, 0);
+            lblQuant.Margin = new Padding(3, 0, 3, 5);
+            lblQuant.Name = "lblQuant";
+            lblQuant.Size = new Size(132, 25);
+            lblQuant.TabIndex = 3;
+            lblQuant.Text = "Quantidade";
+            lblQuant.TextAlign = ContentAlignment.BottomCenter;
             // 
             // CabecalhoPedido
             // 
@@ -151,7 +151,7 @@
 
         private Guna.UI2.WinForms.Guna2Panel guna2Panel1;
         private TableLayoutPanel tableLayoutPanel1;
-        private Label label1;
+        private Label lblQuant;
         private Label lblQuantDisp;
         private Label lblTamanho;
         private Label lblModelo;

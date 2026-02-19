@@ -61,16 +61,14 @@ namespace PEPIDI.UCs.DGVS
                 // MODO ENTREGA (APROVADO)
                 if (EstadoLinha == "Aprovado")
                 {
-                    // Se não tiver visto, entrega 0
+                    // Se não tem visto, é 0
                     if (!chkEntregar.Checked) return 0;
 
-                    // Se tiver visto, entrega a quantidade que foi aprovada (QA)
-                    // NÃO TENTES LER A COMBOBOX AQUI, ELA ESTÁ ESCONDIDA!
-                    return this.QA;
+                    // Se TEM visto, devolve QA. Se QA for 0, devolve 1 (Rede de Segurança!)
+                    return (this.QA > 0) ? this.QA : 1;
                 }
 
                 // MODO APROVAÇÃO (PENDENTE)
-                // Aqui sim, lemos o que o gestor escolheu na ComboBox
                 if (int.TryParse(cmbQuant.Text, out int result))
                 {
                     return result;
@@ -108,7 +106,7 @@ namespace PEPIDI.UCs.DGVS
             // 1. Preenchimento visual
             lblModelo.Text = M;
             lblTamanho.Text = T;
-            lblQuantDisp.Text = QD.ToString();
+            lblQuantDisp.Text = (EstadoLinha == "Aprovado") ? QA.ToString() : QD.ToString();
 
             // Configuração das colunas (garante que o TableLayoutPanel existe no designer)
             tableLayoutPanel1.ColumnStyles[0].SizeType = SizeType.Percent;

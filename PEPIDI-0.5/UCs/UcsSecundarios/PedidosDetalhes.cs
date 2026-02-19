@@ -96,11 +96,13 @@ namespace PEPIDI.UCs.UcsSecundarios
             {
                 btnAprovar.Text = "Aprovar";
                 btnReprovar.Enabled = true;
+                lblQuantDisp.Text = "Quant. Disp";
             }
             else if (estado == "Aprovado")
             {
                 btnAprovar.Text = "Finalizar";
                 btnReprovar.Enabled = false;
+                lblQuantDisp.Text = "Quantidade";
             }
             else
             {
@@ -179,12 +181,18 @@ namespace PEPIDI.UCs.UcsSecundarios
                     string modelo = row["Modelo"].ToString();
                     string tamanho = row["Tamanho"].ToString();
                     int quantDisp = Convert.ToInt32(row["QuantidadeDisponivel"]);
-                    int quantPedida = row.Table.Columns.Contains("QuantidadePedida") ? Convert.ToInt32(row["QuantidadePedida"]) : 0;
+                    int quantPedida = 0;
+                    if (dt.Columns.Contains("QuantidadePedida"))
+                        quantPedida = Convert.ToInt32(row["QuantidadePedida"]);
+                    else if (dt.Columns.Contains("Quantidade"))
+                        quantPedida = Convert.ToInt32(row["Quantidade"]);
+                    // Se o valor for nulo ou zero, forçamos a 1 para segurança
+                    if (quantPedida == 0) quantPedida = 1;
 
                     LinhaItem novaLinha = new LinhaItem(modelo, tamanho, quantDisp, quantPedida, estado);
                     novaLinha.IDEPI = idEpi;
                     novaLinha.QuantidadeOriginal = quantPedida;
-                    novaLinha.QuantidadeAlterada += Linha_QuantidadeAlterada; // Liga o evento de log
+                    novaLinha.QuantidadeAlterada += Linha_QuantidadeAlterada;
                     novaLinha.Dock = DockStyle.Top;
 
                     tlpLinhas.RowCount++;
@@ -312,17 +320,13 @@ namespace PEPIDI.UCs.UcsSecundarios
                     M.AbrirMensagem("Erro ao aprovar: " + ex.Message, "Erro");
                 }
             }
-
             // ==============================================================================
             // 2. FASE DE FINALIZAÇÃO (Aprovado -> Concluido + PDF + Stock)
             // ==============================================================================
             else if (estadoAtual.Equals("Aprovado", StringComparison.OrdinalIgnoreCase))
             {
-                // --- SEGURANÇA: Garante que temos os dados do funcionário para o PDF ---
-                if (string.IsNullOrEmpty(NomeFuncionario))
-                {
-                    CarregarDadosFuncionario(this.ID);
-                }
+                // --- SEGURANÇA: Obriga o programa a carregar o funcionário SEMPRE (evita o "Desconhecido") ---
+                CarregarDadosFuncionario(this.ID);
 
                 // 1. Recolher itens selecionados para entrega
                 var listaReceber = new List<(int ID, string Artigo, string Tamanho, int Qtd)>();
@@ -331,7 +335,6 @@ namespace PEPIDI.UCs.UcsSecundarios
                 {
                     if (c is LinhaItem linha)
                     {
-                        // Verifica se a checkbox está ativa E se a quantidade é maior que 0
                         if (linha.Selecionado && linha.QuantidadeSelecionada > 0)
                         {
                             listaReceber.Add((linha.IDEPI, linha.DescricaoArtigo, linha.TamanhoSelecionado, linha.QuantidadeSelecionada));
@@ -345,29 +348,26 @@ namespace PEPIDI.UCs.UcsSecundarios
                     return;
                 }
 
-                // 2. Abrir Form de Assinatura (Namespace correto!)
+                // 2. Abrir Form de Assinatura
                 using (var frm = new FormAssinatura(NomeFuncionario))
                 {
                     foreach (var item in listaReceber) frm.AdicionarItemReceber(item.Artigo, item.Tamanho, item.Qtd);
 
-                    // Overlay
                     Form overlay = new Form { BackColor = Color.Black, Opacity = 0.5, ShowInTaskbar = false, FormBorderStyle = FormBorderStyle.None, WindowState = FormWindowState.Maximized };
                     overlay.Show();
                     var result = frm.ShowDialog(overlay);
                     overlay.Close();
 
-                    if (result != DialogResult.OK) return; // Cancelou
+                    if (result != DialogResult.OK) return;
 
-                    // 3. Processar Finalização
                     try
                     {
-                        // A. Gerar PDF
+                        // A. Gerar PDF (AGORA COM O NOME DO GESTOR INCLUÍDO NA CHAMADA)
                         string caminhoPDF = PEPIDI.Organizers.PDFGenerator.GerarComprovativo(
-                            this.ID, NomeFuncionario, NMEC, FuncaoFuncionario,
-                            listaReceber, new List<(string, string, int)>(),
+                            this.ID, NomeFuncionario, NMEC, FuncaoFuncionario, NomeGestor,
+                            listaReceber, new List<(int ID, string Artigo, string Tamanho, int Qtd)>(),
                             frm.AssinaturaFinal
                         );
-
                         // B. Transação SQL
                         using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
                         {
@@ -417,12 +417,9 @@ namespace PEPIDI.UCs.UcsSecundarios
                                         }
                                     }
                                 }
-
                                 trans.Commit();
                                 M.AbrirMensagem("Entrega finalizada com sucesso!\nPDF Gerado.", "Sucesso");
-
                                 try { System.Diagnostics.Process.Start("explorer.exe", caminhoPDF); } catch { }
-
                                 this.Parent.Controls.Remove(this);
                                 this.Dispose();
                             }

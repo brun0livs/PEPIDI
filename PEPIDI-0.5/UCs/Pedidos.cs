@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -112,6 +113,127 @@ namespace PEPIDI.UCs
             pnlDetails.Controls.Clear();
             control.Dock = DockStyle.Fill;
             pnlDetails.Controls.Add(control);
+        }
+
+        private void dgvPedidos_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dgvPedidos.IsCurrentCellDirty && dgvPedidos.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                dgvPedidos.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
+        private void dgvPedidos_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgvPedidos.Columns[e.ColumnIndex].Name == "Check")
+            {
+                ValidarBotaoRelatorio();
+            }
+        }
+
+        private void ValidarBotaoRelatorio()
+        {
+            bool temSelecionado = false;
+
+            foreach (DataGridViewRow row in dgvPedidos.Rows)
+            {
+                if (row.Cells["Check"].Value != null && Convert.ToBoolean(row.Cells["Check"].Value) == true)
+                {
+                    temSelecionado = true;
+                    break;
+                }
+            }
+
+            // Assumindo que o botão se chama btnRelatorio no teu Designer
+            btnRelatorio.Visible = temSelecionado;
+            btnRelatorio.Enabled = temSelecionado;
+        }
+        
+        private void btnRecolhaArmazem_Click(object sender, EventArgs e)
+        {
+            // 1. Recolher todos os IDs dos pedidos que têm o visto
+            List<int> idsSelecionados = new List<int>();
+            foreach (DataGridViewRow row in dgvPedidos.Rows)
+            {
+                if (row.Cells["Check"].Value != null && Convert.ToBoolean(row.Cells["Check"].Value) == true)
+                {
+                    if (int.TryParse(row.Cells["ID"].Value.ToString(), out int idPedido))
+                    {
+                        idsSelecionados.Add(idPedido);
+                    }
+                }
+            }
+
+            if (idsSelecionados.Count == 0) return;
+
+            // 2. Query à Base de Dados para SOMAR OS TOTAIS GERAIS
+            var listaArmazem = new List<(string Modelo, string Tamanho, int Qtd)>();
+
+            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+            {
+                conn.Open();
+
+                // Como a nossa lista só tem números (int), injetamos direto com Join. É super seguro e rápido.
+                string inClause = string.Join(",", idsSelecionados);
+
+                // QUERY NOVA: Só precisamos de saber o que ir buscar à prateleira, não interessa quem pediu.
+                string sql = $@"
+            SELECT 
+                E.Modelo, 
+                E.Tamanho, 
+                SUM(PP.Quantidade) AS QtdTotal
+            FROM PedidoPacote PP
+            INNER JOIN EPI E ON PP.IDEPI = E.ID
+            WHERE PP.IDPedReg IN ({inClause}) AND PP.Quantidade > 0
+            GROUP BY E.Modelo, E.Tamanho
+            ORDER BY E.Modelo, E.Tamanho";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            listaArmazem.Add((
+                                reader["Modelo"]?.ToString() ?? "Artigo",
+                                reader["Tamanho"]?.ToString() ?? "-",
+                                Convert.ToInt32(reader["QtdTotal"])
+                            ));
+                        }
+                    }
+                }
+            }
+
+            if (listaArmazem.Count == 0)
+            {
+                EfeitoUI M = new EfeitoUI();
+                M.AbrirMensagem("Os pedidos selecionados não têm itens para separar.", "Aviso");
+                return;
+            }
+
+            // 3. Gerar o PDF e Abrir
+            try
+            {
+                // Chama o MÉTODO NOVO que criámos no PDFGenerator
+                string pdfPath = PDFGenerator.GerarListaRecolhaArmazem(listaArmazem);
+                System.Diagnostics.Process.Start("explorer.exe", pdfPath);
+
+                // Opcional: Desmarcar as checkboxes depois de imprimir
+                foreach (DataGridViewRow row in dgvPedidos.Rows)
+                {
+                    if (row.Cells["Check"].Value != null && Convert.ToBoolean(row.Cells["Check"].Value) == true)
+                    {
+                        row.Cells["Check"].Value = false;
+                    }
+                }
+                ValidarBotaoRelatorio(); // Esconde os botões novamente
+            }
+            catch (Exception ex)
+            {
+                EfeitoUI M = new EfeitoUI();
+                string detalhe = ex.InnerException != null ? $"\nDetalhe: {ex.InnerException.Message}" : "";
+                M.AbrirMensagem($"Erro ao gerar relatório: {ex.Message}{detalhe}", "Erro");
+            }
         }
     }
 }
