@@ -240,8 +240,11 @@ namespace PEPIDI
                 case "pedidos aprovados":
                     AbrirControl(new UCs.Pedidos(IDGestor, "Aprovado"));
                     break;
+                case "inserir stock":
+                    AbrirControl(new UCs.AddStock(IDGestor));
+                    break;
                 case "criar artigos":
-                    //AbrirControl();
+                    AbrirControl(new UCs.CriarStock());
                     break;
                 case "funções":
                     AbrirControl(new UCs.Funcoes(IDGestor));

@@ -81,21 +81,22 @@ namespace PEPIDI.UCs
 
         private void Configura(PEPIDIDataGridView dgvFuncs)
         {
-            dgvFuncs.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            dgvFuncs.Columns["Nome"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            // 1. MUDANÇA AQUI: Modo Fill para as percentagens funcionarem!
+            dgvFuncs.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
             dgvFuncs.ReadOnly = true;
             dgvFuncs.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvFuncs.RowHeadersVisible = false;
 
+            // --- MENU DE AÇÕES ---
             _menuAcoes = new ContextMenuStrip();
-
             _menuAcoes.Items.Add("Editar", null, (s, e) => AcaoSelecionada("Editar"));
             _menuAcoes.Items.Add("Ver histórico", null, (s, e) => AcaoSelecionada("Historico"));
             _menuAcoes.Items.Add(new ToolStripSeparator());
             _menuAcoes.Items.Add("Repor palavra-passe…", null, (s, e) => AcaoSelecionada("ReporPass"));
 
             dgvFuncs.ShowActionDots = true;
-            dgvFuncs.ActionDotsAfterColumn = "Estab";   // ou o nome correto na tua grelha
+            dgvFuncs.ActionDotsAfterColumn = "Estab";
             dgvFuncs.ActionDotsColor = Color.Black;
             dgvFuncs.ActionDotsFontSize = 13f;
 
@@ -106,8 +107,85 @@ namespace PEPIDI.UCs
                 var pt = dgvFuncs.PointToScreen(new System.Drawing.Point(rect.Left, rect.Bottom + 2));
                 _menuAcoes.Show(pt);
             };
-        }
 
+            // --- FORMATAÇÃO, ALINHAMENTO E TAMANHOS ---
+
+            if (dgvFuncs.Columns.Contains("Nr"))
+            {
+                dgvFuncs.Columns["Nr"].HeaderText = "Nº";
+                dgvFuncs.Columns["Nr"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                dgvFuncs.Columns["Nr"].FillWeight = 5;
+            }
+
+            if (dgvFuncs.Columns.Contains("Nome"))
+            {
+                dgvFuncs.Columns["Nome"].FillWeight = 23;
+            }
+
+            if (dgvFuncs.Columns.Contains("Funcao"))
+            {
+                dgvFuncs.Columns["Funcao"].HeaderText = "Função";
+                dgvFuncs.Columns["Funcao"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                dgvFuncs.Columns["Funcao"].FillWeight = 13;
+            }
+
+            if (dgvFuncs.Columns.Contains("TShirt"))
+            {
+                dgvFuncs.Columns["TShirt"].HeaderText = "T-Shirt";
+                dgvFuncs.Columns["TShirt"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                dgvFuncs.Columns["TShirt"].FillWeight = 6;
+            }
+
+            // O CULPADO FOI DEVOLVIDO À GRELHA! 🧥
+            if (dgvFuncs.Columns.Contains("Casaco"))
+            {
+                dgvFuncs.Columns["Casaco"].HeaderText = "Casaco";
+                dgvFuncs.Columns["Casaco"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                dgvFuncs.Columns["Casaco"].FillWeight = 6;
+            }
+
+            if (dgvFuncs.Columns.Contains("PoloMCurta"))
+            {
+                dgvFuncs.Columns["PoloMCurta"].HeaderText = "P. M. Curta";
+                dgvFuncs.Columns["PoloMCurta"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                dgvFuncs.Columns["PoloMCurta"].FillWeight = 6;
+            }
+
+            if (dgvFuncs.Columns.Contains("PoloMCompr"))
+            {
+                dgvFuncs.Columns["PoloMCompr"].HeaderText = "P. M. Compr.";
+                dgvFuncs.Columns["PoloMCompr"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                dgvFuncs.Columns["PoloMCompr"].FillWeight = 6;
+            }
+
+            if (dgvFuncs.Columns.Contains("Calca"))
+            {
+                dgvFuncs.Columns["Calca"].HeaderText = "Calças";
+                dgvFuncs.Columns["Calca"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                dgvFuncs.Columns["Calca"].FillWeight = 6;
+            }
+
+            if (dgvFuncs.Columns.Contains("Sapato"))
+            {
+                dgvFuncs.Columns["Sapato"].HeaderText = "Sapatos";
+                dgvFuncs.Columns["Sapato"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                dgvFuncs.Columns["Sapato"].FillWeight = 6;
+            }
+
+            if (dgvFuncs.Columns.Contains("DtAdmiss"))
+            {
+                dgvFuncs.Columns["DtAdmiss"].HeaderText = "Admissão";
+                dgvFuncs.Columns["DtAdmiss"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                dgvFuncs.Columns["DtAdmiss"].FillWeight = 8;
+            }
+
+            if (dgvFuncs.Columns.Contains("Estab"))
+            {
+                dgvFuncs.Columns["Estab"].HeaderText = "Estab.";
+                dgvFuncs.Columns["Estab"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                dgvFuncs.Columns["Estab"].FillWeight = 15;
+            }
+        }
         // === Ações do menu ===
         private void AcaoSelecionada(string acao)
         {

@@ -72,3 +72,6 @@ C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\P
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\bc-fips-1.0.2.dll
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\bcpkix-fips-1.0.2.dll
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\itext.bouncy-castle-fips-adapter.dll
+C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\PEPIDI.UCs.AddStock.resources
+C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\PEPIDI.UCs.CriarStock.resources
+C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\PEPIDI.UCs.DGVS.LinhaDevolucao.resources

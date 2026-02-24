@@ -9,6 +9,8 @@ namespace PEPIDI.Organizers
         [STAThread]
         static void Main()
         {
+            // Coloca logo no início do arranque da aplicação
+            System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.High;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 

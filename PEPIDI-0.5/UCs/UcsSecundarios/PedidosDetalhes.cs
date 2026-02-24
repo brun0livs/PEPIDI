@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PEPIDI.UCs.UcsSecundarios
@@ -37,14 +38,14 @@ namespace PEPIDI.UCs.UcsSecundarios
             Estado = _Estado;
         }
 
-        private void PedidosDetalhes_Load(object sender, EventArgs e)
+        private async void PedidosDetalhes_Load(object sender, EventArgs e)
         {
             // Ativa o filtro global que impede a recursividade
             Application.AddMessageFilter(this);
 
             var info = Details.GetInfoGestor(IDGestor);
             NomeGestor = info.Nome;
-            GereEstado(Estado);
+            await GereEstadoAsync(Estado);
         }
 
         protected override void OnHandleDestroyed(EventArgs e)
@@ -88,7 +89,7 @@ namespace PEPIDI.UCs.UcsSecundarios
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
 
-        private void GereEstado(string estado)
+        private async Task GereEstadoAsync(string estado)
         {
             label1.Text = (estado == "Aprovado") ? "Selecionar" : "Quantidade";
 
@@ -110,8 +111,11 @@ namespace PEPIDI.UCs.UcsSecundarios
                 btnReprovar.Enabled = false;
             }
 
-            CarregarPPacote(pnlConteudo, ID, estado, pnlScroll, tlpLinhas);
             VerComentario(ID);
+
+            // Carrega os dois painéis em pano de fundo!
+            await CarregarPPacoteAsync(pnlConteudo, ID, estado, pnlScroll, flpLinhas);
+            await CarregarDPacoteAsync(flpDevolucoes, pnlScroll2, ID, estado);
         }
 
         private void CarregarDadosFuncionario(int idPedido)
@@ -121,27 +125,27 @@ namespace PEPIDI.UCs.UcsSecundarios
                 try
                 {
                     conn.Open();
-                    string sql = @"
-                SELECT F.Nome, F.Nr, F.Funcao 
-                FROM PedidoRegistos P
-                INNER JOIN Funcionarios F ON P.IdFuncionario = F.Nr 
-                WHERE P.ID = @ID";
 
-                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    // Chama a nova SP que acabaste de criar no SQL
+                    using (SqlCommand cmd = new SqlCommand("sp_ObterFuncionarioPorPedido", conn))
                     {
-                        cmd.Parameters.AddWithValue("@ID", idPedido);
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Passa o parâmetro com o nome exato que está na SP (@IDPedido)
+                        cmd.Parameters.AddWithValue("@IDPedido", idPedido);
+
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
-                                // Dados encontrados
+                                // Dados encontrados com sucesso
                                 this.NomeFuncionario = reader["Nome"]?.ToString() ?? "Sem Nome";
                                 this.NMEC = reader["Nr"]?.ToString() ?? "0000";
                                 this.FuncaoFuncionario = reader["Funcao"]?.ToString() ?? "-";
                             }
                             else
                             {
-                                // SE NÃO ENCONTRAR, DEFINIMOS VALORES PADRÃO PARA NÃO DAR ERRO
+                                // Se por algum motivo o pedido não existir ou não tiver funcionário
                                 this.NomeFuncionario = "Erro ao ler Funcionário";
                                 this.NMEC = "0000";
                                 this.FuncaoFuncionario = "Erro";
@@ -151,84 +155,154 @@ namespace PEPIDI.UCs.UcsSecundarios
                 }
                 catch (Exception ex)
                 {
-                    // Log de erro (opcional) e valores seguros
+                    // Log de erro invisível (para não rebentar o programa) e define valores de segurança
                     this.NomeFuncionario = "Erro SQL";
                     this.NMEC = "0000";
+                    this.FuncaoFuncionario = "Erro";
                 }
             }
         }
 
-        public void CarregarPPacote(Panel pnlConteudo, int idPedido, string estado, Panel pnlScroll, TableLayoutPanel tlpLinhas)
+        public async Task CarregarDPacoteAsync(FlowLayoutPanel flpLinhasDev, Panel pnlScrollDev, int idPedido, string estado)
         {
-            tlpLinhas.Controls.Clear();
-            tlpLinhas.RowCount = 0;
-            tlpLinhas.RowStyles.Clear();
+            await Task.Delay(150); // Deixa o ecrã respirar
+
+            // 1. FECHA OS OLHOS e limpa!
+            flpLinhasDev.Visible = false;
+            flpLinhasDev.SuspendLayout();
+            flpLinhasDev.Controls.Clear();
+
+            DataTable dt = new DataTable();
+
+            // 2. SQL EM PANO DE FUNDO!
+            await Task.Run(() =>
+            {
+                using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("sp_DetalhesDaDevolucao", conn) { CommandType = CommandType.StoredProcedure };
+                    cmd.Parameters.AddWithValue("@IDPedido", idPedido);
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    adapter.Fill(dt);
+                }
+            });
+
+            // 3. DESENHA RAPIDAMENTE SEM GEOMETRIAS
+            foreach (DataRow row in dt.Rows)
+            {
+                int idEpi = Convert.ToInt32(row["ID"]);
+                string modelo = row["Modelo"].ToString().Trim();
+                string tamanho = row["Tamanho"].ToString().Trim();
+
+                int quantDevolvida = 0;
+                if (dt.Columns.Contains("QuantidadePedida")) quantDevolvida = Convert.ToInt32(row["QuantidadePedida"]);
+                else if (dt.Columns.Contains("Quantidade")) quantDevolvida = Convert.ToInt32(row["Quantidade"]);
+                else if (dt.Columns.Contains("QuantidadeDevolvida")) quantDevolvida = Convert.ToInt32(row["QuantidadeDevolvida"]);
+                if (quantDevolvida == 0) quantDevolvida = 1;
+
+                PEPIDI.UCs.DGVS.LinhaDevolucao novaLinha = new PEPIDI.UCs.DGVS.LinhaDevolucao(idEpi, modelo, tamanho, quantDevolvida);
+                novaLinha.Width = flpLinhasDev.Width - 20; // Ajuste para a scrollbar
+                novaLinha.CreateControl();
+                flpLinhasDev.Controls.Add(novaLinha); // Simples e instantâneo
+            }
+
+            // 4. ABRE OS OLHOS!
+            flpLinhasDev.ResumeLayout(true);
+            flpLinhasDev.Visible = true;
+        }
+
+        public async Task CarregarPPacoteAsync(Panel pnlConteudo, int idPedido, string estado, Panel pnlScroll, FlowLayoutPanel flpLinhas)
+        {
+            await Task.Delay(150); // Deixa o ecrã respirar
+
+            // 1. FECHA OS OLHOS e limpa!
+            flpLinhas.Visible = false;
+            flpLinhas.SuspendLayout();
+            flpLinhas.Controls.Clear();
 
             pnlScroll.Size = tlpDesign.GetControlFromPosition(0, 1).Size;
 
-            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+            DataTable dt = new DataTable();
+
+            // 2. VAI AO SQL EM PANO DE FUNDO!
+            await Task.Run(() =>
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("sp_DetalhesDoPedido", conn) { CommandType = CommandType.StoredProcedure };
-                cmd.Parameters.AddWithValue("@IDPedido", idPedido);
-                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                foreach (DataRow row in dt.Rows)
+                using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
                 {
-                    int idEpi = Convert.ToInt32(row["ID"]);
-                    string modelo = row["Modelo"].ToString();
-                    string tamanho = row["Tamanho"].ToString();
-                    int quantDisp = Convert.ToInt32(row["QuantidadeDisponivel"]);
-                    int quantPedida = 0;
-                    if (dt.Columns.Contains("QuantidadePedida"))
-                        quantPedida = Convert.ToInt32(row["QuantidadePedida"]);
-                    else if (dt.Columns.Contains("Quantidade"))
-                        quantPedida = Convert.ToInt32(row["Quantidade"]);
-                    // Se o valor for nulo ou zero, forçamos a 1 para segurança
-                    if (quantPedida == 0) quantPedida = 1;
-
-                    LinhaItem novaLinha = new LinhaItem(modelo, tamanho, quantDisp, quantPedida, estado);
-                    novaLinha.IDEPI = idEpi;
-                    novaLinha.QuantidadeOriginal = quantPedida;
-                    novaLinha.QuantidadeAlterada += Linha_QuantidadeAlterada;
-                    novaLinha.Dock = DockStyle.Top;
-
-                    tlpLinhas.RowCount++;
-                    tlpLinhas.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-                    tlpLinhas.Controls.Add(novaLinha, 0, tlpLinhas.RowCount - 1);
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("sp_DetalhesDoPedido", conn) { CommandType = CommandType.StoredProcedure };
+                    cmd.Parameters.AddWithValue("@IDPedido", idPedido);
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    adapter.Fill(dt);
                 }
+            });
+
+            // 3. DESENHA INSTANTANEAMENTE SEM GEOMETRIAS DE TABELAS
+            foreach (DataRow row in dt.Rows)
+            {
+                int idEpi = Convert.ToInt32(row["ID"]);
+                string modelo = row["Modelo"].ToString().Trim();
+                string tamanho = row["Tamanho"].ToString().Trim();
+                int quantDisp = Convert.ToInt32(row["QuantidadeDisponivel"]);
+
+                int quantPedida = 0;
+                if (dt.Columns.Contains("QuantidadePedida")) quantPedida = Convert.ToInt32(row["QuantidadePedida"]);
+                else if (dt.Columns.Contains("Quantidade")) quantPedida = Convert.ToInt32(row["Quantidade"]);
+                if (quantPedida == 0) quantPedida = 1;
+
+                LinhaItem novaLinha = new LinhaItem(modelo, tamanho, quantDisp, quantPedida, estado);
+                novaLinha.IDEPI = idEpi;
+                novaLinha.QuantidadeOriginal = quantPedida;
+                novaLinha.QuantidadeAlterada += Linha_QuantidadeAlterada;
+                Linha_QuantidadeAlterada(novaLinha, EventArgs.Empty);
+
+                novaLinha.Width = flpLinhas.Width - 20; // Ajuste para a scrollbar não tapar os botões
+                novaLinha.CreateControl(); // Pré-renderizar
+                flpLinhas.Controls.Add(novaLinha);
             }
-            tlpLinhas.Width = pnlScroll.Width - 5;
+
+            // 4. ABRE OS OLHOS E MOSTRA O RESULTADO FINAL!
+            flpLinhas.ResumeLayout(true);
+            flpLinhas.Visible = true;
         }
 
         private void Linha_QuantidadeAlterada(object sender, EventArgs e)
         {
+            // 1. O EXORCISTA DO FANTASMA DO "0"! 👻🚫
+            if (this.Estado.Equals("Aprovado", StringComparison.OrdinalIgnoreCase) ||
+                this.Estado.Equals("Concluido", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            // 2. PROTEÇÃO DO DISPOSE (Para quando o ecrã fecha)
+            if (this.IsDisposed || this.Disposing) return;
+
             if (sender is LinhaItem linha)
             {
+                if (linha.IsDisposed || linha.Disposing) return;
+
                 string logBusca = $"{linha.M} ({linha.T})";
                 List<string> linhasLog = txtObs.Lines.ToList();
 
-                // Limpa registos antigos para evitar duplicados
-                linhasLog.RemoveAll(l => l.Contains(logBusca));
+                linhasLog.RemoveAll(l => l.TrimStart().StartsWith("[") && l.Contains(logBusca));
 
                 if (linha.QuantidadeSelecionada != linha.QuantidadeOriginal)
                 {
                     string autor = NomeGestor;
                     string notaExtra = "";
 
-                    // Subverificação: Só o PEPIDI assume se o stock for 0
-                    if (linha.QuantidadeSelecionada == 0 && linha.QD == 0)
+                    if (linha.QuantidadeOriginal > linha.QD && linha.QuantidadeSelecionada == linha.QD)
                     {
                         autor = "PEPIDI";
                         notaExtra = " (falta de stock)";
                     }
 
-                    string novaNota = $"[{autor}]: Alterou {logBusca} de {linha.QuantidadeOriginal} para {linha.QuantidadeSelecionada}{notaExtra}";
+                    string novaNota = $"[{autor}]: Alterou a quantidade de '{logBusca}' de {linha.QuantidadeOriginal} para {linha.QuantidadeSelecionada}{notaExtra}.";
                     linhasLog.Add(novaNota);
                 }
-                txtObs.Lines = linhasLog.ToArray();
+
+                txtObs.Text = string.Join(Environment.NewLine, linhasLog.Where(l => !string.IsNullOrWhiteSpace(l)));
             }
         }
 
@@ -258,9 +332,13 @@ namespace PEPIDI.UCs.UcsSecundarios
             }
         }
 
+
         private void btnAprovar_Click(object sender, EventArgs e)
         {
             string estadoAtual = this.Estado.Trim();
+
+            // GUARDA-COSTAS ANTI-FANTASMA: Guardamos as notas na memória LOGO no início do clique!
+            string notasFinaisParaGravar = txtObs.Text.Trim();
 
             // ==============================================================================
             // 1. FASE DE APROVAÇÃO (Pendente -> Aprovado)
@@ -277,7 +355,7 @@ namespace PEPIDI.UCs.UcsSecundarios
                         try
                         {
                             // 1. Atualizar as quantidades que o Gestor decidiu na Combo
-                            foreach (Control c in tlpLinhas.Controls)
+                            foreach (Control c in flpLinhas.Controls) // <--- ATUALIZADO PARA flpLinhas
                             {
                                 if (c is LinhaItem linha)
                                 {
@@ -290,15 +368,16 @@ namespace PEPIDI.UCs.UcsSecundarios
                                 }
                             }
 
-                            // 2. Mudar estado para 'Aprovado'
+                            // 2. Mudar estado para 'Aprovado' E GRAVAR AS NOTAS!
                             string sql = @"UPDATE PedidoRegistos 
-                                   SET Estado = 'Aprovado', Aprovacao = @Gestor, AlteracaoData = GETDATE() 
+                                   SET Estado = 'Aprovado', Aprovacao = @Gestor, Notas = @Notas, AlteracaoData = GETDATE() 
                                    WHERE ID = @ID";
 
                             using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
                             {
                                 cmd.Parameters.AddWithValue("@ID", this.ID);
                                 cmd.Parameters.AddWithValue("@Gestor", IDGestor);
+                                cmd.Parameters.AddWithValue("@Notas", string.IsNullOrEmpty(notasFinaisParaGravar) ? (object)DBNull.Value : notasFinaisParaGravar);
                                 cmd.ExecuteNonQuery();
                             }
 
@@ -325,16 +404,20 @@ namespace PEPIDI.UCs.UcsSecundarios
             // ==============================================================================
             else if (estadoAtual.Equals("Aprovado", StringComparison.OrdinalIgnoreCase))
             {
-                // --- SEGURANÇA: Obriga o programa a carregar o funcionário SEMPRE (evita o "Desconhecido") ---
                 CarregarDadosFuncionario(this.ID);
 
-                // 1. Recolher itens selecionados para entrega
                 var listaReceber = new List<(int ID, string Artigo, string Tamanho, int Qtd)>();
+                var listaDevolver = new List<(int ID, string Artigo, string Tamanho, int Qtd)>(); // <--- LISTA PARA AS DEVOLUÇÕES
+                var todosOsItens = new List<(int IDEPI, int QtdReal, bool Selecionado)>();
 
-                foreach (Control c in tlpLinhas.Controls)
+                // 1. RECOLHER ENTREGAS (Do painel flpLinhas)
+                foreach (Control c in flpLinhas.Controls) // <--- ATUALIZADO PARA flpLinhas
                 {
                     if (c is LinhaItem linha)
                     {
+                        int qtdReal = linha.Selecionado ? linha.QuantidadeSelecionada : 0;
+                        todosOsItens.Add((linha.IDEPI, qtdReal, linha.Selecionado));
+
                         if (linha.Selecionado && linha.QuantidadeSelecionada > 0)
                         {
                             listaReceber.Add((linha.IDEPI, linha.DescricaoArtigo, linha.TamanhoSelecionado, linha.QuantidadeSelecionada));
@@ -342,91 +425,108 @@ namespace PEPIDI.UCs.UcsSecundarios
                     }
                 }
 
-                if (listaReceber.Count == 0)
+                // 2. RECOLHER DEVOLUÇÕES (Do novo flpDevolucoes)
+                foreach (Control c in flpDevolucoes.Controls) // <--- ATUALIZADO PARA flpDevolucoes
                 {
-                    M.AbrirMensagem("Selecione pelo menos um item para entregar.", "Aviso");
+                    if (c is PEPIDI.UCs.DGVS.LinhaDevolucao linhaDev)
+                    {
+                        if (linhaDev.QuantidadeDevolvida > 0)
+                        {
+                            listaDevolver.Add((linhaDev.IDEPI, linhaDev.DescricaoArtigo, linhaDev.TamanhoSelecionado, linhaDev.QuantidadeDevolvida));
+                        }
+                    }
+                }
+
+                // Validação: Tem de haver ou algo para receber, ou algo para devolver!
+                if (listaReceber.Count == 0 && listaDevolver.Count == 0)
+                {
+                    M.AbrirMensagem("Não há itens selecionados para entregar nem para devolver.", "Aviso");
                     return;
                 }
 
-                // 2. Abrir Form de Assinatura
                 using (var frm = new FormAssinatura(NomeFuncionario))
                 {
-                    foreach (var item in listaReceber) frm.AdicionarItemReceber(item.Artigo, item.Tamanho, item.Qtd);
+                    // Passa as entregas para o form de assinatura
+                    foreach (var item in listaReceber)
+                        frm.AdicionarItemReceber(item.Artigo, item.Tamanho, item.Qtd);
 
-                    Form overlay = new Form { BackColor = Color.Black, Opacity = 0.5, ShowInTaskbar = false, FormBorderStyle = FormBorderStyle.None, WindowState = FormWindowState.Maximized };
-                    overlay.Show();
-                    var result = frm.ShowDialog(overlay);
-                    overlay.Close();
+                    // Passa as retomas para o form de assinatura
+                    foreach (var item in listaDevolver)
+                        frm.AdicionarItemDevolver(item.Artigo, item.Tamanho, item.Qtd);
 
-                    if (result != DialogResult.OK) return;
+                    using (Form overlay = new Form { BackColor = Color.Black, Opacity = 0.5, ShowInTaskbar = false, FormBorderStyle = FormBorderStyle.None, WindowState = FormWindowState.Maximized })
+                    {
+                        overlay.Show();
+                        var result = frm.ShowDialog(overlay);
+                        if (result != DialogResult.OK) return;
+                    }
 
                     try
                     {
-                        // A. Gerar PDF (AGORA COM O NOME DO GESTOR INCLUÍDO NA CHAMADA)
+                        // GERA O PDF E PASSA A LISTA DE DEVOLUÇÕES TAMBÉM!
                         string caminhoPDF = PEPIDI.Organizers.PDFGenerator.GerarComprovativo(
                             this.ID, NomeFuncionario, NMEC, FuncaoFuncionario, NomeGestor,
-                            listaReceber, new List<(int ID, string Artigo, string Tamanho, int Qtd)>(),
+                            listaReceber, listaDevolver, // <--- AQUI VAI A MAGIA DA DEVOLUÇÃO
                             frm.AssinaturaFinal
                         );
-                        // B. Transação SQL
+
                         using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
                         {
                             conn.Open();
-                            SqlTransaction trans = conn.BeginTransaction();
-
-                            try
+                            using (SqlTransaction trans = conn.BeginTransaction())
                             {
-                                // Atualiza Estado e PDF
-                                string sqlUpdate = @"UPDATE PedidoRegistos 
-                                             SET Estado = 'Concluido', PDF = @PDF, AlteracaoData = GETDATE() 
-                                             WHERE ID = @ID";
-
-                                using (SqlCommand cmd = new SqlCommand(sqlUpdate, conn, trans))
+                                try
                                 {
-                                    cmd.Parameters.AddWithValue("@ID", this.ID);
-                                    cmd.Parameters.AddWithValue("@PDF", caminhoPDF);
-                                    cmd.ExecuteNonQuery();
-                                }
+                                    // Atualiza Estado, PDF E AS NOTAS!
+                                    string sqlUpdate = @"UPDATE PedidoRegistos 
+                                                 SET Estado = 'Concluido', PDF = @PDF, Notas = @Notas, AlteracaoData = GETDATE() 
+                                                 WHERE ID = @ID";
 
-                                // Abate de Stock
-                                foreach (Control c in tlpLinhas.Controls)
-                                {
-                                    if (c is LinhaItem linha)
+                                    using (SqlCommand cmd = new SqlCommand(sqlUpdate, conn, trans))
                                     {
-                                        // Se tem check, usa a quantidade. Se não, é 0.
-                                        int qtdReal = (linha.Selecionado) ? linha.QuantidadeSelecionada : 0;
+                                        cmd.Parameters.AddWithValue("@ID", this.ID);
+                                        cmd.Parameters.AddWithValue("@PDF", caminhoPDF);
+                                        cmd.Parameters.AddWithValue("@Notas", string.IsNullOrEmpty(notasFinaisParaGravar) ? (object)DBNull.Value : notasFinaisParaGravar);
+                                        cmd.ExecuteNonQuery();
+                                    }
 
-                                        // 1. Grava no PedidoPacote a quantidade real entregue
-                                        SqlCommand cmdItem = new SqlCommand("sp_AtualizarQuantidadePedidoPacote", conn, trans);
-                                        cmdItem.CommandType = CommandType.StoredProcedure;
-                                        cmdItem.Parameters.AddWithValue("@IDPedido", this.ID);
-                                        cmdItem.Parameters.AddWithValue("@IDEPI", linha.IDEPI);
-                                        cmdItem.Parameters.AddWithValue("@NovaQuantidade", qtdReal);
-                                        cmdItem.ExecuteNonQuery();
+                                    // Abate de Stock APENAS do que foi entregue
+                                    foreach (var item in todosOsItens)
+                                    {
+                                        using (SqlCommand cmdItem = new SqlCommand("sp_AtualizarQuantidadePedidoPacote", conn, trans))
+                                        {
+                                            cmdItem.CommandType = CommandType.StoredProcedure;
+                                            cmdItem.Parameters.AddWithValue("@IDPedido", this.ID);
+                                            cmdItem.Parameters.AddWithValue("@IDEPI", item.IDEPI);
+                                            cmdItem.Parameters.AddWithValue("@NovaQuantidade", item.QtdReal);
+                                            cmdItem.ExecuteNonQuery();
+                                        }
 
-                                        // 2. Desconta na tabela EPI (Stock) se entregou algo
-                                        if (qtdReal > 0)
+                                        if (item.QtdReal > 0)
                                         {
                                             string sqlStock = "UPDATE EPI SET Quantidade = Quantidade - @Qtd WHERE ID = @IDEPI";
                                             using (SqlCommand cmdStock = new SqlCommand(sqlStock, conn, trans))
                                             {
-                                                cmdStock.Parameters.AddWithValue("@Qtd", qtdReal);
-                                                cmdStock.Parameters.AddWithValue("@IDEPI", linha.IDEPI);
+                                                cmdStock.Parameters.AddWithValue("@Qtd", item.QtdReal);
+                                                cmdStock.Parameters.AddWithValue("@IDEPI", item.IDEPI);
                                                 cmdStock.ExecuteNonQuery();
                                             }
                                         }
                                     }
+
+                                    trans.Commit();
+
+                                    M.AbrirMensagem("Entrega e retoma finalizadas com sucesso!\nPDF Gerado.", "Sucesso");
+                                    try { System.Diagnostics.Process.Start("explorer.exe", caminhoPDF); } catch { }
+
+                                    this.Parent.Controls.Remove(this);
+                                    this.Dispose();
                                 }
-                                trans.Commit();
-                                M.AbrirMensagem("Entrega finalizada com sucesso!\nPDF Gerado.", "Sucesso");
-                                try { System.Diagnostics.Process.Start("explorer.exe", caminhoPDF); } catch { }
-                                this.Parent.Controls.Remove(this);
-                                this.Dispose();
-                            }
-                            catch (Exception ex)
-                            {
-                                trans.Rollback();
-                                throw ex;
+                                catch (Exception ex)
+                                {
+                                    trans.Rollback();
+                                    throw;
+                                }
                             }
                         }
                     }
@@ -436,7 +536,6 @@ namespace PEPIDI.UCs.UcsSecundarios
                     }
                 }
             }
-
             // ==============================================================================
             // 3. CONSULTA (Concluido -> Ver PDF)
             // ==============================================================================
@@ -445,6 +544,7 @@ namespace PEPIDI.UCs.UcsSecundarios
                 AbrirComprovativoExistente();
             }
         }
+
         private void AbrirComprovativoExistente()
         {
             try

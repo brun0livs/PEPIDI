@@ -37,10 +37,16 @@
     <Compile Update="Organizers\LinhaPedido.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="UCs\CriarStock.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="UCs\Definicoes.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="UCs\DGVS\CabecalhoDevolucao.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UCs\DGVS\LinhaDevolucao.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="UCs\DGVS\LinhaItem.cs">
@@ -59,6 +65,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="UCs\DGVS\CabecalhoPedido.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UCs\AddStock.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="UCs\UcsSecundarios\PedidosDetalhes.cs">

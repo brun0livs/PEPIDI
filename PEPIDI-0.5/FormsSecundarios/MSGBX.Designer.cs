@@ -202,6 +202,7 @@
             FormBorderStyle = FormBorderStyle.None;
             KeyPreview = true;
             Name = "MSGBX";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "MessageBox";
             TopMost = true;
             tableLayoutPanel1.ResumeLayout(false);

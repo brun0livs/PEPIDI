@@ -74,7 +74,7 @@ namespace PEPIDI
             // Pinta o fundo de branco (importante para o PDF não ficar com fundo preto/transparente)
             using (Graphics g = Graphics.FromImage(signatureBitmap))
             {
-                g.Clear(Color.White);
+                g.Clear(Color.Transparent);
             }
         }
 
@@ -129,8 +129,27 @@ namespace PEPIDI
             // Validação Obrigatória
             if (!chkAceito.Checked)
             {
-                MessageBox.Show("É obrigatório aceitar os termos e condições para prosseguir.",
-                                "Assinatura Pendente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                // 1. Cria o fundo escuro (Overlay)
+                Form overlay = new Form
+                {
+                    BackColor = Color.Black,
+                    Opacity = 0.5,
+                    ShowInTaskbar = false,
+                    FormBorderStyle = FormBorderStyle.None,
+                    WindowState = FormWindowState.Maximized
+                };
+                overlay.Show();
+
+                // 2. Abre a tua MessageBox personalizada por cima do fundo escuro
+                using (var msg = new PEPIDI.FormsSecundarios.MSGBX("É obrigatório aceitar os termos e condições para prosseguir.", "Assinatura Pendente"))
+                {
+                    msg.ShowDialog(overlay); // O '(overlay)' obriga a mensagem a ficar por cima
+                }
+
+                // 3. Fecha e limpa o fundo escuro quando clicas no OK
+                overlay.Close();
+                overlay.Dispose();
+
                 return;
             }
 

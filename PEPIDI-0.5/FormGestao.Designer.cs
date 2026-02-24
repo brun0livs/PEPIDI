@@ -177,7 +177,7 @@
             Nav10.HoverState.FillColor = Color.Gray;
             Nav10.Image = (Image)resources.GetObject("Nav10.Image");
             Nav10.ImageAlign = HorizontalAlignment.Left;
-            Nav10.ImageSize = new Size(50, 50);
+            Nav10.ImageSize = new Size(43, 43);
             Nav10.Location = new Point(0, 768);
             Nav10.Margin = new Padding(0, 3, 0, 3);
             Nav10.Name = "Nav10";
@@ -207,7 +207,7 @@
             Nav1.ForeColor = Color.Black;
             Nav1.Image = (Image)resources.GetObject("Nav1.Image");
             Nav1.ImageAlign = HorizontalAlignment.Left;
-            Nav1.ImageSize = new Size(50, 50);
+            Nav1.ImageSize = new Size(43, 43);
             Nav1.Location = new Point(0, 3);
             Nav1.Margin = new Padding(0, 3, 0, 3);
             Nav1.Name = "Nav1";
@@ -237,7 +237,7 @@
             Nav2.ForeColor = Color.Black;
             Nav2.Image = (Image)resources.GetObject("Nav2.Image");
             Nav2.ImageAlign = HorizontalAlignment.Left;
-            Nav2.ImageSize = new Size(50, 50);
+            Nav2.ImageSize = new Size(43, 43);
             Nav2.Location = new Point(0, 88);
             Nav2.Margin = new Padding(0, 3, 0, 3);
             Nav2.Name = "Nav2";
@@ -267,7 +267,7 @@
             Nav3.ForeColor = Color.Black;
             Nav3.Image = (Image)resources.GetObject("Nav3.Image");
             Nav3.ImageAlign = HorizontalAlignment.Left;
-            Nav3.ImageSize = new Size(50, 50);
+            Nav3.ImageSize = new Size(43, 43);
             Nav3.Location = new Point(0, 173);
             Nav3.Margin = new Padding(0, 3, 0, 3);
             Nav3.Name = "Nav3";
@@ -297,7 +297,7 @@
             Nav4.ForeColor = Color.Black;
             Nav4.Image = (Image)resources.GetObject("Nav4.Image");
             Nav4.ImageAlign = HorizontalAlignment.Left;
-            Nav4.ImageSize = new Size(50, 50);
+            Nav4.ImageSize = new Size(43, 43);
             Nav4.Location = new Point(0, 258);
             Nav4.Margin = new Padding(0, 3, 0, 3);
             Nav4.Name = "Nav4";
@@ -327,7 +327,7 @@
             Nav5.ForeColor = Color.Black;
             Nav5.Image = (Image)resources.GetObject("Nav5.Image");
             Nav5.ImageAlign = HorizontalAlignment.Left;
-            Nav5.ImageSize = new Size(50, 50);
+            Nav5.ImageSize = new Size(43, 43);
             Nav5.Location = new Point(0, 343);
             Nav5.Margin = new Padding(0, 3, 0, 3);
             Nav5.Name = "Nav5";
@@ -357,7 +357,7 @@
             Nav6.ForeColor = Color.Black;
             Nav6.Image = (Image)resources.GetObject("Nav6.Image");
             Nav6.ImageAlign = HorizontalAlignment.Left;
-            Nav6.ImageSize = new Size(50, 50);
+            Nav6.ImageSize = new Size(43, 43);
             Nav6.Location = new Point(0, 428);
             Nav6.Margin = new Padding(0, 3, 0, 3);
             Nav6.Name = "Nav6";
@@ -387,7 +387,7 @@
             Nav7.ForeColor = Color.Black;
             Nav7.Image = (Image)resources.GetObject("Nav7.Image");
             Nav7.ImageAlign = HorizontalAlignment.Left;
-            Nav7.ImageSize = new Size(50, 50);
+            Nav7.ImageSize = new Size(43, 43);
             Nav7.Location = new Point(0, 513);
             Nav7.Margin = new Padding(0, 3, 0, 3);
             Nav7.Name = "Nav7";
@@ -417,7 +417,7 @@
             Nav8.ForeColor = Color.Black;
             Nav8.Image = (Image)resources.GetObject("Nav8.Image");
             Nav8.ImageAlign = HorizontalAlignment.Left;
-            Nav8.ImageSize = new Size(50, 50);
+            Nav8.ImageSize = new Size(43, 43);
             Nav8.Location = new Point(0, 598);
             Nav8.Margin = new Padding(0, 3, 0, 3);
             Nav8.Name = "Nav8";
@@ -445,7 +445,7 @@
             Nav9.HoverState.FillColor = Color.Gray;
             Nav9.Image = (Image)resources.GetObject("Nav9.Image");
             Nav9.ImageAlign = HorizontalAlignment.Left;
-            Nav9.ImageSize = new Size(50, 50);
+            Nav9.ImageSize = new Size(43, 43);
             Nav9.Location = new Point(0, 683);
             Nav9.Margin = new Padding(0, 3, 0, 3);
             Nav9.Name = "Nav9";

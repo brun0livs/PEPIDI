@@ -164,6 +164,12 @@
           }
         }
       },
+      "itext7/9.5.0": {
+        "type": "package",
+        "dependencies": {
+          "itext": "9.5.0"
+        }
+      },
       "Microsoft.DotNet.PlatformAbstractions/1.1.0": {
         "type": "package",
         "dependencies": {
@@ -1715,6 +1721,20 @@
         "lib/net461/itext.commons.xml",
         "lib/netstandard2.0/itext.commons.dll",
         "lib/netstandard2.0/itext.commons.xml"
+      ]
+    },
+    "itext7/9.5.0": {
+      "sha512": "9g+bcx7rslHdYGFBojcVTp8mhCJoWbrkLceMqw/CSScB1kh7YSNPdTEsFqZW/8KrcUvTc0wtRHFqQ9R7K5gFNw==",
+      "type": "package",
+      "path": "itext7/9.5.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ITSC-avatar.png",
+        "LICENSE.md",
+        "gnu-agpl-v3.0.md",
+        "itext7.9.5.0.nupkg.sha512",
+        "itext7.nuspec"
       ]
     },
     "Microsoft.DotNet.PlatformAbstractions/1.1.0": {
@@ -5180,7 +5200,8 @@
       "Newtonsoft.Json >= 13.0.4",
       "System.Data.SqlClient >= 4.9.1",
       "itext >= 9.5.0",
-      "itext.bouncy-castle-fips-adapter >= 9.5.0"
+      "itext.bouncy-castle-fips-adapter >= 9.5.0",
+      "itext7 >= 9.5.0"
     ]
   },
   "packageFolders": {
@@ -5255,6 +5276,10 @@
             "version": "[9.5.0, )"
           },
           "itext.bouncy-castle-fips-adapter": {
+            "target": "Package",
+            "version": "[9.5.0, )"
+          },
+          "itext7": {
             "target": "Package",
             "version": "[9.5.0, )"
           }

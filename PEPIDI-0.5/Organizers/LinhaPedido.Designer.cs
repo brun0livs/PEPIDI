@@ -37,9 +37,9 @@
             tlpOP.BackColor = Color.White;
             tlpOP.ColumnCount = 5;
             tlpOP.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 52.46667F));
-            tlpOP.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 11.13333F));
-            tlpOP.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 11.86667F));
-            tlpOP.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 11.33333F));
+            tlpOP.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10.75862F));
+            tlpOP.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 11.6551723F));
+            tlpOP.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 11.8620691F));
             tlpOP.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 13.13333F));
             tlpOP.Controls.Add(modernComboBox2, 2, 0);
             tlpOP.Controls.Add(label3, 3, 0);
@@ -68,28 +68,28 @@
             modernComboBox2.FocusedColor = Color.FromArgb(255, 128, 0);
             modernComboBox2.FocusedState.BorderColor = Color.FromArgb(255, 128, 0);
             modernComboBox2.FocusedState.ForeColor = Color.Black;
-            modernComboBox2.Font = new Font("Roboto", 15.75F);
+            modernComboBox2.Font = new Font("Roboto", 20.75F);
             modernComboBox2.ForeColor = Color.Black;
             modernComboBox2.HoverState.BorderColor = Color.FromArgb(254, 107, 0);
             modernComboBox2.HoverState.FillColor = Color.White;
             modernComboBox2.HoverState.ForeColor = Color.Black;
-            modernComboBox2.ItemHeight = 30;
-            modernComboBox2.Location = new Point(927, 32);
-            modernComboBox2.Margin = new Padding(5, 32, 5, 32);
+            modernComboBox2.ItemHeight = 35;
+            modernComboBox2.Location = new Point(922, 31);
+            modernComboBox2.Margin = new Padding(5, 31, 5, 31);
             modernComboBox2.Name = "modernComboBox2";
             modernComboBox2.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            modernComboBox2.Size = new Size(162, 36);
+            modernComboBox2.Size = new Size(159, 41);
             modernComboBox2.TabIndex = 9;
             // 
             // label3
             // 
             label3.AutoSize = true;
             label3.Dock = DockStyle.Fill;
-            label3.Font = new Font("Roboto", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label3.Font = new Font("Roboto", 20.75F);
             label3.ForeColor = Color.Gray;
-            label3.Location = new Point(1097, 0);
+            label3.Location = new Point(1089, 0);
             label3.Name = "label3";
-            label3.Size = new Size(158, 100);
+            label3.Size = new Size(166, 100);
             label3.TabIndex = 4;
             label3.Text = "Quantidade:";
             label3.TextAlign = ContentAlignment.MiddleRight;
@@ -98,11 +98,11 @@
             // 
             label2.AutoSize = true;
             label2.Dock = DockStyle.Fill;
-            label2.Font = new Font("Roboto", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label2.Font = new Font("Roboto", 20.75F);
             label2.ForeColor = Color.Gray;
             label2.Location = new Point(764, 0);
             label2.Name = "label2";
-            label2.Size = new Size(155, 100);
+            label2.Size = new Size(150, 100);
             label2.TabIndex = 2;
             label2.Text = "Tamanho:";
             label2.TextAlign = ContentAlignment.MiddleRight;
@@ -111,7 +111,7 @@
             // 
             label1.AutoSize = true;
             label1.Dock = DockStyle.Fill;
-            label1.Font = new Font("Roboto", 21.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label1.Font = new Font("Roboto", 20.75F);
             label1.Location = new Point(3, 0);
             label1.Name = "label1";
             label1.Size = new Size(755, 100);

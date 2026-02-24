@@ -148,7 +148,7 @@ namespace PEPIDI.UCs
             btnRelatorio.Visible = temSelecionado;
             btnRelatorio.Enabled = temSelecionado;
         }
-        
+
         private void btnRecolhaArmazem_Click(object sender, EventArgs e)
         {
             // 1. Recolher todos os IDs dos pedidos que têm o visto
@@ -166,27 +166,32 @@ namespace PEPIDI.UCs
 
             if (idsSelecionados.Count == 0) return;
 
-            // 2. Query à Base de Dados para SOMAR OS TOTAIS GERAIS
-            var listaArmazem = new List<(string Modelo, string Tamanho, int Qtd)>();
+            // 2. Query à Base de Dados para obter Itens COM DADOS DO FUNCIONÁRIO
+            // (A lista agora pede 5 dados: NMEC, Nome, Modelo, Tamanho, Qtd)
+            var listaArmazem = new List<(string NMEC, string Nome, string Modelo, string Tamanho, int Qtd)>();
 
             using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
             {
                 conn.Open();
 
-                // Como a nossa lista só tem números (int), injetamos direto com Join. É super seguro e rápido.
+                // Injeta os IDs na cláusula IN de forma segura
                 string inClause = string.Join(",", idsSelecionados);
 
-                // QUERY NOVA: Só precisamos de saber o que ir buscar à prateleira, não interessa quem pediu.
+                // QUERY: Junta a tabela EPI, mas também PedidoRegistos e Funcionários para saber de quem é a roupa
                 string sql = $@"
             SELECT 
+                F.Nr AS NrFunc, 
+                F.Nome, 
                 E.Modelo, 
                 E.Tamanho, 
                 SUM(PP.Quantidade) AS QtdTotal
             FROM PedidoPacote PP
             INNER JOIN EPI E ON PP.IDEPI = E.ID
+            INNER JOIN PedidoRegistos PR ON PP.IDPedReg = PR.ID
+            INNER JOIN Funcionarios F ON PR.NrFunc = F.Nr
             WHERE PP.IDPedReg IN ({inClause}) AND PP.Quantidade > 0
-            GROUP BY E.Modelo, E.Tamanho
-            ORDER BY E.Modelo, E.Tamanho";
+            GROUP BY F.Nr, F.Nome, E.Modelo, E.Tamanho
+            ORDER BY F.Nome, E.Modelo, E.Tamanho";
 
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
@@ -195,6 +200,8 @@ namespace PEPIDI.UCs
                         while (reader.Read())
                         {
                             listaArmazem.Add((
+                                reader["NrFunc"]?.ToString() ?? "0000",
+                                reader["Nome"]?.ToString() ?? "Desconhecido",
                                 reader["Modelo"]?.ToString() ?? "Artigo",
                                 reader["Tamanho"]?.ToString() ?? "-",
                                 Convert.ToInt32(reader["QtdTotal"])
@@ -211,14 +218,14 @@ namespace PEPIDI.UCs
                 return;
             }
 
-            // 3. Gerar o PDF e Abrir
+            // 3. Gerar o PDF de Separação por Funcionário e Abrir
             try
             {
-                // Chama o MÉTODO NOVO que criámos no PDFGenerator
-                string pdfPath = PDFGenerator.GerarListaRecolhaArmazem(listaArmazem);
+                // CHAMA O MÉTODO QUE TU QUERES (GerarListaSeparacaoPorFuncionario)
+                string pdfPath = PEPIDI.Organizers.PDFGenerator.GerarListaSeparacaoPorFuncionario(listaArmazem);
                 System.Diagnostics.Process.Start("explorer.exe", pdfPath);
 
-                // Opcional: Desmarcar as checkboxes depois de imprimir
+                // Desmarcar as checkboxes depois de imprimir para não gerar 2x sem querer
                 foreach (DataGridViewRow row in dgvPedidos.Rows)
                 {
                     if (row.Cells["Check"].Value != null && Convert.ToBoolean(row.Cells["Check"].Value) == true)
@@ -226,7 +233,7 @@ namespace PEPIDI.UCs
                         row.Cells["Check"].Value = false;
                     }
                 }
-                ValidarBotaoRelatorio(); // Esconde os botões novamente
+                ValidarBotaoRelatorio(); // Esconde o botão novamente
             }
             catch (Exception ex)
             {

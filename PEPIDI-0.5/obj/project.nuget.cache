@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "R9pEjQqm5Vo=",
+  "dgSpecHash": "N4ZtaJhPGnU=",
   "success": true,
   "projectFilePath": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\PEPIDI.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,7 @@
     "C:\\Users\\bruno.oliveira\\.nuget\\packages\\itext\\9.5.0\\itext.9.5.0.nupkg.sha512",
     "C:\\Users\\bruno.oliveira\\.nuget\\packages\\itext.bouncy-castle-fips-adapter\\9.5.0\\itext.bouncy-castle-fips-adapter.9.5.0.nupkg.sha512",
     "C:\\Users\\bruno.oliveira\\.nuget\\packages\\itext.commons\\9.5.0\\itext.commons.9.5.0.nupkg.sha512",
+    "C:\\Users\\bruno.oliveira\\.nuget\\packages\\itext7\\9.5.0\\itext7.9.5.0.nupkg.sha512",
     "C:\\Users\\bruno.oliveira\\.nuget\\packages\\microsoft.dotnet.platformabstractions\\1.1.0\\microsoft.dotnet.platformabstractions.1.1.0.nupkg.sha512",
     "C:\\Users\\bruno.oliveira\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\5.0.0\\microsoft.extensions.dependencyinjection.5.0.0.nupkg.sha512",
     "C:\\Users\\bruno.oliveira\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\5.0.0\\microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512",
