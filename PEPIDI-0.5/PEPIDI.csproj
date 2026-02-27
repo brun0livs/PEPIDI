@@ -10,6 +10,12 @@
     <AssemblyName>PEPIDI</AssemblyName>
     <Version>0.5</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	<ServerGarbageCollection>true</ServerGarbageCollection>
+	<RetainVMGarbageCollection>true</RetainVMGarbageCollection>
+	<TieredCompilation>true</TieredCompilation>
+	<TieredCompilationQuickJit>true</TieredCompilationQuickJit>
+
+	<PublishReadyToRun>true</PublishReadyToRun>   
   </PropertyGroup>
 
   <ItemGroup>

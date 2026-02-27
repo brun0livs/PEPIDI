@@ -22,13 +22,31 @@ namespace PEPIDI
         public FormGestao(int _idGestor, PermissoesPerfil _permissoes)
         {
             InitializeComponent();
+            this.DoubleBuffered = true;
+            // Força o motor do Windows a usar estilos modernos de desenho
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint |
+                          ControlStyles.UserPaint |
+                          ControlStyles.OptimizedDoubleBuffer, true);
+            this.UpdateStyles();
             IDGestor = _idGestor;
             permissoes = _permissoes;
             splitContainer1.SplitterDistance = larguraMax;
         }
 
+        public static void SetDoubleBuffered(Control c)
+        {
+            if (System.Windows.Forms.SystemInformation.TerminalServerSession) return;
+            System.Reflection.PropertyInfo pi = typeof(Control).GetProperty("DoubleBuffered",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            pi.SetValue(c, true, null);
+        }
+
+        
+
         private void FormGestao_Load(object sender, EventArgs e)
         {
+            SetDoubleBuffered(splitContainer1.Panel1);
+            SetDoubleBuffered(splitContainer1.Panel2);
             this.KeyPreview = true;
             // Verifica se Details e GetInfoGestor existem no teu projeto
             var info = Details.GetInfoGestor(IDGestor);
@@ -268,16 +286,13 @@ namespace PEPIDI
         // --- CORREÇÃO 2 e 3: TIMER E VISUAL ---
         private void timerMenu_Tick(object sender, EventArgs e)
         {
+            // Suspendemos o desenho do painel que contém o conteúdo (lado direito)
+            // para o Windows não tentar ajustar o CriarStock a cada pixel que o menu move
+            splitContainer1.Panel2.SuspendLayout();
+
             if (menuExpandido)
             {
-                // -- RECOLHER --
-
-                // Passo 1: Esconde o texto IMEDIATAMENTE antes de começar a encolher
-                // para evitar que o texto fique cortado feio.
-                if (splitContainer1.SplitterDistance == larguraMax)
-                {
-                    ConfigurarBotoes(false);
-                }
+                if (splitContainer1.SplitterDistance == larguraMax) ConfigurarBotoes(false);
 
                 splitContainer1.SplitterDistance -= velocidade;
 
@@ -290,7 +305,6 @@ namespace PEPIDI
             }
             else
             {
-                // -- EXPANDIR --
                 splitContainer1.SplitterDistance += velocidade;
 
                 if (splitContainer1.SplitterDistance >= larguraMax)
@@ -298,11 +312,12 @@ namespace PEPIDI
                     splitContainer1.SplitterDistance = larguraMax;
                     menuExpandido = true;
                     timerMenu.Stop();
-
-                    // Passo 2: Mostra o texto APENAS quando terminar de abrir
                     ConfigurarBotoes(true);
                 }
             }
+
+            // Voltamos a permitir que o painel se desenhe agora que já parou de mexer
+            splitContainer1.Panel2.ResumeLayout();
         }
 
         // Método auxiliar para limpar ou restaurar texto e ícones

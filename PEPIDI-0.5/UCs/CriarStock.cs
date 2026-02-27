@@ -18,12 +18,19 @@ namespace PEPIDI.UCs
         public CriarStock()
         {
             InitializeComponent();
+
+            // PREPARAÇÃO DO PAINEL DE TAGS
+            flpFuncoes.AutoScroll = true;
+            flpFuncoes.Padding = new Padding(0);
+            flpFuncoes.Margin = new Padding(0);
+            // Isto garante que o painel tenta não mostrar scrollbars se não for preciso
+            flpFuncoes.WrapContents = true;
         }
 
-        private void CriarStock_Load(object sender, EventArgs e)
+        private async void CriarStock_Load(object sender, EventArgs e)
         {
             CarregarCombo(cmbFamilia);
-            CarregarFuncoes(); // <--- O carregamento das Tags é chamado aqui!
+            await CarregarFuncoesAsync(); // <-- AGORA É ASSÍNCRONO!
         }
 
         // ==========================================
@@ -36,7 +43,7 @@ namespace PEPIDI.UCs
             dtFamilias.Columns.Add("NomeFamilia", typeof(string));
             dtFamilias.Columns.Add("Apresentacao", typeof(string));
 
-            dtFamilias.Rows.Add(0, "Null", "Selecionar...");
+            dtFamilias.Rows.Add(0, "Null", "Familía...");
             dtFamilias.Rows.Add(1, "TShirt", "T-Shirt");
             dtFamilias.Rows.Add(2, "Casaco", "Casaco");
             dtFamilias.Rows.Add(3, "PoloMCurta", "Polo Manga Curta");
@@ -51,39 +58,42 @@ namespace PEPIDI.UCs
             combo.SelectedIndex = 0;
         }
 
-        private void CarregarModelos(string familia)
+        private async void CarregarModelos(string familia)
         {
             DataTable dtModelos = new DataTable();
             dtModelos.Columns.Add("Modelo", typeof(string));
 
-            dtModelos.Rows.Add("Selecionar...");
+            dtModelos.Rows.Add("Modelo...");
             dtModelos.Rows.Add("+ Escrever Novo Modelo...");
 
             string query = "SELECT DISTINCT Modelo FROM EPI WHERE Familia = @Familia AND Modelo IS NOT NULL AND Modelo <> ''";
 
-            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+            // Executa a query pesada em background para não bugar a ComboBox principal
+            await Task.Run(() =>
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
                 {
-                    cmd.Parameters.AddWithValue("@Familia", familia);
-
-                    try
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        conn.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        cmd.Parameters.AddWithValue("@Familia", familia);
+                        try
                         {
-                            while (reader.Read())
+                            conn.Open();
+                            using (SqlDataReader reader = cmd.ExecuteReader())
                             {
-                                dtModelos.Rows.Add(reader["Modelo"].ToString().Trim());
+                                while (reader.Read())
+                                {
+                                    dtModelos.Rows.Add(reader["Modelo"].ToString().Trim());
+                                }
                             }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Erro ao carregar os modelos: " + ex.Message, "Erro SQL");
+                        catch (Exception)
+                        {
+                            // Erro silencioso na thread background para não rebentar o programa
+                        }
                     }
                 }
-            }
+            });
 
             cmbModelo.DataSource = dtModelos;
             cmbModelo.DisplayMember = "Modelo";
@@ -101,7 +111,7 @@ namespace PEPIDI.UCs
             dtTamanhos.Columns.Add("Valor", typeof(string));
             dtTamanhos.Columns.Add("Apresentacao", typeof(string));
 
-            dtTamanhos.Rows.Add("Null", "Selecionar...");
+            dtTamanhos.Rows.Add("Null", "Tamanho...");
 
             if (familia == "Sapato")
             {
@@ -128,35 +138,53 @@ namespace PEPIDI.UCs
         }
 
         // ==========================================
-        // 2. FUNÇÕES AUTORIZADAS (TAGS)
+        // 2. FUNÇÕES AUTORIZADAS (TAGS) - O MOTOR V8! 🚀
         // ==========================================
-        private void CarregarFuncoes()
+        private async Task CarregarFuncoesAsync()
         {
+            // Esconde e congela o painel enquanto desenha
+            flpFuncoes.Visible = false;
+            flpFuncoes.SuspendLayout();
             flpFuncoes.Controls.Clear();
 
+            List<string> listaFuncoes = new List<string>();
             string query = "SELECT Nome FROM Funcoes ORDER BY Nome";
 
-            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+            // 1. Busca os nomes todos num abrir e piscar de olhos noutra thread
+            await Task.Run(() =>
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
                 {
-                    try
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        conn.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        try
                         {
-                            while (reader.Read())
+                            conn.Open();
+                            using (SqlDataReader reader = cmd.ExecuteReader())
                             {
-                                CriarTagFuncao(reader["Nome"].ToString().Trim());
+                                while (reader.Read())
+                                {
+                                    listaFuncoes.Add(reader["Nome"].ToString().Trim());
+                                }
                             }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Erro ao carregar as funções: " + ex.Message, "Erro SQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Erro ao carregar as funções: " + ex.Message, "Erro SQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
+            });
+
+            // 2. Com todos os nomes já em RAM, cospe os botões para o ecrã à bruta!
+            foreach (string nomeFuncao in listaFuncoes)
+            {
+                CriarTagFuncao(nomeFuncao);
             }
+
+            // 3. Liberta a besta!
+            flpFuncoes.ResumeLayout(true);
+            flpFuncoes.Visible = true;
         }
 
         private void CriarTagFuncao(string nomeFuncao)
@@ -174,14 +202,14 @@ namespace PEPIDI.UCs
             // 2. A MAGIA REDONDINHA DO GUNA!
             tag.BorderRadius = 15;
             tag.Cursor = Cursors.Hand;
-            tag.Animated = true; // Dá um efeitinho suave a clicar
+            tag.Animated = true;
 
             // 3. Design Inicial (Desligado)
             tag.FillColor = Color.FromArgb(230, 232, 235); // Fundo Cinza
             tag.ForeColor = Color.FromArgb(64, 64, 64);    // Texto Escuro
             tag.Margin = new Padding(0, 0, 10, 10);
 
-            // Usamos o "Tag" (uma caixinha de memória do botão) para saber se está ligado ou desligado
+            // Usamos o "Tag" para saber se está ligado ou desligado
             tag.Tag = false;
 
             // 4. Evento para ligar/desligar ao clicar
@@ -191,20 +219,20 @@ namespace PEPIDI.UCs
 
                 if (!isLigado)
                 {
-                    // LIGA: Fica Laranja e Letra Branca
                     tag.FillColor = Color.FromArgb(242, 103, 34);
                     tag.ForeColor = Color.White;
                     tag.Tag = true;
                 }
                 else
                 {
-                    // DESLIGA: Volta a Cinza
                     tag.FillColor = Color.FromArgb(230, 232, 235);
                     tag.ForeColor = Color.FromArgb(64, 64, 64);
                     tag.Tag = false;
                 }
             };
 
+            // Criar o controlo em memória RAM antes de o atirar para o painel!
+            tag.CreateControl();
             flpFuncoes.Controls.Add(tag);
         }
 
@@ -271,6 +299,7 @@ namespace PEPIDI.UCs
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             txtNovoModelo.Clear();
+            txtQuantidade.Clear();
             if (cmbModelo.Items.Count > 0)
                 cmbModelo.SelectedIndex = 0;
 
@@ -285,7 +314,6 @@ namespace PEPIDI.UCs
         // ==========================================
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            // Validações
             if (cmbFamilia.SelectedIndex <= 0)
             {
                 MessageBox.Show("Por favor, seleciona uma Família.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -310,7 +338,6 @@ namespace PEPIDI.UCs
             List<string> funcoesSelecionadas = new List<string>();
             foreach (Control ctrl in flpFuncoes.Controls)
             {
-                // Verifica se é um Guna2Button e se a propriedade Tag diz que está "true" (ligado)
                 if (ctrl is Guna2Button btn && btn.Tag is bool isLigado && isLigado)
                 {
                     funcoesSelecionadas.Add(btn.Text);
@@ -362,7 +389,6 @@ namespace PEPIDI.UCs
                 txtQuantidade.Clear();
                 foreach (Control ctrl in flpFuncoes.Controls)
                 {
-                    // Desliga e pinta de cinza todos os botões redondinhos
                     if (ctrl is Guna2Button btn)
                     {
                         btn.Tag = false;

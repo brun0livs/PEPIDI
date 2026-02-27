@@ -12,16 +12,17 @@ namespace PEPIDI.UCs.DGVS
 {
     public partial class LinhaDevolucao : UserControl
     {
+        // ISTO É O QUE FALTA AÍ PARA OS ERROS DESAPARECEREM:
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        // ISTO É O QUE FALTA AÍ PARA OS ERROS DESAPARECEREM:
         public int IDEPI { get; set; }
         public string DescricaoArtigo => lblModelo.Text;
         public string TamanhoSelecionado => lblTamanho.Text;
         public int QuantidadeDevolvida => Convert.ToInt32(lblQuantDevolvida.Text);
 
-        // Este é o tal "construtor de 4 argumentos" que o Visual Studio está a pedir!
         public LinhaDevolucao(int idEpi, string modelo, string tamanho, int quantDevolvida)
         {
-            InitializeComponent(); // OBRIGATÓRIO: É isto que desenha o ecrã
+            InitializeComponent();
 
             this.IDEPI = idEpi;
             lblModelo.Text = modelo;

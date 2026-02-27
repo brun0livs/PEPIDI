@@ -94,7 +94,7 @@ namespace PEPIDI.UCs
             if (dgv.Columns.Contains("CorHex")) dgv.Columns["CorHex"].Visible = false;
         }
 
-        private void DgvPedidos_CellClick(object sender, DataGridViewCellEventArgs e)
+        private async void DgvPedidos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
@@ -103,6 +103,8 @@ namespace PEPIDI.UCs
 
                 if (cellValue != null && int.TryParse(cellValue.ToString(), out int idPedidoSelecionado))
                 {
+                    // CRIA A INTERFACE NA THREAD PRINCIPAL (Super rápido agora!)
+                    // O próprio PedidosDetalhes vai tratar de não engasgar graças ao nosso trabalho anterior
                     AbrirControl(new UcsSecundarios.PedidosDetalhes(idPedidoSelecionado, IDGestor, estado));
                 }
             }

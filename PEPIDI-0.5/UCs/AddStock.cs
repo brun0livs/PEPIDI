@@ -41,10 +41,10 @@ namespace PEPIDI.UCs
 
         private void UCAddStock_Load(object sender, EventArgs e)
         {
-            CarregaDGV(dgvStock);
-            CarregarFuncoes();
-            PreencherCombosFamiliaModelo();
-            lblQuantAdici.Text = _qtdAdicionar.ToString();
+            //CarregaDGV(dgvStock);
+            //CarregarFuncoes();
+            //PreencherCombosFamiliaModelo();
+            //lblQuantAdici.Text = _qtdAdicionar.ToString();
         }
 
         private void CarregaDGV(DataGridView dgv)

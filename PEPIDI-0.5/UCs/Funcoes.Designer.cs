@@ -69,7 +69,7 @@
             tableLayoutPanel1.RowCount = 2;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 93F));
-            tableLayoutPanel1.Size = new Size(1936, 1048);
+            tableLayoutPanel1.Size = new Size(2489, 1327);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -86,7 +86,7 @@
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(1936, 73);
+            tableLayoutPanel2.Size = new Size(2489, 92);
             tableLayoutPanel2.TabIndex = 0;
             // 
             // btnAddFuncao
@@ -99,13 +99,13 @@
             btnAddFuncao.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
             btnAddFuncao.Dock = DockStyle.Fill;
             btnAddFuncao.FillColor = Color.FromArgb(243, 108, 33);
-            btnAddFuncao.Font = new Font("Roboto", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnAddFuncao.Font = new Font("Roboto", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnAddFuncao.ForeColor = Color.White;
-            btnAddFuncao.Location = new Point(1315, 10);
-            btnAddFuncao.Margin = new Padding(25, 10, 25, 10);
+            btnAddFuncao.Location = new Point(1690, 13);
+            btnAddFuncao.Margin = new Padding(32, 13, 32, 13);
             btnAddFuncao.Name = "btnAddFuncao";
             btnAddFuncao.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            btnAddFuncao.Size = new Size(596, 53);
+            btnAddFuncao.Size = new Size(767, 66);
             btnAddFuncao.TabIndex = 4;
             btnAddFuncao.Text = "Criar Função";
             btnAddFuncao.Click += btnAddFuncao_Click;
@@ -114,11 +114,11 @@
             // 
             label1.AutoSize = true;
             label1.Dock = DockStyle.Fill;
-            label1.Font = new Font("Roboto Medium", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(15, 0);
-            label1.Margin = new Padding(15, 0, 0, 0);
+            label1.Font = new Font("Roboto Medium", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(19, 0);
+            label1.Margin = new Padding(19, 0, 0, 0);
             label1.Name = "label1";
-            label1.Size = new Size(630, 73);
+            label1.Size = new Size(810, 92);
             label1.TabIndex = 0;
             label1.Text = "FUNÇÕES";
             label1.TextAlign = ContentAlignment.MiddleLeft;
@@ -159,8 +159,9 @@
             dgvFuncoes.Dock = DockStyle.Fill;
             dgvFuncoes.EnableHeadersVisualStyles = false;
             dgvFuncoes.GridColor = Color.White;
-            dgvFuncoes.Location = new Point(15, 88);
-            dgvFuncoes.Margin = new Padding(15, 15, 15, 0);
+            dgvFuncoes.HeaderFontSize = 15F;
+            dgvFuncoes.Location = new Point(19, 111);
+            dgvFuncoes.Margin = new Padding(19, 19, 19, 0);
             dgvFuncoes.MultiSelect = false;
             dgvFuncoes.Name = "dgvFuncoes";
             dgvFuncoes.RowHeadersVisible = false;
@@ -170,7 +171,7 @@
             dgvFuncoes.RowTemplate.Height = 54;
             dgvFuncoes.ScrollBars = ScrollBars.None;
             dgvFuncoes.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvFuncoes.Size = new Size(1906, 960);
+            dgvFuncoes.Size = new Size(2451, 1216);
             dgvFuncoes.TabIndex = 3;
             dgvFuncoes.CellDoubleClick += dgvFuncoes_CellDoubleClick;
             dgvFuncoes.CellValueChanged += dgvFuncoes_CellValueChanged;
@@ -207,7 +208,7 @@
             PodeCriarStock.DataPropertyName = "PodeCriarStock";
             PodeCriarStock.HeaderText = "Criar Stock";
             PodeCriarStock.Name = "PodeCriarStock";
-            PodeCriarStock.Width = 79;
+            PodeCriarStock.Width = 78;
             // 
             // PodeInserirStock
             // 
@@ -215,7 +216,7 @@
             PodeInserirStock.DataPropertyName = "PodeInserirStock";
             PodeInserirStock.HeaderText = "Inserir Stock";
             PodeInserirStock.Name = "PodeInserirStock";
-            PodeInserirStock.Width = 88;
+            PodeInserirStock.Width = 87;
             // 
             // PodeEditarFunc
             // 
@@ -231,7 +232,7 @@
             PodeSubmeter.DataPropertyName = "PodeSubmeter";
             PodeSubmeter.HeaderText = "Submeter";
             PodeSubmeter.Name = "PodeSubmeter";
-            PodeSubmeter.Width = 77;
+            PodeSubmeter.Width = 76;
             // 
             // PodeAprovar
             // 
@@ -239,7 +240,7 @@
             PodeAprovar.DataPropertyName = "PodeAprovar";
             PodeAprovar.HeaderText = "Aprovar";
             PodeAprovar.Name = "PodeAprovar";
-            PodeAprovar.Width = 66;
+            PodeAprovar.Width = 64;
             // 
             // PodeEntregar
             // 
@@ -247,7 +248,7 @@
             PodeEntregar.DataPropertyName = "PodeEntregar";
             PodeEntregar.HeaderText = "Entregar";
             PodeEntregar.Name = "PodeEntregar";
-            PodeEntregar.Width = 70;
+            PodeEntregar.Width = 68;
             // 
             // PodeCriarFuncoes
             // 
@@ -255,7 +256,7 @@
             PodeCriarFuncoes.DataPropertyName = "PodeCriarFuncoes";
             PodeCriarFuncoes.HeaderText = "Criar Funcoes";
             PodeCriarFuncoes.Name = "PodeCriarFuncoes";
-            PodeCriarFuncoes.Width = 95;
+            PodeCriarFuncoes.Width = 94;
             // 
             // PodeAlterarDefinicoes
             // 
@@ -263,7 +264,7 @@
             PodeAlterarDefinicoes.DataPropertyName = "PodeAlterarDefinicoes";
             PodeAlterarDefinicoes.HeaderText = "Alterar Definicoes";
             PodeAlterarDefinicoes.Name = "PodeAlterarDefinicoes";
-            PodeAlterarDefinicoes.Width = 121;
+            PodeAlterarDefinicoes.Width = 119;
             // 
             // CorHex
             // 
@@ -275,12 +276,14 @@
             // 
             // Funcoes
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(9F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             Controls.Add(tableLayoutPanel1);
+            Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Margin = new Padding(4, 4, 4, 4);
             Name = "Funcoes";
-            Size = new Size(1936, 1048);
+            Size = new Size(2489, 1327);
             Load += Funcoes_Load;
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);

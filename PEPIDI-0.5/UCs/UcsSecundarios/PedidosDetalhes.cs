@@ -19,7 +19,6 @@ namespace PEPIDI.UCs.UcsSecundarios
         int IDGestor;
         string NomeGestor;
         string Estado;
-        // CORREÇÃO: Inicializar com string vazia ou valores por defeito
         string NomeFuncionario = "Funcionário Desconhecido";
         string NMEC = "0000";
         string FuncaoFuncionario = "-";
@@ -36,13 +35,45 @@ namespace PEPIDI.UCs.UcsSecundarios
             ID = _ID;
             IDGestor = _IDGestor;
             Estado = _Estado;
+
+            // MATAR O DUPLO SCROLL
+            if (pnlScroll != null) pnlScroll.AutoScroll = false;
+            if (pnlScroll2 != null) pnlScroll2.AutoScroll = false;
+
+            flpLinhas.AutoScroll = true;
+            flpDevolucoes.AutoScroll = true;
+
+            // FORÇAR PADDING ZERO NOS PAINÉIS PARA ELES NÃO EMPURRAREM AS LINHAS
+            flpLinhas.Padding = new Padding(0);
+            flpLinhas.Margin = new Padding(0);
+            flpDevolucoes.Padding = new Padding(0);
+            flpDevolucoes.Margin = new Padding(0);
+
+            flpLinhas.SizeChanged += (s, e) => AjustarLarguras(flpLinhas);
+            flpDevolucoes.SizeChanged += (s, e) => AjustarLarguras(flpDevolucoes);
+        }
+
+        // =========================================================================
+        // METODO QUE ESMAGA QUALQUER BURACO LATERAL E FORÇA A LARGURA MÁXIMA
+        // =========================================================================
+        private void AjustarLarguras(FlowLayoutPanel flp)
+        {
+            if (flp.IsDisposed || !flp.IsHandleCreated) return;
+
+            flp.SuspendLayout();
+            foreach (Control c in flp.Controls)
+            {
+                // A elegância voltou! 5px de cada lado.
+                c.Margin = new Padding(5, 2, 5, 2);
+                // Desconta os 10px das laterais + 2px de segurança
+                c.Width = flp.ClientSize.Width - 12;
+            }
+            flp.ResumeLayout();
         }
 
         private async void PedidosDetalhes_Load(object sender, EventArgs e)
         {
-            // Ativa o filtro global que impede a recursividade
             Application.AddMessageFilter(this);
-
             var info = Details.GetInfoGestor(IDGestor);
             NomeGestor = info.Nome;
             await GereEstadoAsync(Estado);
@@ -50,19 +81,15 @@ namespace PEPIDI.UCs.UcsSecundarios
 
         protected override void OnHandleDestroyed(EventArgs e)
         {
-            // Remove o filtro ao fechar para evitar que a app tente dar scroll a um painel que já não existe
             Application.RemoveMessageFilter(this);
             base.OnHandleDestroyed(e);
         }
 
-        // Este método captura o scroll antes de ele chegar aos botões e causar o StackOverflow
         public bool PreFilterMessage(ref Message m)
         {
-            // WM_MOUSEWHEEL = 0x020A
             if (m.Msg == 0x020A && pnlScroll != null && pnlScroll.IsHandleCreated)
             {
                 Point pos = PointToClient(Cursor.Position);
-
                 if (this.ClientRectangle.Contains(pos))
                 {
                     TimeSpan elapsed = DateTime.Now - lastScrollTime;
@@ -75,11 +102,8 @@ namespace PEPIDI.UCs.UcsSecundarios
                     if (scrollCount < MaxScrollMessages)
                     {
                         scrollCount++;
-                        // Envia o scroll diretamente para o pnlScroll sem passar pelos filhos
-                        SendMessage(pnlScroll.Handle, m.Msg, m.WParam, m.LParam);
+                        SendMessage(flpLinhas.Handle, m.Msg, m.WParam, m.LParam);
                     }
-
-                    // "Mata" a mensagem original. Isto impede que o evento suba na hierarquia e crash o programa.
                     return true;
                 }
             }
@@ -113,7 +137,6 @@ namespace PEPIDI.UCs.UcsSecundarios
 
             VerComentario(ID);
 
-            // Carrega os dois painéis em pano de fundo!
             await CarregarPPacoteAsync(pnlConteudo, ID, estado, pnlScroll, flpLinhas);
             await CarregarDPacoteAsync(flpDevolucoes, pnlScroll2, ID, estado);
         }
@@ -125,27 +148,20 @@ namespace PEPIDI.UCs.UcsSecundarios
                 try
                 {
                     conn.Open();
-
-                    // Chama a nova SP que acabaste de criar no SQL
                     using (SqlCommand cmd = new SqlCommand("sp_ObterFuncionarioPorPedido", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-
-                        // Passa o parâmetro com o nome exato que está na SP (@IDPedido)
                         cmd.Parameters.AddWithValue("@IDPedido", idPedido);
-
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
-                                // Dados encontrados com sucesso
                                 this.NomeFuncionario = reader["Nome"]?.ToString() ?? "Sem Nome";
                                 this.NMEC = reader["Nr"]?.ToString() ?? "0000";
                                 this.FuncaoFuncionario = reader["Funcao"]?.ToString() ?? "-";
                             }
                             else
                             {
-                                // Se por algum motivo o pedido não existir ou não tiver funcionário
                                 this.NomeFuncionario = "Erro ao ler Funcionário";
                                 this.NMEC = "0000";
                                 this.FuncaoFuncionario = "Erro";
@@ -153,9 +169,8 @@ namespace PEPIDI.UCs.UcsSecundarios
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    // Log de erro invisível (para não rebentar o programa) e define valores de segurança
                     this.NomeFuncionario = "Erro SQL";
                     this.NMEC = "0000";
                     this.FuncaoFuncionario = "Erro";
@@ -165,16 +180,14 @@ namespace PEPIDI.UCs.UcsSecundarios
 
         public async Task CarregarDPacoteAsync(FlowLayoutPanel flpLinhasDev, Panel pnlScrollDev, int idPedido, string estado)
         {
-            await Task.Delay(150); // Deixa o ecrã respirar
+            await Task.Delay(150);
 
-            // 1. FECHA OS OLHOS e limpa!
             flpLinhasDev.Visible = false;
             flpLinhasDev.SuspendLayout();
             flpLinhasDev.Controls.Clear();
 
             DataTable dt = new DataTable();
 
-            // 2. SQL EM PANO DE FUNDO!
             await Task.Run(() =>
             {
                 using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
@@ -187,7 +200,6 @@ namespace PEPIDI.UCs.UcsSecundarios
                 }
             });
 
-            // 3. DESENHA RAPIDAMENTE SEM GEOMETRIAS
             foreach (DataRow row in dt.Rows)
             {
                 int idEpi = Convert.ToInt32(row["ID"]);
@@ -201,30 +213,33 @@ namespace PEPIDI.UCs.UcsSecundarios
                 if (quantDevolvida == 0) quantDevolvida = 1;
 
                 PEPIDI.UCs.DGVS.LinhaDevolucao novaLinha = new PEPIDI.UCs.DGVS.LinhaDevolucao(idEpi, modelo, tamanho, quantDevolvida);
-                novaLinha.Width = flpLinhasDev.Width - 20; // Ajuste para a scrollbar
-                novaLinha.CreateControl();
-                flpLinhasDev.Controls.Add(novaLinha); // Simples e instantâneo
+
+                // ZERO MARGEM NAS LATERAIS
+                novaLinha.AutoSize = false;
+                novaLinha.Margin = new Padding(0, 2, 0, 2);
+                novaLinha.Width = flpLinhasDev.ClientSize.Width;
+                novaLinha.Height = 40;
+
+                flpLinhasDev.Controls.Add(novaLinha);
             }
 
-            // 4. ABRE OS OLHOS!
             flpLinhasDev.ResumeLayout(true);
             flpLinhasDev.Visible = true;
+
+            // Força o ajuste imediatamente após desenhar
+            AjustarLarguras(flpLinhasDev);
         }
 
         public async Task CarregarPPacoteAsync(Panel pnlConteudo, int idPedido, string estado, Panel pnlScroll, FlowLayoutPanel flpLinhas)
         {
-            await Task.Delay(150); // Deixa o ecrã respirar
+            await Task.Delay(150);
 
-            // 1. FECHA OS OLHOS e limpa!
             flpLinhas.Visible = false;
             flpLinhas.SuspendLayout();
             flpLinhas.Controls.Clear();
 
-            pnlScroll.Size = tlpDesign.GetControlFromPosition(0, 1).Size;
-
             DataTable dt = new DataTable();
 
-            // 2. VAI AO SQL EM PANO DE FUNDO!
             await Task.Run(() =>
             {
                 using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
@@ -237,7 +252,6 @@ namespace PEPIDI.UCs.UcsSecundarios
                 }
             });
 
-            // 3. DESENHA INSTANTANEAMENTE SEM GEOMETRIAS DE TABELAS
             foreach (DataRow row in dt.Rows)
             {
                 int idEpi = Convert.ToInt32(row["ID"]);
@@ -256,26 +270,30 @@ namespace PEPIDI.UCs.UcsSecundarios
                 novaLinha.QuantidadeAlterada += Linha_QuantidadeAlterada;
                 Linha_QuantidadeAlterada(novaLinha, EventArgs.Empty);
 
-                novaLinha.Width = flpLinhas.Width - 20; // Ajuste para a scrollbar não tapar os botões
-                novaLinha.CreateControl(); // Pré-renderizar
+                // ZERO MARGEM NAS LATERAIS
+                novaLinha.AutoSize = false;
+                novaLinha.Margin = new Padding(0, 2, 0, 2);
+                novaLinha.Width = flpLinhas.ClientSize.Width;
+                novaLinha.Height = 40;
+
                 flpLinhas.Controls.Add(novaLinha);
             }
 
-            // 4. ABRE OS OLHOS E MOSTRA O RESULTADO FINAL!
             flpLinhas.ResumeLayout(true);
             flpLinhas.Visible = true;
+
+            // Força o ajuste imediatamente após desenhar
+            AjustarLarguras(flpLinhas);
         }
 
         private void Linha_QuantidadeAlterada(object sender, EventArgs e)
         {
-            // 1. O EXORCISTA DO FANTASMA DO "0"! 👻🚫
             if (this.Estado.Equals("Aprovado", StringComparison.OrdinalIgnoreCase) ||
                 this.Estado.Equals("Concluido", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
-            // 2. PROTEÇÃO DO DISPOSE (Para quando o ecrã fecha)
             if (this.IsDisposed || this.Disposing) return;
 
             if (sender is LinhaItem linha)
@@ -306,7 +324,6 @@ namespace PEPIDI.UCs.UcsSecundarios
             }
         }
 
-        // Outros métodos necessários
         private void VerComentario(int idPedido)
         {
             txtObs.Text = string.Empty;
@@ -324,25 +341,18 @@ namespace PEPIDI.UCs.UcsSecundarios
 
         private void close_Click(object sender, EventArgs e)
         {
-            // Verifica se o controlo tem um pai (o painel onde o inseriste)
             if (this.Parent != null)
             {
                 this.Parent.Controls.Remove(this);
-                this.Dispose(); // Liberta a memória para não ter lag (mais para o meu rato)
+                this.Dispose();
             }
         }
-
 
         private void btnAprovar_Click(object sender, EventArgs e)
         {
             string estadoAtual = this.Estado.Trim();
-
-            // GUARDA-COSTAS ANTI-FANTASMA: Guardamos as notas na memória LOGO no início do clique!
             string notasFinaisParaGravar = txtObs.Text.Trim();
 
-            // ==============================================================================
-            // 1. FASE DE APROVAÇÃO (Pendente -> Aprovado)
-            // ==============================================================================
             if (estadoAtual.Equals("Pendente", StringComparison.OrdinalIgnoreCase))
             {
                 try
@@ -354,8 +364,7 @@ namespace PEPIDI.UCs.UcsSecundarios
 
                         try
                         {
-                            // 1. Atualizar as quantidades que o Gestor decidiu na Combo
-                            foreach (Control c in flpLinhas.Controls) // <--- ATUALIZADO PARA flpLinhas
+                            foreach (Control c in flpLinhas.Controls)
                             {
                                 if (c is LinhaItem linha)
                                 {
@@ -368,7 +377,6 @@ namespace PEPIDI.UCs.UcsSecundarios
                                 }
                             }
 
-                            // 2. Mudar estado para 'Aprovado' E GRAVAR AS NOTAS!
                             string sql = @"UPDATE PedidoRegistos 
                                    SET Estado = 'Aprovado', Aprovacao = @Gestor, Notas = @Notas, AlteracaoData = GETDATE() 
                                    WHERE ID = @ID";
@@ -399,19 +407,15 @@ namespace PEPIDI.UCs.UcsSecundarios
                     M.AbrirMensagem("Erro ao aprovar: " + ex.Message, "Erro");
                 }
             }
-            // ==============================================================================
-            // 2. FASE DE FINALIZAÇÃO (Aprovado -> Concluido + PDF + Stock)
-            // ==============================================================================
             else if (estadoAtual.Equals("Aprovado", StringComparison.OrdinalIgnoreCase))
             {
                 CarregarDadosFuncionario(this.ID);
 
                 var listaReceber = new List<(int ID, string Artigo, string Tamanho, int Qtd)>();
-                var listaDevolver = new List<(int ID, string Artigo, string Tamanho, int Qtd)>(); // <--- LISTA PARA AS DEVOLUÇÕES
+                var listaDevolver = new List<(int ID, string Artigo, string Tamanho, int Qtd)>();
                 var todosOsItens = new List<(int IDEPI, int QtdReal, bool Selecionado)>();
 
-                // 1. RECOLHER ENTREGAS (Do painel flpLinhas)
-                foreach (Control c in flpLinhas.Controls) // <--- ATUALIZADO PARA flpLinhas
+                foreach (Control c in flpLinhas.Controls)
                 {
                     if (c is LinhaItem linha)
                     {
@@ -425,8 +429,7 @@ namespace PEPIDI.UCs.UcsSecundarios
                     }
                 }
 
-                // 2. RECOLHER DEVOLUÇÕES (Do novo flpDevolucoes)
-                foreach (Control c in flpDevolucoes.Controls) // <--- ATUALIZADO PARA flpDevolucoes
+                foreach (Control c in flpDevolucoes.Controls)
                 {
                     if (c is PEPIDI.UCs.DGVS.LinhaDevolucao linhaDev)
                     {
@@ -437,7 +440,6 @@ namespace PEPIDI.UCs.UcsSecundarios
                     }
                 }
 
-                // Validação: Tem de haver ou algo para receber, ou algo para devolver!
                 if (listaReceber.Count == 0 && listaDevolver.Count == 0)
                 {
                     M.AbrirMensagem("Não há itens selecionados para entregar nem para devolver.", "Aviso");
@@ -446,11 +448,9 @@ namespace PEPIDI.UCs.UcsSecundarios
 
                 using (var frm = new FormAssinatura(NomeFuncionario))
                 {
-                    // Passa as entregas para o form de assinatura
                     foreach (var item in listaReceber)
                         frm.AdicionarItemReceber(item.Artigo, item.Tamanho, item.Qtd);
 
-                    // Passa as retomas para o form de assinatura
                     foreach (var item in listaDevolver)
                         frm.AdicionarItemDevolver(item.Artigo, item.Tamanho, item.Qtd);
 
@@ -463,10 +463,9 @@ namespace PEPIDI.UCs.UcsSecundarios
 
                     try
                     {
-                        // GERA O PDF E PASSA A LISTA DE DEVOLUÇÕES TAMBÉM!
                         string caminhoPDF = PEPIDI.Organizers.PDFGenerator.GerarComprovativo(
                             this.ID, NomeFuncionario, NMEC, FuncaoFuncionario, NomeGestor,
-                            listaReceber, listaDevolver, // <--- AQUI VAI A MAGIA DA DEVOLUÇÃO
+                            listaReceber, listaDevolver,
                             frm.AssinaturaFinal
                         );
 
@@ -477,7 +476,6 @@ namespace PEPIDI.UCs.UcsSecundarios
                             {
                                 try
                                 {
-                                    // Atualiza Estado, PDF E AS NOTAS!
                                     string sqlUpdate = @"UPDATE PedidoRegistos 
                                                  SET Estado = 'Concluido', PDF = @PDF, Notas = @Notas, AlteracaoData = GETDATE() 
                                                  WHERE ID = @ID";
@@ -490,7 +488,6 @@ namespace PEPIDI.UCs.UcsSecundarios
                                         cmd.ExecuteNonQuery();
                                     }
 
-                                    // Abate de Stock APENAS do que foi entregue
                                     foreach (var item in todosOsItens)
                                     {
                                         using (SqlCommand cmdItem = new SqlCommand("sp_AtualizarQuantidadePedidoPacote", conn, trans))
@@ -522,7 +519,7 @@ namespace PEPIDI.UCs.UcsSecundarios
                                     this.Parent.Controls.Remove(this);
                                     this.Dispose();
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     trans.Rollback();
                                     throw;
@@ -536,9 +533,6 @@ namespace PEPIDI.UCs.UcsSecundarios
                     }
                 }
             }
-            // ==============================================================================
-            // 3. CONSULTA (Concluido -> Ver PDF)
-            // ==============================================================================
             else
             {
                 AbrirComprovativoExistente();
@@ -554,7 +548,6 @@ namespace PEPIDI.UCs.UcsSecundarios
                 using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
                 {
                     conn.Open();
-                    // Vai buscar o caminho que guardaste na coluna PDF
                     string sql = "SELECT PDF FROM PedidoRegistos WHERE ID = @ID";
 
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
@@ -570,7 +563,6 @@ namespace PEPIDI.UCs.UcsSecundarios
 
                 if (!string.IsNullOrEmpty(caminhoPDF) && System.IO.File.Exists(caminhoPDF))
                 {
-                    // Abre o PDF com o visualizador padrão do Windows
                     System.Diagnostics.Process.Start("explorer.exe", caminhoPDF);
                 }
                 else
@@ -587,12 +579,7 @@ namespace PEPIDI.UCs.UcsSecundarios
         private void btnReprovar_Click(object sender, EventArgs e)
         {
             string justificativaFinal = "";
-
-            // 1. ANALISAR O CONTEÚDO ATUAL DA TXTOBS
-            // Filtramos para ignorar o que o programa escreve sozinho (Logs de Stock / PEPIDI)
             List<string> linhasAtuais = txtObs.Lines.ToList();
-
-            // Pegamos apenas em linhas que NÃO são logs automáticos e NÃO estão vazias
             var linhasManuais = linhasAtuais.Where(l =>
                 !l.Contains("Alterou") &&
                 !l.Contains("(falta de stock)") &&
@@ -601,15 +588,11 @@ namespace PEPIDI.UCs.UcsSecundarios
 
             if (linhasManuais.Count > 0)
             {
-                // CASO A: O utilizador já escreveu o motivo diretamente na txtObs
-                // Pegamos no texto manual (limpando possíveis prefixos que já lá estejam)
                 string textoPuro = string.Join(" ", linhasManuais).Replace($"[{NomeGestor}]:", "").Trim();
                 justificativaFinal = $"[{NomeGestor}]: MOTIVO REPROVAÇÃO - {textoPuro}";
             }
             else
             {
-                // CASO B: A txtObs está vazia ou só tem logs do PEPIDI
-                // Abrimos o formulário com o efeito de sombra (Overlay)
                 using (Form overlay = new Form())
                 {
                     overlay.StartPosition = FormStartPosition.Manual;
@@ -631,7 +614,7 @@ namespace PEPIDI.UCs.UcsSecundarios
                         else
                         {
                             overlay.Close();
-                            return; // Cancelou
+                            return;
                         }
                     }
                     overlay.Close();
@@ -648,7 +631,6 @@ namespace PEPIDI.UCs.UcsSecundarios
                 using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
                 {
                     conn.Open();
-                    // Gravamos apenas a nota formatada, descartando todo o lixo da txtObs
                     SqlCommand cmd = new SqlCommand("UPDATE PedidoRegistos SET Estado = 'Reprovado', Notas = @Notas WHERE ID = @ID", conn);
                     cmd.Parameters.AddWithValue("@ID", ID);
                     cmd.Parameters.AddWithValue("@Notas", notaLimpa);

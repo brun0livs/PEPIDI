@@ -14,11 +14,15 @@ using System.Drawing.Imaging;
 using iText.Forms.Xfdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Forms.Fields;
+using System.Windows.Forms.VisualStyles;
+using VerticalAlignment = iText.Layout.Properties.VerticalAlignment;
 
 namespace PEPIDI.Organizers
 {
     public static class PDFGenerator
     {
+        public static iText.Layout.Properties.VerticalAlignment? VerticalAlign { get; private set; }
+
         public static string GerarComprovativo(
             int IDPEDIDO,
             string FUNCIONARIO,
@@ -129,6 +133,7 @@ namespace PEPIDI.Organizers
                 tabelaItens.AddHeaderCell(new Cell().Add(new Paragraph("Tamanho").SetFont(fontNegrito).SetTextAlignment(TextAlignment.CENTER)).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder(Border.NO_BORDER));
                 tabelaItens.AddHeaderCell(new Cell().Add(new Paragraph("Quantidade Entregue").SetFont(fontNegrito).SetTextAlignment(TextAlignment.CENTER)).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder(Border.NO_BORDER));
 
+                
                 tabelaItens2.AddHeaderCell(new Cell().Add(new Paragraph("Artigo").SetFont(fontNegrito).SetTextAlignment(TextAlignment.CENTER)).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder(Border.NO_BORDER));
                 tabelaItens2.AddHeaderCell(new Cell().Add(new Paragraph("Descrição").SetFont(fontNegrito).SetTextAlignment(TextAlignment.CENTER)).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder(Border.NO_BORDER));
                 tabelaItens2.AddHeaderCell(new Cell().Add(new Paragraph("Tamanho").SetFont(fontNegrito).SetTextAlignment(TextAlignment.CENTER)).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder(Border.NO_BORDER));
@@ -188,11 +193,32 @@ namespace PEPIDI.Organizers
                     tabelaItens2.AddCell(new Cell().Add(new Paragraph(item.Qtd.ToString())).SetMinHeight(13).SetPadding(1).SetBorder(Border.NO_BORDER).SetTextAlignment(TextAlignment.RIGHT));
                 }
 
-                Table Tlinha2 = new Table(UnitValue.CreatePercentArray(new float[] { 50f, 50f })).UseAllAvailableWidth();
-                Tlinha2.AddCell(new Cell().Add(new Paragraph("Total: ").SetMultipliedLeading(0.001f).SetFont(fontNegrito).SetFontSize(9)).SetTextAlignment(TextAlignment.LEFT).SetBorder(Border.NO_BORDER));
-                Tlinha2.AddCell(new Cell().Add(new Paragraph(total2.ToString()).SetMultipliedLeading(0.001f).SetFont(fontNegrito).SetFontSize(9)).SetTextAlignment(TextAlignment.RIGHT).SetBorder(Border.NO_BORDER));
-                Tlinha2.AddCell(new Cell(1, 2).SetBorderBottom(new SolidBorder(ColorConstants.LIGHT_GRAY, 1)).SetBorderTop(Border.NO_BORDER).SetBorderLeft(Border.NO_BORDER).SetBorderRight(Border.NO_BORDER));
+                Table Tlinha2 = new Table(UnitValue.CreatePercentArray(new float[] { 20f, 30, 30, 20f })).UseAllAvailableWidth();
 
+                // 1. A célula invisível que faz de linha separadora
+                Tlinha2.AddCell(new Cell(1, 4) // (1, 4) é mais seguro que (0, 4) no iText7
+                    .SetBorderBottom(new SolidBorder(ColorConstants.LIGHT_GRAY, 0.5f))
+                    .SetBorderTop(Border.NO_BORDER)
+                    .SetBorderLeft(Border.NO_BORDER)
+                    .SetBorderRight(Border.NO_BORDER));
+
+                // 2. Célula com a palavra "Total:"
+                Tlinha2.AddCell(new Cell()
+                    .Add(new Paragraph("Total: ").SetFont(fontNegrito).SetFontSize(9))
+                    .SetPaddingTop(1f) // <--- O SEGREDO: Dá uma margem de 5 pontos em relação à linha de cima!
+                    .SetTextAlignment(TextAlignment.CENTER)
+                    .SetBorder(Border.NO_BORDER));
+
+                // Células vazias do meio
+                Tlinha2.AddCell(new Cell().SetBorder(Border.NO_BORDER));
+                Tlinha2.AddCell(new Cell().SetBorder(Border.NO_BORDER));
+
+                // 3. Célula com o Valor do Total
+                Tlinha2.AddCell(new Cell()
+                    .Add(new Paragraph(total2.ToString()).SetFont(fontNegrito).SetFontSize(9))
+                    .SetPaddingTop(1f) // <--- Tem de ter o mesmo PaddingTop para ficar alinhado com a palavra "Total"
+                    .SetTextAlignment(TextAlignment.RIGHT)
+                    .SetBorder(Border.NO_BORDER));
                 // PREENCHER LINHAS VAZIAS PARA O LAYOUT FIXO
                 for (int i = 0; i < linhasFinais - usadas; i++)
                 {
@@ -244,6 +270,7 @@ namespace PEPIDI.Organizers
                 {
                     doc.Add(tabelaItens);
                     doc.Add(Tlinha);
+                    doc.Add(new Paragraph("\n"));
                     doc.Add(tabelaItens2);
                     doc.Add(Tlinha2);
                     doc.Add(tabelaItens3);
@@ -351,7 +378,7 @@ namespace PEPIDI.Organizers
                     doc.Add(tableNome);
 
                     // Tabela com os Itens desse Funcionário
-                    Table tableItens = new Table(UnitValue.CreatePercentArray(new float[] { 10f, 15f, 55f, 20f })).UseAllAvailableWidth();
+                    Table tableItens = new Table(UnitValue.CreatePercentArray(new float[] { 15f, 55f, 20f, 10f })).UseAllAvailableWidth();
 
                     foreach (var item in grupo)
                     {
@@ -371,16 +398,17 @@ namespace PEPIDI.Organizers
                             .SetPaddingLeft(5f)
                             .SetVerticalAlignment(VerticalAlignment.MIDDLE);
 
-                        tableItens.AddCell(cellCheck).SetVerticalAlignment(VerticalAlignment.MIDDLE);
 
                         // 2. Quantidade
                         tableItens.AddCell(new Cell().Add(new Paragraph($"{item.Qtd} x").SetFont(fontNegrito)).SetBorder(Border.NO_BORDER).SetVerticalAlignment(VerticalAlignment.MIDDLE).SetTextAlignment(TextAlignment.CENTER));
 
                         // 3. Artigo / Modelo
-                        tableItens.AddCell(new Cell().Add(new Paragraph(item.Modelo)).SetBorder(Border.NO_BORDER).SetVerticalAlignment(VerticalAlignment.MIDDLE));
+                        tableItens.AddCell(new Cell().Add(new Paragraph(item.Modelo)).SetBorder(Border.NO_BORDER).SetTextAlignment(TextAlignment.LEFT));
 
                         // 4. Tamanho
                         tableItens.AddCell(new Cell().Add(new Paragraph($"Tam: {item.Tamanho}").SetFont(fontNegrito)).SetBorder(Border.NO_BORDER).SetVerticalAlignment(VerticalAlignment.MIDDLE).SetTextAlignment(TextAlignment.CENTER));
+                        
+                        tableItens.AddCell(cellCheck).SetVerticalAlignment(VerticalAlign).SetTextAlignment(TextAlignment.RIGHT);
                     }
                     doc.Add(tableItens);
 

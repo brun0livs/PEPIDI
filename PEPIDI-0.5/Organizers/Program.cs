@@ -44,6 +44,8 @@ namespace PEPIDI.Organizers
             }
 
             GetConn.ConnectionString = connString;
+            ApplicationConfiguration.Initialize();
+            Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             //int nr = 1077;
             //Application.Run(new FormGestao(nr, PermissoesPerfil.VerPermissoes(nr)));
             //Application.Run(new FrmConsumosDetalhados(1016));
