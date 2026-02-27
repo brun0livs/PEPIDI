@@ -69,7 +69,7 @@
             tableLayoutPanel1.RowCount = 2;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 93F));
-            tableLayoutPanel1.Size = new Size(2489, 1327);
+            tableLayoutPanel1.Size = new Size(1837, 858);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -86,7 +86,7 @@
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(2489, 92);
+            tableLayoutPanel2.Size = new Size(1837, 60);
             tableLayoutPanel2.TabIndex = 0;
             // 
             // btnAddFuncao
@@ -101,11 +101,11 @@
             btnAddFuncao.FillColor = Color.FromArgb(243, 108, 33);
             btnAddFuncao.Font = new Font("Roboto", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnAddFuncao.ForeColor = Color.White;
-            btnAddFuncao.Location = new Point(1690, 13);
+            btnAddFuncao.Location = new Point(1256, 13);
             btnAddFuncao.Margin = new Padding(32, 13, 32, 13);
             btnAddFuncao.Name = "btnAddFuncao";
             btnAddFuncao.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            btnAddFuncao.Size = new Size(767, 66);
+            btnAddFuncao.Size = new Size(549, 34);
             btnAddFuncao.TabIndex = 4;
             btnAddFuncao.Text = "Criar Função";
             btnAddFuncao.Click += btnAddFuncao_Click;
@@ -118,7 +118,7 @@
             label1.Location = new Point(19, 0);
             label1.Margin = new Padding(19, 0, 0, 0);
             label1.Name = "label1";
-            label1.Size = new Size(810, 92);
+            label1.Size = new Size(593, 60);
             label1.TabIndex = 0;
             label1.Text = "FUNÇÕES";
             label1.TextAlign = ContentAlignment.MiddleLeft;
@@ -160,7 +160,7 @@
             dgvFuncoes.EnableHeadersVisualStyles = false;
             dgvFuncoes.GridColor = Color.White;
             dgvFuncoes.HeaderFontSize = 15F;
-            dgvFuncoes.Location = new Point(19, 111);
+            dgvFuncoes.Location = new Point(19, 79);
             dgvFuncoes.Margin = new Padding(19, 19, 19, 0);
             dgvFuncoes.MultiSelect = false;
             dgvFuncoes.Name = "dgvFuncoes";
@@ -171,7 +171,7 @@
             dgvFuncoes.RowTemplate.Height = 54;
             dgvFuncoes.ScrollBars = ScrollBars.None;
             dgvFuncoes.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvFuncoes.Size = new Size(2451, 1216);
+            dgvFuncoes.Size = new Size(1799, 779);
             dgvFuncoes.TabIndex = 3;
             dgvFuncoes.CellDoubleClick += dgvFuncoes_CellDoubleClick;
             dgvFuncoes.CellValueChanged += dgvFuncoes_CellValueChanged;
@@ -281,9 +281,9 @@
             BackColor = Color.White;
             Controls.Add(tableLayoutPanel1);
             Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Margin = new Padding(4, 4, 4, 4);
+            Margin = new Padding(4);
             Name = "Funcoes";
-            Size = new Size(2489, 1327);
+            Size = new Size(1837, 858);
             Load += Funcoes_Load;
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);

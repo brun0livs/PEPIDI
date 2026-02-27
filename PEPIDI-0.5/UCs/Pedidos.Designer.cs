@@ -72,16 +72,16 @@
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(1936, 1048);
+            tableLayoutPanel1.Size = new Size(1837, 858);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // pnlDetails
             // 
             pnlDetails.Dock = DockStyle.Fill;
-            pnlDetails.Location = new Point(1244, 0);
+            pnlDetails.Location = new Point(1181, 0);
             pnlDetails.Margin = new Padding(5, 0, 5, 10);
             pnlDetails.Name = "pnlDetails";
-            pnlDetails.Size = new Size(687, 1038);
+            pnlDetails.Size = new Size(651, 848);
             pnlDetails.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -98,7 +98,7 @@
             tableLayoutPanel2.RowCount = 2;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 93F));
-            tableLayoutPanel2.Size = new Size(1239, 1048);
+            tableLayoutPanel2.Size = new Size(1176, 858);
             tableLayoutPanel2.TabIndex = 1;
             // 
             // dgvPedidos
@@ -136,7 +136,7 @@
             dgvPedidos.EnableHeadersVisualStyles = false;
             dgvPedidos.GridColor = SystemColors.Control;
             dgvPedidos.HeaderFontSize = 15F;
-            dgvPedidos.Location = new Point(10, 83);
+            dgvPedidos.Location = new Point(10, 70);
             dgvPedidos.Margin = new Padding(10);
             dgvPedidos.MultiSelect = false;
             dgvPedidos.Name = "dgvPedidos";
@@ -146,7 +146,7 @@
             dgvPedidos.RowTemplate.Height = 54;
             dgvPedidos.ScrollBars = ScrollBars.None;
             dgvPedidos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvPedidos.Size = new Size(1219, 955);
+            dgvPedidos.Size = new Size(1156, 778);
             dgvPedidos.TabIndex = 1;
             dgvPedidos.CellClick += DgvPedidos_CellClick;
             dgvPedidos.CellValueChanged += dgvPedidos_CellValueChanged;
@@ -247,7 +247,7 @@
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 1;
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel3.Size = new Size(1239, 73);
+            tableLayoutPanel3.Size = new Size(1176, 60);
             tableLayoutPanel3.TabIndex = 2;
             // 
             // btnRelatorio
@@ -265,11 +265,11 @@
             btnRelatorio.Font = new Font("Roboto", 15F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnRelatorio.ForeColor = Color.White;
             btnRelatorio.Image = (Image)resources.GetObject("btnRelatorio.Image");
-            btnRelatorio.Location = new Point(974, 15);
+            btnRelatorio.Location = new Point(924, 15);
             btnRelatorio.Margin = new Padding(10, 15, 10, 15);
             btnRelatorio.Name = "btnRelatorio";
             btnRelatorio.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            btnRelatorio.Size = new Size(255, 43);
+            btnRelatorio.Size = new Size(242, 30);
             btnRelatorio.TabIndex = 10;
             btnRelatorio.Text = "Exportar";
             btnRelatorio.Visible = false;
@@ -282,7 +282,7 @@
             lblPedidos.Font = new Font("Roboto Medium", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblPedidos.Location = new Point(3, 0);
             lblPedidos.Name = "lblPedidos";
-            lblPedidos.Size = new Size(958, 73);
+            lblPedidos.Size = new Size(908, 60);
             lblPedidos.TabIndex = 1;
             lblPedidos.Text = "PEDIDOS PENDENTES";
             lblPedidos.TextAlign = ContentAlignment.MiddleLeft;
@@ -296,7 +296,7 @@
             Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Margin = new Padding(0);
             Name = "Pedidos";
-            Size = new Size(1936, 1048);
+            Size = new Size(1837, 858);
             Load += Pedidos_Load;
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);

@@ -77,6 +77,7 @@ namespace PEPIDI.UCs
             Configura(dgvFuncs);
             TouchScrollHelper.AtivarScrollPorArrasto(dgvFuncs);
 
+
         }
 
         private void Configura(PEPIDIDataGridView dgvFuncs)
@@ -229,7 +230,8 @@ namespace PEPIDI.UCs
                     break;
 
                 case "ReporPass":
-                    M.AbrirMensagem($"Password reposta para o funcionário #{id}", "PEPIDI");
+                    //M.AbrirMensagem($"Password reposta para o funcionário #{id}", "PEPIDI");
+                    MessageBox.Show(this.Size.ToString());
                     break;
             }
         }

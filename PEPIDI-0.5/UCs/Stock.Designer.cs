@@ -66,7 +66,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 25F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 25F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 25F));
-            tableLayoutPanel1.Size = new Size(2489, 1327);
+            tableLayoutPanel1.Size = new Size(1837, 858);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // dgvStock
@@ -103,7 +103,7 @@
             dgvStock.EnableHeadersVisualStyles = false;
             dgvStock.GridColor = SystemColors.Control;
             dgvStock.HeaderFontSize = 15F;
-            dgvStock.Location = new Point(13, 95);
+            dgvStock.Location = new Point(13, 66);
             dgvStock.Margin = new Padding(13, 13, 13, 0);
             dgvStock.MultiSelect = false;
             dgvStock.Name = "dgvStock";
@@ -113,7 +113,7 @@
             dgvStock.RowTemplate.Height = 54;
             dgvStock.ScrollBars = ScrollBars.None;
             dgvStock.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvStock.Size = new Size(2463, 1232);
+            dgvStock.Size = new Size(1811, 792);
             dgvStock.TabIndex = 2;
             // 
             // tableLayoutPanel2
@@ -129,7 +129,7 @@
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.Size = new Size(2489, 82);
+            tableLayoutPanel2.Size = new Size(1837, 53);
             tableLayoutPanel2.TabIndex = 0;
             // 
             // label1
@@ -140,7 +140,7 @@
             label1.Location = new Point(4, 0);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
-            label1.Size = new Size(1236, 82);
+            label1.Size = new Size(910, 53);
             label1.TabIndex = 1;
             label1.Text = "STOCK";
             label1.TextAlign = ContentAlignment.MiddleLeft;
@@ -167,11 +167,11 @@
             cmbVisoes.HoverState.ForeColor = Color.Black;
             cmbVisoes.ItemHeight = 32;
             cmbVisoes.Items.AddRange(new object[] { "Teste1", "Teste2", "Teste3", "Teste4", "Teste5", "Teste6", "Teste7", "Teste8", "Teste9", "Teste10" });
-            cmbVisoes.Location = new Point(1276, 14);
+            cmbVisoes.Location = new Point(950, 14);
             cmbVisoes.Margin = new Padding(32, 14, 32, 14);
             cmbVisoes.Name = "cmbVisoes";
             cmbVisoes.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            cmbVisoes.Size = new Size(1181, 38);
+            cmbVisoes.Size = new Size(855, 38);
             cmbVisoes.TabIndex = 1;
             cmbVisoes.SelectedIndexChanged += cmbVisoes_SelectedIndexChanged;
             // 
@@ -185,7 +185,7 @@
             Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Margin = new Padding(0);
             Name = "Stock";
-            Size = new Size(2489, 1327);
+            Size = new Size(1837, 858);
             Load += Stock_Load;
             tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvStock).EndInit();

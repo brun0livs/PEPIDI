@@ -5,7 +5,7 @@ using PEPIDI.UCs.DGVS;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,6 +32,15 @@ namespace PEPIDI.UCs.UcsSecundarios
         public PedidosDetalhes(int _ID, int _IDGestor, string _Estado)
         {
             InitializeComponent();
+            
+            // Força a UC a usar a memória para desenhar antes de mostrar (GPU friendly)
+            this.DoubleBuffered = true;
+
+            foreach (Control control in this.Controls)
+            {
+                EnableDoubleBuffer(control);
+            }
+
             ID = _ID;
             IDGestor = _IDGestor;
             Estado = _Estado;
@@ -51,6 +60,16 @@ namespace PEPIDI.UCs.UcsSecundarios
 
             flpLinhas.SizeChanged += (s, e) => AjustarLarguras(flpLinhas);
             flpDevolucoes.SizeChanged += (s, e) => AjustarLarguras(flpDevolucoes);
+
+        }
+
+        private void EnableDoubleBuffer(Control c)
+        {
+            var property = typeof(Control).GetProperty("DoubleBuffered",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            property?.SetValue(c, true, null);
+
+            foreach (Control child in c.Controls) EnableDoubleBuffer(child);
         }
 
         // =========================================================================

@@ -10,6 +10,10 @@ namespace PEPIDI
 {
     public partial class FormGestao : Form
     {
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
+        private const int WM_SETREDRAW = 11;
+
         int IDGestor;
         private readonly PermissoesPerfil permissoes;
 
@@ -240,47 +244,55 @@ namespace PEPIDI
             Navegar(chaveNavegacao);
         }
 
-        private void Navegar(string key)
+        private async void Navegar(string key)
         {
-            // O switch usa a KEY (Tag), garantindo que funciona mesmo com menu fechado
-            switch (key.ToLowerInvariant())
+            Cursor.Current = Cursors.WaitCursor;
+
+            try
             {
-                case "stock":
-                    AbrirControl(new UCs.Stock(permissoes));
-                    break;
-                case "funcionários":
-                case "funcionarios":
-                    AbrirControl(new UCs.Funcionarios(IDGestor));
-                    break;
-                case "pedidos pendentes":
-                    AbrirControl(new UCs.Pedidos(IDGestor, "Pendente"));
-                    break;
-                case "pedidos aprovados":
-                    AbrirControl(new UCs.Pedidos(IDGestor, "Aprovado"));
-                    break;
-                case "inserir stock":
-                    AbrirControl(new UCs.AddStock(IDGestor));
-                    break;
-                case "criar artigos":
-                    AbrirControl(new UCs.CriarStock());
-                    break;
-                case "funções":
-                    AbrirControl(new UCs.Funcoes(IDGestor));
-                    break;
-                case "definições":
-                    AbrirControl(new UCs.Definicoes(IDGestor));
-                    break;
-                default:
-                    // Caso tenhas botões sem case, não faz nada
-                    break;
+                // Dá um pequeno fôlego à UI para não congelar o clique do menu
+                await Task.Yield();
+
+                UserControl controlParaAbrir = key.ToLowerInvariant() switch
+                {
+                    "stock" => new UCs.Stock(permissoes),
+                    "funcionarios" or "funcionários" => new UCs.Funcionarios(IDGestor),
+                    "pedidos pendentes" => new UCs.Pedidos(IDGestor, "Pendente"),
+                    "pedidos aprovados" => new UCs.Pedidos(IDGestor, "Aprovado"),
+                    "inserir stock" => new UCs.AddStock(IDGestor),
+                    "criar artigos" => new UCs.CriarStock(),
+                    "funções" => new UCs.Funcoes(IDGestor),
+                    "definições" => new UCs.Definicoes(IDGestor),
+                    _ => null
+                };
+
+                if (controlParaAbrir != null)
+                {
+                    AbrirControl(controlParaAbrir);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao navegar: {ex.Message}");
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
             }
         }
 
         public void AbrirControl(UserControl control)
         {
+            // Diz ao Windows: "Para de desenhar este painel agora"
+            SendMessage(pnlConteudo.Handle, WM_SETREDRAW, false, 0);
+
             pnlConteudo.Controls.Clear();
             control.Dock = DockStyle.Fill;
             pnlConteudo.Controls.Add(control);
+
+            // Diz ao Windows: "Ok, agora desenha tudo de uma vez"
+            SendMessage(pnlConteudo.Handle, WM_SETREDRAW, true, 0);
+            pnlConteudo.Refresh();
         }
 
         // --- CORREÇÃO 2 e 3: TIMER E VISUAL ---

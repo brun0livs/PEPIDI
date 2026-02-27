@@ -71,7 +71,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 24F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 24F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 24F));
-            tableLayoutPanel1.Size = new Size(2213, 1258);
+            tableLayoutPanel1.Size = new Size(1837, 858);
             tableLayoutPanel1.TabIndex = 1;
             // 
             // tableLayoutPanel2
@@ -89,7 +89,7 @@
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(2213, 88);
+            tableLayoutPanel2.Size = new Size(1837, 60);
             tableLayoutPanel2.TabIndex = 0;
             // 
             // txtPesquisa
@@ -109,7 +109,7 @@
             txtPesquisa.IconRight = (Image)resources.GetObject("txtPesquisa.IconRight");
             txtPesquisa.IconRightOffset = new Point(10, 0);
             txtPesquisa.IconRightSize = new Size(25, 25);
-            txtPesquisa.Location = new Point(750, 13);
+            txtPesquisa.Location = new Point(625, 13);
             txtPesquisa.Margin = new Padding(13);
             txtPesquisa.MaxLength = 16;
             txtPesquisa.Name = "txtPesquisa";
@@ -117,7 +117,7 @@
             txtPesquisa.PlaceholderText = "Procurar Funcionário";
             txtPesquisa.SelectedText = "";
             txtPesquisa.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            txtPesquisa.Size = new Size(711, 62);
+            txtPesquisa.Size = new Size(586, 34);
             txtPesquisa.TabIndex = 6;
             txtPesquisa.TextAlign = HorizontalAlignment.Center;
             txtPesquisa.TextOffset = new Point(10, 0);
@@ -130,7 +130,7 @@
             label1.Font = new Font("Roboto", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.Location = new Point(3, 0);
             label1.Name = "label1";
-            label1.Size = new Size(731, 88);
+            label1.Size = new Size(606, 60);
             label1.TabIndex = 1;
             label1.Text = "FUNCIONÁRIOS";
             label1.TextAlign = ContentAlignment.MiddleLeft;
@@ -147,11 +147,11 @@
             btnAddFunc.FillColor = Color.FromArgb(243, 108, 33);
             btnAddFunc.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnAddFunc.ForeColor = Color.White;
-            btnAddFunc.Location = new Point(1503, 12);
+            btnAddFunc.Location = new Point(1253, 12);
             btnAddFunc.Margin = new Padding(29, 12, 29, 12);
             btnAddFunc.Name = "btnAddFunc";
             btnAddFunc.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            btnAddFunc.Size = new Size(681, 64);
+            btnAddFunc.Size = new Size(555, 36);
             btnAddFunc.TabIndex = 5;
             btnAddFunc.Text = "Novo Funcionário";
             btnAddFunc.Click += btnAddFunc_Click;
@@ -192,7 +192,7 @@
             dgvFuncs.EnableHeadersVisualStyles = false;
             dgvFuncs.GridColor = SystemColors.Control;
             dgvFuncs.HeaderFontSize = 15F;
-            dgvFuncs.Location = new Point(11, 100);
+            dgvFuncs.Location = new Point(11, 72);
             dgvFuncs.Margin = new Padding(11, 12, 11, 0);
             dgvFuncs.MultiSelect = false;
             dgvFuncs.Name = "dgvFuncs";
@@ -211,7 +211,7 @@
             dgvFuncs.RowTemplate.Height = 54;
             dgvFuncs.ScrollBars = ScrollBars.None;
             dgvFuncs.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvFuncs.Size = new Size(2191, 1158);
+            dgvFuncs.Size = new Size(1815, 786);
             dgvFuncs.TabIndex = 1;
             // 
             // Funcionarios
@@ -223,7 +223,7 @@
             Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Margin = new Padding(3, 4, 3, 4);
             Name = "Funcionarios";
-            Size = new Size(2213, 1258);
+            Size = new Size(1837, 858);
             Load += Funcionarios_Load;
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);

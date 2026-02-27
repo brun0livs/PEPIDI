@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace PEPIDI.UCs
@@ -17,6 +18,10 @@ namespace PEPIDI.UCs
         readonly int IDGestor;
         readonly private GestorDePedidos gdp;
         readonly string estado;
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
+        private const int WM_SETREDRAW = 11;
+        private CancellationTokenSource _cts = new();
 
         public Pedidos(int _IDGestor, string _estado)
         {
@@ -96,25 +101,43 @@ namespace PEPIDI.UCs
 
         private async void DgvPedidos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0)
+            if (e.RowIndex < 0) return;
+
+            // Cancela o clique anterior se o utilizador clicou noutra linha muito rápido
+            _cts.Cancel();
+            _cts = new CancellationTokenSource();
+
+            try
             {
-                // Busca o ID usando o nome exato do Designer: "ID"
+                // Aguarda 250ms (um pequeno "fôlego" para o CPU)
+                await Task.Delay(250, _cts.Token);
+
                 object cellValue = dgvPedidos.Rows[e.RowIndex].Cells["ID"].Value;
 
                 if (cellValue != null && int.TryParse(cellValue.ToString(), out int idPedidoSelecionado))
                 {
-                    // CRIA A INTERFACE NA THREAD PRINCIPAL (Super rápido agora!)
-                    // O próprio PedidosDetalhes vai tratar de não engasgar graças ao nosso trabalho anterior
-                    AbrirControl(new UcsSecundarios.PedidosDetalhes(idPedidoSelecionado, IDGestor, estado));
+                    // Criamos a UC. Dica: Se o construtor da UC faz SQL, ela vai lagar.
+                    // O ideal é a UC ser criada vazia e carregar os dados num evento 'Load' asíncrono.
+                    var ucDetalhes = new UcsSecundarios.PedidosDetalhes(idPedidoSelecionado, IDGestor, estado);
+
+                    AbrirControl(ucDetalhes);
                 }
             }
+            catch (OperationCanceledException) { /* Ignora se cancelado */ }
         }
 
         public void AbrirControl(UserControl control)
         {
+            // 1. Para o desenho do painel (evita o lag visual de montagem)
+            SendMessage(pnlDetails.Handle, WM_SETREDRAW, false, 0);
+
             pnlDetails.Controls.Clear();
             control.Dock = DockStyle.Fill;
             pnlDetails.Controls.Add(control);
+
+            // 2. Retoma o desenho e força a placa gráfica a pintar tudo de uma vez
+            SendMessage(pnlDetails.Handle, WM_SETREDRAW, true, 0);
+            pnlDetails.Refresh();
         }
 
         private void dgvPedidos_CurrentCellDirtyStateChanged(object sender, EventArgs e)

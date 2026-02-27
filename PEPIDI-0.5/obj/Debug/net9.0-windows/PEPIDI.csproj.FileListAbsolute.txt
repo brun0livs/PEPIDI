@@ -75,3 +75,4 @@ C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\i
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\PEPIDI.UCs.AddStock.resources
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\PEPIDI.UCs.CriarStock.resources
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\PEPIDI.UCs.DGVS.LinhaDevolucao.resources
+C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\PEPIDI.dll.config

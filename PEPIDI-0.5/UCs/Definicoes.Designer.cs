@@ -43,7 +43,7 @@
             tableLayoutPanel1.RowCount = 2;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Size = new Size(1936, 1048);
+            tableLayoutPanel1.Size = new Size(1837, 858);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // Definicoes
@@ -55,7 +55,7 @@
             Controls.Add(tableLayoutPanel1);
             Margin = new Padding(0);
             Name = "Definicoes";
-            Size = new Size(1936, 1048);
+            Size = new Size(1837, 858);
             ResumeLayout(false);
         }
 

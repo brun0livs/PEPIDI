@@ -27,86 +27,86 @@ namespace PEPIDI.UCs
 
         private void Stock_Load(object sender, EventArgs e)
         {
+            // Ativa a performance turbo que criaste no Organizer
+            HelperPerformance.AtivarDoubleBufferRecursivo(this);
             CarregarCombo();
             TouchScrollHelper.AtivarScrollPorArrasto(dgvStock);
+
+            
         }
 
-        private void CarregarCombo()
+        private async void CarregarCombo()
         {
             try
             {
-                using (var con = new SqlConnection(_cs))
-                using (var cmd = new SqlCommand(@"SELECT ID, Nome, [Query] FROM dbo.[Query] ORDER BY Nome;", con))
-                using (var da = new SqlDataAdapter(cmd))
-                {
-                    _dtQueries = new DataTable();
-                    da.Fill(_dtQueries);
+                DataTable dtTemp = new DataTable();
 
-
-                    if (permissoes.PodeAlterarDefinicoes)
+                // 1. Busca os dados em background (SQL fora da UI Thread)
+                await Task.Run(() => {
+                    using (var con = new SqlConnection(_cs))
+                    using (var cmd = new SqlCommand(@"SELECT ID, Nome, [Query] FROM dbo.[Query] ORDER BY Nome;", con))
+                    using (var da = new SqlDataAdapter(cmd))
                     {
-                        // Adicionar linha "Gerir Filtros"
-                        DataRow rowGerir = _dtQueries.NewRow();
-                        rowGerir["ID"] = -1;
-                        rowGerir["Nome"] = "---------------- Gerir Filtros";
-                        rowGerir["Query"] = "ACTION_GERIR";
-                        _dtQueries.Rows.Add(rowGerir);
+                        da.Fill(dtTemp);
                     }
-                    
+                });
 
-                    // === A CORREÇÃO ESTÁ AQUI ===
-                    // 1. Define as propriedades PRIMEIRO
-                    cmbVisoes.DisplayMember = "Nome";
-                    cmbVisoes.ValueMember = "Query";
-
-                    // 2. Define o DataSource DEPOIS. 
-                    // Assim, quando o evento disparar, ele já sabe qual é o ValueMember correto.
-                    cmbVisoes.DataSource = _dtQueries;
-
-                    // 3. Define a seleção inicial
-                    cmbVisoes.SelectedIndex = -1;
+                // 2. Adiciona a linha de gestão se tiver permissões
+                if (permissoes.PodeAlterarDefinicoes)
+                {
+                    DataRow rowGerir = dtTemp.NewRow();
+                    rowGerir["ID"] = -1;
+                    rowGerir["Nome"] = "---------------- Gerir Filtros";
+                    rowGerir["Query"] = "ACTION_GERIR";
+                    dtTemp.Rows.Add(rowGerir);
                 }
 
-                // Lógica de seleção por defeito (ID=1)
-                if (_dtQueries != null && _dtQueries.Rows.Count > 0)
+                _dtQueries = dtTemp;
+
+                // 3. Vinculação de dados (UI Thread)
+                // Definimos os membros ANTES do DataSource para evitar erros de cast
+                cmbVisoes.DisplayMember = "Nome";
+                cmbVisoes.ValueMember = "Query";
+
+                // Atribuir o DataSource dispara o SelectedIndexChanged automaticamente
+                cmbVisoes.DataSource = _dtQueries;
+
+                // 4. Lógica para encontrar o ID 1 e expor no Load
+                if (_dtQueries.Rows.Count > 0)
                 {
-                    foreach (DataRow row in _dtQueries.Rows)
+                    // Lemos o ID que guardaste nas definições do projeto
+                    int idDefault = Properties.Settings.Default.VisaoStockDefault;
+
+                    DataRow[] linhasIdDefault = _dtQueries.Select($"ID = {idDefault}");
+
+                    if (linhasIdDefault.Length > 0)
                     {
-                        if (row["ID"] != DBNull.Value && Convert.ToInt32(row["ID"]) == 1)
-                        {
-                            cmbVisoes.SelectedValue = row["Query"];
-                            break;
-                        }
+                        cmbVisoes.SelectedValue = linhasIdDefault[0]["Query"].ToString();
+                    }
+                    else
+                    {
+                        // Se o ID das definições não for encontrado, volta para o primeiro da lista
+                        cmbVisoes.SelectedIndex = 0;
                     }
                 }
             }
             catch (Exception ex)
             {
-                M.AbrirMensagem("Erro a carregar visões:" + Environment.NewLine + ex.Message, "Erro");
+                M.AbrirMensagem("Erro a carregar visões: " + ex.Message, "Erro");
             }
         }
 
         private void cmbVisoes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbVisoes.SelectedIndex == -1 || cmbVisoes.SelectedValue == null) return;
+            // Proteção essencial para o primeiro carregamento
+            if (cmbVisoes.SelectedValue == null || cmbVisoes.SelectedValue is DataRowView)
+                return;
 
-            // PROTEÇÃO EXTRA:
-            // Se por acaso vier um DataRowView (o objeto) em vez da string, ignoramos
-            if (cmbVisoes.SelectedValue is System.Data.DataRowView) return;
+            string sql = cmbVisoes.SelectedValue.ToString();
 
-            var sql = cmbVisoes.SelectedValue.ToString();
-
-            // Lógica do botão Gerir
             if (sql == "ACTION_GERIR")
             {
-                // new FormGerir().ShowDialog(); // Abre o teu form aqui
                 M.AbrirMensagem("Janela de Gestão de Filtros.", "PEPIDI");
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(sql))
-            {
-                dgvStock.DataSource = null;
                 return;
             }
 

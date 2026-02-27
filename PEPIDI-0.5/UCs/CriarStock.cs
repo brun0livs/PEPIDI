@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -17,6 +17,8 @@ namespace PEPIDI.UCs
     {
         public CriarStock()
         {
+            // Para o motor de layout e o desenho
+            this.SuspendLayout();
             InitializeComponent();
 
             // PREPARAÇÃO DO PAINEL DE TAGS
@@ -25,6 +27,13 @@ namespace PEPIDI.UCs
             flpFuncoes.Margin = new Padding(0);
             // Isto garante que o painel tenta não mostrar scrollbars se não for preciso
             flpFuncoes.WrapContents = true;
+            // Ativa o DoubleBuffered em cascata (como fizemos antes)
+            // Isso evita que o utilizador veja os controlos a serem "desenhados" um a um
+            this.DoubleBuffered = true;
+            HelperPerformance.AtivarDoubleBufferRecursivo(this);
+
+            // Só agora é que o Windows calcula onde tudo fica
+            this.ResumeLayout(true);
         }
 
         private async void CriarStock_Load(object sender, EventArgs e)
