@@ -9,6 +9,8 @@ namespace PEPIDI.Organizers
         [STAThread]
         static void Main()
         {
+            ApplicationConfiguration.Initialize();
+            Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             // Coloca logo no início do arranque da aplicação
             System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.High;
             Application.EnableVisualStyles();
@@ -44,8 +46,7 @@ namespace PEPIDI.Organizers
             }
 
             GetConn.ConnectionString = connString;
-            ApplicationConfiguration.Initialize();
-            Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+            
             //int nr = 1077;
             //Application.Run(new FormGestao(nr, PermissoesPerfil.VerPermissoes(nr)));
             //Application.Run(new FrmConsumosDetalhados(1016));

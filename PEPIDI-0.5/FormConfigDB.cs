@@ -39,7 +39,8 @@ namespace PEPIDI
 
             if (chkWinAuth.Checked)
             {
-                ConnectionStringFinal = $"Server={servidor};Database={baseDados};Integrated Security=True;";
+                // ADICIONADO O TrustServerCertificate=True AQUI!
+                ConnectionStringFinal = $"Server={servidor};Database={baseDados};Integrated Security=True;TrustServerCertificate=True;";
             }
             else
             {
@@ -52,7 +53,8 @@ namespace PEPIDI
                     return;
                 }
 
-                ConnectionStringFinal = $"Server={servidor};Database={baseDados};User Id={utilizador};Password={senha};";
+                // ADICIONADO O TrustServerCertificate=True AQUI TAMBÉM!
+                ConnectionStringFinal = $"Server={servidor};Database={baseDados};User Id={utilizador};Password={senha};TrustServerCertificate=True;";
             }
 
             this.DialogResult = DialogResult.OK;

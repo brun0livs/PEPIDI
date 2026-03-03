@@ -31,6 +31,8 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             tableLayoutPanel1 = new TableLayoutPanel();
             label1 = new Label();
             guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
@@ -49,6 +51,7 @@
             lblTituloEsquerda = new Label();
             cmbTamanho = new Guna.UI2.WinForms.Guna2ComboBox();
             cmbFamilia = new Guna.UI2.WinForms.Guna2ComboBox();
+            btnImport = new Guna.UI2.WinForms.Guna2Button();
             tableLayoutPanel1.SuspendLayout();
             guna2Panel3.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
@@ -65,6 +68,7 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
             tableLayoutPanel1.Controls.Add(guna2Panel3, 1, 1);
+            tableLayoutPanel1.Controls.Add(btnImport, 2, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -231,6 +235,7 @@
             btnGuardar.Size = new Size(437, 50);
             btnGuardar.TabIndex = 35;
             btnGuardar.Text = "Guardar";
+            btnGuardar.Click += btnGuardar_Click;
             // 
             // btnCancelar
             // 
@@ -248,6 +253,7 @@
             btnCancelar.Size = new Size(437, 50);
             btnCancelar.TabIndex = 34;
             btnCancelar.Text = "Cancelar";
+            btnCancelar.Click += btnCancelar_Click;
             // 
             // flpFuncoes
             // 
@@ -298,6 +304,7 @@
             txtNovoModelo.Size = new Size(1, 40);
             txtNovoModelo.TabIndex = 32;
             txtNovoModelo.Visible = false;
+            txtNovoModelo.TextChanged += txtNovoModelo_TextChanged;
             // 
             // cmbModelo
             // 
@@ -321,6 +328,7 @@
             cmbModelo.Size = new Size(900, 37);
             cmbModelo.TabIndex = 28;
             cmbModelo.TextAlign = HorizontalAlignment.Center;
+            cmbModelo.SelectedIndexChanged += cmbModelo_SelectedIndexChanged;
             // 
             // lblTituloEsquerda
             // 
@@ -381,6 +389,25 @@
             cmbFamilia.TabIndex = 31;
             cmbFamilia.TabStop = false;
             cmbFamilia.TextAlign = HorizontalAlignment.Center;
+            cmbFamilia.SelectedIndexChanged += cmbFamilia_SelectedIndexChanged;
+            // 
+            // btnImport
+            // 
+            btnImport.BorderRadius = 15;
+            btnImport.Cursor = Cursors.Hand;
+            btnImport.CustomizableEdges = customizableEdges17;
+            btnImport.Dock = DockStyle.Fill;
+            btnImport.FillColor = Color.FromArgb(242, 103, 34);
+            btnImport.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnImport.ForeColor = Color.White;
+            btnImport.Location = new Point(1387, 4);
+            btnImport.Margin = new Padding(10, 4, 10, 16);
+            btnImport.Name = "btnImport";
+            btnImport.ShadowDecoration.CustomizableEdges = customizableEdges18;
+            btnImport.Size = new Size(440, 40);
+            btnImport.TabIndex = 36;
+            btnImport.Text = "Importar";
+            btnImport.Click += btnImport_Click;
             // 
             // CriarStock
             // 
@@ -424,5 +451,6 @@
         private Guna.UI2.WinForms.Guna2ComboBox cmbTamanho;
         private Guna.UI2.WinForms.Guna2ComboBox cmbFamilia;
         private Label label1;
+        private Guna.UI2.WinForms.Guna2Button btnImport;
     }
 }

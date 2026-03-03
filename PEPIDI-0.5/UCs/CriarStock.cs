@@ -319,10 +319,11 @@ namespace PEPIDI.UCs
         }
 
         // ==========================================
-        // 4. GRAVAÇÃO NA BASE DE DADOS
+        // 4. GRAVAÇÃO NA BASE DE DADOS (COM VERIFICAÇÃO INTELIGENTE)
         // ==========================================
         private void btnGuardar_Click(object sender, EventArgs e)
         {
+            // 1. Validações Iniciais
             if (cmbFamilia.SelectedIndex <= 0)
             {
                 MessageBox.Show("Por favor, seleciona uma Família.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -369,15 +370,60 @@ namespace PEPIDI.UCs
                 }
             }
 
+            // 2. Processar a Gravação
             try
             {
                 int acessoID = ObterOuCriarAcessoID(funcoesSelecionadas);
-
-                string query = @"INSERT INTO EPI (Familia, Modelo, Tamanho, Acesso, Quantidade) 
-                                 VALUES (@Familia, @Modelo, @Tamanho, @Acesso, @Quantidade)";
+                bool somarAosExistentes = false;
+                bool artigoJaExiste = false;
 
                 using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
                 {
+                    conn.Open();
+
+                    // PASSO A: Verificar em silêncio se o artigo já existe
+                    string checkQuery = "SELECT COUNT(*) FROM EPI WHERE Modelo = @Modelo AND Tamanho = @Tamanho AND Acesso = @Acesso";
+                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
+                    {
+                        checkCmd.Parameters.AddWithValue("@Modelo", modelo);
+                        checkCmd.Parameters.AddWithValue("@Tamanho", tamanho);
+                        checkCmd.Parameters.AddWithValue("@Acesso", acessoID);
+
+                        int count = (int)checkCmd.ExecuteScalar();
+                        if (count > 0) artigoJaExiste = true;
+                    }
+
+                    // PASSO B: Se já existir, avisa o utilizador e pergunta o que fazer!
+                    if (artigoJaExiste)
+                    {
+                        DialogResult resposta = MessageBox.Show(
+                            $"O artigo '{modelo}' (Tamanho: {tamanho}) já existe no armazém!\n\n" +
+                            "[ SIM ] - Somar esta nova quantidade ao stock existente (Recomendado)\n" +
+                            "[ NÃO ] - Criar uma linha nova e separada na base de dados\n" +
+                            "[ CANCELAR ] - Abortar a gravação",
+                            "Artigo Duplicado Detetado",
+                            MessageBoxButtons.YesNoCancel,
+                            MessageBoxIcon.Question);
+
+                        if (resposta == DialogResult.Cancel) return; // Cancela tudo se ele desistir
+
+                        somarAosExistentes = (resposta == DialogResult.Yes);
+                    }
+
+                    // PASSO C: Montar a Query consoante a decisão
+                    string query = "";
+                    if (artigoJaExiste && somarAosExistentes)
+                    {
+                        // Atualiza a quantidade (SOMA)
+                        query = "UPDATE EPI SET Quantidade = Quantidade + @Quantidade WHERE Modelo = @Modelo AND Tamanho = @Tamanho AND Acesso = @Acesso";
+                    }
+                    else
+                    {
+                        // Insere linha nova (Seja porque é novo, ou porque o utilizador escolheu "NÃO" duplicar)
+                        query = "INSERT INTO EPI (Familia, Modelo, Tamanho, Acesso, Quantidade) VALUES (@Familia, @Modelo, @Tamanho, @Acesso, @Quantidade)";
+                    }
+
+                    // PASSO D: Executar a Query final
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@Familia", familia);
@@ -386,12 +432,11 @@ namespace PEPIDI.UCs
                         cmd.Parameters.AddWithValue("@Acesso", acessoID);
                         cmd.Parameters.AddWithValue("@Quantidade", quantidade);
 
-                        conn.Open();
                         cmd.ExecuteNonQuery();
                     }
                 }
 
-                MessageBox.Show("Stock criado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Stock guardado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // Limpar Ecrã
                 cmbFamilia.SelectedIndex = 0;
@@ -458,6 +503,45 @@ namespace PEPIDI.UCs
                 }
 
                 return novoID;
+            }
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            // 1. Descobrir quem é o "Pai" (O Form principal que está a mostrar este UserControl)
+            Form pai = this.FindForm();
+
+            // 2. Criar a Sombra (Overlay)
+            using (Form overlay = new Form())
+            {
+                // Configuração da sombra
+                overlay.StartPosition = FormStartPosition.Manual;
+                overlay.FormBorderStyle = FormBorderStyle.None;
+                overlay.Opacity = 0.50d;
+                overlay.BackColor = Color.Black;
+                overlay.ShowInTaskbar = false;
+
+                if (pai != null)
+                {
+                    overlay.Location = pai.Location;
+                    overlay.Size = pai.Size;
+                    overlay.Show(pai);
+                }
+                else
+                {
+                    overlay.WindowState = FormWindowState.Maximized;
+                    overlay.Show();
+                }
+
+                // 3. Abrir o teu FormImportarStock POR CIMA da sombra
+                using (FormsSecundarios.FormImportarStock frm = new FormsSecundarios.FormImportarStock())
+                {
+                    // O segredo: passar o 'overlay' para o ShowDialog
+                    frm.ShowDialog(overlay);
+                }
+
+                // 4. Fechar a sombra logo a seguir à importação terminar ou ser cancelada
+                overlay.Close();
             }
         }
     }
