@@ -103,8 +103,7 @@ namespace PEPIDI.UCs
             // 
             // AddStock
             // 
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleMode = AutoScaleMode.Inherit;
             BackColor = Color.White;
             Controls.Add(tableLayoutPanel1);
             Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);

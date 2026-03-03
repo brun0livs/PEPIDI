@@ -177,8 +177,7 @@
             // 
             // Stock
             // 
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleMode = AutoScaleMode.Inherit;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             BackColor = Color.White;
             Controls.Add(tableLayoutPanel1);

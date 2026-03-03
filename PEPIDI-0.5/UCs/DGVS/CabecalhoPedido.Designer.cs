@@ -133,8 +133,7 @@
             // 
             // CabecalhoPedido
             // 
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleMode = AutoScaleMode.Inherit;
             BackColor = Color.White;
             Controls.Add(guna2Panel1);
             Margin = new Padding(0);
