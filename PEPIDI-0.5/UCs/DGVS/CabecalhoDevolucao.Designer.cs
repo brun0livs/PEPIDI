@@ -116,8 +116,8 @@
             // 
             // CabecalhoDevolucao
             // 
-            AutoScaleDimensions = new SizeF(8F, 18F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = Color.White;
             Controls.Add(tableLayoutPanel1);
             Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);

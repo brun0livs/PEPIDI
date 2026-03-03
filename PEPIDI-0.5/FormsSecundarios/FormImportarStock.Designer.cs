@@ -121,7 +121,7 @@
             pnlInstrucoes.Controls.Add(lblDica);
             pnlInstrucoes.Dock = DockStyle.Fill;
             pnlInstrucoes.Location = new Point(23, 92);
-            pnlInstrucoes.Margin = new Padding(23, 23, 23, 23);
+            pnlInstrucoes.Margin = new Padding(23);
             pnlInstrucoes.Name = "pnlInstrucoes";
             pnlInstrucoes.Padding = new Padding(18, 17, 18, 17);
             pnlInstrucoes.Size = new Size(1062, 208);
@@ -160,7 +160,7 @@
             lblDica.Name = "lblDica";
             lblDica.Size = new Size(1026, 46);
             lblDica.TabIndex = 0;
-            lblDica.Text = "💡 Dica: Copia os dados do Excel (colunas: Família, Modelo, Tamanho, Quantidade), clica na primeira célula da tabela abaixo e prime Ctrl + V.";
+            lblDica.Text = "💡 Dica: Copia os dados do Excel (colunas: Modelo, Tamanho, Quantidade), clica na primeira célula da tabela abaixo e prime Ctrl + V.";
             // 
             // dgvImport
             // 

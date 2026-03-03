@@ -45,7 +45,7 @@ namespace PEPIDI
             pi.SetValue(c, true, null);
         }
 
-        
+
 
         private void FormGestao_Load(object sender, EventArgs e)
         {
@@ -372,7 +372,7 @@ namespace PEPIDI
 
         private void FormGestao_KeyPress(object sender, KeyPressEventArgs e)
         {
-            
+
         }
 
         private void FormGestao_KeyDown(object sender, KeyEventArgs e)
@@ -394,6 +394,31 @@ namespace PEPIDI
                     this.WindowState = FormWindowState.Maximized;   // Maximiza
                 }
             }
+        }
+
+        // Adiciona este evento no teu FormGestao
+        private void FormGestao_DpiChanged(object sender, DpiChangedEventArgs e)
+        {
+            // O Windows diz-te exatamente qual é o novo DPI para onde a janela foi arrastada!
+            float dpiScale = e.DeviceDpiNew / 96f;
+
+            // 1. Ajusta o menu lateral para a nova escala
+            splitContainer1.SplitterDistance = (int)(300 * dpiScale);
+
+            // 2. Ajusta os ícones do menu
+            int tamanhoIcone = (int)(43 * dpiScale);
+            Size novoTamanhoGuna = new Size(tamanhoIcone, tamanhoIcone);
+
+            Nav1.ImageSize = novoTamanhoGuna;
+            Nav2.ImageSize = novoTamanhoGuna;
+            Nav3.ImageSize = novoTamanhoGuna;
+            Nav4.ImageSize = novoTamanhoGuna;
+            Nav5.ImageSize = novoTamanhoGuna;
+            Nav6.ImageSize = novoTamanhoGuna;
+            Nav7.ImageSize = novoTamanhoGuna;
+            Nav8.ImageSize = novoTamanhoGuna;
+            Nav9.ImageSize = novoTamanhoGuna;
+            Nav10.ImageSize = novoTamanhoGuna;
         }
     }
 }

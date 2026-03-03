@@ -52,6 +52,7 @@ namespace PEPIDI.UCs
             tableLayoutPanel1.Controls.Add(guna2CustomGradientPanel1, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Margin = new Padding(4);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 2;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
@@ -64,9 +65,10 @@ namespace PEPIDI.UCs
             label1.AutoSize = true;
             label1.Dock = DockStyle.Fill;
             label1.Font = new Font("Roboto", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(3, 0);
+            label1.Location = new Point(4, 0);
+            label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
-            label1.Size = new Size(912, 60);
+            label1.Size = new Size(910, 60);
             label1.TabIndex = 2;
             label1.Text = "ADICIONAR STOCK DE EPI";
             label1.TextAlign = ContentAlignment.MiddleLeft;
@@ -78,11 +80,11 @@ namespace PEPIDI.UCs
             guna2CustomGradientPanel2.BorderThickness = 1;
             guna2CustomGradientPanel2.CustomizableEdges = customizableEdges1;
             guna2CustomGradientPanel2.Dock = DockStyle.Fill;
-            guna2CustomGradientPanel2.Location = new Point(933, 75);
-            guna2CustomGradientPanel2.Margin = new Padding(15);
+            guna2CustomGradientPanel2.Location = new Point(937, 79);
+            guna2CustomGradientPanel2.Margin = new Padding(19);
             guna2CustomGradientPanel2.Name = "guna2CustomGradientPanel2";
             guna2CustomGradientPanel2.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            guna2CustomGradientPanel2.Size = new Size(889, 768);
+            guna2CustomGradientPanel2.Size = new Size(881, 760);
             guna2CustomGradientPanel2.TabIndex = 1;
             // 
             // guna2CustomGradientPanel1
@@ -92,20 +94,21 @@ namespace PEPIDI.UCs
             guna2CustomGradientPanel1.BorderThickness = 1;
             guna2CustomGradientPanel1.CustomizableEdges = customizableEdges3;
             guna2CustomGradientPanel1.Dock = DockStyle.Fill;
-            guna2CustomGradientPanel1.Location = new Point(15, 75);
-            guna2CustomGradientPanel1.Margin = new Padding(15);
+            guna2CustomGradientPanel1.Location = new Point(19, 79);
+            guna2CustomGradientPanel1.Margin = new Padding(19);
             guna2CustomGradientPanel1.Name = "guna2CustomGradientPanel1";
             guna2CustomGradientPanel1.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            guna2CustomGradientPanel1.Size = new Size(888, 768);
+            guna2CustomGradientPanel1.Size = new Size(880, 760);
             guna2CustomGradientPanel1.TabIndex = 0;
             // 
             // AddStock
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = Color.White;
             Controls.Add(tableLayoutPanel1);
-            Margin = new Padding(4, 3, 4, 3);
+            Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Margin = new Padding(5, 4, 5, 4);
             Name = "AddStock";
             Size = new Size(1837, 858);
             Load += UCAddStock_Load;
