@@ -32,53 +32,28 @@ namespace PEPIDI.UCs
         {
             if (cmbDisplay.SelectedItem == null) return;
 
-            Form janelaPrincipal = this.FindForm();
-            if (janelaPrincipal == null) return;
-
             string escolha = cmbDisplay.SelectedItem.ToString();
 
-            // Descobre em que monitor físico o programa está atualmente a ser exibido
-            Screen ecraAtual = Screen.FromControl(janelaPrincipal);
+            // Mostra um aviso ao utilizador de que o programa vai reiniciar
+            DialogResult resposta = MessageBox.Show(
+                "Para aplicar o novo tamanho de ecrã, o programa precisa de ser reiniciado. Queres reiniciar agora?",
+                "Reiniciar PEPIDI",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
 
-            switch (escolha)
+            if (resposta == DialogResult.Yes)
             {
-                case "Automático (Preencher Ecrã)":
-                    // Tira do maximizado para a janela poder ser redimensionada livremente
-                    janelaPrincipal.WindowState = FormWindowState.Normal;
+                // Aqui tu guardas a escolha numa Settings file ou na Base de Dados
+                // Properties.Settings.Default.ModoEcra = escolha;
+                // Properties.Settings.Default.Save();
 
-                    // O "WorkingArea" é a medida exata do ecrã DESCONTANDO a barra de tarefas do Windows.
-                    // Isto faz com que o programa ocupe 100% do ecrã disponível, seja um monitor de 24" ou um ecrã de 15".
-                    janelaPrincipal.Bounds = ecraAtual.WorkingArea;
-                    break;
-
-                case "Maximizado (Fixo)":
-                    // Modo maximizado clássico do Windows
-                    janelaPrincipal.WindowState = FormWindowState.Maximized;
-                    break;
-
-                case "Portátil (HD)":
-                    // Força a resolução típica de portáteis mais pequenos
-                    janelaPrincipal.WindowState = FormWindowState.Normal;
-                    janelaPrincipal.Size = new Size(1366, 768);
-
-                    // Centrar manualmente no ecrã atual (Substitui o CenterToScreen)
-                    janelaPrincipal.Location = new Point(
-                        ecraAtual.WorkingArea.Left + (ecraAtual.WorkingArea.Width - janelaPrincipal.Width) / 2,
-                        ecraAtual.WorkingArea.Top + (ecraAtual.WorkingArea.Height - janelaPrincipal.Height) / 2
-                    );
-                    break;
-
-                case "Monitor (Full HD)":
-                    // Força a resolução de monitores standard
-                    janelaPrincipal.WindowState = FormWindowState.Normal;
-                    janelaPrincipal.Size = new Size(1920, 1080);
-
-                    // Centrar manualmente no ecrã atual
-                    janelaPrincipal.Location = new Point(
-                        ecraAtual.WorkingArea.Left + (ecraAtual.WorkingArea.Width - janelaPrincipal.Width) / 2,
-                        ecraAtual.WorkingArea.Top + (ecraAtual.WorkingArea.Height - janelaPrincipal.Height) / 2
-                    );
-                    break;
+                // Faz um restart limpo à aplicação!
+                Application.Restart();
+                Environment.Exit(0); // Garante que o processo atual morre imediatamente
+            }
+            else
+            {
+                // Se ele disser que não, voltas a meter a combobox como estava antes
             }
         }
     }

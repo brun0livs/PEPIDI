@@ -48,11 +48,17 @@ namespace PEPIDI.UCs
                 lblPedidos.ForeColor = Color.FromArgb(243, 108, 33);
                 if (dgvPedidos.Columns.Contains("Check")) dgvPedidos.Columns["Check"].Visible = false;
             }
-            else
+            else if (estado == "Aprovado")
             {
                 lblPedidos.Text = "PEDIDOS APROVADOS";
                 lblPedidos.ForeColor = Color.Green;
                 if (dgvPedidos.Columns.Contains("Check")) dgvPedidos.Columns["Check"].Visible = true;
+            }
+            else
+            {
+                lblPedidos.Text = "PEDIDOS FINALIZADOS";
+                lblPedidos.ForeColor = Color.Green;
+                if (dgvPedidos.Columns.Contains("Check")) dgvPedidos.Columns["Check"].Visible = false;
             }
 
             CarregarPedidosPorEstado(dgvPedidos, estado);

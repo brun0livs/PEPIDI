@@ -1,10 +1,11 @@
 ﻿using Guna.UI2.WinForms;
-using PEPIDI.Organizers;
 using PEPIDI.Models;
+using PEPIDI.Organizers;
+using PEPIDI.UCs.DGVS;
+using PEPIDI.Utils;
 using System;
 using System.Drawing; // Necessário para HorizontalAlignment não dar erro de ambiguidade
 using System.Windows.Forms;
-using PEPIDI.UCs.DGVS;
 
 namespace PEPIDI
 {
@@ -40,8 +41,7 @@ namespace PEPIDI
         public static void SetDoubleBuffered(Control c)
         {
             if (System.Windows.Forms.SystemInformation.TerminalServerSession) return;
-            System.Reflection.PropertyInfo pi = typeof(Control).GetProperty("DoubleBuffered",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            System.Reflection.PropertyInfo pi = typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             pi.SetValue(c, true, null);
         }
 
@@ -51,6 +51,9 @@ namespace PEPIDI
         {
             SetDoubleBuffered(splitContainer1.Panel1);
             SetDoubleBuffered(splitContainer1.Panel2);
+
+            splitContainer1.SplitterDistance = GestorTamanhos.LarguraMenuLateral;
+
             this.KeyPreview = true;
             // Verifica se Details e GetInfoGestor existem no teu projeto
             var info = Details.GetInfoGestor(IDGestor);
@@ -63,8 +66,11 @@ namespace PEPIDI
                 if (c is Guna2Button btn && btn.Tag == null)
                 {
                     btn.Tag = btn.Text; // Salva o texto inicial na Tag
+                    //configurações posteriores para o DPI
+                    btn.ImageSize = GestorTamanhos.TamanhoIconeMenu;
                 }
             }
+            lblNome.Font = GestorTamanhos.FonteTitulos;
             AbrirPrimeiraPermissao();
         }
 
@@ -259,7 +265,7 @@ namespace PEPIDI
                     "funcionarios" or "funcionários" => new UCs.Funcionarios(IDGestor),
                     "pedidos pendentes" => new UCs.Pedidos(IDGestor, "Pendente"),
                     "pedidos aprovados" => new UCs.Pedidos(IDGestor, "Aprovado"),
-                    "inserir stock" => new UCs.AddStock(IDGestor),
+                    "histórico" => new UCs.Stock(permissoes),
                     "criar artigos" => new UCs.CriarStock(),
                     "funções" => new UCs.Funcoes(IDGestor),
                     "definições" => new UCs.Definicoes(IDGestor),
@@ -425,23 +431,6 @@ namespace PEPIDI
             Nav8.ImageSize = novoTamanhoGuna;
             Nav9.ImageSize = novoTamanhoGuna;
             Nav10.ImageSize = novoTamanhoGuna;
-
-            // Força todas as letras a crescerem na proporção certa!
-            EscalarFontes(this, dpiScale);
-        }
-
-        private void EscalarFontes(Control pai, float dpiScale)
-        {
-            foreach (Control ctrl in pai.Controls)
-            {
-                float novoTamanho = ctrl.Font.Size * dpiScale;
-                ctrl.Font = new Font(ctrl.Font.FontFamily, novoTamanho, ctrl.Font.Style);
-
-                if (ctrl.HasChildren)
-                {
-                    EscalarFontes(ctrl, dpiScale);
-                }
-            }
         }
     }
 }
