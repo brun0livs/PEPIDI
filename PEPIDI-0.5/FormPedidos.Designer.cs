@@ -305,6 +305,7 @@
             BackColor = Color.White;
             ClientSize = new Size(1920, 1009);
             Controls.Add(splitContainer1);
+            Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "FormPedidos";
             StartPosition = FormStartPosition.CenterScreen;

@@ -399,13 +399,19 @@ namespace PEPIDI
         // Adiciona este evento no teu FormGestao
         private void FormGestao_DpiChanged(object sender, DpiChangedEventArgs e)
         {
-            // O Windows diz-te exatamente qual é o novo DPI para onde a janela foi arrastada!
-            float dpiScale = e.DeviceDpiNew / 96f;
+            AdaptarDPI();
+        }
 
-            // 1. Ajusta o menu lateral para a nova escala
+        private void AdaptarDPI()
+        {
+            float dpiScale = this.DeviceDpi / 96f;
+
+            if (dpiScale <= 1f) return; // Se for um ecrã normal, não mexe em nada!
+
+            // Ajusta a largura do menu lateral
             splitContainer1.SplitterDistance = (int)(300 * dpiScale);
 
-            // 2. Ajusta os ícones do menu
+            // Ajusta o tamanho dos ícones do Menu
             int tamanhoIcone = (int)(43 * dpiScale);
             Size novoTamanhoGuna = new Size(tamanhoIcone, tamanhoIcone);
 
@@ -419,6 +425,23 @@ namespace PEPIDI
             Nav8.ImageSize = novoTamanhoGuna;
             Nav9.ImageSize = novoTamanhoGuna;
             Nav10.ImageSize = novoTamanhoGuna;
+
+            // Força todas as letras a crescerem na proporção certa!
+            EscalarFontes(this, dpiScale);
+        }
+
+        private void EscalarFontes(Control pai, float dpiScale)
+        {
+            foreach (Control ctrl in pai.Controls)
+            {
+                float novoTamanho = ctrl.Font.Size * dpiScale;
+                ctrl.Font = new Font(ctrl.Font.FontFamily, novoTamanho, ctrl.Font.Style);
+
+                if (ctrl.HasChildren)
+                {
+                    EscalarFontes(ctrl, dpiScale);
+                }
+            }
         }
     }
 }

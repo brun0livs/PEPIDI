@@ -215,7 +215,7 @@
             BackColor = SystemColors.Control;
             ClientSize = new Size(434, 311);
             Controls.Add(tableLayoutPanel1);
-            Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 4, 3, 4);
             MaximizeBox = false;
