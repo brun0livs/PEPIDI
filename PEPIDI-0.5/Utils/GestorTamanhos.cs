@@ -84,8 +84,8 @@ namespace PEPIDI.Utils
         {
             TipoEcra.Portatil => 50,
             TipoEcra.MonitorFullHD => 54,
-            TipoEcra.Surface => 65,
-            TipoEcra.Televisao => 80,
+            TipoEcra.Surface => 80,
+            TipoEcra.Televisao => 85,
             _ => 35
         };
 
