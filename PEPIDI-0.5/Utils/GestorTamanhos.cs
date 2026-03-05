@@ -26,7 +26,7 @@ namespace PEPIDI.Utils
         {
             TipoEcra.Portatil => new Font("Roboto", 9F, FontStyle.Regular),
             TipoEcra.MonitorFullHD => new Font("Roboto", 11F, FontStyle.Regular),
-            TipoEcra.Surface => new Font("Roboto", 16F, FontStyle.Regular),
+            TipoEcra.Surface => new Font("Roboto", 12F, FontStyle.Regular),
             TipoEcra.Televisao => new Font("Roboto", 24F, FontStyle.Regular),
             _ => new Font("Roboto", 11F, FontStyle.Regular)
         };
@@ -35,7 +35,7 @@ namespace PEPIDI.Utils
         {
             TipoEcra.Portatil => new Font("Roboto", 15F, FontStyle.Regular),
             TipoEcra.MonitorFullHD => new Font("Roboto", 20.25F, FontStyle.Regular),
-            TipoEcra.Surface => new Font("Roboto", 26F, FontStyle.Regular),
+            TipoEcra.Surface => new Font("Roboto", 22F, FontStyle.Regular),
             TipoEcra.Televisao => new Font("Roboto", 30F, FontStyle.Regular),
             _ => new Font("Roboto", 20.25F, FontStyle.Regular)
         };
@@ -46,7 +46,7 @@ namespace PEPIDI.Utils
         {
             TipoEcra.Portatil => new Font("Roboto", 15F, FontStyle.Regular),
             TipoEcra.MonitorFullHD => new Font("Roboto", 20.25F, FontStyle.Regular),
-            TipoEcra.Surface => new Font("Roboto", 26F, FontStyle.Regular),
+            TipoEcra.Surface => new Font("Roboto", 22F, FontStyle.Regular),
             TipoEcra.Televisao => new Font("Roboto", 30F, FontStyle.Regular),
             _ => new Font("Roboto", 20.25F, FontStyle.Regular)
         };
