@@ -103,7 +103,7 @@ namespace PEPIDI.Utils
         {
             TipoEcra.Portatil => 28,
             TipoEcra.MonitorFullHD => 32,
-            TipoEcra.Surface => 36,
+            TipoEcra.Surface => 40,
             TipoEcra.Televisao => 40,
             _ => 79
         };

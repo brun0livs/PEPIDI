@@ -37,7 +37,7 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             dgvStock = new PEPIDI.Models.PEPIDIDataGridView();
             tableLayoutPanel2 = new TableLayoutPanel();
-            label1 = new Label();
+            lblTituloSTOCK = new Label();
             cmbVisoes = new Guna.UI2.WinForms.Guna2ComboBox();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvStock).BeginInit();
@@ -121,7 +121,7 @@
             tableLayoutPanel2.ColumnCount = 2;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.Controls.Add(label1, 0, 0);
+            tableLayoutPanel2.Controls.Add(lblTituloSTOCK, 0, 0);
             tableLayoutPanel2.Controls.Add(cmbVisoes, 1, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 0);
@@ -132,18 +132,18 @@
             tableLayoutPanel2.Size = new Size(1837, 53);
             tableLayoutPanel2.TabIndex = 0;
             // 
-            // label1
+            // lblTituloSTOCK
             // 
-            label1.AutoSize = true;
-            label1.Dock = DockStyle.Fill;
-            label1.Font = new Font("Roboto", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(4, 0);
-            label1.Margin = new Padding(4, 0, 4, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(910, 53);
-            label1.TabIndex = 1;
-            label1.Text = "STOCK";
-            label1.TextAlign = ContentAlignment.MiddleLeft;
+            lblTituloSTOCK.AutoSize = true;
+            lblTituloSTOCK.Dock = DockStyle.Fill;
+            lblTituloSTOCK.Font = new Font("Roboto", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTituloSTOCK.Location = new Point(4, 0);
+            lblTituloSTOCK.Margin = new Padding(4, 0, 4, 0);
+            lblTituloSTOCK.Name = "lblTituloSTOCK";
+            lblTituloSTOCK.Size = new Size(910, 53);
+            lblTituloSTOCK.TabIndex = 1;
+            lblTituloSTOCK.Text = "STOCK";
+            lblTituloSTOCK.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // cmbVisoes
             // 
@@ -197,7 +197,7 @@
 
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
-        private Label label1;
+        private Label lblTituloSTOCK;
         private Guna.UI2.WinForms.Guna2ComboBox cmbVisoes;
         private Models.PEPIDIDataGridView dgvStock;
     }
