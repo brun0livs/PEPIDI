@@ -1,6 +1,7 @@
 using Microsoft.VisualBasic.Logging;
 using PEPIDI;
 using PEPIDI.Organizers;
+using PEPIDI.Utils;
 
 namespace PEPIDI.Organizers
 {
@@ -11,6 +12,22 @@ namespace PEPIDI.Organizers
         {
             ApplicationConfiguration.Initialize();
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+
+            // 1. IR BUSCAR A MEMÓRIA ÀS SETTINGS
+            string memoria = Properties.Settings.Default.ModoEcraGuardado;
+
+            // 2. TRADUZIR A STRING DA MEMÓRIA PARA O NOSSO ENUM
+            // O TryParse tenta ler o texto (ex: "Surface") e converter para o TipoEcra.Surface
+            if (Enum.TryParse(memoria, out TipoEcra modoLido))
+            {
+                GestorTema.ModoAtual = modoLido;
+            }
+            else
+            {
+                // Se der erro ou a memória estiver corrompida, arranca em modo seguro
+                GestorTema.ModoAtual = TipoEcra.MonitorFullHD;
+            }
+
             // Coloca logo no início do arranque da aplicação
             System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.High;
             Application.EnableVisualStyles();
@@ -46,11 +63,12 @@ namespace PEPIDI.Organizers
             }
 
             GetConn.ConnectionString = connString;
-            
-            //int nr = 1077;
-            //Application.Run(new FormGestao(nr, PermissoesPerfil.VerPermissoes(nr)));
+
+            // 3. ARRANCAR O PROGRAMA
+            int nr = 1077;
+            Application.Run(new FormGestao(nr, PermissoesPerfil.VerPermissoes(nr)));
             //Application.Run(new FrmConsumosDetalhados(1016));
-            Application.Run(new FrmLogIn());
+            //Application.Run(new FrmLogIn());
             //Application.Run(new Finalizacao(24, 666));
             //Application.Run(new FrmCv());
         }

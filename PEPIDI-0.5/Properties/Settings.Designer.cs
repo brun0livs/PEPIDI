@@ -31,5 +31,29 @@ namespace PEPIDI.Properties {
                 return ((int)(this["VisaoStockDefault"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ModoEcraGuardado {
+            get {
+                return ((string)(this["ModoEcraGuardado"]));
+            }
+            set {
+                this["ModoEcraGuardado"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MenuEspandido {
+            get {
+                return ((bool)(this["MenuEspandido"]));
+            }
+            set {
+                this["MenuEspandido"] = value;
+            }
+        }
     }
 }

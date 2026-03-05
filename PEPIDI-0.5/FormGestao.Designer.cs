@@ -502,8 +502,7 @@
             // 
             // FormGestao
             // 
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.White;
             ClientSize = new Size(1920, 1009);
             Controls.Add(splitContainer1);

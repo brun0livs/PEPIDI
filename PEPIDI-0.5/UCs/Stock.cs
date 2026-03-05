@@ -33,9 +33,6 @@ namespace PEPIDI.UCs
             CarregarCombo();
             TouchScrollHelper.AtivarScrollPorArrasto(dgvStock);
 
-            dgvStock.Font = GestorTamanhos.FonteGeral;
-            label1.Font = GestorTamanhos.FonteTitulos;
-            cmbVisoes.Font = GestorTamanhos.FonteGeral;
         }
 
         private async void CarregarCombo()

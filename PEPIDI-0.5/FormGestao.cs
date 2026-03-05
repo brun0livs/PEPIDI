@@ -19,10 +19,10 @@ namespace PEPIDI
         private readonly PermissoesPerfil permissoes;
 
         // Configuração do Menu
-        bool menuExpandido = true;
-        const int larguraMax = 350;
-        const int larguraMin = 79;
-        const int velocidade = 75;
+        bool menuExpandido = Properties.Settings.Default.MenuEspandido;
+        int larguraMax;
+        int larguraMin; // <-- Deixou de ser const e perdeu o 79!
+        const int velocidade = 75; // A velocidade da animação pode continuar fixa
 
         public FormGestao(int _idGestor, PermissoesPerfil _permissoes)
         {
@@ -51,11 +51,18 @@ namespace PEPIDI
         {
             SetDoubleBuffered(splitContainer1.Panel1);
             SetDoubleBuffered(splitContainer1.Panel2);
-
-            splitContainer1.SplitterDistance = GestorTamanhos.LarguraMenuLateral;
-
             this.KeyPreview = true;
-            // Verifica se Details e GetInfoGestor existem no teu projeto
+
+            // ==========================================
+            // 1. APLICAR O TEMA CENTRALIZADO (O "CSS")
+            // ==========================================
+            GestorTema.AplicarEstilos(this);
+
+            // Definir a largura do menu consoante o ecrã
+            larguraMax = GestorTema.ModoAtual == TipoEcra.Surface ? 450 : 310;
+            splitContainer1.SplitterDistance = larguraMax;
+            // ==========================================
+
             var info = Details.GetInfoGestor(IDGestor);
             lblNome.Text = info.Nome + " · " + info.Funcao;
             AplicarPermissoes();
@@ -66,11 +73,9 @@ namespace PEPIDI
                 if (c is Guna2Button btn && btn.Tag == null)
                 {
                     btn.Tag = btn.Text; // Salva o texto inicial na Tag
-                    //configurações posteriores para o DPI
-                    btn.ImageSize = GestorTamanhos.TamanhoIconeMenu;
                 }
             }
-            lblNome.Font = GestorTamanhos.FonteTitulos;
+
             AbrirPrimeiraPermissao();
         }
 
@@ -222,6 +227,7 @@ namespace PEPIDI
             if (chaveNavegacao.Equals("Expandir", StringComparison.OrdinalIgnoreCase))
             {
                 timerMenu.Start();
+                Properties.Settings.Default.MenuEspandido = !menuExpandido; // Salva o estado para a próxima vez
                 return;
             }
 

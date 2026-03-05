@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PEPIDI.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -33,28 +34,32 @@ namespace PEPIDI.UCs
             if (cmbDisplay.SelectedItem == null) return;
 
             string escolha = cmbDisplay.SelectedItem.ToString();
+            TipoEcra novoModo = TipoEcra.MonitorFullHD; // Padrão
 
-            // Mostra um aviso ao utilizador de que o programa vai reiniciar
+            // 1. Descobrir qual foi a escolha
+            if (escolha.Contains("Tablet") || escolha.Contains("Surface"))
+                novoModo = TipoEcra.Surface;
+            else if (escolha.Contains("Portátil"))
+                novoModo = TipoEcra.Portatil;
+            // Podes adicionar mais IFs se tiveres mais modos
+
+            // 2. Perguntar se quer reiniciar agora
             DialogResult resposta = MessageBox.Show(
-                "Para aplicar o novo tamanho de ecrã, o programa precisa de ser reiniciado. Queres reiniciar agora?",
-                "Reiniciar PEPIDI",
+                "O programa vai reiniciar para aplicar a nova resolução. Queres continuar?",
+                "Alterar Resolução",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
             if (resposta == DialogResult.Yes)
             {
-                // Aqui tu guardas a escolha numa Settings file ou na Base de Dados
-                // Properties.Settings.Default.ModoEcra = escolha;
-                // Properties.Settings.Default.Save();
+                // 3. GUARDAR NAS SETTINGS!
+                Properties.Settings.Default.ModoEcraGuardado = novoModo.ToString();
+                Properties.Settings.Default.Save(); // Escreve no disco rígido do utilizador
 
-                // Faz um restart limpo à aplicação!
+                // 4. REINICIAR (Fecha e volta a abrir instantaneamente)
                 Application.Restart();
-                Environment.Exit(0); // Garante que o processo atual morre imediatamente
-            }
-            else
-            {
-                // Se ele disser que não, voltas a meter a combobox como estava antes
-            }
+                Environment.Exit(0);
+            }return;
         }
     }
 }
