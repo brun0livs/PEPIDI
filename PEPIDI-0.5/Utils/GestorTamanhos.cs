@@ -34,6 +34,15 @@ namespace PEPIDI.Utils
 
         public static Font FonteTitulo => ModoAtual switch
         {
+            TipoEcra.Portatil => new Font("Roboto Medium", 15F, FontStyle.Regular),
+            TipoEcra.MonitorFullHD => new Font("Roboto Medium", 20.25F, FontStyle.Regular),
+            TipoEcra.Surface => new Font("Roboto Medium", 20.25F, FontStyle.Regular),
+            TipoEcra.Televisao => new Font("Roboto Medium", 30F, FontStyle.Regular),
+            _ => new Font("Roboto Medium", 20.25F, FontStyle.Regular)
+        };
+
+        public static Font FonteNome => ModoAtual switch
+        {
             TipoEcra.Portatil => new Font("Roboto", 15F, FontStyle.Regular),
             TipoEcra.MonitorFullHD => new Font("Roboto", 20.25F, FontStyle.Regular),
             TipoEcra.Surface => new Font("Roboto", 20.25F, FontStyle.Regular),
@@ -73,9 +82,9 @@ namespace PEPIDI.Utils
         // GRELHAS (DATAGRIDVIEWS)
         public static int AlturaLinhaDgv => ModoAtual switch
         {
-            TipoEcra.Portatil => 30,
-            TipoEcra.MonitorFullHD => 35,
-            TipoEcra.Surface => 55,
+            TipoEcra.Portatil => 50,
+            TipoEcra.MonitorFullHD => 54,
+            TipoEcra.Surface => 65,
             TipoEcra.Televisao => 80,
             _ => 35
         };
@@ -128,7 +137,9 @@ namespace PEPIDI.Utils
                 }
                 else if (c is Label lbl)
                 {
-                    if (lbl.Name.Contains("Titulo") || lbl.Name.Contains("lblNome"))
+                    if (lbl.Name.Contains("lblNome"))
+                        lbl.Font = FonteNome;
+                    else if (lbl.Name.Contains("Titulo"))
                         lbl.Font = FonteTitulo;
                     else
                         lbl.Font = FonteLabel;
