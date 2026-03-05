@@ -91,6 +91,11 @@ namespace PEPIDI.UCs
             dgvFuncs.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvFuncs.RowHeadersVisible = false;
 
+            // --- ACTIVAR BADGES COLORIDAS ---
+            // Isto diz à tua classe personalizada para procurar a coluna com HeaderText "Função"
+            dgvFuncs.BadgeColumnName = "Função";
+            dgvFuncs.BadgeColorColumnName = "CorHex";
+
             // --- MENU DE AÇÕES ---
             _menuAcoes = new ContextMenuStrip();
             _menuAcoes.Items.Add("Editar", null, (s, e) => AcaoSelecionada("Editar"));
@@ -130,6 +135,16 @@ namespace PEPIDI.UCs
                 dgvFuncs.Columns["Funcao"].HeaderText = "Função";
                 dgvFuncs.Columns["Funcao"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 dgvFuncs.Columns["Funcao"].FillWeight = 13;
+
+                // Magia da Transparência: Esconde o texto normal para a badge desenhada poder brilhar
+                dgvFuncs.Columns["Funcao"].DefaultCellStyle.ForeColor = Color.Transparent;
+                dgvFuncs.Columns["Funcao"].DefaultCellStyle.SelectionForeColor = Color.Transparent;
+            }
+
+            // Esconder a coluna que traz o código HEX da Base de Dados
+            if (dgvFuncs.Columns.Contains("CorHex"))
+            {
+                dgvFuncs.Columns["CorHex"].Visible = false;
             }
 
             if (dgvFuncs.Columns.Contains("TShirt"))

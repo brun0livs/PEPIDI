@@ -21,6 +21,7 @@ namespace PEPIDI.UCs
             {
                 pnlDefsPrev.Visible = true;
             }
+            GestorTema.AplicarEstilos(this);
 
             // 1. Injetar os itens por código (Assim tens a certeza absoluta que o texto bate certo)
             // Se já os tens no Designer, podes apagar de lá para não haver duplicados.

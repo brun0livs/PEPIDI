@@ -334,7 +334,7 @@
             Nav5.ShadowDecoration.CustomizableEdges = customizableEdges12;
             Nav5.Size = new Size(310, 79);
             Nav5.TabIndex = 12;
-            Nav5.Tag = "Histórico";
+            Nav5.Tag = "Pedidos Finalizados";
             Nav5.Text = "Pedidos Finalizados";
             Nav5.TextAlign = HorizontalAlignment.Left;
             Nav5.Click += Nav_Clicked;

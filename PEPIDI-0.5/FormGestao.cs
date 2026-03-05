@@ -273,7 +273,7 @@ namespace PEPIDI
                     "funcionarios" or "funcionários" => new UCs.Funcionarios(IDGestor),
                     "pedidos pendentes" => new UCs.Pedidos(IDGestor, "Pendente"),
                     "pedidos aprovados" => new UCs.Pedidos(IDGestor, "Aprovado"),
-                    "histórico" => new UCs.Stock(permissoes),
+                    "pedidos finalizados" => new UCs.Pedidos(IDGestor, "Finalizado"),
                     "criar artigos" => new UCs.CriarStock(),
                     "funções" => new UCs.Funcoes(IDGestor),
                     "definições" => new UCs.Definicoes(IDGestor),

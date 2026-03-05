@@ -138,6 +138,7 @@ namespace PEPIDI.Utils
                     if (btn.Name.StartsWith("Nav"))
                     {
                         btn.Font = FonteBotaoNAV;
+                        btn.CheckedState.Font = FonteBotaoNAV;
                         btn.Padding = PaddingBotao;
                         btn.ImageSize = TamanhoIconeBotao;
                     }else if (btn.Name.Contains("btn"))

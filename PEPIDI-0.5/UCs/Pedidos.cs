@@ -57,7 +57,7 @@ namespace PEPIDI.UCs
             else
             {
                 lblPedidos.Text = "PEDIDOS FINALIZADOS";
-                lblPedidos.ForeColor = Color.Green;
+                lblPedidos.ForeColor = Color.Black;
                 if (dgvPedidos.Columns.Contains("Check")) dgvPedidos.Columns["Check"].Visible = false;
             }
 
