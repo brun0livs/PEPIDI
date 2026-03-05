@@ -18,7 +18,7 @@ namespace PEPIDI.Utils
         public static TipoEcra ModoAtual { get; set; } = TipoEcra.MonitorFullHD; // Padrão
 
         // ==========================================
-        // 3. AS REGRAS MULTI-ECRÃ (Usando o Switch moderno do C#)
+        // 3. AS REGRAS MULTI-ECRÃ
         // ==========================================
 
         // LABELS
@@ -28,19 +28,29 @@ namespace PEPIDI.Utils
             TipoEcra.MonitorFullHD => new Font("Roboto", 11F, FontStyle.Regular),
             TipoEcra.Surface => new Font("Roboto", 16F, FontStyle.Regular),
             TipoEcra.Televisao => new Font("Roboto", 24F, FontStyle.Regular),
-            _ => new Font("Roboto", 11F, FontStyle.Regular) // Segurança
+            _ => new Font("Roboto", 11F, FontStyle.Regular)
         };
 
         public static Font FonteTitulo => ModoAtual switch
         {
-            TipoEcra.Portatil => new Font("Roboto", 16F, FontStyle.Bold),
-            TipoEcra.MonitorFullHD => new Font("Roboto", 18F, FontStyle.Bold),
-            TipoEcra.Surface => new Font("Roboto", 24F, FontStyle.Bold),
-            TipoEcra.Televisao => new Font("Roboto", 40F, FontStyle.Bold),
-            _ => new Font("Roboto", 18F, FontStyle.Bold)
+            TipoEcra.Portatil => new Font("Roboto", 15F, FontStyle.Regular),
+            TipoEcra.MonitorFullHD => new Font("Roboto", 20.25F, FontStyle.Regular),
+            TipoEcra.Surface => new Font("Roboto", 26F, FontStyle.Regular),
+            TipoEcra.Televisao => new Font("Roboto", 30F, FontStyle.Regular),
+            _ => new Font("Roboto", 20.25F, FontStyle.Regular)
         };
 
         // BOTÕES
+        // AQUI ESTÁ A VARIÁVEL QUE FALTAVA! 👇
+        public static Font FonteBotao => ModoAtual switch
+        {
+            TipoEcra.Portatil => new Font("Roboto", 15F, FontStyle.Regular),
+            TipoEcra.MonitorFullHD => new Font("Roboto", 20.25F, FontStyle.Regular),
+            TipoEcra.Surface => new Font("Roboto", 26F, FontStyle.Regular),
+            TipoEcra.Televisao => new Font("Roboto", 30F, FontStyle.Regular),
+            _ => new Font("Roboto", 20.25F, FontStyle.Regular)
+        };
+
         public static Padding PaddingBotao => ModoAtual switch
         {
             TipoEcra.Portatil => new Padding(5, 2, 5, 2),
@@ -48,6 +58,15 @@ namespace PEPIDI.Utils
             TipoEcra.Surface => new Padding(20, 15, 20, 15),
             TipoEcra.Televisao => new Padding(30, 20, 30, 20),
             _ => new Padding(10, 5, 10, 5)
+        };
+
+        public static Size TamanhoIconeBotao => ModoAtual switch
+        {
+            TipoEcra.Portatil => new Size(32, 32),
+            TipoEcra.MonitorFullHD => new Size(43, 43),
+            TipoEcra.Surface => new Size(80, 80), // O teu ícone grande para o Surface!
+            TipoEcra.Televisao => new Size(128, 128),
+            _ => new Size(43, 43)
         };
 
         // GRELHAS (DATAGRIDVIEWS)
@@ -64,8 +83,8 @@ namespace PEPIDI.Utils
         public static int LarguraMenuExpandido => ModoAtual switch
         {
             TipoEcra.Portatil => 250,
-            TipoEcra.MonitorFullHD => 310, // O teu valor normal
-            TipoEcra.Surface => 450,       // Maior para o Surface
+            TipoEcra.MonitorFullHD => 310,
+            TipoEcra.Surface => 450,
             TipoEcra.Televisao => 600,
             _ => 310
         };
@@ -73,37 +92,44 @@ namespace PEPIDI.Utils
         public static int LarguraMenuRecolhido => ModoAtual switch
         {
             TipoEcra.Portatil => 60,
-            TipoEcra.MonitorFullHD => 79,  // O teu quadrado perfeito no PC
-            TipoEcra.Surface => 115,       // O novo quadrado perfeito para o Surface! (Ajusta este valor se precisares)
+            TipoEcra.MonitorFullHD => 79,
+            TipoEcra.Surface => 115,
             TipoEcra.Televisao => 150,
             _ => 79
         };
 
-        public static Size TamanhoIconeBotao => ModoAtual switch
-        {
-            TipoEcra.Portatil => new Size(32, 32),
-            TipoEcra.MonitorFullHD => new Size(43, 43),
-
-            // AQUI! Muda de 64 para 80, 96, ou o tamanho que achares perfeito!
-            TipoEcra.Surface => new Size(80, 80),
-
-            TipoEcra.Televisao => new Size(128, 128),
-            _ => new Size(43, 43)
-        };
-
-        // (E continuas a adicionar as tuas Fontes e Alturas para a Grelha da mesma forma...)
-
         // ==========================================
-        // 4. O PINTOR (Fica Exatamente Igual!)
+        // 4. O PINTOR (O Scanner Corrigido!)
         // ==========================================
         public static void AplicarEstilos(Control pai)
         {
-            // O teu código do AplicarEstilos que te dei na mensagem anterior fica aqui.
-            // A genialidade disto é que o Pintor NÃO MUDA! 
-            // Ele só vai pedir a "FonteLabel" e a propriedade acima dá-lhe o tamanho 
-            // correto automaticamente, consoante o "ModoAtual" selecionado.
+            // O FOREACH É OBRIGATÓRIO! É ele que entra nos painéis e procura os botões.
+            foreach (Control c in pai.Controls)
+            {
+                if (c is Guna.UI2.WinForms.Guna2Button btn)
+                {
+                    btn.Font = FonteBotao;
+                    btn.Padding = PaddingBotao;
 
-            // ... (Cola aqui o foreach (Control c in pai.Controls) de antes) ...
+                    if (btn.Name.StartsWith("Nav"))
+                    {
+                        btn.ImageSize = TamanhoIconeBotao;
+                    }
+                }
+                else if (c is Label lbl)
+                {
+                    if (lbl.Name.Contains("Titulo") || lbl.Name.Contains("lblNome"))
+                        lbl.Font = FonteTitulo;
+                    else
+                        lbl.Font = FonteLabel;
+                }
+
+                // A RECURSIVIDADE: Se for um painel (como o teu menu), ele entra lá para dentro e pinta os botões!
+                if (c.HasChildren)
+                {
+                    AplicarEstilos(c);
+                }
+            }
         }
     }
 }
