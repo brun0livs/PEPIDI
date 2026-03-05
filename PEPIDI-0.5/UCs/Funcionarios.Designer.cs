@@ -28,20 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Funcionarios));
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
             tableLayoutPanel1 = new TableLayoutPanel();
             tableLayoutPanel2 = new TableLayoutPanel();
             txtPesquisa = new Guna.UI2.WinForms.Guna2TextBox();
-            label1 = new Label();
+            lblTituloFUNCIONARIOS = new Label();
             btnAddFunc = new Guna.UI2.WinForms.Guna2Button();
             dgvFuncs = new PEPIDI.Models.PEPIDIDataGridView();
             tableLayoutPanel1.SuspendLayout();
@@ -81,7 +81,7 @@
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel2.Controls.Add(txtPesquisa, 1, 0);
-            tableLayoutPanel2.Controls.Add(label1, 0, 0);
+            tableLayoutPanel2.Controls.Add(lblTituloFUNCIONARIOS, 0, 0);
             tableLayoutPanel2.Controls.Add(btnAddFunc, 2, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 0);
@@ -95,7 +95,7 @@
             // txtPesquisa
             // 
             txtPesquisa.AutoRoundedCorners = true;
-            txtPesquisa.CustomizableEdges = customizableEdges1;
+            txtPesquisa.CustomizableEdges = customizableEdges5;
             txtPesquisa.DefaultText = "";
             txtPesquisa.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             txtPesquisa.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
@@ -116,29 +116,29 @@
             txtPesquisa.PlaceholderForeColor = Color.Silver;
             txtPesquisa.PlaceholderText = "Procurar Funcionário";
             txtPesquisa.SelectedText = "";
-            txtPesquisa.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            txtPesquisa.ShadowDecoration.CustomizableEdges = customizableEdges6;
             txtPesquisa.Size = new Size(586, 34);
             txtPesquisa.TabIndex = 6;
             txtPesquisa.TextAlign = HorizontalAlignment.Center;
             txtPesquisa.TextOffset = new Point(10, 0);
             txtPesquisa.TextChanged += txtPesquisa_TextChanged;
             // 
-            // label1
+            // lblTituloFUNCIONARIOS
             // 
-            label1.AutoSize = true;
-            label1.Dock = DockStyle.Fill;
-            label1.Font = new Font("Roboto", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(3, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(606, 60);
-            label1.TabIndex = 1;
-            label1.Text = "FUNCIONÁRIOS";
-            label1.TextAlign = ContentAlignment.MiddleLeft;
+            lblTituloFUNCIONARIOS.AutoSize = true;
+            lblTituloFUNCIONARIOS.Dock = DockStyle.Fill;
+            lblTituloFUNCIONARIOS.Font = new Font("Roboto", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTituloFUNCIONARIOS.Location = new Point(3, 0);
+            lblTituloFUNCIONARIOS.Name = "lblTituloFUNCIONARIOS";
+            lblTituloFUNCIONARIOS.Size = new Size(606, 60);
+            lblTituloFUNCIONARIOS.TabIndex = 1;
+            lblTituloFUNCIONARIOS.Text = "FUNCIONÁRIOS";
+            lblTituloFUNCIONARIOS.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // btnAddFunc
             // 
             btnAddFunc.BorderRadius = 10;
-            btnAddFunc.CustomizableEdges = customizableEdges3;
+            btnAddFunc.CustomizableEdges = customizableEdges7;
             btnAddFunc.DisabledState.BorderColor = Color.DarkGray;
             btnAddFunc.DisabledState.CustomBorderColor = Color.DarkGray;
             btnAddFunc.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -150,7 +150,7 @@
             btnAddFunc.Location = new Point(1253, 12);
             btnAddFunc.Margin = new Padding(29, 12, 29, 12);
             btnAddFunc.Name = "btnAddFunc";
-            btnAddFunc.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            btnAddFunc.ShadowDecoration.CustomizableEdges = customizableEdges8;
             btnAddFunc.Size = new Size(555, 36);
             btnAddFunc.TabIndex = 5;
             btnAddFunc.Text = "Novo Funcionário";
@@ -160,34 +160,34 @@
             // 
             dgvFuncs.AllowUserToAddRows = false;
             dgvFuncs.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = Color.Transparent;
-            dataGridViewCellStyle1.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dgvFuncs.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle6.BackColor = Color.Transparent;
+            dataGridViewCellStyle6.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dgvFuncs.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
             dgvFuncs.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvFuncs.BackgroundColor = Color.White;
             dgvFuncs.BorderStyle = BorderStyle.None;
             dgvFuncs.CellBorderStyle = DataGridViewCellBorderStyle.None;
             dgvFuncs.CellPadding = new Padding(10);
             dgvFuncs.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = Color.White;
-            dataGridViewCellStyle2.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = Color.Black;
-            dataGridViewCellStyle2.Padding = new Padding(0, 8, 0, 8);
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvFuncs.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.BackColor = Color.White;
+            dataGridViewCellStyle7.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle7.ForeColor = Color.Black;
+            dataGridViewCellStyle7.Padding = new Padding(0, 8, 0, 8);
+            dataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.True;
+            dgvFuncs.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             dgvFuncs.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.Transparent;
-            dataGridViewCellStyle3.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle3.ForeColor = Color.Black;
-            dataGridViewCellStyle3.Padding = new Padding(18, 10, 18, 10);
-            dataGridViewCellStyle3.SelectionBackColor = Color.Transparent;
-            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            dgvFuncs.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = Color.Transparent;
+            dataGridViewCellStyle8.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle8.ForeColor = Color.Black;
+            dataGridViewCellStyle8.Padding = new Padding(18, 10, 18, 10);
+            dataGridViewCellStyle8.SelectionBackColor = Color.Transparent;
+            dataGridViewCellStyle8.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.False;
+            dgvFuncs.DefaultCellStyle = dataGridViewCellStyle8;
             dgvFuncs.Dock = DockStyle.Fill;
             dgvFuncs.EnableHeadersVisualStyles = false;
             dgvFuncs.GridColor = SystemColors.Control;
@@ -196,18 +196,18 @@
             dgvFuncs.Margin = new Padding(11, 12, 11, 0);
             dgvFuncs.MultiSelect = false;
             dgvFuncs.Name = "dgvFuncs";
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = SystemColors.Control;
-            dataGridViewCellStyle4.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle4.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
-            dgvFuncs.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = SystemColors.Control;
+            dataGridViewCellStyle9.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle9.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = DataGridViewTriState.True;
+            dgvFuncs.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             dgvFuncs.RowHeadersVisible = false;
-            dataGridViewCellStyle5.BackColor = Color.Transparent;
-            dataGridViewCellStyle5.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dgvFuncs.RowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle10.BackColor = Color.Transparent;
+            dataGridViewCellStyle10.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dgvFuncs.RowsDefaultCellStyle = dataGridViewCellStyle10;
             dgvFuncs.RowTemplate.Height = 54;
             dgvFuncs.ScrollBars = ScrollBars.None;
             dgvFuncs.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -235,7 +235,7 @@
 
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
-        private Label label1;
+        private Label lblTituloFUNCIONARIOS;
         private PEPIDI.Models.PEPIDIDataGridView dgvFuncs;
         private Guna.UI2.WinForms.Guna2Button btnAddFunc;
         private Guna.UI2.WinForms.Guna2TextBox txtPesquisa;

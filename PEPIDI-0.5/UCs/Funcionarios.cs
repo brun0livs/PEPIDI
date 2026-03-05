@@ -1,6 +1,7 @@
 ﻿using PEPIDI.FormsSecundarios;
 using PEPIDI.Models;
 using PEPIDI.Organizers;
+using PEPIDI.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -76,6 +77,7 @@ namespace PEPIDI.UCs
             dgvFuncs.DataSource = dt;
             Configura(dgvFuncs);
             TouchScrollHelper.AtivarScrollPorArrasto(dgvFuncs);
+            GestorTema.AplicarEstilos(this);
 
 
         }
