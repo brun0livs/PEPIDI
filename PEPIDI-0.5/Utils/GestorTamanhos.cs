@@ -51,14 +51,22 @@ namespace PEPIDI.Utils
         };
 
         // BOTÕES
-        // AQUI ESTÁ A VARIÁVEL QUE FALTAVA! 👇
-        public static Font FonteBotao => ModoAtual switch
+        public static Font FonteBotaoNAV => ModoAtual switch
         {
             TipoEcra.Portatil => new Font("Roboto", 15F, FontStyle.Regular),
             TipoEcra.MonitorFullHD => new Font("Roboto", 20.25F, FontStyle.Regular),
             TipoEcra.Surface => new Font("Roboto", 20.25F, FontStyle.Regular),
             TipoEcra.Televisao => new Font("Roboto", 30F, FontStyle.Regular),
             _ => new Font("Roboto", 20.25F, FontStyle.Regular)
+        };
+
+        public static Font FonteBotao => ModoAtual switch
+        {
+            TipoEcra.Portatil => new Font("Roboto", 11F, FontStyle.Regular),
+            TipoEcra.MonitorFullHD => new Font("Roboto", 12F, FontStyle.Regular),
+            TipoEcra.Surface => new Font("Roboto", 12F, FontStyle.Regular),
+            TipoEcra.Televisao => new Font("Roboto", 20F, FontStyle.Regular),
+            _ => new Font("Roboto", 12F, FontStyle.Regular)
         };
 
         public static Padding PaddingBotao => ModoAtual switch
@@ -127,13 +135,16 @@ namespace PEPIDI.Utils
             {
                 if (c is Guna.UI2.WinForms.Guna2Button btn)
                 {
-                    btn.Font = FonteBotao;
-                    btn.Padding = PaddingBotao;
-
                     if (btn.Name.StartsWith("Nav"))
                     {
+                        btn.Font = FonteBotaoNAV;
+                        btn.Padding = PaddingBotao;
                         btn.ImageSize = TamanhoIconeBotao;
+                    }else if (btn.Name.Contains("btn"))
+                    {
+                        btn.Font = FonteBotao;
                     }
+
                 }
                 else if (c is Label lbl)
                 {
