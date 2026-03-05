@@ -226,8 +226,10 @@ namespace PEPIDI
 
             if (chaveNavegacao.Equals("Expandir", StringComparison.OrdinalIgnoreCase))
             {
+                //A largura mínima do menu passa a ser exatamente a altura atual do botão!
+                larguraMin = Nav1.Height;
+
                 timerMenu.Start();
-                Properties.Settings.Default.MenuEspandido = !menuExpandido; // Salva o estado para a próxima vez
                 return;
             }
 

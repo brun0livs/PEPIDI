@@ -3,32 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\properties\\settings.settings||{6D2695F9-5365-4A78-89ED-F205C045BFE6}",
-      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:properties\\settings.settings||{6D2695F9-5365-4A78-89ED-F205C045BFE6}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\formgestao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:formgestao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\utils\\gestortamanhos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:utils\\gestortamanhos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\formgestao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:formgestao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\ucs\\definicoes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:ucs\\definicoes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\formconfigdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:formconfigdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\ucs\\stock.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:ucs\\stock.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\formpedidos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:formpedidos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\ucs\\definicoes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:ucs\\definicoes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\organizers\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:organizers\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\formlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:formlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,96 +30,69 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Settings.settings",
-              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\Properties\\Settings.settings",
-              "RelativeDocumentMoniker": "Properties\\Settings.settings",
-              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\Properties\\Settings.settings",
-              "RelativeToolTip": "Properties\\Settings.settings",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002767|",
-              "WhenOpened": "2026-03-04T17:32:58.644Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "GestorTamanhos.cs",
-              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\Utils\\GestorTamanhos.cs",
-              "RelativeDocumentMoniker": "Utils\\GestorTamanhos.cs",
-              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\Utils\\GestorTamanhos.cs",
-              "RelativeToolTip": "Utils\\GestorTamanhos.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAfAAAAAAAAAA==",
+              "DocumentIndex": 4,
+              "Title": "FormLogIn.cs [Projeto]",
+              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormLogIn.cs",
+              "RelativeDocumentMoniker": "FormLogIn.cs",
+              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormLogIn.cs [Projeto]",
+              "RelativeToolTip": "FormLogIn.cs [Projeto]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T16:59:21.36Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-05T09:28:27.649Z",
+              "IsPinned": true,
+              "EditorCaption": " [Projeto]"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "FormGestao.cs",
               "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormGestao.cs",
               "RelativeDocumentMoniker": "FormGestao.cs",
-              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormGestao.cs",
-              "RelativeToolTip": "FormGestao.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAgwOQAAAAiAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormGestao.cs*",
+              "RelativeToolTip": "FormGestao.cs*",
+              "ViewState": "AgIAANIAAAAAAAAAAAAlwOQAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T16:57:50.189Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Stock.cs",
-              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\UCs\\Stock.cs",
-              "RelativeDocumentMoniker": "UCs\\Stock.cs",
-              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\UCs\\Stock.cs",
-              "RelativeToolTip": "UCs\\Stock.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T16:58:02.003Z",
+              "WhenOpened": "2026-03-05T09:44:32.825Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "Definicoes.cs",
-              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\UCs\\Definicoes.cs",
-              "RelativeDocumentMoniker": "UCs\\Definicoes.cs",
-              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\UCs\\Definicoes.cs",
-              "RelativeToolTip": "UCs\\Definicoes.cs",
-              "ViewState": "AgIAAB8AAAAAAAAAAAAiwDcAAAAsAAAAAAAAAA==",
+              "Title": "FormPedidos.cs [Projeto]",
+              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormPedidos.cs",
+              "RelativeDocumentMoniker": "FormPedidos.cs",
+              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormPedidos.cs [Projeto]",
+              "RelativeToolTip": "FormPedidos.cs [Projeto]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T16:57:05.039Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Definicoes.cs [Projeto]",
-              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\UCs\\Definicoes.cs",
-              "RelativeDocumentMoniker": "UCs\\Definicoes.cs",
-              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\UCs\\Definicoes.cs [Projeto]",
-              "RelativeToolTip": "UCs\\Definicoes.cs [Projeto]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T16:57:01.058Z",
+              "WhenOpened": "2026-03-05T09:28:28.416Z",
               "EditorCaption": " [Projeto]"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\Organizers\\Program.cs",
-              "RelativeDocumentMoniker": "Organizers\\Program.cs",
-              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\Organizers\\Program.cs",
-              "RelativeToolTip": "Organizers\\Program.cs",
-              "ViewState": "AgIAADkAAAAAAAAAAAAAAEQAAABUAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "FormGestao.cs [Projeto]",
+              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormGestao.cs",
+              "RelativeDocumentMoniker": "FormGestao.cs",
+              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormGestao.cs [Projeto]*",
+              "RelativeToolTip": "FormGestao.cs [Projeto]*",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T16:53:28.24Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-05T09:28:26.748Z",
+              "EditorCaption": " [Projeto]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FormConfigDB.cs [Projeto]",
+              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormConfigDB.cs",
+              "RelativeDocumentMoniker": "FormConfigDB.cs",
+              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormConfigDB.cs [Projeto]",
+              "RelativeToolTip": "FormConfigDB.cs [Projeto]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-05T09:28:26.076Z",
+              "EditorCaption": " [Projeto]"
             }
           ]
         }
