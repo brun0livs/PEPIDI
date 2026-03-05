@@ -50,15 +50,6 @@ namespace PEPIDI.Utils
             _ => new Padding(10, 5, 10, 5)
         };
 
-        public static Size TamanhoIconeBotao => ModoAtual switch
-        {
-            TipoEcra.Portatil => new Size(32, 32),
-            TipoEcra.MonitorFullHD => new Size(43, 43),
-            TipoEcra.Surface => new Size(64, 64),
-            TipoEcra.Televisao => new Size(96, 96),
-            _ => new Size(43, 43)
-        };
-
         // GRELHAS (DATAGRIDVIEWS)
         public static int AlturaLinhaDgv => ModoAtual switch
         {
@@ -86,6 +77,18 @@ namespace PEPIDI.Utils
             TipoEcra.Surface => 115,       // O novo quadrado perfeito para o Surface! (Ajusta este valor se precisares)
             TipoEcra.Televisao => 150,
             _ => 79
+        };
+
+        public static Size TamanhoIconeBotao => ModoAtual switch
+        {
+            TipoEcra.Portatil => new Size(32, 32),
+            TipoEcra.MonitorFullHD => new Size(43, 43),
+
+            // AQUI! Muda de 64 para 80, 96, ou o tamanho que achares perfeito!
+            TipoEcra.Surface => new Size(80, 80),
+
+            TipoEcra.Televisao => new Size(128, 128),
+            _ => new Size(43, 43)
         };
 
         // (E continuas a adicionar as tuas Fontes e Alturas para a Grelha da mesma forma...)
