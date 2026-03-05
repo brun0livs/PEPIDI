@@ -32,6 +32,7 @@ namespace PEPIDI.UCs
             HelperPerformance.AtivarDoubleBufferRecursivo(this);
             CarregarCombo();
             TouchScrollHelper.AtivarScrollPorArrasto(dgvStock);
+            GestorTema.AplicarEstilos(this);
 
         }
 

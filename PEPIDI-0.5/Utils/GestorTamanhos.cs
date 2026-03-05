@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using PEPIDI.Models;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace PEPIDI.Utils
@@ -98,6 +99,15 @@ namespace PEPIDI.Utils
             _ => 79
         };
 
+        public static int AlturaCombos => ModoAtual switch
+        {
+            TipoEcra.Portatil => 28,
+            TipoEcra.MonitorFullHD => 32,
+            TipoEcra.Surface => 36,
+            TipoEcra.Televisao => 40,
+            _ => 79
+        };
+
         // ==========================================
         // 4. O PINTOR (O Scanner Corrigido!)
         // ==========================================
@@ -122,6 +132,14 @@ namespace PEPIDI.Utils
                         lbl.Font = FonteTitulo;
                     else
                         lbl.Font = FonteLabel;
+                }else if (c is Guna.UI2.WinForms.Guna2ComboBox cmb)
+                {
+                    cmb.Font = FonteLabel;
+                    cmb.ItemHeight = AlturaCombos;
+                }
+                else if (c is PEPIDIDataGridView dgv)
+                {
+                    dgv.RowTemplate.Height = AlturaLinhaDgv;
                 }
 
                 // A RECURSIVIDADE: Se for um painel (como o teu menu), ele entra lá para dentro e pinta os botões!
