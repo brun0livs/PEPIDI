@@ -66,7 +66,7 @@ namespace PEPIDI
             // 2. LER AS LARGURAS CORRETAS
             this.PerformLayout();
             larguraMin = Nav1.Height; // Fica quadrado perfeito
-            larguraMax = GestorTema.ModoAtual == TipoEcra.Surface ? 350 : 220;
+            larguraMax = GestorTema.ModoAtual == TipoEcra.Surface ? 400 : 220;
 
             // 3. CARREGAR UTILIZADOR E PERMISSÕES
             var info = Details.GetInfoGestor(IDGestor);
