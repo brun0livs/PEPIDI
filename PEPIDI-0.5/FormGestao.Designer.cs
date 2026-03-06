@@ -97,8 +97,9 @@
             pnlMenu.Panel2.Controls.Add(tableLayoutPanel3);
             pnlMenu.Panel2MinSize = 1469;
             pnlMenu.Size = new Size(1920, 1009);
-            pnlMenu.SplitterDistance = 310;
+            pnlMenu.SplitterDistance = 200;
             pnlMenu.TabIndex = 0;
+            pnlMenu.SplitterMoved += pnlMenu_SplitterMoved;
             // 
             // tableLayoutPanel1
             // 
@@ -114,7 +115,7 @@
             tableLayoutPanel1.RowCount = 2;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 15F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 85F));
-            tableLayoutPanel1.Size = new Size(310, 1009);
+            tableLayoutPanel1.Size = new Size(200, 1009);
             tableLayoutPanel1.TabIndex = 1;
             // 
             // panel1
@@ -126,7 +127,7 @@
             panel1.Location = new Point(0, 0);
             panel1.Margin = new Padding(0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(310, 151);
+            panel1.Size = new Size(200, 151);
             panel1.TabIndex = 0;
             // 
             // tlpMenu
@@ -159,7 +160,7 @@
             tlpMenu.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tlpMenu.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tlpMenu.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tlpMenu.Size = new Size(310, 858);
+            tlpMenu.Size = new Size(200, 858);
             tlpMenu.TabIndex = 1;
             // 
             // Nav10
@@ -182,7 +183,7 @@
             Nav10.Margin = new Padding(0, 3, 0, 3);
             Nav10.Name = "Nav10";
             Nav10.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            Nav10.Size = new Size(310, 87);
+            Nav10.Size = new Size(200, 87);
             Nav10.TabIndex = 17;
             Nav10.Tag = "Sair";
             Nav10.Text = "Sair";
@@ -212,7 +213,7 @@
             Nav1.Margin = new Padding(0, 3, 0, 3);
             Nav1.Name = "Nav1";
             Nav1.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            Nav1.Size = new Size(310, 79);
+            Nav1.Size = new Size(200, 79);
             Nav1.TabIndex = 16;
             Nav1.Tag = "Stock";
             Nav1.Text = "Stock";
@@ -242,7 +243,7 @@
             Nav2.Margin = new Padding(0, 3, 0, 3);
             Nav2.Name = "Nav2";
             Nav2.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            Nav2.Size = new Size(310, 79);
+            Nav2.Size = new Size(200, 79);
             Nav2.TabIndex = 15;
             Nav2.Tag = "Funcionários";
             Nav2.Text = "Funcionários";
@@ -272,7 +273,7 @@
             Nav3.Margin = new Padding(0, 3, 0, 3);
             Nav3.Name = "Nav3";
             Nav3.ShadowDecoration.CustomizableEdges = customizableEdges8;
-            Nav3.Size = new Size(310, 79);
+            Nav3.Size = new Size(200, 79);
             Nav3.TabIndex = 14;
             Nav3.Tag = "Pedidos Pendentes";
             Nav3.Text = "Pedidos Pendentes";
@@ -302,7 +303,7 @@
             Nav4.Margin = new Padding(0, 3, 0, 3);
             Nav4.Name = "Nav4";
             Nav4.ShadowDecoration.CustomizableEdges = customizableEdges10;
-            Nav4.Size = new Size(310, 79);
+            Nav4.Size = new Size(200, 79);
             Nav4.TabIndex = 13;
             Nav4.Tag = "Pedidos Aprovados";
             Nav4.Text = "Pedidos Aprovados";
@@ -332,7 +333,7 @@
             Nav5.Margin = new Padding(0, 3, 0, 3);
             Nav5.Name = "Nav5";
             Nav5.ShadowDecoration.CustomizableEdges = customizableEdges12;
-            Nav5.Size = new Size(310, 79);
+            Nav5.Size = new Size(200, 79);
             Nav5.TabIndex = 12;
             Nav5.Tag = "Histórico";
             Nav5.Text = "Histórico";
@@ -362,7 +363,7 @@
             Nav6.Margin = new Padding(0, 3, 0, 3);
             Nav6.Name = "Nav6";
             Nav6.ShadowDecoration.CustomizableEdges = customizableEdges14;
-            Nav6.Size = new Size(310, 79);
+            Nav6.Size = new Size(200, 79);
             Nav6.TabIndex = 11;
             Nav6.Tag = "Criar Artigos";
             Nav6.Text = "Criar Artigos";
@@ -392,7 +393,7 @@
             Nav7.Margin = new Padding(0, 3, 0, 3);
             Nav7.Name = "Nav7";
             Nav7.ShadowDecoration.CustomizableEdges = customizableEdges16;
-            Nav7.Size = new Size(310, 79);
+            Nav7.Size = new Size(200, 79);
             Nav7.TabIndex = 10;
             Nav7.Tag = "Funções";
             Nav7.Text = "Funções";
@@ -422,7 +423,7 @@
             Nav8.Margin = new Padding(0, 3, 0, 3);
             Nav8.Name = "Nav8";
             Nav8.ShadowDecoration.CustomizableEdges = customizableEdges18;
-            Nav8.Size = new Size(310, 79);
+            Nav8.Size = new Size(200, 79);
             Nav8.TabIndex = 9;
             Nav8.Tag = "Expandir";
             Nav8.Text = "Expandir";
@@ -450,7 +451,7 @@
             Nav9.Margin = new Padding(0, 3, 0, 3);
             Nav9.Name = "Nav9";
             Nav9.ShadowDecoration.CustomizableEdges = customizableEdges20;
-            Nav9.Size = new Size(310, 79);
+            Nav9.Size = new Size(200, 79);
             Nav9.TabIndex = 8;
             Nav9.Tag = "Definições";
             Nav9.Text = "Definições";
@@ -471,7 +472,7 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 15F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 85F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel3.Size = new Size(1606, 1009);
+            tableLayoutPanel3.Size = new Size(1716, 1009);
             tableLayoutPanel3.TabIndex = 1;
             // 
             // lblNome
@@ -482,7 +483,7 @@
             lblNome.Location = new Point(10, 0);
             lblNome.Margin = new Padding(10, 0, 0, 0);
             lblNome.Name = "lblNome";
-            lblNome.Size = new Size(1596, 151);
+            lblNome.Size = new Size(1706, 151);
             lblNome.TabIndex = 2;
             lblNome.Text = "lblNome";
             lblNome.TextAlign = ContentAlignment.MiddleLeft;
@@ -493,7 +494,7 @@
             pnlConteudo.Location = new Point(0, 151);
             pnlConteudo.Margin = new Padding(0);
             pnlConteudo.Name = "pnlConteudo";
-            pnlConteudo.Size = new Size(1606, 858);
+            pnlConteudo.Size = new Size(1716, 858);
             pnlConteudo.TabIndex = 1;
             // 
             // timerMenu

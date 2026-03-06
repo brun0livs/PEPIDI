@@ -66,7 +66,7 @@ namespace PEPIDI
             // 2. LER AS LARGURAS CORRETAS
             this.PerformLayout();
             larguraMin = Nav1.Height; // Fica quadrado perfeito
-            larguraMax = GestorTema.ModoAtual == TipoEcra.Surface ? 450 : 310;
+            larguraMax = GestorTema.ModoAtual == TipoEcra.Surface ? 350 : 220;
 
             // 3. CARREGAR UTILIZADOR E PERMISSÕES
             var info = Details.GetInfoGestor(IDGestor);
@@ -204,7 +204,7 @@ namespace PEPIDI
 
             Navegar(chaveNavegacao);
             //calcular percentagens de cada modulo
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
         }
 
         private async void Navegar(string key)
@@ -219,7 +219,7 @@ namespace PEPIDI
                     "funcionarios" or "funcionários" => new UCs.Funcionarios(IDGestor),
                     "pedidos pendentes" => new UCs.Pedidos(IDGestor, "Pendente"),
                     "pedidos aprovados" => new UCs.Pedidos(IDGestor, "Aprovado"),
-                    "historico" or "histórico"=> new UCs.Pedidos(IDGestor, "Finalizado"),
+                    "historico" or "histórico" => new UCs.Pedidos(IDGestor, "Finalizado"),
                     "criar artigos" => new UCs.CriarStock(),
                     "funções" => new UCs.Funcoes(IDGestor),
                     "definições" => new UCs.Definicoes(IDGestor),
@@ -355,6 +355,11 @@ namespace PEPIDI
             Nav8.ImageSize = novoTamanhoGuna;
             Nav9.ImageSize = novoTamanhoGuna;
             Nav10.ImageSize = novoTamanhoGuna;
+        }
+
+        private void pnlMenu_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            MessageBox.Show("Splitter Distance: " + pnlMenu.SplitterDistance);
         }
     }
 }
