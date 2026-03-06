@@ -16,7 +16,7 @@ namespace PEPIDI.Organizers
         public Dictionary<int, int> quantidadesSelecionadas = new Dictionary<int, int>();
         EfeitoUI M = new EfeitoUI();
 
-        public DataTable CarregarPedidosPorEstado(string estado)
+        public DataTable  CarregarPedidosPorEstado(string estado)
         {
             using (SqlConnection conn = GetConn.GetConnection())
             using (SqlCommand cmd = new SqlCommand("sp_CarregarPedidosPorEstado", conn))

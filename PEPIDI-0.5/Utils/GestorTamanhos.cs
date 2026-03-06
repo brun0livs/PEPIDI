@@ -34,30 +34,30 @@ namespace PEPIDI.Utils
 
         public static Font FonteTitulo => ModoAtual switch
         {
-            TipoEcra.Portatil => new Font("Roboto Medium", 15F, FontStyle.Regular),
-            TipoEcra.MonitorFullHD => new Font("Roboto Medium", 20.25F, FontStyle.Regular),
-            TipoEcra.Surface => new Font("Roboto Medium", 20.25F, FontStyle.Regular),
-            TipoEcra.Televisao => new Font("Roboto Medium", 30F, FontStyle.Regular),
-            _ => new Font("Roboto Medium", 20.25F, FontStyle.Regular)
+            TipoEcra.Portatil => new Font("Roboto Medium", 12F, FontStyle.Regular),
+            TipoEcra.MonitorFullHD => new Font("Roboto Medium", 16F, FontStyle.Regular),
+            TipoEcra.Surface => new Font("Roboto Medium", 16F, FontStyle.Regular),
+            TipoEcra.Televisao => new Font("Roboto Medium", 25F, FontStyle.Regular),
+            _ => new Font("Roboto Medium", 16F, FontStyle.Regular)
         };
 
         public static Font FonteNome => ModoAtual switch
         {
-            TipoEcra.Portatil => new Font("Roboto", 15F, FontStyle.Regular),
-            TipoEcra.MonitorFullHD => new Font("Roboto", 20.25F, FontStyle.Regular),
-            TipoEcra.Surface => new Font("Roboto", 20.25F, FontStyle.Regular),
-            TipoEcra.Televisao => new Font("Roboto", 30F, FontStyle.Regular),
-            _ => new Font("Roboto", 20.25F, FontStyle.Regular)
+            TipoEcra.Portatil => new Font("Roboto", 12F, FontStyle.Regular),
+            TipoEcra.MonitorFullHD => new Font("Roboto", 16F, FontStyle.Regular),
+            TipoEcra.Surface => new Font("Roboto", 16F, FontStyle.Regular),
+            TipoEcra.Televisao => new Font("Roboto", 25F, FontStyle.Regular),
+            _ => new Font("Roboto", 16F, FontStyle.Regular)
         };
 
         // BOTÕES
         public static Font FonteBotaoNAV => ModoAtual switch
         {
-            TipoEcra.Portatil => new Font("Roboto", 15F, FontStyle.Regular),
-            TipoEcra.MonitorFullHD => new Font("Roboto", 20.25F, FontStyle.Regular),
-            TipoEcra.Surface => new Font("Roboto", 20.25F, FontStyle.Regular),
-            TipoEcra.Televisao => new Font("Roboto", 30F, FontStyle.Regular),
-            _ => new Font("Roboto", 20.25F, FontStyle.Regular)
+            TipoEcra.Portatil => new Font("Roboto", 12F, FontStyle.Regular),
+            TipoEcra.MonitorFullHD => new Font("Roboto", 16F, FontStyle.Regular),
+            TipoEcra.Surface => new Font("Roboto", 16F, FontStyle.Regular),
+            TipoEcra.Televisao => new Font("Roboto", 25F, FontStyle.Regular),
+            _ => new Font("Roboto", 16F, FontStyle.Regular)
         };
 
         public static Font FonteBotao => ModoAtual switch

@@ -62,7 +62,7 @@ namespace PEPIDI.Models
 
         [DefaultValue(54)]
 
-        public int CardRowHeight { get; set; } = 54;
+        public int CardRowHeight { get; set; } =  54;
 
 
 

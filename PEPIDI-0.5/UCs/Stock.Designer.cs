@@ -173,6 +173,7 @@
             cmbVisoes.ShadowDecoration.CustomizableEdges = customizableEdges2;
             cmbVisoes.Size = new Size(855, 38);
             cmbVisoes.TabIndex = 1;
+            cmbVisoes.TextOffset = new Point(10, 0);
             cmbVisoes.SelectedIndexChanged += cmbVisoes_SelectedIndexChanged;
             // 
             // Stock

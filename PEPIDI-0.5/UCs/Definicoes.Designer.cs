@@ -125,7 +125,7 @@
             label2.Name = "label2";
             label2.Size = new Size(417, 45);
             label2.TabIndex = 3;
-            label2.Text = "DEFINIÇÕES PREVILIGIADAS";
+            label2.Text = "DEFINIÇÕES PREVILEGIADAS";
             label2.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label3

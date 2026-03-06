@@ -46,13 +46,13 @@ namespace PEPIDI.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool MenuEspandido {
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MenuExpandido {
             get {
-                return ((bool)(this["MenuEspandido"]));
+                return ((bool)(this["MenuExpandido"]));
             }
             set {
-                this["MenuEspandido"] = value;
+                this["MenuExpandido"] = value;
             }
         }
     }
