@@ -121,12 +121,13 @@ namespace PEPIDI
         {
             switch (key.ToLowerInvariant())
             {
-                case "stock": return permissoes.PodeVerStock || permissoes.PodeInserirStock || permissoes.PodeCriarStock;
+                case "stock": return permissoes.PodeVerStock || permissoes.PodeCriarStock;
                 case "funcionários":
                 case "funcionarios": return permissoes.PodeEditarFunc;
                 case "pedidos pendentes": return permissoes.PodeAprovar || permissoes.PodeEntregar;
                 case "pedidos aprovados": return permissoes.PodeEntregar || permissoes.PodeAprovar;
-                case "inserir stock": return permissoes.PodeInserirStock;
+                case "histórico":
+                case "historico": return permissoes.PodeVerHistorico;
                 case "criar artigos": return permissoes.PodeCriarStock;
                 case "funções":
                 case "funcoes": return permissoes.PodeCriarFuncoes;
@@ -154,7 +155,7 @@ namespace PEPIDI
             if (PodeAceder("Funcionários")) { Nav2.Visible = true; Nav2.Enabled = true; }
             if (PodeAceder("Pedidos Pendentes")) { Nav3.Visible = true; Nav3.Enabled = true; }
             if (PodeAceder("Pedidos Aprovados")) { Nav4.Visible = true; Nav4.Enabled = true; }
-            if (PodeAceder("Inserir Stock")) { Nav5.Visible = true; Nav5.Enabled = true; }
+            if (PodeAceder("Histórico")) { Nav5.Visible = true; Nav5.Enabled = true; }
             if (PodeAceder("Criar Artigos")) { Nav6.Visible = true; Nav6.Enabled = true; }
             if (PodeAceder("Funções")) { Nav7.Visible = true; Nav7.Enabled = true; }
             if (PodeAceder("Definições")) { Nav9.Visible = true; Nav9.Enabled = true; }
@@ -202,6 +203,8 @@ namespace PEPIDI
             }
 
             Navegar(chaveNavegacao);
+            //calcular percentagens de cada modulo
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
         }
 
         private async void Navegar(string key)
@@ -216,7 +219,7 @@ namespace PEPIDI
                     "funcionarios" or "funcionários" => new UCs.Funcionarios(IDGestor),
                     "pedidos pendentes" => new UCs.Pedidos(IDGestor, "Pendente"),
                     "pedidos aprovados" => new UCs.Pedidos(IDGestor, "Aprovado"),
-                    "pedidos finalizados" => new UCs.Pedidos(IDGestor, "Finalizado"),
+                    "historico" or "histórico"=> new UCs.Pedidos(IDGestor, "Finalizado"),
                     "criar artigos" => new UCs.CriarStock(),
                     "funções" => new UCs.Funcoes(IDGestor),
                     "definições" => new UCs.Definicoes(IDGestor),

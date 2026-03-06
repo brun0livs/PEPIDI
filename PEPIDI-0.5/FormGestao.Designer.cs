@@ -30,26 +30,26 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGestao));
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges23 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges24 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges25 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges26 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges27 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges28 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges29 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges30 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges31 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges32 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges33 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges34 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges35 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges36 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges37 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges38 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges39 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges40 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlMenu = new SplitContainer();
             tableLayoutPanel1 = new TableLayoutPanel();
             panel1 = new Panel();
@@ -165,7 +165,7 @@
             // Nav10
             // 
             Nav10.AccessibleRole = AccessibleRole.RadioButton;
-            Nav10.CustomizableEdges = customizableEdges21;
+            Nav10.CustomizableEdges = customizableEdges1;
             Nav10.DisabledState.BorderColor = Color.DarkGray;
             Nav10.DisabledState.CustomBorderColor = Color.DarkGray;
             Nav10.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -181,7 +181,7 @@
             Nav10.Location = new Point(0, 768);
             Nav10.Margin = new Padding(0, 3, 0, 3);
             Nav10.Name = "Nav10";
-            Nav10.ShadowDecoration.CustomizableEdges = customizableEdges22;
+            Nav10.ShadowDecoration.CustomizableEdges = customizableEdges2;
             Nav10.Size = new Size(310, 87);
             Nav10.TabIndex = 17;
             Nav10.Tag = "Sair";
@@ -196,7 +196,7 @@
             Nav1.CheckedState.Font = new Font("Roboto", 20.25F);
             Nav1.CheckedState.ForeColor = Color.White;
             Nav1.Cursor = Cursors.Hand;
-            Nav1.CustomizableEdges = customizableEdges23;
+            Nav1.CustomizableEdges = customizableEdges3;
             Nav1.DisabledState.BorderColor = Color.DarkGray;
             Nav1.DisabledState.CustomBorderColor = Color.DarkGray;
             Nav1.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -211,7 +211,7 @@
             Nav1.Location = new Point(0, 3);
             Nav1.Margin = new Padding(0, 3, 0, 3);
             Nav1.Name = "Nav1";
-            Nav1.ShadowDecoration.CustomizableEdges = customizableEdges24;
+            Nav1.ShadowDecoration.CustomizableEdges = customizableEdges4;
             Nav1.Size = new Size(310, 79);
             Nav1.TabIndex = 16;
             Nav1.Tag = "Stock";
@@ -226,7 +226,7 @@
             Nav2.CheckedState.Font = new Font("Roboto", 20.25F);
             Nav2.CheckedState.ForeColor = Color.White;
             Nav2.Cursor = Cursors.Hand;
-            Nav2.CustomizableEdges = customizableEdges25;
+            Nav2.CustomizableEdges = customizableEdges5;
             Nav2.DisabledState.BorderColor = Color.DarkGray;
             Nav2.DisabledState.CustomBorderColor = Color.DarkGray;
             Nav2.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -241,7 +241,7 @@
             Nav2.Location = new Point(0, 88);
             Nav2.Margin = new Padding(0, 3, 0, 3);
             Nav2.Name = "Nav2";
-            Nav2.ShadowDecoration.CustomizableEdges = customizableEdges26;
+            Nav2.ShadowDecoration.CustomizableEdges = customizableEdges6;
             Nav2.Size = new Size(310, 79);
             Nav2.TabIndex = 15;
             Nav2.Tag = "Funcionários";
@@ -256,7 +256,7 @@
             Nav3.CheckedState.Font = new Font("Roboto", 20.25F);
             Nav3.CheckedState.ForeColor = Color.White;
             Nav3.Cursor = Cursors.Hand;
-            Nav3.CustomizableEdges = customizableEdges27;
+            Nav3.CustomizableEdges = customizableEdges7;
             Nav3.DisabledState.BorderColor = Color.DarkGray;
             Nav3.DisabledState.CustomBorderColor = Color.DarkGray;
             Nav3.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -271,7 +271,7 @@
             Nav3.Location = new Point(0, 173);
             Nav3.Margin = new Padding(0, 3, 0, 3);
             Nav3.Name = "Nav3";
-            Nav3.ShadowDecoration.CustomizableEdges = customizableEdges28;
+            Nav3.ShadowDecoration.CustomizableEdges = customizableEdges8;
             Nav3.Size = new Size(310, 79);
             Nav3.TabIndex = 14;
             Nav3.Tag = "Pedidos Pendentes";
@@ -286,7 +286,7 @@
             Nav4.CheckedState.Font = new Font("Roboto", 20.25F);
             Nav4.CheckedState.ForeColor = Color.White;
             Nav4.Cursor = Cursors.Hand;
-            Nav4.CustomizableEdges = customizableEdges29;
+            Nav4.CustomizableEdges = customizableEdges9;
             Nav4.DisabledState.BorderColor = Color.DarkGray;
             Nav4.DisabledState.CustomBorderColor = Color.DarkGray;
             Nav4.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -301,7 +301,7 @@
             Nav4.Location = new Point(0, 258);
             Nav4.Margin = new Padding(0, 3, 0, 3);
             Nav4.Name = "Nav4";
-            Nav4.ShadowDecoration.CustomizableEdges = customizableEdges30;
+            Nav4.ShadowDecoration.CustomizableEdges = customizableEdges10;
             Nav4.Size = new Size(310, 79);
             Nav4.TabIndex = 13;
             Nav4.Tag = "Pedidos Aprovados";
@@ -316,7 +316,7 @@
             Nav5.CheckedState.Font = new Font("Roboto", 20.25F);
             Nav5.CheckedState.ForeColor = Color.White;
             Nav5.Cursor = Cursors.Hand;
-            Nav5.CustomizableEdges = customizableEdges31;
+            Nav5.CustomizableEdges = customizableEdges11;
             Nav5.DisabledState.BorderColor = Color.DarkGray;
             Nav5.DisabledState.CustomBorderColor = Color.DarkGray;
             Nav5.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -331,11 +331,11 @@
             Nav5.Location = new Point(0, 343);
             Nav5.Margin = new Padding(0, 3, 0, 3);
             Nav5.Name = "Nav5";
-            Nav5.ShadowDecoration.CustomizableEdges = customizableEdges32;
+            Nav5.ShadowDecoration.CustomizableEdges = customizableEdges12;
             Nav5.Size = new Size(310, 79);
             Nav5.TabIndex = 12;
-            Nav5.Tag = "Pedidos Finalizados";
-            Nav5.Text = "Pedidos Finalizados";
+            Nav5.Tag = "Histórico";
+            Nav5.Text = "Histórico";
             Nav5.TextAlign = HorizontalAlignment.Left;
             Nav5.Click += Nav_Clicked;
             // 
@@ -346,7 +346,7 @@
             Nav6.CheckedState.Font = new Font("Roboto", 20.25F);
             Nav6.CheckedState.ForeColor = Color.White;
             Nav6.Cursor = Cursors.Hand;
-            Nav6.CustomizableEdges = customizableEdges33;
+            Nav6.CustomizableEdges = customizableEdges13;
             Nav6.DisabledState.BorderColor = Color.DarkGray;
             Nav6.DisabledState.CustomBorderColor = Color.DarkGray;
             Nav6.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -361,7 +361,7 @@
             Nav6.Location = new Point(0, 428);
             Nav6.Margin = new Padding(0, 3, 0, 3);
             Nav6.Name = "Nav6";
-            Nav6.ShadowDecoration.CustomizableEdges = customizableEdges34;
+            Nav6.ShadowDecoration.CustomizableEdges = customizableEdges14;
             Nav6.Size = new Size(310, 79);
             Nav6.TabIndex = 11;
             Nav6.Tag = "Criar Artigos";
@@ -376,7 +376,7 @@
             Nav7.CheckedState.Font = new Font("Roboto", 20.25F);
             Nav7.CheckedState.ForeColor = Color.White;
             Nav7.Cursor = Cursors.Hand;
-            Nav7.CustomizableEdges = customizableEdges35;
+            Nav7.CustomizableEdges = customizableEdges15;
             Nav7.DisabledState.BorderColor = Color.DarkGray;
             Nav7.DisabledState.CustomBorderColor = Color.DarkGray;
             Nav7.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -391,7 +391,7 @@
             Nav7.Location = new Point(0, 513);
             Nav7.Margin = new Padding(0, 3, 0, 3);
             Nav7.Name = "Nav7";
-            Nav7.ShadowDecoration.CustomizableEdges = customizableEdges36;
+            Nav7.ShadowDecoration.CustomizableEdges = customizableEdges16;
             Nav7.Size = new Size(310, 79);
             Nav7.TabIndex = 10;
             Nav7.Tag = "Funções";
@@ -406,7 +406,7 @@
             Nav8.CheckedState.Font = new Font("Roboto", 20.25F);
             Nav8.CheckedState.ForeColor = Color.White;
             Nav8.Cursor = Cursors.Hand;
-            Nav8.CustomizableEdges = customizableEdges37;
+            Nav8.CustomizableEdges = customizableEdges17;
             Nav8.DisabledState.BorderColor = Color.DarkGray;
             Nav8.DisabledState.CustomBorderColor = Color.DarkGray;
             Nav8.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -421,7 +421,7 @@
             Nav8.Location = new Point(0, 598);
             Nav8.Margin = new Padding(0, 3, 0, 3);
             Nav8.Name = "Nav8";
-            Nav8.ShadowDecoration.CustomizableEdges = customizableEdges38;
+            Nav8.ShadowDecoration.CustomizableEdges = customizableEdges18;
             Nav8.Size = new Size(310, 79);
             Nav8.TabIndex = 9;
             Nav8.Tag = "Expandir";
@@ -433,7 +433,7 @@
             // 
             Nav9.AccessibleRole = AccessibleRole.RadioButton;
             Nav9.CheckedState.ForeColor = Color.White;
-            Nav9.CustomizableEdges = customizableEdges39;
+            Nav9.CustomizableEdges = customizableEdges19;
             Nav9.DisabledState.BorderColor = Color.DarkGray;
             Nav9.DisabledState.CustomBorderColor = Color.DarkGray;
             Nav9.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -449,7 +449,7 @@
             Nav9.Location = new Point(0, 683);
             Nav9.Margin = new Padding(0, 3, 0, 3);
             Nav9.Name = "Nav9";
-            Nav9.ShadowDecoration.CustomizableEdges = customizableEdges40;
+            Nav9.ShadowDecoration.CustomizableEdges = customizableEdges20;
             Nav9.Size = new Size(310, 79);
             Nav9.TabIndex = 8;
             Nav9.Tag = "Definições";

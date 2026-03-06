@@ -9,7 +9,7 @@ namespace PEPIDI.Organizers
         public bool PodeSubmeter { get; set; }
         public bool PodeVerStock { get; set; }
         public bool PodeCriarStock { get; set; }
-        public bool PodeInserirStock { get; set; }
+        public bool PodeVerHistorico { get; set; }
         public bool PodeEditarFunc { get; set; }
         public bool PodeAprovar { get; set; }
         public bool PodeEntregar { get; set; }
@@ -27,7 +27,7 @@ namespace PEPIDI.Organizers
 
                 SqlCommand cmd = new SqlCommand(@"
                     SELECT 
-                        PodeVerStock, PodeCriarStock, PodeInserirStock, PodeEditarFunc,
+                        PodeVerStock, PodeCriarStock, PodeVerHistorico, PodeEditarFunc,
                         PodeSubmeter, PodeAprovar, PodeEntregar, PodeCriarFuncoes, PodeAlterarDefinicoes
                     FROM Funcionarios FU
                     JOIN Funcoes F ON FU.Funcao = F.ID
@@ -44,7 +44,7 @@ namespace PEPIDI.Organizers
                             // Validações para evitar erro se o campo for NULL na BD
                             PodeVerStock = !reader.IsDBNull(0) && reader.GetBoolean(0),
                             PodeCriarStock = !reader.IsDBNull(1) && reader.GetBoolean(1),
-                            PodeInserirStock = !reader.IsDBNull(2) && reader.GetBoolean(2),
+                            PodeVerHistorico = !reader.IsDBNull(2) && reader.GetBoolean(2),
                             PodeEditarFunc = !reader.IsDBNull(3) && reader.GetBoolean(3),
                             PodeSubmeter = !reader.IsDBNull(4) && reader.GetBoolean(4),
                             PodeAprovar = !reader.IsDBNull(5) && reader.GetBoolean(5),
