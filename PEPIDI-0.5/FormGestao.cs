@@ -356,10 +356,5 @@ namespace PEPIDI
             Nav9.ImageSize = novoTamanhoGuna;
             Nav10.ImageSize = novoTamanhoGuna;
         }
-
-        private void pnlMenu_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-            MessageBox.Show("Splitter Distance: " + pnlMenu.SplitterDistance);
-        }
     }
 }

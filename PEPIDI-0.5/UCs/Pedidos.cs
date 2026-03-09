@@ -1,10 +1,11 @@
-﻿using PEPIDI.Models;
+﻿using Microsoft.Data.SqlClient;
+using PEPIDI.Models;
 using PEPIDI.Organizers;
+using PEPIDI.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -36,8 +37,8 @@ namespace PEPIDI.UCs
             // 1. Bloqueamos a geração automática para respeitar o que fizeste no Designer
             dgvPedidos.AutoGenerateColumns = false;
             GereEstados();
-
             TouchScrollHelper.AtivarScrollPorArrasto(dgvPedidos);
+            GestorTema.AplicarEstilos(this);
         }
 
         private void GereEstados()

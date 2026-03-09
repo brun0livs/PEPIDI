@@ -95,11 +95,10 @@
             // pnlMenu.Panel2
             // 
             pnlMenu.Panel2.Controls.Add(tableLayoutPanel3);
-            pnlMenu.Panel2MinSize = 1469;
+            pnlMenu.Panel2MinSize = 100;
             pnlMenu.Size = new Size(1920, 1009);
             pnlMenu.SplitterDistance = 200;
             pnlMenu.TabIndex = 0;
-            pnlMenu.SplitterMoved += pnlMenu_SplitterMoved;
             // 
             // tableLayoutPanel1
             // 
