@@ -45,20 +45,20 @@ namespace PEPIDI.UCs
         {
             if (estado == "Pendente")
             {
-                lblPedidos.Text = "PEDIDOS PENDENTES";
-                lblPedidos.ForeColor = Color.FromArgb(243, 108, 33);
+                lblTituloPedidos.Text = "PEDIDOS PENDENTES";
+                lblTituloPedidos.ForeColor = Color.FromArgb(243, 108, 33);
                 if (dgvPedidos.Columns.Contains("Check")) dgvPedidos.Columns["Check"].Visible = false;
             }
             else if (estado == "Aprovado")
             {
-                lblPedidos.Text = "PEDIDOS APROVADOS";
-                lblPedidos.ForeColor = Color.Green;
+                lblTituloPedidos.Text = "PEDIDOS APROVADOS";
+                lblTituloPedidos.ForeColor = Color.Green;
                 if (dgvPedidos.Columns.Contains("Check")) dgvPedidos.Columns["Check"].Visible = true;
             }
             else
             {
-                lblPedidos.Text = "PEDIDOS FINALIZADOS";
-                lblPedidos.ForeColor = Color.Black;
+                lblTituloPedidos.Text = "PEDIDOS FINALIZADOS";
+                lblTituloPedidos.ForeColor = Color.Black;
                 if (dgvPedidos.Columns.Contains("Check")) dgvPedidos.Columns["Check"].Visible = false;
             }
 

@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Pedidos));
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             tableLayoutPanel1 = new TableLayoutPanel();
             pnlDetails = new Panel();
             tableLayoutPanel2 = new TableLayoutPanel();
@@ -52,7 +52,7 @@
             Check = new DataGridViewCheckBoxColumn();
             tableLayoutPanel3 = new TableLayoutPanel();
             btnRelatorio = new Guna.UI2.WinForms.Guna2Button();
-            lblPedidos = new Label();
+            lblTituloPedidos = new Label();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPedidos).BeginInit();
@@ -105,33 +105,33 @@
             // 
             dgvPedidos.AllowUserToAddRows = false;
             dgvPedidos.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = Color.Transparent;
-            dgvPedidos.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.BackColor = Color.Transparent;
+            dgvPedidos.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             dgvPedidos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvPedidos.BackgroundColor = Color.White;
             dgvPedidos.BorderStyle = BorderStyle.None;
             dgvPedidos.CellBorderStyle = DataGridViewCellBorderStyle.None;
             dgvPedidos.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = Color.White;
-            dataGridViewCellStyle2.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = Color.Black;
-            dataGridViewCellStyle2.Padding = new Padding(0, 8, 0, 8);
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvPedidos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.BackColor = Color.White;
+            dataGridViewCellStyle6.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle6.ForeColor = Color.Black;
+            dataGridViewCellStyle6.Padding = new Padding(0, 8, 0, 8);
+            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
+            dgvPedidos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
             dgvPedidos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvPedidos.Columns.AddRange(new DataGridViewColumn[] { ID, Data, NrFunc, NomeFunc, Funcao, CorHex, PedidoEstado, NomeAprovador, NomeEntrega, PDF, Check });
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.Transparent;
-            dataGridViewCellStyle3.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle3.ForeColor = Color.Black;
-            dataGridViewCellStyle3.Padding = new Padding(18, 10, 18, 10);
-            dataGridViewCellStyle3.SelectionBackColor = Color.Transparent;
-            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            dgvPedidos.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = Color.Transparent;
+            dataGridViewCellStyle7.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle7.ForeColor = Color.Black;
+            dataGridViewCellStyle7.Padding = new Padding(18, 10, 18, 10);
+            dataGridViewCellStyle7.SelectionBackColor = Color.Transparent;
+            dataGridViewCellStyle7.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
+            dgvPedidos.DefaultCellStyle = dataGridViewCellStyle7;
             dgvPedidos.Dock = DockStyle.Fill;
             dgvPedidos.EnableHeadersVisualStyles = false;
             dgvPedidos.GridColor = SystemColors.Control;
@@ -141,8 +141,8 @@
             dgvPedidos.MultiSelect = false;
             dgvPedidos.Name = "dgvPedidos";
             dgvPedidos.RowHeadersVisible = false;
-            dataGridViewCellStyle4.BackColor = Color.Transparent;
-            dgvPedidos.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.BackColor = Color.Transparent;
+            dgvPedidos.RowsDefaultCellStyle = dataGridViewCellStyle8;
             dgvPedidos.RowTemplate.Height = 54;
             dgvPedidos.ScrollBars = ScrollBars.None;
             dgvPedidos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -240,7 +240,7 @@
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 77.80468F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.1953182F));
             tableLayoutPanel3.Controls.Add(btnRelatorio, 1, 0);
-            tableLayoutPanel3.Controls.Add(lblPedidos, 0, 0);
+            tableLayoutPanel3.Controls.Add(lblTituloPedidos, 0, 0);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(0, 0);
             tableLayoutPanel3.Margin = new Padding(0);
@@ -254,7 +254,7 @@
             // 
             btnRelatorio.BorderRadius = 10;
             btnRelatorio.CustomImages.ImageAlign = HorizontalAlignment.Left;
-            btnRelatorio.CustomizableEdges = customizableEdges1;
+            btnRelatorio.CustomizableEdges = customizableEdges3;
             btnRelatorio.DisabledState.BorderColor = Color.DarkGray;
             btnRelatorio.DisabledState.CustomBorderColor = Color.DarkGray;
             btnRelatorio.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -268,24 +268,24 @@
             btnRelatorio.Location = new Point(924, 15);
             btnRelatorio.Margin = new Padding(10, 15, 10, 15);
             btnRelatorio.Name = "btnRelatorio";
-            btnRelatorio.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            btnRelatorio.ShadowDecoration.CustomizableEdges = customizableEdges4;
             btnRelatorio.Size = new Size(242, 30);
             btnRelatorio.TabIndex = 10;
             btnRelatorio.Text = "Exportar";
             btnRelatorio.Visible = false;
             btnRelatorio.Click += btnRecolhaArmazem_Click;
             // 
-            // lblPedidos
+            // lblTituloPedidos
             // 
-            lblPedidos.AutoSize = true;
-            lblPedidos.Dock = DockStyle.Fill;
-            lblPedidos.Font = new Font("Roboto Medium", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblPedidos.Location = new Point(3, 0);
-            lblPedidos.Name = "lblPedidos";
-            lblPedidos.Size = new Size(908, 60);
-            lblPedidos.TabIndex = 1;
-            lblPedidos.Text = "PEDIDOS PENDENTES";
-            lblPedidos.TextAlign = ContentAlignment.MiddleLeft;
+            lblTituloPedidos.AutoSize = true;
+            lblTituloPedidos.Dock = DockStyle.Fill;
+            lblTituloPedidos.Font = new Font("Roboto Medium", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTituloPedidos.Location = new Point(3, 0);
+            lblTituloPedidos.Name = "lblTituloPedidos";
+            lblTituloPedidos.Size = new Size(908, 60);
+            lblTituloPedidos.TabIndex = 1;
+            lblTituloPedidos.Text = "PEDIDOS PENDENTES";
+            lblTituloPedidos.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // Pedidos
             // 
@@ -323,7 +323,7 @@
         private DataGridViewTextBoxColumn PDF;
         private DataGridViewCheckBoxColumn Check;
         private TableLayoutPanel tableLayoutPanel3;
-        private Label lblPedidos;
+        private Label lblTituloPedidos;
         private Guna.UI2.WinForms.Guna2Button btnRelatorio;
     }
 }
