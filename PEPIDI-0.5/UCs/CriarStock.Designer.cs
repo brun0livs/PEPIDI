@@ -34,21 +34,21 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             tableLayoutPanel1 = new TableLayoutPanel();
-            label1 = new Label();
+            lblTituloCriarEPI = new Label();
             guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
             tableLayoutPanel3 = new TableLayoutPanel();
             tableLayoutPanel5 = new TableLayoutPanel();
-            txtQuantidade = new Guna.UI2.WinForms.Guna2TextBox();
+            txtQuantidadeEPI = new Guna.UI2.WinForms.Guna2TextBox();
             lblQuant = new Label();
-            lblTituloDireita = new Label();
+            lblTituloBaixo = new Label();
             tableLayoutPanel6 = new TableLayoutPanel();
             btnGuardar = new Guna.UI2.WinForms.Guna2Button();
             btnCancelar = new Guna.UI2.WinForms.Guna2Button();
             flpFuncoes = new FlowLayoutPanel();
             tlpModelo = new TableLayoutPanel();
-            txtNovoModelo = new Guna.UI2.WinForms.Guna2TextBox();
+            txtNovoModeloEPI = new Guna.UI2.WinForms.Guna2TextBox();
             cmbModelo = new Guna.UI2.WinForms.Guna2ComboBox();
-            lblTituloEsquerda = new Label();
+            lblTituloCima = new Label();
             cmbTamanho = new Guna.UI2.WinForms.Guna2ComboBox();
             cmbFamilia = new Guna.UI2.WinForms.Guna2ComboBox();
             btnImport = new Guna.UI2.WinForms.Guna2Button();
@@ -66,7 +66,7 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            tableLayoutPanel1.Controls.Add(label1, 0, 0);
+            tableLayoutPanel1.Controls.Add(lblTituloCriarEPI, 0, 0);
             tableLayoutPanel1.Controls.Add(guna2Panel3, 1, 1);
             tableLayoutPanel1.Controls.Add(btnImport, 2, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
@@ -79,17 +79,17 @@
             tableLayoutPanel1.Size = new Size(1837, 858);
             tableLayoutPanel1.TabIndex = 0;
             // 
-            // label1
+            // lblTituloCriarEPI
             // 
-            label1.AutoSize = true;
-            label1.Dock = DockStyle.Fill;
-            label1.Font = new Font("Roboto", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(3, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(453, 60);
-            label1.TabIndex = 6;
-            label1.Text = "CRIAR NOVO EPI";
-            label1.TextAlign = ContentAlignment.MiddleLeft;
+            lblTituloCriarEPI.AutoSize = true;
+            lblTituloCriarEPI.Dock = DockStyle.Fill;
+            lblTituloCriarEPI.Font = new Font("Roboto", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTituloCriarEPI.Location = new Point(3, 0);
+            lblTituloCriarEPI.Name = "lblTituloCriarEPI";
+            lblTituloCriarEPI.Size = new Size(453, 60);
+            lblTituloCriarEPI.TabIndex = 6;
+            lblTituloCriarEPI.Text = "CRIAR NOVO EPI";
+            lblTituloCriarEPI.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // guna2Panel3
             // 
@@ -114,11 +114,11 @@
             tableLayoutPanel3.ColumnCount = 1;
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel3.Controls.Add(tableLayoutPanel5, 0, 4);
-            tableLayoutPanel3.Controls.Add(lblTituloDireita, 0, 5);
+            tableLayoutPanel3.Controls.Add(lblTituloBaixo, 0, 5);
             tableLayoutPanel3.Controls.Add(tableLayoutPanel6, 0, 7);
             tableLayoutPanel3.Controls.Add(flpFuncoes, 0, 6);
             tableLayoutPanel3.Controls.Add(tlpModelo, 0, 2);
-            tableLayoutPanel3.Controls.Add(lblTituloEsquerda, 0, 0);
+            tableLayoutPanel3.Controls.Add(lblTituloCima, 0, 0);
             tableLayoutPanel3.Controls.Add(cmbTamanho, 0, 3);
             tableLayoutPanel3.Controls.Add(cmbFamilia, 0, 1);
             tableLayoutPanel3.Dock = DockStyle.Fill;
@@ -142,7 +142,7 @@
             tableLayoutPanel5.ColumnCount = 2;
             tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 14.0929537F));
             tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 85.90704F));
-            tableLayoutPanel5.Controls.Add(txtQuantidade, 1, 0);
+            tableLayoutPanel5.Controls.Add(txtQuantidadeEPI, 1, 0);
             tableLayoutPanel5.Controls.Add(lblQuant, 0, 0);
             tableLayoutPanel5.Dock = DockStyle.Fill;
             tableLayoutPanel5.Location = new Point(0, 204);
@@ -153,30 +153,30 @@
             tableLayoutPanel5.Size = new Size(914, 51);
             tableLayoutPanel5.TabIndex = 40;
             // 
-            // txtQuantidade
+            // txtQuantidadeEPI
             // 
-            txtQuantidade.BorderRadius = 15;
-            txtQuantidade.CustomizableEdges = customizableEdges1;
-            txtQuantidade.DefaultText = "";
-            txtQuantidade.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
-            txtQuantidade.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
-            txtQuantidade.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
-            txtQuantidade.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
-            txtQuantidade.Dock = DockStyle.Fill;
-            txtQuantidade.FocusedState.BorderColor = Color.FromArgb(242, 103, 34);
-            txtQuantidade.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtQuantidade.ForeColor = Color.FromArgb(64, 64, 64);
-            txtQuantidade.HoverState.BorderColor = Color.FromArgb(242, 103, 34);
-            txtQuantidade.Location = new Point(135, 7);
-            txtQuantidade.Margin = new Padding(7);
-            txtQuantidade.Name = "txtQuantidade";
-            txtQuantidade.PlaceholderText = "Não obrigatório";
-            txtQuantidade.RightToLeft = RightToLeft.Yes;
-            txtQuantidade.SelectedText = "";
-            txtQuantidade.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            txtQuantidade.Size = new Size(772, 37);
-            txtQuantidade.TabIndex = 33;
-            txtQuantidade.TextAlign = HorizontalAlignment.Right;
+            txtQuantidadeEPI.BorderRadius = 18;
+            txtQuantidadeEPI.CustomizableEdges = customizableEdges1;
+            txtQuantidadeEPI.DefaultText = "";
+            txtQuantidadeEPI.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
+            txtQuantidadeEPI.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
+            txtQuantidadeEPI.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
+            txtQuantidadeEPI.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+            txtQuantidadeEPI.Dock = DockStyle.Fill;
+            txtQuantidadeEPI.FocusedState.BorderColor = Color.FromArgb(242, 103, 34);
+            txtQuantidadeEPI.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtQuantidadeEPI.ForeColor = Color.FromArgb(64, 64, 64);
+            txtQuantidadeEPI.HoverState.BorderColor = Color.FromArgb(242, 103, 34);
+            txtQuantidadeEPI.Location = new Point(135, 7);
+            txtQuantidadeEPI.Margin = new Padding(7);
+            txtQuantidadeEPI.Name = "txtQuantidadeEPI";
+            txtQuantidadeEPI.PlaceholderText = "Não obrigatório";
+            txtQuantidadeEPI.RightToLeft = RightToLeft.Yes;
+            txtQuantidadeEPI.SelectedText = "";
+            txtQuantidadeEPI.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            txtQuantidadeEPI.Size = new Size(772, 37);
+            txtQuantidadeEPI.TabIndex = 33;
+            txtQuantidadeEPI.TextAlign = HorizontalAlignment.Right;
             // 
             // lblQuant
             // 
@@ -189,19 +189,19 @@
             lblQuant.Text = "Quantidade:";
             lblQuant.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // lblTituloDireita
+            // lblTituloBaixo
             // 
-            lblTituloDireita.AutoSize = true;
-            lblTituloDireita.Dock = DockStyle.Fill;
-            lblTituloDireita.Font = new Font("Roboto Medium", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblTituloDireita.ForeColor = Color.FromArgb(64, 64, 64);
-            lblTituloDireita.Location = new Point(5, 255);
-            lblTituloDireita.Margin = new Padding(5, 0, 5, 0);
-            lblTituloDireita.Name = "lblTituloDireita";
-            lblTituloDireita.Size = new Size(904, 51);
-            lblTituloDireita.TabIndex = 34;
-            lblTituloDireita.Text = "FUNÇÕES AUTORIZADAS";
-            lblTituloDireita.TextAlign = ContentAlignment.MiddleCenter;
+            lblTituloBaixo.AutoSize = true;
+            lblTituloBaixo.Dock = DockStyle.Fill;
+            lblTituloBaixo.Font = new Font("Roboto Medium", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTituloBaixo.ForeColor = Color.FromArgb(64, 64, 64);
+            lblTituloBaixo.Location = new Point(5, 255);
+            lblTituloBaixo.Margin = new Padding(5, 0, 5, 0);
+            lblTituloBaixo.Name = "lblTituloBaixo";
+            lblTituloBaixo.Size = new Size(904, 51);
+            lblTituloBaixo.TabIndex = 34;
+            lblTituloBaixo.Text = "FUNÇÕES AUTORIZADAS";
+            lblTituloBaixo.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // tableLayoutPanel6
             // 
@@ -269,7 +269,7 @@
             tlpModelo.ColumnCount = 2;
             tlpModelo.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tlpModelo.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tlpModelo.Controls.Add(txtNovoModelo, 1, 0);
+            tlpModelo.Controls.Add(txtNovoModeloEPI, 1, 0);
             tlpModelo.Controls.Add(cmbModelo, 0, 0);
             tlpModelo.Dock = DockStyle.Fill;
             tlpModelo.Location = new Point(0, 102);
@@ -280,36 +280,36 @@
             tlpModelo.Size = new Size(914, 51);
             tlpModelo.TabIndex = 33;
             // 
-            // txtNovoModelo
+            // txtNovoModeloEPI
             // 
-            txtNovoModelo.BorderRadius = 15;
-            txtNovoModelo.CustomizableEdges = customizableEdges7;
-            txtNovoModelo.DefaultText = "";
-            txtNovoModelo.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
-            txtNovoModelo.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
-            txtNovoModelo.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
-            txtNovoModelo.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
-            txtNovoModelo.Dock = DockStyle.Fill;
-            txtNovoModelo.Enabled = false;
-            txtNovoModelo.FocusedState.BorderColor = Color.FromArgb(242, 103, 34);
-            txtNovoModelo.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtNovoModelo.ForeColor = Color.FromArgb(64, 64, 64);
-            txtNovoModelo.HoverState.BorderColor = Color.FromArgb(242, 103, 34);
-            txtNovoModelo.Location = new Point(464, 7);
-            txtNovoModelo.Margin = new Padding(7, 7, 7, 4);
-            txtNovoModelo.Name = "txtNovoModelo";
-            txtNovoModelo.PlaceholderText = "";
-            txtNovoModelo.SelectedText = "";
-            txtNovoModelo.ShadowDecoration.CustomizableEdges = customizableEdges8;
-            txtNovoModelo.Size = new Size(443, 40);
-            txtNovoModelo.TabIndex = 32;
-            txtNovoModelo.Visible = false;
-            txtNovoModelo.TextChanged += txtNovoModelo_TextChanged;
+            txtNovoModeloEPI.BorderRadius = 18;
+            txtNovoModeloEPI.CustomizableEdges = customizableEdges7;
+            txtNovoModeloEPI.DefaultText = "";
+            txtNovoModeloEPI.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
+            txtNovoModeloEPI.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
+            txtNovoModeloEPI.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
+            txtNovoModeloEPI.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+            txtNovoModeloEPI.Dock = DockStyle.Fill;
+            txtNovoModeloEPI.Enabled = false;
+            txtNovoModeloEPI.FocusedState.BorderColor = Color.FromArgb(242, 103, 34);
+            txtNovoModeloEPI.Font = new Font("Roboto", 11F);
+            txtNovoModeloEPI.ForeColor = Color.FromArgb(64, 64, 64);
+            txtNovoModeloEPI.HoverState.BorderColor = Color.FromArgb(242, 103, 34);
+            txtNovoModeloEPI.Location = new Point(464, 7);
+            txtNovoModeloEPI.Margin = new Padding(7);
+            txtNovoModeloEPI.Name = "txtNovoModeloEPI";
+            txtNovoModeloEPI.PlaceholderText = "";
+            txtNovoModeloEPI.SelectedText = "";
+            txtNovoModeloEPI.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            txtNovoModeloEPI.Size = new Size(443, 37);
+            txtNovoModeloEPI.TabIndex = 32;
+            txtNovoModeloEPI.Visible = false;
+            txtNovoModeloEPI.TextChanged += txtNovoModelo_TextChanged;
             // 
             // cmbModelo
             // 
             cmbModelo.BackColor = Color.Transparent;
-            cmbModelo.BorderRadius = 15;
+            cmbModelo.BorderRadius = 18;
             cmbModelo.CustomizableEdges = customizableEdges9;
             cmbModelo.Dock = DockStyle.Fill;
             cmbModelo.DrawMode = DrawMode.OwnerDrawFixed;
@@ -330,24 +330,24 @@
             cmbModelo.TextAlign = HorizontalAlignment.Center;
             cmbModelo.SelectedIndexChanged += cmbModelo_SelectedIndexChanged;
             // 
-            // lblTituloEsquerda
+            // lblTituloCima
             // 
-            lblTituloEsquerda.AutoSize = true;
-            lblTituloEsquerda.Dock = DockStyle.Fill;
-            lblTituloEsquerda.Font = new Font("Roboto Medium", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblTituloEsquerda.ForeColor = Color.FromArgb(64, 64, 64);
-            lblTituloEsquerda.Location = new Point(5, 0);
-            lblTituloEsquerda.Margin = new Padding(5, 0, 5, 0);
-            lblTituloEsquerda.Name = "lblTituloEsquerda";
-            lblTituloEsquerda.Size = new Size(904, 51);
-            lblTituloEsquerda.TabIndex = 20;
-            lblTituloEsquerda.Text = "DETALHES DO ARTIGO";
-            lblTituloEsquerda.TextAlign = ContentAlignment.MiddleCenter;
+            lblTituloCima.AutoSize = true;
+            lblTituloCima.Dock = DockStyle.Fill;
+            lblTituloCima.Font = new Font("Roboto Medium", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTituloCima.ForeColor = Color.FromArgb(64, 64, 64);
+            lblTituloCima.Location = new Point(5, 0);
+            lblTituloCima.Margin = new Padding(5, 0, 5, 0);
+            lblTituloCima.Name = "lblTituloCima";
+            lblTituloCima.Size = new Size(904, 51);
+            lblTituloCima.TabIndex = 20;
+            lblTituloCima.Text = "DETALHES DO ARTIGO";
+            lblTituloCima.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // cmbTamanho
             // 
             cmbTamanho.BackColor = Color.Transparent;
-            cmbTamanho.BorderRadius = 15;
+            cmbTamanho.BorderRadius = 18;
             cmbTamanho.CustomizableEdges = customizableEdges11;
             cmbTamanho.Dock = DockStyle.Fill;
             cmbTamanho.DrawMode = DrawMode.OwnerDrawFixed;
@@ -370,7 +370,7 @@
             // cmbFamilia
             // 
             cmbFamilia.BackColor = Color.Transparent;
-            cmbFamilia.BorderRadius = 15;
+            cmbFamilia.BorderRadius = 18;
             cmbFamilia.CustomizableEdges = customizableEdges13;
             cmbFamilia.Dock = DockStyle.Fill;
             cmbFamilia.DrawMode = DrawMode.OwnerDrawFixed;
@@ -436,20 +436,20 @@
         private Guna.UI2.WinForms.Guna2Panel guna2Panel3;
         private TableLayoutPanel tableLayoutPanel3;
         private TableLayoutPanel tableLayoutPanel5;
-        private Guna.UI2.WinForms.Guna2TextBox txtQuantidade;
+        private Guna.UI2.WinForms.Guna2TextBox txtQuantidadeEPI;
         private Label lblQuant;
-        private Label lblTituloDireita;
+        private Label lblTituloBaixo;
         private TableLayoutPanel tableLayoutPanel6;
         private Guna.UI2.WinForms.Guna2Button btnGuardar;
         private Guna.UI2.WinForms.Guna2Button btnCancelar;
         private FlowLayoutPanel flpFuncoes;
         private TableLayoutPanel tlpModelo;
-        private Guna.UI2.WinForms.Guna2TextBox txtNovoModelo;
+        private Guna.UI2.WinForms.Guna2TextBox txtNovoModeloEPI;
         private Guna.UI2.WinForms.Guna2ComboBox cmbModelo;
-        private Label lblTituloEsquerda;
+        private Label lblTituloCima;
         private Guna.UI2.WinForms.Guna2ComboBox cmbTamanho;
         private Guna.UI2.WinForms.Guna2ComboBox cmbFamilia;
-        private Label label1;
+        private Label lblTituloCriarEPI;
         private Guna.UI2.WinForms.Guna2Button btnImport;
     }
 }

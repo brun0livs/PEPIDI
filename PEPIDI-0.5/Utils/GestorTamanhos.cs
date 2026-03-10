@@ -17,6 +17,7 @@ namespace PEPIDI.Utils
     {
         // 2. A VARIÁVEL QUE DIZ ONDE ESTAMOS A CORRER
         public static TipoEcra ModoAtual { get; set; } = TipoEcra.MonitorFullHD; // Padrão
+        
 
         // ==========================================
         // 3. AS REGRAS MULTI-ECRÃ
@@ -141,7 +142,8 @@ namespace PEPIDI.Utils
                         btn.CheckedState.Font = FonteBotaoNAV;
                         btn.Padding = PaddingBotao;
                         btn.ImageSize = TamanhoIconeBotao;
-                    }else if (btn.Name.Contains("btn"))
+                    }
+                    else if (btn.Name.Contains("btn"))
                     {
                         btn.Font = FonteBotao;
                     }
@@ -155,10 +157,33 @@ namespace PEPIDI.Utils
                         lbl.Font = FonteTitulo;
                     else
                         lbl.Font = FonteLabel;
-                }else if (c is Guna.UI2.WinForms.Guna2ComboBox cmb)
+                }
+                else if (c is Guna.UI2.WinForms.Guna2ComboBox cmb)
                 {
                     cmb.Font = FonteLabel;
                     cmb.ItemHeight = AlturaCombos;
+                    MessageBox.Show("Nome da Combo: " + cmb.Name + ", " + cmb.Size.ToString());
+                }
+                else if (c is Guna.UI2.WinForms.Guna2TextBox txt)
+                {
+                    txt.Font = FonteLabel;
+
+                    if (txt.Name.Contains("EPI"))
+                    {
+                        // Procura nos controlos do mesmo painel por um ComboBox
+                        foreach (Control irmao in pai.Controls)
+                        {
+                            if (irmao is Guna.UI2.WinForms.Guna2ComboBox cmbb)
+                            {
+                                txt.Size = cmbb.Size;
+                                txt.Margin = cmbb.Margin;
+                                MessageBox.Show("Encontrado ComboBox: " + cmbb.Name + ", " + cmbb.Size.ToString() +
+                                        "\n" + "Encontrado  TextBox: " + txt.Name + ", " + txt.Size.ToString());
+                                break; // Para assim que encontrar o primeiro
+                            }
+                        }
+                    }
+                    MessageBox.Show("Nome da TextBox: " + txt.Name + ", " + txt.Size.ToString());
                 }
                 else if (c is PEPIDIDataGridView dgv)
                 {

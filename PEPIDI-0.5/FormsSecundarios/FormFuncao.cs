@@ -10,6 +10,8 @@ namespace PEPIDI.FormsSecundarios
         private readonly string Nome;
         private readonly int idGestor;
         private readonly string Hex;
+        EfeitoUI M = new EfeitoUI();
+
 
         public FormFuncao(string _Nome, int _id, int _idgestor, string _Hex)
         {
@@ -53,9 +55,14 @@ namespace PEPIDI.FormsSecundarios
                 cmd.Parameters.Add("@CorHex", SqlDbType.NVarChar, 7).Value = txtCorHex.Text;
 
                 conn.Open();
-                object result = cmd.ExecuteScalar();
-                this.DialogResult = DialogResult.OK;
-                this.Close();
+                try
+                {
+                    object result = cmd.ExecuteScalar();
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
+                }catch (Exception ex){
+                    M.AbrirMensagem("Algo correu mal:\n" + ex.ToString(),"Erro");
+                }
             }
         }
 

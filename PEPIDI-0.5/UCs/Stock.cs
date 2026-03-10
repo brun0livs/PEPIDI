@@ -98,61 +98,61 @@ namespace PEPIDI.UCs
         }
 
         private void cmbVisoes_SelectedIndexChanged(object sender, EventArgs e)
-{
-    // Proteção essencial para o primeiro carregamento
-    if (cmbVisoes.SelectedValue == null || cmbVisoes.SelectedValue is DataRowView)
-        return;
-
-    string sql = cmbVisoes.SelectedValue.ToString();
-
-    if (sql == "ACTION_GERIR")
-    {
-        // 1. Descobrir quem é o "Pai" (O Form principal que está aberto)
-        Form pai = this.FindForm(); 
-
-        // 2. Criar a Sombra (Overlay)
-        using (Form overlay = new Form())
         {
-            // Configuração da sombra
-            overlay.StartPosition = FormStartPosition.Manual;
-            overlay.FormBorderStyle = FormBorderStyle.None;
-            overlay.Opacity = 0.50d;
-            overlay.BackColor = Color.Black;
-            overlay.ShowInTaskbar = false;
+            // Proteção essencial para o primeiro carregamento
+            if (cmbVisoes.SelectedValue == null || cmbVisoes.SelectedValue is DataRowView)
+                return;
 
-            if (pai != null)
+            string sql = cmbVisoes.SelectedValue.ToString();
+
+            if (sql == "ACTION_GERIR")
             {
-                overlay.Location = pai.Location;
-                overlay.Size = pai.Size;
-                overlay.Show(pai);
-            }
-            else
-            {
-                overlay.WindowState = FormWindowState.Maximized;
-                overlay.Show();
+                // 1. Descobrir quem é o "Pai" (O Form principal que está aberto)
+                Form pai = this.FindForm(); 
+
+                // 2. Criar a Sombra (Overlay)
+                using (Form overlay = new Form())
+                {
+                    // Configuração da sombra
+                    overlay.StartPosition = FormStartPosition.Manual;
+                    overlay.FormBorderStyle = FormBorderStyle.None;
+                    overlay.Opacity = 0.50d;
+                    overlay.BackColor = Color.Black;
+                    overlay.ShowInTaskbar = false;
+
+                    if (pai != null)
+                    {
+                        overlay.Location = pai.Location;
+                        overlay.Size = pai.Size;
+                        overlay.Show(pai);
+                    }
+                    else
+                    {
+                        overlay.WindowState = FormWindowState.Maximized;
+                        overlay.Show();
+                    }
+
+                    // 3. Abrir o teu FormGestaoDeFiltros POR CIMA da sombra
+                    using (PEPIDI.FormsSecundarios.FormGestaoDeFiltros frm = new PEPIDI.FormsSecundarios.FormGestaoDeFiltros())
+                    {
+                        // Passamos o 'overlay' para o ShowDialog, para ele saber que tem de ficar colado à sombra
+                        frm.ShowDialog(overlay); 
+                    }
+
+                    // 4. Fechar a sombra logo a seguir ao FormGestaoDeFiltros ser fechado
+                    overlay.Close();
+                }
+
+                // 5. ATUALIZAR A COMBOBOX DEPOIS DA GESTÃO FECHAR!
+                CarregarCombo();
+
+                // 6. Abortar a missão para não tentar enviar o "ACTION_GERIR" para a grelha
+                return; 
             }
 
-            // 3. Abrir o teu FormGestaoDeFiltros POR CIMA da sombra
-            using (PEPIDI.FormsSecundarios.FormGestaoDeFiltros frm = new PEPIDI.FormsSecundarios.FormGestaoDeFiltros())
-            {
-                // Passamos o 'overlay' para o ShowDialog, para ele saber que tem de ficar colado à sombra
-                frm.ShowDialog(overlay); 
-            }
-
-            // 4. Fechar a sombra logo a seguir ao FormGestaoDeFiltros ser fechado
-            overlay.Close();
+            // Se for uma Query normal, aplica na grelha!
+            AplicarQueryNaDgv(sql);
         }
-
-        // 5. ATUALIZAR A COMBOBOX DEPOIS DA GESTÃO FECHAR!
-        CarregarCombo();
-
-        // 6. Abortar a missão para não tentar enviar o "ACTION_GERIR" para a grelha
-        return; 
-    }
-
-    // Se for uma Query normal, aplica na grelha!
-    AplicarQueryNaDgv(sql);
-}
 
         private void AplicarQueryNaDgv(string sql)
         {

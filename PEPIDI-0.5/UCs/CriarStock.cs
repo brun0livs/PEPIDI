@@ -270,7 +270,7 @@ namespace PEPIDI.UCs
 
             if (cmbModelo.Text == "+ Escrever Novo Modelo...")
             {
-                ativarTamanho = !string.IsNullOrWhiteSpace(txtNovoModelo.Text);
+                ativarTamanho = !string.IsNullOrWhiteSpace(txtNovoModeloEPI.Text);
             }
             else
             {
@@ -290,9 +290,9 @@ namespace PEPIDI.UCs
                 tlpModelo.ColumnStyles[0] = new ColumnStyle(SizeType.Percent, 0F);
                 tlpModelo.ColumnStyles[1] = new ColumnStyle(SizeType.Percent, 100F);
 
-                txtNovoModelo.Enabled = true;
-                txtNovoModelo.Visible = true;
-                txtNovoModelo.Focus();
+                txtNovoModeloEPI.Enabled = true;
+                txtNovoModeloEPI.Visible = true;
+                txtNovoModeloEPI.Focus();
             }
             else
             {
@@ -310,8 +310,8 @@ namespace PEPIDI.UCs
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            txtNovoModelo.Clear();
-            txtQuantidade.Clear();
+            txtNovoModeloEPI.Clear();
+            txtQuantidadeEPI.Clear();
             if (cmbModelo.Items.Count > 0)
                 cmbModelo.SelectedIndex = 0;
 
@@ -334,7 +334,7 @@ namespace PEPIDI.UCs
             }
             string familia = cmbFamilia.SelectedValue.ToString();
 
-            string modelo = txtNovoModelo.Visible ? txtNovoModelo.Text.Trim() : cmbModelo.Text.Trim();
+            string modelo = txtNovoModeloEPI.Visible ? txtNovoModeloEPI.Text.Trim() : cmbModelo.Text.Trim();
             if (string.IsNullOrEmpty(modelo) || modelo == "Selecionar..." || modelo == "+ Escrever Novo Modelo...")
             {
                 MessageBox.Show("Por favor, escolhe ou escreve um Modelo válido.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -364,9 +364,9 @@ namespace PEPIDI.UCs
             }
 
             int quantidade = 0;
-            if (!string.IsNullOrWhiteSpace(txtQuantidade.Text))
+            if (!string.IsNullOrWhiteSpace(txtQuantidadeEPI.Text))
             {
-                if (!int.TryParse(txtQuantidade.Text, out quantidade))
+                if (!int.TryParse(txtQuantidadeEPI.Text, out quantidade))
                 {
                     MessageBox.Show("A quantidade tem de ser um número inteiro válido!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -443,7 +443,7 @@ namespace PEPIDI.UCs
 
                 // Limpar Ecrã
                 cmbFamilia.SelectedIndex = 0;
-                txtQuantidade.Clear();
+                txtQuantidadeEPI.Clear();
                 foreach (Control ctrl in flpFuncoes.Controls)
                 {
                     if (ctrl is Guna2Button btn)
