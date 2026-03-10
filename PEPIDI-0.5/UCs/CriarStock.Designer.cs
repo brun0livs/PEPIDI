@@ -267,8 +267,8 @@
             // tlpModelo
             // 
             tlpModelo.ColumnCount = 2;
-            tlpModelo.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tlpModelo.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 0F));
+            tlpModelo.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tlpModelo.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tlpModelo.Controls.Add(txtNovoModelo, 1, 0);
             tlpModelo.Controls.Add(cmbModelo, 0, 0);
             tlpModelo.Dock = DockStyle.Fill;
@@ -295,13 +295,13 @@
             txtNovoModelo.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtNovoModelo.ForeColor = Color.FromArgb(64, 64, 64);
             txtNovoModelo.HoverState.BorderColor = Color.FromArgb(242, 103, 34);
-            txtNovoModelo.Location = new Point(921, 7);
+            txtNovoModelo.Location = new Point(464, 7);
             txtNovoModelo.Margin = new Padding(7, 7, 7, 4);
             txtNovoModelo.Name = "txtNovoModelo";
             txtNovoModelo.PlaceholderText = "";
             txtNovoModelo.SelectedText = "";
             txtNovoModelo.ShadowDecoration.CustomizableEdges = customizableEdges8;
-            txtNovoModelo.Size = new Size(1, 40);
+            txtNovoModelo.Size = new Size(443, 40);
             txtNovoModelo.TabIndex = 32;
             txtNovoModelo.Visible = false;
             txtNovoModelo.TextChanged += txtNovoModelo_TextChanged;
@@ -325,7 +325,7 @@
             cmbModelo.Margin = new Padding(7);
             cmbModelo.Name = "cmbModelo";
             cmbModelo.ShadowDecoration.CustomizableEdges = customizableEdges10;
-            cmbModelo.Size = new Size(900, 37);
+            cmbModelo.Size = new Size(443, 37);
             cmbModelo.TabIndex = 28;
             cmbModelo.TextAlign = HorizontalAlignment.Center;
             cmbModelo.SelectedIndexChanged += cmbModelo_SelectedIndexChanged;
@@ -400,11 +400,11 @@
             btnImport.FillColor = Color.FromArgb(242, 103, 34);
             btnImport.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnImport.ForeColor = Color.White;
-            btnImport.Location = new Point(1387, 4);
-            btnImport.Margin = new Padding(10, 4, 10, 16);
+            btnImport.Location = new Point(1387, 12);
+            btnImport.Margin = new Padding(10, 12, 10, 12);
             btnImport.Name = "btnImport";
             btnImport.ShadowDecoration.CustomizableEdges = customizableEdges18;
-            btnImport.Size = new Size(440, 40);
+            btnImport.Size = new Size(440, 36);
             btnImport.TabIndex = 36;
             btnImport.Text = "Importar";
             btnImport.Click += btnImport_Click;

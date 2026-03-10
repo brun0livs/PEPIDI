@@ -119,10 +119,10 @@ namespace PEPIDI.Utils
         public static int AlturaCombos => ModoAtual switch
         {
             TipoEcra.Portatil => 28,
-            TipoEcra.MonitorFullHD => 32,
-            TipoEcra.Surface => 40,
-            TipoEcra.Televisao => 40,
-            _ => 79
+            TipoEcra.MonitorFullHD => 36,
+            TipoEcra.Surface => 50,
+            TipoEcra.Televisao => 50,
+            _ => 36
         };
 
         // ==========================================
