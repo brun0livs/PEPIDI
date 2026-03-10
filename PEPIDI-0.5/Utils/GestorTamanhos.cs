@@ -131,9 +131,24 @@ namespace PEPIDI.Utils
         // ==========================================
         public static void AplicarEstilos(Control pai)
         {
-            // O FOREACH É OBRIGATÓRIO! É ele que entra nos painéis e procura os botões.
+            Size tamanhoReferencia = Size.Empty;
+            // 1º LOOP: Varredura rápida para capturar estilos globais do painel
             foreach (Control c in pai.Controls)
             {
+                if (c is Guna.UI2.WinForms.Guna2ComboBox cmbRef)
+                {
+                    tamanhoReferencia = cmbRef.Size; // Guardamos o tamanho da combo
+                    cmbRef.Font = FonteLabel;
+                    cmbRef.ItemHeight = AlturaCombos;
+                }
+            }
+            MessageBox.Show(tamanhoReferencia.ToString());
+            // 2º LOOP: Aplicar aos restantes e entrar na recursividade
+            foreach (Control c in pai.Controls)
+            {
+                // Ignoramos a Combo porque já foi tratada no 1º loop
+                if (c is Guna.UI2.WinForms.Guna2ComboBox) continue;
+
                 if (c is Guna.UI2.WinForms.Guna2Button btn)
                 {
                     if (btn.Name.StartsWith("Nav"))
@@ -147,50 +162,28 @@ namespace PEPIDI.Utils
                     {
                         btn.Font = FonteBotao;
                     }
-
                 }
                 else if (c is Label lbl)
                 {
-                    if (lbl.Name.Contains("lblNome"))
-                        lbl.Font = FonteNome;
-                    else if (lbl.Name.Contains("Titulo"))
-                        lbl.Font = FonteTitulo;
-                    else
-                        lbl.Font = FonteLabel;
-                }
-                else if (c is Guna.UI2.WinForms.Guna2ComboBox cmb)
-                {
-                    cmb.Font = FonteLabel;
-                    cmb.ItemHeight = AlturaCombos;
-                    MessageBox.Show("Nome da Combo: " + cmb.Name + ", " + cmb.Size.ToString());
+                    lbl.Font = lbl.Name.Contains("lblNome") ? FonteNome :
+                               lbl.Name.Contains("Titulo") ? FonteTitulo : FonteLabel;
                 }
                 else if (c is Guna.UI2.WinForms.Guna2TextBox txt)
                 {
                     txt.Font = FonteLabel;
-
-                    if (txt.Name.Contains("EPI"))
+                    // Se tivermos capturado um tamanho de combo, aplicamos aqui!
+                    if (txt.Name.Contains("EPI") && tamanhoReferencia != Size.Empty)
                     {
-                        // Procura nos controlos do mesmo painel por um ComboBox
-                        foreach (Control irmao in pai.Controls)
-                        {
-                            if (irmao is Guna.UI2.WinForms.Guna2ComboBox cmbb)
-                            {
-                                txt.Size = cmbb.Size;
-                                txt.Margin = cmbb.Margin;
-                                MessageBox.Show("Encontrado ComboBox: " + cmbb.Name + ", " + cmbb.Size.ToString() +
-                                        "\n" + "Encontrado  TextBox: " + txt.Name + ", " + txt.Size.ToString());
-                                break; // Para assim que encontrar o primeiro
-                            }
-                        }
+                        txt.Size = tamanhoReferencia;
                     }
-                    MessageBox.Show("Nome da TextBox: " + txt.Name + ", " + txt.Size.ToString());
+                    MessageBox.Show($"Aplicando estilo a TextBox: {txt.Name}, nova altura: {txt.Size.Height}");
                 }
                 else if (c is PEPIDIDataGridView dgv)
                 {
                     dgv.RowTemplate.Height = AlturaLinhaDgv;
                 }
 
-                // A RECURSIVIDADE: Se for um painel (como o teu menu), ele entra lá para dentro e pinta os botões!
+                // RECURSIVIDADE: Entrar em painéis/containers
                 if (c.HasChildren)
                 {
                     AplicarEstilos(c);
