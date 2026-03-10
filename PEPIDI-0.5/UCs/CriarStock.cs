@@ -1,10 +1,11 @@
 ﻿using Guna.UI2.WinForms;
+using Microsoft.Data.SqlClient;
 using PEPIDI.Organizers;
+using PEPIDI.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -34,12 +35,14 @@ namespace PEPIDI.UCs
 
             // Só agora é que o Windows calcula onde tudo fica
             this.ResumeLayout(true);
+
         }
 
         private async void CriarStock_Load(object sender, EventArgs e)
         {
             CarregarCombo(cmbFamilia);
             await CarregarFuncoesAsync(); // <-- AGORA É ASSÍNCRONO!
+            GestorTema.AplicarEstilos(this);
         }
 
         // ==========================================

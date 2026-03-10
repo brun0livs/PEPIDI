@@ -129,7 +129,7 @@ namespace PEPIDI
                 case "histórico":
                 case "historico": return permissoes.PodeVerHistorico;
                 case "criar artigos": return permissoes.PodeCriarStock;
-                case "funções":
+                case "funções": return permissoes.PodeCriarFuncoes;
                 case "funcoes": return permissoes.PodeCriarFuncoes;
                 case "definições":
                 case "definicoes": return permissoes.PodeAlterarDefinicoes;
@@ -221,11 +221,10 @@ namespace PEPIDI
                     "pedidos aprovados" => new UCs.Pedidos(IDGestor, "Aprovado"),
                     "historico" or "histórico" => new UCs.Pedidos(IDGestor, "Finalizado"),
                     "criar artigos" => new UCs.CriarStock(),
-                    "funções" => new UCs.Funcoes(IDGestor),
+                    "funções" or "funcoes" => new UCs.Funcoes(IDGestor),
                     "definições" => new UCs.Definicoes(IDGestor),
                     _ => null
                 };
-
                 if (controlParaAbrir != null)
                 {
                     AbrirControl(controlParaAbrir);

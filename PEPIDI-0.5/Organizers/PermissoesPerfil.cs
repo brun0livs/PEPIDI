@@ -27,8 +27,8 @@ namespace PEPIDI.Organizers
 
                 SqlCommand cmd = new SqlCommand(@"
                     SELECT 
-                        PodeVerStock, PodeCriarStock, PodeVerHistorico, PodeEditarFunc,
-                        PodeSubmeter, PodeAprovar, PodeEntregar, PodeCriarFuncoes, PodeAlterarDefinicoes
+                    PodeVerStock, PodeCriarStock, PodeVerHistorico, PodeEditarFunc,
+                    PodeSubmeter, PodeAprovar, PodeEntregar, PodeCriarFuncoes, PodeAlterarDefinicoes
                     FROM Funcionarios FU
                     JOIN Funcoes F ON FU.Funcao = F.ID
                     WHERE FU.Nr = @NrFunc", conn);
