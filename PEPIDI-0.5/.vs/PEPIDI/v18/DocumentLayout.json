@@ -103,9 +103,9 @@
               "Title": "GestorTamanhos.cs",
               "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\Utils\\GestorTamanhos.cs",
               "RelativeDocumentMoniker": "Utils\\GestorTamanhos.cs",
-              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\Utils\\GestorTamanhos.cs",
-              "RelativeToolTip": "Utils\\GestorTamanhos.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKoAAAA3AAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\Utils\\GestorTamanhos.cs*",
+              "RelativeToolTip": "Utils\\GestorTamanhos.cs*",
+              "ViewState": "AgIAAKIAAAAAAAAAAAAiwJIAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-10T10:52:18.491Z",
               "EditorCaption": ""
@@ -141,8 +141,7 @@
               "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\UCs\\Funcionarios.cs [Projeto]",
               "RelativeToolTip": "UCs\\Funcionarios.cs [Projeto]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-09T12:16:44.517Z",
-              "EditorCaption": " [Projeto]"
+              "WhenOpened": "2026-03-09T12:16:44.517Z"
             },
             {
               "$type": "Document",
@@ -153,8 +152,7 @@
               "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\UCs\\Pedidos.cs [Projeto]",
               "RelativeToolTip": "UCs\\Pedidos.cs [Projeto]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-09T12:16:35.495Z",
-              "EditorCaption": " [Projeto]"
+              "WhenOpened": "2026-03-09T12:16:35.495Z"
             }
           ]
         }

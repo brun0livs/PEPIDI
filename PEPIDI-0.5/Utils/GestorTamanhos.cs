@@ -140,9 +140,9 @@ namespace PEPIDI.Utils
                     tamanhoReferencia = cmbRef.Size; // Guardamos o tamanho da combo
                     cmbRef.Font = FonteLabel;
                     cmbRef.ItemHeight = AlturaCombos;
+                    MessageBox.Show(tamanhoReferencia.ToString());
                 }
             }
-            MessageBox.Show(tamanhoReferencia.ToString());
             // 2º LOOP: Aplicar aos restantes e entrar na recursividade
             foreach (Control c in pai.Controls)
             {
