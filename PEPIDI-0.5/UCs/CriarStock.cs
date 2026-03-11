@@ -583,6 +583,7 @@ namespace PEPIDI.UCs
 
         private void dgvStock_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            Tabela.Visible = true;
             // Verifica se a linha clicada é válida (evita erro ao clicar no cabeçalho)
             if (e.RowIndex >= 0)
             {
