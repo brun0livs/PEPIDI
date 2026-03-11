@@ -16,6 +16,7 @@ namespace PEPIDI.UCs
 {
     public partial class CriarStock : UserControl
     {
+        EfeitoUI M = new EfeitoUI();
         public CriarStock()
         {
             // Para o motor de layout e o desenho
@@ -41,8 +42,40 @@ namespace PEPIDI.UCs
         private async void CriarStock_Load(object sender, EventArgs e)
         {
             CarregarCombo(cmbFamilia);
-            await CarregarFuncoesAsync(); // <-- AGORA É ASSÍNCRONO!
+            await CarregarFuncoesAsync();
+            AplicarQueryNaDgv("SELECT ID, Modelo, Familia, Tamanho, Quantidade FROM EPI");
             GestorTema.AplicarEstilos(this);
+        }
+
+        private void AplicarQueryNaDgv(string sql)
+        {
+            try
+            {
+                using (var con = new SqlConnection(GetConn.ConnectionString))
+                using (var da = new SqlDataAdapter(sql, con))
+                {
+                    var dt = new DataTable();
+                    da.Fill(dt);
+
+                    dgvStock.AutoGenerateColumns = true;
+                    dgvStock.DataSource = dt;
+
+                    // 4. Alinhamentos cosméticos
+                    if (dgvStock.Columns.Contains("Tamanho"))
+                    {
+                        dgvStock.Columns["Tamanho"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    }
+                    if (dgvStock.Columns.Contains("ID"))
+                    {
+                        dgvStock.Columns["ID"].Visible = false;
+                    }
+                }
+                dgvStock.ReadOnly = true;
+            }
+            catch (Exception ex)
+            {
+                M.AbrirMensagem("Erro ao aplicar visão: " + Environment.NewLine + ex.Message, "Erro");
+            }
         }
 
         // ==========================================
@@ -545,6 +578,94 @@ namespace PEPIDI.UCs
 
                 // 4. Fechar a sombra logo a seguir à importação terminar ou ser cancelada
                 overlay.Close();
+            }
+        }
+
+        private void dgvStock_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Verifica se a linha clicada é válida (evita erro ao clicar no cabeçalho)
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow linha = dgvStock.Rows[e.RowIndex];
+
+                // 1. Carregar a Família (Causa o trigger para carregar Modelos e Tamanhos)
+                if (linha.Cells["Familia"].Value != null)
+                {
+                    cmbFamilia.SelectedValue = linha.Cells["Familia"].Value.ToString();
+                }
+
+                // 2. Carregar o Modelo
+                // Nota: Como o cmbFamilia_SelectedIndexChanged já carrega os modelos, 
+                // precisamos de garantir que o modelo existe na lista antes de selecionar
+                if (linha.Cells["Modelo"].Value != null)
+                {
+                    string modeloTabela = linha.Cells["Modelo"].Value.ToString();
+                    cmbModelo.Text = modeloTabela;
+                }
+
+                // 3. Carregar o Tamanho
+                if (linha.Cells["Tamanho"].Value != null)
+                {
+                    cmbTamanho.SelectedValue = linha.Cells["Tamanho"].Value.ToString();
+                }
+
+                // 4. Carregar a Quantidade
+                if (linha.Cells["Quantidade"].Value != null)
+                {
+                    txtQuantidadeEPI.Text = linha.Cells["Quantidade"].Value.ToString();
+                }
+
+                // 5. Lógica para as Funções (Tags)
+                // Se precisares de carregar quais as funções estão ativas para este ID, 
+                // terás de fazer uma query à tabela AcessoFuncoes usando o ID da linha.
+                int idArtigo = Convert.ToInt32(linha.Cells["ID"].Value);
+                MarcarFuncoesDoArtigo(idArtigo);
+            }
+        }
+
+        private void MarcarFuncoesDoArtigo(int idArtigo)
+        {
+            // 1. Primeiro, desliga todas as tags
+            foreach (Control ctrl in flpFuncoes.Controls)
+            {
+                if (ctrl is Guna2Button btn)
+                {
+                    btn.Tag = false;
+                    btn.FillColor = Color.FromArgb(230, 232, 235);
+                    btn.ForeColor = Color.FromArgb(64, 64, 64);
+                }
+            }
+
+            // 2. Busca na BD quais as funções associadas a este ID de EPI
+            string query = @"SELECT f.Nome FROM Funcoes f 
+                     INNER JOIN AcessoFuncoes af ON f.ID = af.FuncaoID 
+                     INNER JOIN EPI e ON e.Acesso = af.AcessoID 
+                     WHERE e.ID = @id";
+
+            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", idArtigo);
+                conn.Open();
+
+                using (SqlDataReader rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        string nomeFuncao = rdr["Nome"].ToString();
+
+                        // Procura o botão com este texto e "liga-o"
+                        foreach (Control ctrl in flpFuncoes.Controls)
+                        {
+                            if (ctrl is Guna2Button btn && btn.Text == nomeFuncao)
+                            {
+                                btn.Tag = true;
+                                btn.FillColor = Color.FromArgb(242, 103, 34);
+                                btn.ForeColor = Color.White;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

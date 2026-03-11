@@ -140,7 +140,7 @@ namespace PEPIDI.Utils
                     tamanhoReferencia = cmbRef.Size; // Guardamos o tamanho da combo
                     cmbRef.Font = FonteLabel;
                     cmbRef.ItemHeight = AlturaCombos;
-                    MessageBox.Show(tamanhoReferencia.ToString());
+                    //MessageBox.Show(tamanhoReferencia.ToString());
                 }
             }
             // 2º LOOP: Aplicar aos restantes e entrar na recursividade
@@ -175,8 +175,8 @@ namespace PEPIDI.Utils
                     if (txt.Name.Contains("EPI") && tamanhoReferencia != Size.Empty)
                     {
                         txt.Size = tamanhoReferencia;
+                        //MessageBox.Show($"Aplicando estilo a TextBox: {txt.Name}, nova altura: {txt.Size.Height}");
                     }
-                    MessageBox.Show($"Aplicando estilo a TextBox: {txt.Name}, nova altura: {txt.Size.Height}");
                 }
                 else if (c is PEPIDIDataGridView dgv)
                 {
