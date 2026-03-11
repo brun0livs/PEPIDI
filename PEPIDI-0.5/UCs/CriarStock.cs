@@ -1,53 +1,32 @@
-﻿using Guna.UI2.WinForms;
-using Microsoft.Data.SqlClient;
-using PEPIDI.Organizers;
+﻿using Microsoft.Data.SqlClient;
+using PEPIDI.UCs.UcsSecundarios; // Garante que o namespace da UC Artigo está aqui
 using PEPIDI.Utils;
+using PEPIDI.Organizers;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
 
 namespace PEPIDI.UCs
 {
     public partial class CriarStock : UserControl
     {
         EfeitoUI M = new EfeitoUI();
-        public CriarStock()
+
+        // 1. CARREGAMENTO DA DGV NO LOAD
+        private void CriarStock_Load(object sender, EventArgs e)
         {
-            // Para o motor de layout e o desenho
-            this.SuspendLayout();
-            InitializeComponent();
+            // Query para preencher a tabela com os dados essenciais
+            string sql = "SELECT ID, Modelo, Familia, Tamanho, Quantidade FROM EPI";
+            PreencherTabela(sql);
 
-            // PREPARAÇÃO DO PAINEL DE TAGS
-            flpFuncoes.AutoScroll = true;
-            flpFuncoes.Padding = new Padding(0);
-            flpFuncoes.Margin = new Padding(0);
-            // Isto garante que o painel tenta não mostrar scrollbars se não for preciso
-            flpFuncoes.WrapContents = true;
-            // Ativa o DoubleBuffered em cascata (como fizemos antes)
-            // Isso evita que o utilizador veja os controlos a serem "desenhados" um a um
-            this.DoubleBuffered = true;
-            HelperPerformance.AtivarDoubleBufferRecursivo(this);
-
-            // Só agora é que o Windows calcula onde tudo fica
-            this.ResumeLayout(true);
-
-        }
-
-        private async void CriarStock_Load(object sender, EventArgs e)
-        {
-            CarregarCombo(cmbFamilia);
-            await CarregarFuncoesAsync();
-            AplicarQueryNaDgv("SELECT ID, Modelo, Familia, Tamanho, Quantidade FROM EPI");
+            // Aplica os estilos (fontes, cores) definidos no teu GestorTema
             GestorTema.AplicarEstilos(this);
         }
 
-        private void AplicarQueryNaDgv(string sql)
+        // 2. MÉTODO PARA ALIMENTAR A DATA GRID VIEW
+        public void PreencherTabela(string sql)
         {
             try
             {
@@ -57,616 +36,46 @@ namespace PEPIDI.UCs
                     var dt = new DataTable();
                     da.Fill(dt);
 
-                    dgvStock.AutoGenerateColumns = true;
                     dgvStock.DataSource = dt;
 
-                    // 4. Alinhamentos cosméticos
-                    if (dgvStock.Columns.Contains("Tamanho"))
-                    {
-                        dgvStock.Columns["Tamanho"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                    }
+                    // Esconde o ID mas mantém-no acessível para o CellClick
                     if (dgvStock.Columns.Contains("ID"))
-                    {
                         dgvStock.Columns["ID"].Visible = false;
-                    }
-                }
-                dgvStock.ReadOnly = true;
-            }
-            catch (Exception ex)
-            {
-                M.AbrirMensagem("Erro ao aplicar visão: " + Environment.NewLine + ex.Message, "Erro");
-            }
-        }
 
-        // ==========================================
-        // 1. CARREGAMENTO DE DADOS UI
-        // ==========================================
-        private void CarregarCombo(Guna2ComboBox combo)
-        {
-            DataTable dtFamilias = new DataTable();
-            dtFamilias.Columns.Add("ID", typeof(int));
-            dtFamilias.Columns.Add("NomeFamilia", typeof(string));
-            dtFamilias.Columns.Add("Apresentacao", typeof(string));
-
-            dtFamilias.Rows.Add(0, "Null", "Familía...");
-            dtFamilias.Rows.Add(1, "TShirt", "T-Shirt");
-            dtFamilias.Rows.Add(2, "Casaco", "Casaco");
-            dtFamilias.Rows.Add(3, "PoloMCurta", "Polo Manga Curta");
-            dtFamilias.Rows.Add(4, "PoloMCompr", "Polo Manga Comprida");
-            dtFamilias.Rows.Add(5, "Calca", "Calça");
-            dtFamilias.Rows.Add(6, "Sapato", "Sapato");
-
-            combo.DataSource = dtFamilias;
-            combo.DisplayMember = "Apresentacao";
-            combo.ValueMember = "NomeFamilia";
-
-            combo.SelectedIndex = 0;
-        }
-
-        private async void CarregarModelos(string familia)
-        {
-            DataTable dtModelos = new DataTable();
-            dtModelos.Columns.Add("Modelo", typeof(string));
-
-            dtModelos.Rows.Add("Modelo...");
-            dtModelos.Rows.Add("+ Escrever Novo Modelo...");
-
-            string query = "SELECT DISTINCT Modelo FROM EPI WHERE Familia = @Familia AND Modelo IS NOT NULL AND Modelo <> ''";
-
-            // Executa a query pesada em background para não bugar a ComboBox principal
-            await Task.Run(() =>
-            {
-                using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
-                {
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Familia", familia);
-                        try
-                        {
-                            conn.Open();
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                while (reader.Read())
-                                {
-                                    dtModelos.Rows.Add(reader["Modelo"].ToString().Trim());
-                                }
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            // Erro silencioso na thread background para não rebentar o programa
-                        }
-                    }
-                }
-            });
-
-            cmbModelo.DataSource = dtModelos;
-            cmbModelo.DisplayMember = "Modelo";
-            cmbModelo.ValueMember = "Modelo";
-
-            cmbModelo.DropDownStyle = ComboBoxStyle.DropDownList;
-
-            if (cmbModelo.Items.Count > 0)
-                cmbModelo.SelectedIndex = 0;
-        }
-
-        private void CarregarTamanhos(string familia)
-        {
-            DataTable dtTamanhos = new DataTable();
-            dtTamanhos.Columns.Add("Valor", typeof(string));
-            dtTamanhos.Columns.Add("Apresentacao", typeof(string));
-
-            dtTamanhos.Rows.Add("Null", "Tamanho...");
-
-            if (familia == "Sapato")
-            {
-                for (int i = 35; i <= 48; i++)
-                    dtTamanhos.Rows.Add(i.ToString(), i.ToString());
-            }
-            else if (familia == "Calca")
-            {
-                for (int i = 36; i <= 58; i += 2)
-                    dtTamanhos.Rows.Add(i.ToString(), i.ToString());
-            }
-            else if (familia != "Null")
-            {
-                string[] tamanhosLetras = { "XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL" };
-                foreach (string tamanho in tamanhosLetras)
-                    dtTamanhos.Rows.Add(tamanho, tamanho);
-            }
-
-            cmbTamanho.DataSource = dtTamanhos;
-            cmbTamanho.DisplayMember = "Apresentacao";
-            cmbTamanho.ValueMember = "Valor";
-
-            cmbTamanho.SelectedIndex = 0;
-        }
-
-        // ==========================================
-        // 2. FUNÇÕES AUTORIZADAS (TAGS) - O MOTOR V8! 🚀
-        // ==========================================
-        private async Task CarregarFuncoesAsync()
-        {
-            // Esconde e congela o painel enquanto desenha
-            flpFuncoes.Visible = false;
-            flpFuncoes.SuspendLayout();
-            flpFuncoes.Controls.Clear();
-
-            List<string> listaFuncoes = new List<string>();
-            string query = "SELECT Nome FROM Funcoes ORDER BY Nome";
-
-            // 1. Busca os nomes todos num abrir e piscar de olhos noutra thread
-            await Task.Run(() =>
-            {
-                using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
-                {
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        try
-                        {
-                            conn.Open();
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                while (reader.Read())
-                                {
-                                    listaFuncoes.Add(reader["Nome"].ToString().Trim());
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show("Erro ao carregar as funções: " + ex.Message, "Erro SQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                }
-            });
-
-            // 2. Com todos os nomes já em RAM, cospe os botões para o ecrã à bruta!
-            foreach (string nomeFuncao in listaFuncoes)
-            {
-                CriarTagFuncao(nomeFuncao);
-            }
-
-            // 3. Liberta a besta!
-            flpFuncoes.ResumeLayout(true);
-            flpFuncoes.Visible = true;
-        }
-
-        private void CriarTagFuncao(string nomeFuncao)
-        {
-            Guna2Button tag = new Guna2Button();
-            tag.Text = nomeFuncao;
-
-            // 1. Definir a fonte e medir o tamanho
-            tag.Font = new Font("Roboto", 10F, FontStyle.Regular);
-            int larguraTexto = TextRenderer.MeasureText(nomeFuncao, tag.Font).Width;
-
-            // Tamanho com folga (+30) para o texto respirar dentro do botão redondo
-            tag.Size = new Size(larguraTexto + 30, 35);
-
-            // 2. A MAGIA REDONDINHA DO GUNA!
-            tag.BorderRadius = 15;
-            tag.Cursor = Cursors.Hand;
-            tag.Animated = true;
-
-            // 3. Design Inicial (Desligado)
-            tag.FillColor = Color.FromArgb(230, 232, 235); // Fundo Cinza
-            tag.ForeColor = Color.FromArgb(64, 64, 64);    // Texto Escuro
-            tag.Margin = new Padding(0, 0, 10, 10);
-
-            // Usamos o "Tag" para saber se está ligado ou desligado
-            tag.Tag = false;
-
-            // 4. Evento para ligar/desligar ao clicar
-            tag.Click += (s, e) =>
-            {
-                bool isLigado = (bool)tag.Tag;
-
-                if (!isLigado)
-                {
-                    tag.FillColor = Color.FromArgb(242, 103, 34);
-                    tag.ForeColor = Color.White;
-                    tag.Tag = true;
-                }
-                else
-                {
-                    tag.FillColor = Color.FromArgb(230, 232, 235);
-                    tag.ForeColor = Color.FromArgb(64, 64, 64);
-                    tag.Tag = false;
-                }
-            };
-
-            // Criar o controlo em memória RAM antes de o atirar para o painel!
-            tag.CreateControl();
-            flpFuncoes.Controls.Add(tag);
-        }
-
-        // ==========================================
-        // 3. EVENTOS DA INTERFACE E VALIDAÇÕES
-        // ==========================================
-        private void cmbFamilia_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmbFamilia.SelectedValue == null) return;
-
-            string familiaSelecionada = cmbFamilia.SelectedValue.ToString();
-            CarregarTamanhos(familiaSelecionada);
-
-            cmbModelo.Enabled = true;
-            CarregarModelos(familiaSelecionada);
-
-            ValidarTamanho();
-        }
-
-        private void ValidarTamanho()
-        {
-            bool ativarTamanho = false;
-
-            if (cmbModelo.Text == "+ Escrever Novo Modelo...")
-            {
-                ativarTamanho = !string.IsNullOrWhiteSpace(txtNovoModeloEPI.Text);
-            }
-            else
-            {
-                string modeloEscolhido = cmbModelo.Text.Trim();
-                ativarTamanho = !string.IsNullOrEmpty(modeloEscolhido) && modeloEscolhido != "Selecionar...";
-            }
-
-            cmbTamanho.Enabled = ativarTamanho;
-        }
-
-        private void cmbModelo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string modeloEscolhido = cmbModelo.Text.Trim();
-
-            if (modeloEscolhido == "+ Escrever Novo Modelo...")
-            {
-                tlpModelo.ColumnStyles[0] = new ColumnStyle(SizeType.Percent, 0F);
-                tlpModelo.ColumnStyles[1] = new ColumnStyle(SizeType.Percent, 100F);
-
-                txtNovoModeloEPI.Enabled = true;
-                txtNovoModeloEPI.Visible = true;
-                txtNovoModeloEPI.Focus();
-            }
-            else
-            {
-                tlpModelo.ColumnStyles[1] = new ColumnStyle(SizeType.Percent, 0F);
-                tlpModelo.ColumnStyles[0] = new ColumnStyle(SizeType.Percent, 100F);
-            }
-
-            ValidarTamanho();
-        }
-
-        private void txtNovoModelo_TextChanged(object sender, EventArgs e)
-        {
-            ValidarTamanho();
-        }
-
-        private void btnCancelar_Click(object sender, EventArgs e)
-        {
-            txtNovoModeloEPI.Clear();
-            txtQuantidadeEPI.Clear();
-            if (cmbModelo.Items.Count > 0)
-                cmbModelo.SelectedIndex = 0;
-
-            tlpModelo.ColumnStyles[1] = new ColumnStyle(SizeType.Percent, 0F);
-            tlpModelo.ColumnStyles[0] = new ColumnStyle(SizeType.Percent, 100F);
-
-            ValidarTamanho();
-        }
-
-        // ==========================================
-        // 4. GRAVAÇÃO NA BASE DE DADOS (COM VERIFICAÇÃO INTELIGENTE)
-        // ==========================================
-        private void btnGuardar_Click(object sender, EventArgs e)
-        {
-            // 1. Validações Iniciais
-            if (cmbFamilia.SelectedIndex <= 0)
-            {
-                MessageBox.Show("Por favor, seleciona uma Família.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            string familia = cmbFamilia.SelectedValue.ToString();
-
-            string modelo = txtNovoModeloEPI.Visible ? txtNovoModeloEPI.Text.Trim() : cmbModelo.Text.Trim();
-            if (string.IsNullOrEmpty(modelo) || modelo == "Selecionar..." || modelo == "+ Escrever Novo Modelo...")
-            {
-                MessageBox.Show("Por favor, escolhe ou escreve um Modelo válido.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (cmbTamanho.SelectedIndex <= 0)
-            {
-                MessageBox.Show("Por favor, seleciona um Tamanho.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            string tamanho = cmbTamanho.SelectedValue.ToString();
-
-            List<string> funcoesSelecionadas = new List<string>();
-            foreach (Control ctrl in flpFuncoes.Controls)
-            {
-                if (ctrl is Guna2Button btn && btn.Tag is bool isLigado && isLigado)
-                {
-                    funcoesSelecionadas.Add(btn.Text);
-                }
-            }
-
-            if (funcoesSelecionadas.Count == 0)
-            {
-                MessageBox.Show("Tens de selecionar pelo menos uma Função Autorizada!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            int quantidade = 0;
-            if (!string.IsNullOrWhiteSpace(txtQuantidadeEPI.Text))
-            {
-                if (!int.TryParse(txtQuantidadeEPI.Text, out quantidade))
-                {
-                    MessageBox.Show("A quantidade tem de ser um número inteiro válido!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-            }
-
-            // 2. Processar a Gravação
-            try
-            {
-                int acessoID = ObterOuCriarAcessoID(funcoesSelecionadas);
-                bool somarAosExistentes = false;
-                bool artigoJaExiste = false;
-
-                using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
-                {
-                    conn.Open();
-
-                    // PASSO A: Verificar em silêncio se o artigo já existe
-                    string checkQuery = "SELECT COUNT(*) FROM EPI WHERE Modelo = @Modelo AND Tamanho = @Tamanho AND Acesso = @Acesso";
-                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
-                    {
-                        checkCmd.Parameters.AddWithValue("@Modelo", modelo);
-                        checkCmd.Parameters.AddWithValue("@Tamanho", tamanho);
-                        checkCmd.Parameters.AddWithValue("@Acesso", acessoID);
-
-                        int count = (int)checkCmd.ExecuteScalar();
-                        if (count > 0) artigoJaExiste = true;
-                    }
-
-                    // PASSO B: Se já existir, avisa o utilizador e pergunta o que fazer!
-                    if (artigoJaExiste)
-                    {
-                        DialogResult resposta = MessageBox.Show(
-                            $"O artigo '{modelo}' (Tamanho: {tamanho}) já existe no armazém!\n\n" +
-                            "[ SIM ] - Somar esta nova quantidade ao stock existente (Recomendado)\n" +
-                            "[ NÃO ] - Criar uma linha nova e separada na base de dados\n" +
-                            "[ CANCELAR ] - Abortar a gravação",
-                            "Artigo Duplicado Detetado",
-                            MessageBoxButtons.YesNoCancel,
-                            MessageBoxIcon.Question);
-
-                        if (resposta == DialogResult.Cancel) return; // Cancela tudo se ele desistir
-
-                        somarAosExistentes = (resposta == DialogResult.Yes);
-                    }
-
-                    // PASSO C: Montar a Query consoante a decisão
-                    string query = "";
-                    if (artigoJaExiste && somarAosExistentes)
-                    {
-                        // Atualiza a quantidade (SOMA)
-                        query = "UPDATE EPI SET Quantidade = Quantidade + @Quantidade WHERE Modelo = @Modelo AND Tamanho = @Tamanho AND Acesso = @Acesso";
-                    }
-                    else
-                    {
-                        // Insere linha nova (Seja porque é novo, ou porque o utilizador escolheu "NÃO" duplicar)
-                        query = "INSERT INTO EPI (Familia, Modelo, Tamanho, Acesso, Quantidade) VALUES (@Familia, @Modelo, @Tamanho, @Acesso, @Quantidade)";
-                    }
-
-                    // PASSO D: Executar a Query final
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Familia", familia);
-                        cmd.Parameters.AddWithValue("@Modelo", modelo);
-                        cmd.Parameters.AddWithValue("@Tamanho", tamanho);
-                        cmd.Parameters.AddWithValue("@Acesso", acessoID);
-                        cmd.Parameters.AddWithValue("@Quantidade", quantidade);
-
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-
-                MessageBox.Show("Stock guardado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // Limpar Ecrã
-                cmbFamilia.SelectedIndex = 0;
-                txtQuantidadeEPI.Clear();
-                foreach (Control ctrl in flpFuncoes.Controls)
-                {
-                    if (ctrl is Guna2Button btn)
-                    {
-                        btn.Tag = false;
-                        btn.FillColor = Color.FromArgb(230, 232, 235);
-                        btn.ForeColor = Color.FromArgb(64, 64, 64);
-                    }
+                    // Estética: Centraliza o texto da coluna Tamanho
+                    if (dgvStock.Columns.Contains("Tamanho"))
+                        dgvStock.Columns["Tamanho"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao guardar na base de dados: " + ex.Message, "Erro SQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                M.AbrirMensagem("Erro ao carregar stock: " + ex.Message, "Erro SQL");
             }
         }
 
-        private int ObterOuCriarAcessoID(List<string> funcoesSelecionadas)
-        {
-            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
-            {
-                conn.Open();
-
-                SqlCommand cmdIDs = new SqlCommand("SELECT DISTINCT AcessoID FROM AcessoFuncoes", conn);
-                List<int> ids = new List<int>();
-                using (SqlDataReader rdr = cmdIDs.ExecuteReader())
-                {
-                    while (rdr.Read()) ids.Add(rdr.GetInt32(0));
-                }
-
-                foreach (int id in ids)
-                {
-                    SqlCommand cmdFuncoes = new SqlCommand("SELECT Nome FROM AcessoFuncoes INNER JOIN Funcoes ON Funcoes.ID = AcessoFuncoes.FuncaoID WHERE AcessoID = @id", conn);
-                    cmdFuncoes.Parameters.AddWithValue("@id", id);
-
-                    List<string> funcoesDoGrupo = new List<string>();
-                    using (SqlDataReader rdr = cmdFuncoes.ExecuteReader())
-                    {
-                        while (rdr.Read()) funcoesDoGrupo.Add(rdr.GetString(0));
-                    }
-
-                    if (funcoesDoGrupo.Count == funcoesSelecionadas.Count && !funcoesDoGrupo.Except(funcoesSelecionadas).Any())
-                    {
-                        return id;
-                    }
-                }
-
-                SqlCommand cmdNovoID = new SqlCommand("INSERT INTO Acessos DEFAULT VALUES; SELECT SCOPE_IDENTITY();", conn);
-                int novoID = Convert.ToInt32(cmdNovoID.ExecuteScalar());
-
-                foreach (string funcao in funcoesSelecionadas)
-                {
-                    SqlCommand cmdGetID = new SqlCommand("SELECT ID FROM Funcoes WHERE Nome = @nome", conn);
-                    cmdGetID.Parameters.AddWithValue("@nome", funcao);
-                    int idFunc = (int)cmdGetID.ExecuteScalar();
-
-                    SqlCommand cmdInsert = new SqlCommand("INSERT INTO AcessoFuncoes (AcessoID, FuncaoID) VALUES (@acesso, @funcao)", conn);
-                    cmdInsert.Parameters.AddWithValue("@acesso", novoID);
-                    cmdInsert.Parameters.AddWithValue("@funcao", idFunc);
-                    cmdInsert.ExecuteNonQuery();
-                }
-
-                return novoID;
-            }
-        }
-
-        private void btnImport_Click(object sender, EventArgs e)
-        {
-            // 1. Descobrir quem é o "Pai" (O Form principal que está a mostrar este UserControl)
-            Form pai = this.FindForm();
-
-            // 2. Criar a Sombra (Overlay)
-            using (Form overlay = new Form())
-            {
-                // Configuração da sombra
-                overlay.StartPosition = FormStartPosition.Manual;
-                overlay.FormBorderStyle = FormBorderStyle.None;
-                overlay.Opacity = 0.50d;
-                overlay.BackColor = Color.Black;
-                overlay.ShowInTaskbar = false;
-
-                if (pai != null)
-                {
-                    overlay.Location = pai.Location;
-                    overlay.Size = pai.Size;
-                    overlay.Show(pai);
-                }
-                else
-                {
-                    overlay.WindowState = FormWindowState.Maximized;
-                    overlay.Show();
-                }
-
-                // 3. Abrir o teu FormImportarStock POR CIMA da sombra
-                using (FormsSecundarios.FormImportarStock frm = new FormsSecundarios.FormImportarStock())
-                {
-                    // O segredo: passar o 'overlay' para o ShowDialog
-                    frm.ShowDialog(overlay);
-                }
-
-                // 4. Fechar a sombra logo a seguir à importação terminar ou ser cancelada
-                overlay.Close();
-            }
-        }
-
+        // 3. EVENTO CELLCLICK QUE ENVIA O ID PARA A UC ARTIGO
         private void dgvStock_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            Tabela.Visible = true;
-            // Verifica se a linha clicada é válida (evita erro ao clicar no cabeçalho)
+            // Verifica se clicaste numa linha (e não no cabeçalho)
             if (e.RowIndex >= 0)
             {
-                DataGridViewRow linha = dgvStock.Rows[e.RowIndex];
+                // Obtém o ID da linha selecionada
+                int idSelecionado = Convert.ToInt32(dgvStock.Rows[e.RowIndex].Cells["ID"].Value);
 
-                // 1. Carregar a Família (Causa o trigger para carregar Modelos e Tamanhos)
-                if (linha.Cells["Familia"].Value != null)
+                // Procura se a UC Artigo já existe dentro do pnlDetails
+                var ucArtigo = pnlDetails.Controls.OfType<Artigo>().FirstOrDefault();
+
+                if (ucArtigo == null)
                 {
-                    cmbFamilia.SelectedValue = linha.Cells["Familia"].Value.ToString();
+                    // Se não existe, cria a instância e adiciona ao painel
+                    ucArtigo = new Artigo();
+                    ucArtigo.Dock = DockStyle.Fill;
+                    pnlDetails.Controls.Clear();
+                    pnlDetails.Controls.Add(ucArtigo);
                 }
 
-                // 2. Carregar o Modelo
-                // Nota: Como o cmbFamilia_SelectedIndexChanged já carrega os modelos, 
-                // precisamos de garantir que o modelo existe na lista antes de selecionar
-                if (linha.Cells["Modelo"].Value != null)
-                {
-                    string modeloTabela = linha.Cells["Modelo"].Value.ToString();
-                    cmbModelo.Text = modeloTabela;
-                }
-
-                // 3. Carregar o Tamanho
-                if (linha.Cells["Tamanho"].Value != null)
-                {
-                    cmbTamanho.SelectedValue = linha.Cells["Tamanho"].Value.ToString();
-                }
-
-                // 4. Carregar a Quantidade
-                if (linha.Cells["Quantidade"].Value != null)
-                {
-                    txtQuantidadeEPI.Text = linha.Cells["Quantidade"].Value.ToString();
-                }
-
-                // 5. Lógica para as Funções (Tags)
-                // Se precisares de carregar quais as funções estão ativas para este ID, 
-                // terás de fazer uma query à tabela AcessoFuncoes usando o ID da linha.
-                int idArtigo = Convert.ToInt32(linha.Cells["ID"].Value);
-                MarcarFuncoesDoArtigo(idArtigo);
-            }
-        }
-
-        private void MarcarFuncoesDoArtigo(int idArtigo)
-        {
-            // 1. Primeiro, desliga todas as tags
-            foreach (Control ctrl in flpFuncoes.Controls)
-            {
-                if (ctrl is Guna2Button btn)
-                {
-                    btn.Tag = false;
-                    btn.FillColor = Color.FromArgb(230, 232, 235);
-                    btn.ForeColor = Color.FromArgb(64, 64, 64);
-                }
-            }
-
-            // 2. Busca na BD quais as funções associadas a este ID de EPI
-            string query = @"SELECT f.Nome FROM Funcoes f 
-                     INNER JOIN AcessoFuncoes af ON f.ID = af.FuncaoID 
-                     INNER JOIN EPI e ON e.Acesso = af.AcessoID 
-                     WHERE e.ID = @id";
-
-            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
-            {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@id", idArtigo);
-                conn.Open();
-
-                using (SqlDataReader rdr = cmd.ExecuteReader())
-                {
-                    while (rdr.Read())
-                    {
-                        string nomeFuncao = rdr["Nome"].ToString();
-
-                        // Procura o botão com este texto e "liga-o"
-                        foreach (Control ctrl in flpFuncoes.Controls)
-                        {
-                            if (ctrl is Guna2Button btn && btn.Text == nomeFuncao)
-                            {
-                                btn.Tag = true;
-                                btn.FillColor = Color.FromArgb(242, 103, 34);
-                                btn.ForeColor = Color.White;
-                            }
-                        }
-                    }
-                }
+                // Chama o método público da UC Artigo para carregar os dados
+                ucArtigo.CarregarDadosParaEdicao(idSelecionado);
             }
         }
     }

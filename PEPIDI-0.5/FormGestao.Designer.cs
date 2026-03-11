@@ -364,8 +364,8 @@
             Nav6.ShadowDecoration.CustomizableEdges = customizableEdges14;
             Nav6.Size = new Size(200, 79);
             Nav6.TabIndex = 11;
-            Nav6.Tag = "Criar Artigos";
-            Nav6.Text = "Criar Artigos";
+            Nav6.Tag = "Gestão de Stock";
+            Nav6.Text = "Gestão de Stock";
             Nav6.TextAlign = HorizontalAlignment.Left;
             Nav6.Click += Nav_Clicked;
             // 

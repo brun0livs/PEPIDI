@@ -76,6 +76,9 @@
     <Compile Update="UCs\AddStock.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="UCs\UcsSecundarios\Artigo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="UCs\UcsSecundarios\PedidosDetalhes.cs">
       <SubType>UserControl</SubType>
     </Compile>
