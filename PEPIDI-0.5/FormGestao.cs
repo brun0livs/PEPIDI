@@ -128,8 +128,9 @@ namespace PEPIDI
                 case "pedidos aprovados": return permissoes.PodeEntregar || permissoes.PodeAprovar;
                 case "histórico":
                 case "historico": return permissoes.PodeVerHistorico;
-                case "criar artigos": return permissoes.PodeCriarStock;
-                case "funções": return permissoes.PodeCriarFuncoes;
+                case "gestão":
+                case "gestao": return permissoes.PodeInserirStock || permissoes.PodeCriarStock;
+                case "funções":
                 case "funcoes": return permissoes.PodeCriarFuncoes;
                 case "definições":
                 case "definicoes": return permissoes.PodeAlterarDefinicoes;
@@ -156,7 +157,7 @@ namespace PEPIDI
             if (PodeAceder("Pedidos Pendentes")) { Nav3.Visible = true; Nav3.Enabled = true; }
             if (PodeAceder("Pedidos Aprovados")) { Nav4.Visible = true; Nav4.Enabled = true; }
             if (PodeAceder("Histórico")) { Nav5.Visible = true; Nav5.Enabled = true; }
-            if (PodeAceder("Criar Artigos")) { Nav6.Visible = true; Nav6.Enabled = true; }
+            if (PodeAceder("Gestão")) { Nav6.Visible = true; Nav6.Enabled = true; }
             if (PodeAceder("Funções")) { Nav7.Visible = true; Nav7.Enabled = true; }
             if (PodeAceder("Definições")) { Nav9.Visible = true; Nav9.Enabled = true; }
         }
@@ -220,7 +221,7 @@ namespace PEPIDI
                     "pedidos pendentes" => new UCs.Pedidos(IDGestor, "Pendente"),
                     "pedidos aprovados" => new UCs.Pedidos(IDGestor, "Aprovado"),
                     "historico" or "histórico" => new UCs.Pedidos(IDGestor, "Finalizado"),
-                    "criar artigos" => new UCs.CriarStock(),
+                    "gestao" or "gestão"=> new UCs.CriarStock(permissoes.PodeCriarStock),
                     "funções" or "funcoes" => new UCs.Funcoes(IDGestor),
                     "definições" => new UCs.Definicoes(IDGestor),
                     _ => null

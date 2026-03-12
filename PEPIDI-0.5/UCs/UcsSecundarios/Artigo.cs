@@ -15,25 +15,18 @@ namespace PEPIDI.UCs.UcsSecundarios
 {
     public partial class Artigo : UserControl
     {
-        int id;
-        public Artigo()
+        int _id;
+        string _estado;
+        public Artigo(string estado, int id)
         {
             InitializeComponent();
-            //id = _id;
+            id = _id;
+            estado = _estado;
         }
 
         private void Artigo_Load(object sender, EventArgs e)
         {
             CarregarCombo(cmbFamilia);
-        }
-
-        // Dentro da classe Artigo.cs
-        public void CarregarDadosParaEdicao(int id)
-        {
-            // 2. Aqui fazes a query SELECT * FROM EPI WHERE ID = @id
-            
-            // 3. Preenches as tuas combos e as tags do FlowLayoutPanel
-            MessageBox.Show("A carregar dados do ID: " + id);
         }
 
         private void CarregarCombo(Guna2ComboBox combo)

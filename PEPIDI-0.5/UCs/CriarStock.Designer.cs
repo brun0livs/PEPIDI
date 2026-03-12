@@ -26,6 +26,7 @@
             lblTituloCriarEPI = new Label();
             tableLayoutPanel1 = new TableLayoutPanel();
             pnlDetails = new Panel();
+            tableLayoutPanel2 = new TableLayoutPanel();
             guna2Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvStock).BeginInit();
             tableLayoutPanel1.SuspendLayout();
@@ -117,6 +118,7 @@
             tableLayoutPanel1.Controls.Add(lblTituloCriarEPI, 0, 0);
             tableLayoutPanel1.Controls.Add(guna2Panel1, 0, 1);
             tableLayoutPanel1.Controls.Add(pnlDetails, 1, 1);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 1, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -135,6 +137,20 @@
             pnlDetails.Name = "pnlDetails";
             pnlDetails.Size = new Size(909, 788);
             pnlDetails.TabIndex = 7;
+            // 
+            // tableLayoutPanel2
+            // 
+            tableLayoutPanel2.ColumnCount = 2;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(918, 0);
+            tableLayoutPanel2.Margin = new Padding(0);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 1;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.Size = new Size(919, 60);
+            tableLayoutPanel2.TabIndex = 8;
             // 
             // CriarStock
             // 
@@ -159,5 +175,6 @@
         private TableLayoutPanel tableLayoutPanel1;
         private Models.PEPIDIDataGridView dgvStock;
         private Panel pnlDetails;
+        private TableLayoutPanel tableLayoutPanel2;
     }
 }

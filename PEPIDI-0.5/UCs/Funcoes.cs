@@ -85,8 +85,8 @@ namespace PEPIDI.UCs
 
                 cmd.Parameters.AddWithValue("@ID", idFuncao);
                 cmd.Parameters.AddWithValue("@PodeVerStock", row.Cells["PodeVerStock"].Value ?? false);
-                cmd.Parameters.AddWithValue("@PodeCriarStock", row.Cells["PodeCriarStock"].Value ?? false);
                 cmd.Parameters.AddWithValue("@PodeInserirStock", row.Cells["PodeInserirStock"].Value ?? false);
+                cmd.Parameters.AddWithValue("@PodeCriarStock", row.Cells["PodeCriarStock"].Value ?? false);
                 cmd.Parameters.AddWithValue("@PodeEditarFunc", row.Cells["PodeEditarFunc"].Value ?? false);
                 cmd.Parameters.AddWithValue("@PodeSubmeter", row.Cells["PodeSubmeter"].Value ?? false);
                 cmd.Parameters.AddWithValue("@PodeAprovar", row.Cells["PodeAprovar"].Value ?? false);

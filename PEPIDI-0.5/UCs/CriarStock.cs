@@ -1,18 +1,23 @@
 ﻿using Microsoft.Data.SqlClient;
+using PEPIDI.Organizers;
 using PEPIDI.UCs.UcsSecundarios; // Garante que o namespace da UC Artigo está aqui
 using PEPIDI.Utils;
-using PEPIDI.Organizers;
-using System;
 using System.Data;
-using System.Linq;
-using System.Windows.Forms;
 
 
 namespace PEPIDI.UCs
 {
     public partial class CriarStock : UserControl
     {
-        EfeitoUI M = new EfeitoUI();
+        EfeitoUI M = new();
+
+        private bool BtnNovo;
+
+        public CriarStock(bool _BtnNovo)
+        {
+            InitializeComponent();
+            BtnNovo = _BtnNovo;
+        }
 
         // 1. CARREGAMENTO DA DGV NO LOAD
         private void CriarStock_Load(object sender, EventArgs e)
@@ -23,6 +28,10 @@ namespace PEPIDI.UCs
 
             // Aplica os estilos (fontes, cores) definidos no teu GestorTema
             GestorTema.AplicarEstilos(this);
+            if (BtnNovo)
+            {
+                M.AbrirMensagem("Botão liga!", "Sucesso");
+            }
         }
 
         // 2. MÉTODO PARA ALIMENTAR A DATA GRID VIEW

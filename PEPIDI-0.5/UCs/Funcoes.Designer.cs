@@ -42,8 +42,8 @@
             ID = new DataGridViewTextBoxColumn();
             Nome = new DataGridViewTextBoxColumn();
             PodeVerStock = new DataGridViewCheckBoxColumn();
-            PodeCriarStock = new DataGridViewCheckBoxColumn();
             PodeInserirStock = new DataGridViewCheckBoxColumn();
+            PodeCriarStock = new DataGridViewCheckBoxColumn();
             PodeEditarFunc = new DataGridViewCheckBoxColumn();
             PodeSubmeter = new DataGridViewCheckBoxColumn();
             PodeAprovar = new DataGridViewCheckBoxColumn();
@@ -145,7 +145,7 @@
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
             dgvFuncoes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvFuncoes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvFuncoes.Columns.AddRange(new DataGridViewColumn[] { ID, Nome, PodeVerStock, PodeCriarStock, PodeInserirStock, PodeEditarFunc, PodeSubmeter, PodeAprovar, PodeEntregar, PodeCriarFuncoes, PodeAlterarDefinicoes, CorHex });
+            dgvFuncoes.Columns.AddRange(new DataGridViewColumn[] { ID, Nome, PodeVerStock, PodeInserirStock, PodeCriarStock, PodeEditarFunc, PodeSubmeter, PodeAprovar, PodeEntregar, PodeCriarFuncoes, PodeAlterarDefinicoes, CorHex });
             dgvFuncoes.Cursor = Cursors.Hand;
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = Color.Transparent;
@@ -200,15 +200,7 @@
             PodeVerStock.Name = "PodeVerStock";
             PodeVerStock.Resizable = DataGridViewTriState.True;
             PodeVerStock.SortMode = DataGridViewColumnSortMode.Automatic;
-            PodeVerStock.Width = 89;
-            // 
-            // PodeCriarStock
-            // 
-            PodeCriarStock.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            PodeCriarStock.DataPropertyName = "PodeCriarStock";
-            PodeCriarStock.HeaderText = "Criar Stock";
-            PodeCriarStock.Name = "PodeCriarStock";
-            PodeCriarStock.Width = 78;
+            PodeVerStock.Width = 97;
             // 
             // PodeInserirStock
             // 
@@ -216,7 +208,15 @@
             PodeInserirStock.DataPropertyName = "PodeInserirStock";
             PodeInserirStock.HeaderText = "Inserir Stock";
             PodeInserirStock.Name = "PodeInserirStock";
-            PodeInserirStock.Width = 87;
+            PodeInserirStock.Width = 97;
+            // 
+            // PodeCriarStock
+            // 
+            PodeCriarStock.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            PodeCriarStock.DataPropertyName = "PodeCriarStock";
+            PodeCriarStock.HeaderText = "Criar Stock";
+            PodeCriarStock.Name = "PodeCriarStock";
+            PodeCriarStock.Width = 87;
             // 
             // PodeEditarFunc
             // 
@@ -224,7 +224,7 @@
             PodeEditarFunc.DataPropertyName = "PodeEditarFunc";
             PodeEditarFunc.HeaderText = "Editar Func";
             PodeEditarFunc.Name = "PodeEditarFunc";
-            PodeEditarFunc.Width = 78;
+            PodeEditarFunc.Width = 87;
             // 
             // PodeSubmeter
             // 
@@ -256,7 +256,7 @@
             PodeCriarFuncoes.DataPropertyName = "PodeCriarFuncoes";
             PodeCriarFuncoes.HeaderText = "Criar Funcoes";
             PodeCriarFuncoes.Name = "PodeCriarFuncoes";
-            PodeCriarFuncoes.Width = 94;
+            PodeCriarFuncoes.Width = 105;
             // 
             // PodeAlterarDefinicoes
             // 
@@ -301,8 +301,8 @@
         private DataGridViewTextBoxColumn ID;
         private DataGridViewTextBoxColumn Nome;
         private DataGridViewCheckBoxColumn PodeVerStock;
-        private DataGridViewCheckBoxColumn PodeCriarStock;
         private DataGridViewCheckBoxColumn PodeInserirStock;
+        private DataGridViewCheckBoxColumn PodeCriarStock;
         private DataGridViewCheckBoxColumn PodeEditarFunc;
         private DataGridViewCheckBoxColumn PodeSubmeter;
         private DataGridViewCheckBoxColumn PodeAprovar;
