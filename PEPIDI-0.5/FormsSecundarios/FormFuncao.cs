@@ -1,6 +1,7 @@
-﻿using PEPIDI.Organizers;
+﻿using Microsoft.Data.SqlClient;
+using PEPIDI.Organizers;
+using PEPIDI.Utils;
 using System.Data;
-using Microsoft.Data.SqlClient;
 
 namespace PEPIDI.FormsSecundarios
 {
@@ -28,6 +29,7 @@ namespace PEPIDI.FormsSecundarios
         private void LblFechar_Click(object sender, EventArgs e)
         {
             this.Close();
+            GestorTema.AplicarEstilos(this);
         }
 
         private void EscolherCor_Click(object sender, EventArgs e)

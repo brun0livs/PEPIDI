@@ -1,10 +1,11 @@
 ﻿using Guna.UI2.WinForms;
+using Microsoft.Data.SqlClient;
 using PEPIDI.Models; // Confirma se o GetConn está neste namespace ou noutro
 using PEPIDI.Organizers;
+using PEPIDI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace PEPIDI.FormsSecundarios
         {
             await CarregarFuncoesAsync();
             await CarregarRegrasFamiliaAsync(); // Carrega o "cérebro" das famílias
+            GestorTema.AplicarEstilos(this);
         }
 
         // ==========================================

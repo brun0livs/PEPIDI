@@ -1,11 +1,12 @@
-﻿using PEPIDI.FormsSecundarios;
+﻿using Microsoft.Data.SqlClient;
+using PEPIDI.FormsSecundarios;
 using PEPIDI.Models;
 using PEPIDI.Organizers;
 using PEPIDI.UCs.DGVS;
+using PEPIDI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -96,6 +97,8 @@ namespace PEPIDI.UCs.UcsSecundarios
             var info = Details.GetInfoGestor(IDGestor);
             NomeGestor = info.Nome;
             await GereEstadoAsync(Estado);
+            GestorTema.AplicarEstilos(this);
+
         }
 
         protected override void OnHandleDestroyed(EventArgs e)
@@ -134,19 +137,19 @@ namespace PEPIDI.UCs.UcsSecundarios
 
         private async Task GereEstadoAsync(string estado)
         {
-            label1.Text = (estado == "Aprovado") ? "Selecionar" : "Quantidade";
+            lblDGVQuant1.Text = (estado == "Aprovado") ? "Selecionar" : "Quantidade";
 
             if (estado == "Pendente")
             {
                 btnAprovar.Text = "Aprovar";
                 btnReprovar.Enabled = true;
-                lblQuantDisp.Text = "Quant. Disp";
+                lblDGVQuantDisp.Text = "Quant. Disp";
             }
             else if (estado == "Aprovado")
             {
                 btnAprovar.Text = "Finalizar";
                 btnReprovar.Enabled = false;
-                lblQuantDisp.Text = "Quantidade";
+                lblDGVQuantDisp.Text = "Quantidade";
             }
             else
             {

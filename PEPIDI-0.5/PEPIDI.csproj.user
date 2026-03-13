@@ -73,9 +73,6 @@
     <Compile Update="UCs\DGVS\CabecalhoPedido.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="UCs\AddStock.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Update="UCs\UcsSecundarios\Artigo.cs">
       <SubType>UserControl</SubType>
     </Compile>

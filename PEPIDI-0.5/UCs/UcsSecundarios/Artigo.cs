@@ -31,6 +31,7 @@ namespace PEPIDI.UCs.UcsSecundarios
         private void Artigo_Load(object sender, EventArgs e)
         {
             GereEstado(estado);
+            GestorTema.AplicarEstilos(this);
         }
 
         private async void GereEstado(string estado)

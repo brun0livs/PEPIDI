@@ -42,6 +42,7 @@ namespace PEPIDI.UCs
                 btnImportarEPI.Visible = true;
                 btnImportarEPI.Enabled = true;
             }
+            TouchScrollHelper.AtivarScrollPorArrasto(dgvStock);
         }
 
         // 2. MÉTODO PARA ALIMENTAR A DATA GRID VIEW
