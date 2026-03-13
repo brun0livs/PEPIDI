@@ -35,7 +35,7 @@ namespace PEPIDI.UCs
         {
             dgv.AutoGenerateColumns = false;
 
-            string query = @"SELECT [ID], [Nome], [PodeVerStock], [PodeCriarStock],
+            string query = @"SELECT [ID], [Nome], [PodeVerStock], [PodeInserirStock], [PodeCriarStock],
                                     [PodeEditarFunc], [PodeSubmeter], [PodeAprovar], [PodeEntregar],
                                     [PodeCriarFuncoes], [PodeAlterarDefinicoes], [CorHex] FROM Funcoes";
 
