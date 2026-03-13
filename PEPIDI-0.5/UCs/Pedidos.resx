@@ -150,15 +150,4 @@
   <metadata name="Check.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="btnRelatorio.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABGdBTUEAALGPC/xhBQAAAQ5JREFUaEPt
-        2cENgkAQhWGa8G5nNqF1UIIlWJAmtsGJZybZ0XV0YIGwDMn7EhLjhN35r9o0REREQQFoATzT09r5bgC4
-        4uNq57vBkGgYEg1DomFINAyJZnchAI72O1ES4r1bHYAuLfqz0FiIvJNmnZ1VBaDPFhVfMUMhWYTq83lV
-        AA5mGfGO8UL+RIjD++AtDMX8CwkZobwYGxI6QjkxN+ezihWhnBhPzAhVGBM7Qo3EbBORfspRJzv3ODHF
-        EXJX9t7TziebGyJMTHGECBUiUsykCBEuZC6GeBiy0Boh9+xA+XVdLqjxyF3qbveaDMA5O3ArZ7vXLPbU
-        2uw+iwC4AHhkf9ys/chdF7sHERHRGl4W+3zYw++3NQAAAABJRU5ErkJggg==
-</value>
-  </data>
 </root>

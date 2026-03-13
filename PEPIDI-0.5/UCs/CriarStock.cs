@@ -3,6 +3,7 @@ using PEPIDI.Organizers;
 using PEPIDI.UCs.UcsSecundarios; // Garante que o namespace da UC Artigo está aqui
 using PEPIDI.Utils;
 using System.Data;
+using System.Runtime.InteropServices;
 
 
 namespace PEPIDI.UCs
@@ -11,12 +12,18 @@ namespace PEPIDI.UCs
     {
         EfeitoUI M = new();
 
-        private bool BtnNovo;
+        private bool BtnCriar;
+        int Gestor;
 
-        public CriarStock(bool _BtnNovo)
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
+        private const int WM_SETREDRAW = 11;
+
+        public CriarStock(int _Gestor, bool _BtnNovo)
         {
             InitializeComponent();
-            BtnNovo = _BtnNovo;
+            BtnCriar = _BtnNovo;
+            Gestor = _Gestor;
         }
 
         // 1. CARREGAMENTO DA DGV NO LOAD
@@ -28,9 +35,12 @@ namespace PEPIDI.UCs
 
             // Aplica os estilos (fontes, cores) definidos no teu GestorTema
             GestorTema.AplicarEstilos(this);
-            if (BtnNovo)
+            if (BtnCriar)
             {
-                M.AbrirMensagem("Botão liga!", "Sucesso");
+                btnCriarEPI.Visible = true;
+                btnCriarEPI.Enabled = true;
+                btnImportarEPI.Visible = true;
+                btnImportarEPI.Enabled = true;
             }
         }
 
@@ -65,27 +75,90 @@ namespace PEPIDI.UCs
         // 3. EVENTO CELLCLICK QUE ENVIA O ID PARA A UC ARTIGO
         private void dgvStock_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            string estado = "Editar";
             // Verifica se clicaste numa linha (e não no cabeçalho)
             if (e.RowIndex >= 0)
             {
-                // Obtém o ID da linha selecionada
-                int idSelecionado = Convert.ToInt32(dgvStock.Rows[e.RowIndex].Cells["ID"].Value);
+                int id = Convert.ToInt16(dgvStock.Rows[e.RowIndex].Cells["ID"].Value);
+                AbrirControl(new Artigo(estado, id, Gestor));
+            }
+        }
 
-                // Procura se a UC Artigo já existe dentro do pnlDetails
-                var ucArtigo = pnlDetails.Controls.OfType<Artigo>().FirstOrDefault();
+        public void AbrirControl(UserControl control)
+        {
+            // 1. Para o desenho do painel (evita o lag visual)
+            SendMessage(pnlDetails.Handle, WM_SETREDRAW, false, 0);
 
-                if (ucArtigo == null)
+            // 2. Antes de limpar, é boa prática fazer Dispose para libertar memória
+            foreach (Control c in pnlDetails.Controls)
+            {
+                c.Dispose();
+            }
+            pnlDetails.Controls.Clear();
+
+            // ============================================================
+            // 3. SE O CONTROLO FOR DO TIPO "Artigo", SUBSCREVEMOS O EVENTO
+            // ============================================================
+            if (control is Artigo ucArtigo)
+            {
+                ucArtigo.ArtigoGuardado += (s, args) =>
                 {
-                    // Se não existe, cria a instância e adiciona ao painel
-                    ucArtigo = new Artigo();
-                    ucArtigo.Dock = DockStyle.Fill;
-                    pnlDetails.Controls.Clear();
-                    pnlDetails.Controls.Add(ucArtigo);
+                    // Substitui pela tua query real de listagem
+                    string sqlRefresh = "SELECT ID, Modelo, Familia, Tamanho, Quantidade FROM EPI";
+                    PreencherTabela(sqlRefresh);
+                };
+            }
+
+            // 4. Configurar e adicionar o novo controlo
+            control.Dock = DockStyle.Fill;
+            pnlDetails.Controls.Add(control);
+
+            // 5. Retoma o desenho
+            SendMessage(pnlDetails.Handle, WM_SETREDRAW, true, 0);
+            pnlDetails.Refresh();
+        }
+
+        private void btnImportarEPI_Click(object sender, EventArgs e)
+        {
+            // 1. Identificar o Form principal (Pai) para a sombra ocupar o ecrã todo
+            Form pai = this.FindForm();
+
+            using (Form overlay = new Form())
+            {
+                // Configurações da Sombra
+                overlay.StartPosition = FormStartPosition.Manual;
+                overlay.FormBorderStyle = FormBorderStyle.None;
+                overlay.Opacity = 0.50d;
+                overlay.BackColor = Color.Black;
+                overlay.ShowInTaskbar = false;
+
+                if (pai != null)
+                {
+                    overlay.Location = pai.Location;
+                    overlay.Size = pai.Size;
+                    overlay.Show(pai); // Mostra a sombra por cima do Form principal
                 }
 
-                // Chama o método público da UC Artigo para carregar os dados
-                ucArtigo.CarregarDadosParaEdicao(idSelecionado);
+                // 2. Abrir o Form de Importação
+                // Nota: Verifica se o caminho/nome do Form está correto no teu projeto
+                using (FormsSecundarios.FormImportarStock frm = new FormsSecundarios.FormImportarStock())
+                {
+                    frm.ShowDialog(overlay); // Abre o form centralizado na sombra
+                }
+
+                // 3. Fechar a sombra e atualizar a tabela caso tenham sido importados dados novos
+                overlay.Close();
+
+                // Atualiza a DGV para mostrar o que foi importado
+                string sql = "SELECT ID, Modelo, Familia, Tamanho, Quantidade FROM EPI";
+                PreencherTabela(sql);
             }
+        }
+
+        private void btnCriarEPI_Click(object sender, EventArgs e)
+        {
+            // "Criar" é o estado, 0 é o ID (novo), Gestor é a variável global que já tens na UC
+            AbrirControl(new Artigo("Criar", 0, Gestor));
         }
     }
 }

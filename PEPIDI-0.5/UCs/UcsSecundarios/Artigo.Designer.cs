@@ -62,7 +62,7 @@
             cmbFamilia = new Guna.UI2.WinForms.Guna2ComboBox();
             tableLayoutPanel1 = new TableLayoutPanel();
             lblTituloCima = new Label();
-            label1 = new Label();
+            lblClose = new Label();
             Tabela.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
             tableLayoutPanel5.SuspendLayout();
@@ -88,7 +88,6 @@
             Tabela.ShadowDecoration.CustomizableEdges = customizableEdges16;
             Tabela.Size = new Size(679, 694);
             Tabela.TabIndex = 6;
-            Tabela.Visible = false;
             // 
             // tableLayoutPanel3
             // 
@@ -216,6 +215,7 @@
             btnGuardar.Size = new Size(320, 50);
             btnGuardar.TabIndex = 35;
             btnGuardar.Text = "Guardar";
+            btnGuardar.Click += btnGuardar_Click;
             // 
             // btnCancelar
             // 
@@ -233,6 +233,7 @@
             btnCancelar.Size = new Size(319, 50);
             btnCancelar.TabIndex = 34;
             btnCancelar.Text = "Cancelar";
+            btnCancelar.Click += btnCancelar_Click;
             // 
             // flpFuncoes
             // 
@@ -269,7 +270,6 @@
             txtNovoModeloEPI.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
             txtNovoModeloEPI.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
             txtNovoModeloEPI.Dock = DockStyle.Fill;
-            txtNovoModeloEPI.Enabled = false;
             txtNovoModeloEPI.FocusedState.BorderColor = Color.FromArgb(242, 103, 34);
             txtNovoModeloEPI.Font = new Font("Roboto", 11F);
             txtNovoModeloEPI.ForeColor = Color.FromArgb(64, 64, 64);
@@ -363,7 +363,7 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 75F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12.5F));
             tableLayoutPanel1.Controls.Add(lblTituloCima, 1, 0);
-            tableLayoutPanel1.Controls.Add(label1, 2, 0);
+            tableLayoutPanel1.Controls.Add(lblClose, 2, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(0);
@@ -387,15 +387,16 @@
             lblTituloCima.Text = "EPI";
             lblTituloCima.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // label1
+            // lblClose
             // 
-            label1.AutoSize = true;
-            label1.Dock = DockStyle.Fill;
-            label1.Image = (Image)resources.GetObject("label1.Image");
-            label1.Location = new Point(596, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(80, 52);
-            label1.TabIndex = 22;
+            lblClose.AutoSize = true;
+            lblClose.Dock = DockStyle.Fill;
+            lblClose.Image = (Image)resources.GetObject("lblClose.Image");
+            lblClose.Location = new Point(596, 0);
+            lblClose.Name = "lblClose";
+            lblClose.Size = new Size(80, 52);
+            lblClose.TabIndex = 22;
+            lblClose.Click += btnCancelar_Click;
             // 
             // Artigo
             // 
@@ -436,6 +437,6 @@
         private Guna.UI2.WinForms.Guna2ComboBox cmbFamilia;
         private TableLayoutPanel tableLayoutPanel1;
         private Label lblTituloCima;
-        private Label label1;
+        private Label lblClose;
     }
 }

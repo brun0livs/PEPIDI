@@ -21,15 +21,23 @@
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CriarStock));
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
             dgvStock = new PEPIDI.Models.PEPIDIDataGridView();
             lblTituloCriarEPI = new Label();
             tableLayoutPanel1 = new TableLayoutPanel();
             pnlDetails = new Panel();
             tableLayoutPanel2 = new TableLayoutPanel();
+            btnImportarEPI = new Guna.UI2.WinForms.Guna2Button();
+            btnCriarEPI = new Guna.UI2.WinForms.Guna2Button();
             guna2Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvStock).BeginInit();
             tableLayoutPanel1.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
             SuspendLayout();
             // 
             // guna2Panel1
@@ -88,6 +96,7 @@
             dgvStock.Margin = new Padding(13, 13, 13, 0);
             dgvStock.MultiSelect = false;
             dgvStock.Name = "dgvStock";
+            dgvStock.ReadOnly = true;
             dgvStock.RowHeadersVisible = false;
             dataGridViewCellStyle4.BackColor = Color.Transparent;
             dgvStock.RowsDefaultCellStyle = dataGridViewCellStyle4;
@@ -143,6 +152,8 @@
             tableLayoutPanel2.ColumnCount = 2;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.Controls.Add(btnImportarEPI, 1, 0);
+            tableLayoutPanel2.Controls.Add(btnCriarEPI, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(918, 0);
             tableLayoutPanel2.Margin = new Padding(0);
@@ -151,6 +162,55 @@
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.Size = new Size(919, 60);
             tableLayoutPanel2.TabIndex = 8;
+            // 
+            // btnImportarEPI
+            // 
+            btnImportarEPI.BorderRadius = 10;
+            btnImportarEPI.CustomImages.ImageAlign = HorizontalAlignment.Left;
+            btnImportarEPI.CustomizableEdges = customizableEdges3;
+            btnImportarEPI.DisabledState.BorderColor = Color.DarkGray;
+            btnImportarEPI.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnImportarEPI.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnImportarEPI.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnImportarEPI.Dock = DockStyle.Fill;
+            btnImportarEPI.Enabled = false;
+            btnImportarEPI.FillColor = Color.FromArgb(243, 108, 33);
+            btnImportarEPI.Font = new Font("Roboto", 15F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnImportarEPI.ForeColor = Color.White;
+            btnImportarEPI.Image = (Image)resources.GetObject("btnImportarEPI.Image");
+            btnImportarEPI.Location = new Point(469, 12);
+            btnImportarEPI.Margin = new Padding(10, 12, 10, 12);
+            btnImportarEPI.Name = "btnImportarEPI";
+            btnImportarEPI.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            btnImportarEPI.Size = new Size(440, 36);
+            btnImportarEPI.TabIndex = 12;
+            btnImportarEPI.Text = "Importar";
+            btnImportarEPI.Visible = false;
+            btnImportarEPI.Click += btnImportarEPI_Click;
+            // 
+            // btnCriarEPI
+            // 
+            btnCriarEPI.BorderRadius = 10;
+            btnCriarEPI.CustomImages.ImageAlign = HorizontalAlignment.Left;
+            btnCriarEPI.CustomizableEdges = customizableEdges5;
+            btnCriarEPI.DisabledState.BorderColor = Color.DarkGray;
+            btnCriarEPI.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnCriarEPI.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnCriarEPI.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnCriarEPI.Dock = DockStyle.Fill;
+            btnCriarEPI.Enabled = false;
+            btnCriarEPI.FillColor = Color.FromArgb(243, 108, 33);
+            btnCriarEPI.Font = new Font("Roboto", 15F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnCriarEPI.ForeColor = Color.White;
+            btnCriarEPI.Location = new Point(10, 12);
+            btnCriarEPI.Margin = new Padding(10, 12, 10, 12);
+            btnCriarEPI.Name = "btnCriarEPI";
+            btnCriarEPI.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            btnCriarEPI.Size = new Size(439, 36);
+            btnCriarEPI.TabIndex = 11;
+            btnCriarEPI.Text = "Adicionar Novo Artigo";
+            btnCriarEPI.Visible = false;
+            btnCriarEPI.Click += btnCriarEPI_Click;
             // 
             // CriarStock
             // 
@@ -166,6 +226,7 @@
             ((System.ComponentModel.ISupportInitialize)dgvStock).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
+            tableLayoutPanel2.ResumeLayout(false);
             ResumeLayout(false);
 
         }
@@ -176,5 +237,7 @@
         private Models.PEPIDIDataGridView dgvStock;
         private Panel pnlDetails;
         private TableLayoutPanel tableLayoutPanel2;
+        private Guna.UI2.WinForms.Guna2Button btnImportarEPI;
+        private Guna.UI2.WinForms.Guna2Button btnCriarEPI;
     }
 }

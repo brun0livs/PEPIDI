@@ -33,7 +33,6 @@
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Pedidos));
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             tableLayoutPanel1 = new TableLayoutPanel();
             pnlDetails = new Panel();
@@ -264,7 +263,7 @@
             btnRelatorio.FillColor = Color.FromArgb(243, 108, 33);
             btnRelatorio.Font = new Font("Roboto", 15F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnRelatorio.ForeColor = Color.White;
-            btnRelatorio.Image = (Image)resources.GetObject("btnRelatorio.Image");
+            btnRelatorio.Image = Properties.Resources.export;
             btnRelatorio.Location = new Point(924, 12);
             btnRelatorio.Margin = new Padding(10, 12, 10, 12);
             btnRelatorio.Name = "btnRelatorio";

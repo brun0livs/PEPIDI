@@ -221,7 +221,7 @@ namespace PEPIDI
                     "pedidos pendentes" => new UCs.Pedidos(IDGestor, "Pendente"),
                     "pedidos aprovados" => new UCs.Pedidos(IDGestor, "Aprovado"),
                     "historico" or "histórico" => new UCs.Pedidos(IDGestor, "Finalizado"),
-                    "gestao" or "gestão"=> new UCs.CriarStock(permissoes.PodeCriarStock),
+                    "gestao" or "gestão"=> new UCs.CriarStock(IDGestor, permissoes.PodeCriarStock),
                     "funções" or "funcoes" => new UCs.Funcoes(IDGestor),
                     "definições" => new UCs.Definicoes(IDGestor),
                     _ => null
