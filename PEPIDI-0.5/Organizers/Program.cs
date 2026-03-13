@@ -65,10 +65,10 @@ namespace PEPIDI.Organizers
             GetConn.ConnectionString = connString;
 
             // 3. ARRANCAR O PROGRAMA
-            int nr = 1077;
-            Application.Run(new FormGestao(nr, PermissoesPerfil.VerPermissoes(nr)));
+            //int nr = 1077;
+            //Application.Run(new FormGestao(nr, PermissoesPerfil.VerPermissoes(nr)));
             //Application.Run(new FrmConsumosDetalhados(1016));
-            //Application.Run(new FrmLogIn());
+            Application.Run(new FrmLogIn());
             //Application.Run(new Finalizacao(24, 666));
             //Application.Run(new FrmCv());
         }
