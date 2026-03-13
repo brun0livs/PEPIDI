@@ -1,5 +1,6 @@
 using PEPIDI;
 using PEPIDI.Organizers;
+using PEPIDI.Utils;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Diagnostics;
@@ -14,6 +15,7 @@ namespace PEPIDI
         public FrmLogIn()
         {
             InitializeComponent();
+            GestorTema.AplicarEstilos(this);
         }
 
         private void BtnLogIn_Click(object sender, EventArgs e)

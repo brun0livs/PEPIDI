@@ -1,6 +1,7 @@
 ﻿using Guna.UI2.WinForms;
 using PEPIDI.Models; // Assume que a GetConn está aqui
 using PEPIDI.Organizers;
+using PEPIDI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -28,6 +29,7 @@ namespace PEPIDI.FormsSecundarios
         {
             CarregarVisoes();
             await CarregarFiltrosAsync();
+            GestorTema.AplicarEstilos(this);
         }
 
         private void lblFechar_Click(object sender, EventArgs e)

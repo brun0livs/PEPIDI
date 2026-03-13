@@ -210,6 +210,7 @@
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             tableLayoutPanel3.ResumeLayout(false);
+            this.Load += MSGBX_Load;
             ResumeLayout(false);
         }
 

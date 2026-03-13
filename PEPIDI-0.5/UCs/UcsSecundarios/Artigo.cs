@@ -1,5 +1,8 @@
 ﻿using Guna.UI2.WinForms;
+using Microsoft.Data.SqlClient;
+using PEPIDI.FormsSecundarios;
 using PEPIDI.Organizers;
+using PEPIDI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,8 +10,6 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Data.SqlClient;
-using PEPIDI.Utils;
 
 namespace PEPIDI.UCs.UcsSecundarios
 {
@@ -43,6 +44,7 @@ namespace PEPIDI.UCs.UcsSecundarios
             switch (estado)
             {
                 case "Criar":
+                    lblTituloCima.Text = "Criar Novo EPI";
                     cmbFamilia.SelectedIndex = 0;
                     txtQuantidadeEPI.Clear();
                     cmbFamilia.Enabled = true;
@@ -67,6 +69,8 @@ namespace PEPIDI.UCs.UcsSecundarios
 
                 case "Editar":
                     await CarregarDadosArtigoAsync(id);
+
+                    lblTituloCima.Text = "Editar EPI";
 
                     // BLOQUEIO DOS CAMPOS (Apenas quantidade e funções editáveis)
                     cmbFamilia.Enabled = false;
@@ -322,10 +326,12 @@ namespace PEPIDI.UCs.UcsSecundarios
             CarregarTamanhos(fam);
             cmbModelo.Enabled = true;
 
-            Task.Run(async () => {
+            Task.Run(async () =>
+            {
                 DataTable dt = ObterTabelaModelos(fam);
 
-                this.Invoke(new MethodInvoker(() => {
+                this.Invoke(new MethodInvoker(() =>
+                {
                     // ADICIONA ESTAS DUAS LINHAS AQUI:
                     cmbModelo.DisplayMember = "Modelo";
                     cmbModelo.ValueMember = "Modelo";
@@ -509,6 +515,21 @@ namespace PEPIDI.UCs.UcsSecundarios
                 }
 
                 return novoID;
+            }
+        }
+
+        private void btnEliminar_Click(object sender, EventArgs e)
+        {
+            using (MSGBX m = new MSGBX("Deseja mesmo eliminar este EPI?", "Eliminar EPI"))
+            {
+                if (m.ShowDialog() == DialogResult.Yes)
+                {
+                    // EXECUTA O SQL DE GUARDAR
+                }
+                else
+                {
+                    // UTILIZADOR CANCELOU
+                }
             }
         }
     }

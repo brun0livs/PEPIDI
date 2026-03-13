@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using PEPIDI.Utils;
 
 namespace PEPIDI.FormsSecundarios
 {
@@ -15,15 +7,57 @@ namespace PEPIDI.FormsSecundarios
         public MSGBX(string _Message, string _Titulo)
         {
             InitializeComponent();
+            GestorTema.AplicarEstilos(this);
             lblMessage.Text = _Message;
             lblTitulo.Text = "PEPIDI | " + _Titulo;
-            this.CancelButton = btnOK; // Permite fechar a caixa de mensagem com a tecla ESC
-            this.AcceptButton = btnOK; // Permite fechar a caixa de mensagem com a tecla ENTER
+
+            // Configuração padrão: Apenas OK visível
+            this.AcceptButton = btnOK;
+            this.CancelButton = btnOK;
+        }
+
+        private void MSGBX_Load(object sender, EventArgs e)
+        {
+            Gere(lblMessage);
+        }
+
+        private void Gere(Label lbl)
+        {
+            // Verifica se a mensagem contém "Deseja" ou "?" para agir como pergunta
+            if (lbl.Text.Contains("Deseja") || lbl.Text.Contains("?"))
+            {
+                // Configura o botão principal como SIM
+                btnOK.Text = "Sim";
+                this.DialogResult = DialogResult.None; // Reset para não fechar logo
+
+                // Ativa o botão de Cancelar (tens de ter um btnCancelar no Designer)
+                if (btnCancelar != null)
+                {
+                    btnCancelar.Visible = true;
+                    btnCancelar.Enabled = true;
+                    btnCancelar.Text = "Cancelar";
+                    this.CancelButton = btnCancelar; // Agora o ESC faz "Não"
+                    this.AcceptButton = btnOK;       // O ENTER faz "Sim"
+                }
+            }
+            else
+            {
+                // Modo Aviso normal
+                btnOK.Text = "OK";
+                if (btnCancelar != null) btnCancelar.Visible = false;
+                this.CancelButton = btnOK;
+            }
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
+            this.DialogResult = DialogResult.Yes; // Se clicou em "Sim/OK"
+            this.Close();
+        }
+
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.No; // Se clicou em "Não"
             this.Close();
         }
     }
