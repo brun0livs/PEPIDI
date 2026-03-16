@@ -106,6 +106,7 @@
             dgvStock.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvStock.Size = new Size(1811, 785);
             dgvStock.TabIndex = 2;
+            dgvStock.CellFormatting += dgvStock_CellFormatting;
             // 
             // tableLayoutPanel2
             // 

@@ -19,6 +19,7 @@ namespace PEPIDI.UCs
         private DataTable _dtQueries;
         private PermissoesPerfil permissoes;
         EfeitoUI M = new EfeitoUI();
+        private Font fonteNegrito = new Font("Roboto", 11.25F, FontStyle.Bold);
 
         public Stock(PermissoesPerfil _permissoes)
         {
@@ -43,7 +44,8 @@ namespace PEPIDI.UCs
                 DataTable dtTemp = new DataTable();
 
                 // 1. Busca os dados em background (SQL fora da UI Thread)
-                await Task.Run(() => {
+                await Task.Run(() =>
+                {
                     using (var con = new SqlConnection(_cs))
                     using (var cmd = new SqlCommand(@"SELECT ID, Nome, [Query] FROM dbo.[Query] ORDER BY Nome;", con))
                     using (var da = new SqlDataAdapter(cmd))
@@ -108,7 +110,7 @@ namespace PEPIDI.UCs
             if (sql == "ACTION_GERIR")
             {
                 // 1. Descobrir quem é o "Pai" (O Form principal que está aberto)
-                Form pai = this.FindForm(); 
+                Form pai = this.FindForm();
 
                 // 2. Criar a Sombra (Overlay)
                 using (Form overlay = new Form())
@@ -136,7 +138,7 @@ namespace PEPIDI.UCs
                     using (PEPIDI.FormsSecundarios.FormGestaoDeFiltros frm = new PEPIDI.FormsSecundarios.FormGestaoDeFiltros())
                     {
                         // Passamos o 'overlay' para o ShowDialog, para ele saber que tem de ficar colado à sombra
-                        frm.ShowDialog(overlay); 
+                        frm.ShowDialog(overlay);
                     }
 
                     // 4. Fechar a sombra logo a seguir ao FormGestaoDeFiltros ser fechado
@@ -147,7 +149,7 @@ namespace PEPIDI.UCs
                 CarregarCombo();
 
                 // 6. Abortar a missão para não tentar enviar o "ACTION_GERIR" para a grelha
-                return; 
+                return;
             }
 
             // Se for uma Query normal, aplica na grelha!
@@ -171,11 +173,11 @@ namespace PEPIDI.UCs
                     // CONFIGURAÇÃO DA COR (ADICIONA ISTO AQUI)
                     // ============================================
 
-                    // 1. Configura a coluna que tem o Texto (ex: "Armazém")
-                    dgvStock.BadgeColumnName = "Departamento";
+                    //// 1. Configura a coluna que tem o Texto (ex: "Armazém")
+                    //dgvStock.BadgeColumnName = "Departamento";
 
-                    // 2. Configura a coluna que tem a Cor (ex: "#FF0000")
-                    dgvStock.BadgeColorColumnName = "CorHex";
+                    //// 2. Configura a coluna que tem a Cor (ex: "#FF0000")
+                    //dgvStock.BadgeColorColumnName = "CorHex";
 
                     // 3. Esconde a coluna da cor para não ficar feio na tabela
                     if (dgvStock.Columns.Contains("CorHex"))
@@ -194,6 +196,50 @@ namespace PEPIDI.UCs
             catch (Exception ex)
             {
                 M.AbrirMensagem("Erro ao aplicar visão: " + Environment.NewLine + ex.Message, "Erro");
+            }
+        }
+
+        private void dgvStock_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dgvStock.Columns[e.ColumnIndex].Name == "Departamento" && e.Value != null)
+            {
+                string textoCompleto = e.Value.ToString().Trim();
+
+                // Determinar a Cor e o Texto
+                Color corFinal;
+                string textoFinal = textoCompleto;
+
+                if (textoCompleto.Contains(",") || textoCompleto.Length > 13)
+                {
+                    textoFinal = "Vários";
+                    corFinal = ColorTranslator.FromHtml("#F26722"); // Laranja Diatosta
+                    dgvStock.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = textoCompleto;
+                }
+                else
+                {
+                    // Tenta obter a cor da coluna CorHex
+                    if (dgvStock.Rows[e.RowIndex].Cells["CorHex"].Value != DBNull.Value)
+                    {
+                        corFinal = ColorTranslator.FromHtml(dgvStock.Rows[e.RowIndex].Cells["CorHex"].Value.ToString());
+                    }
+                    else
+                    {
+                        corFinal = Color.Gray; // Cor de fallback
+                    }
+                }
+
+                // APLICAR AO ESTILO
+                e.Value = textoFinal;
+                e.FormattingApplied = true;
+
+                e.CellStyle.BackColor = corFinal;
+                e.CellStyle.ForeColor = Color.White;
+                e.CellStyle.SelectionBackColor = corFinal;
+                e.CellStyle.SelectionForeColor = Color.White;
+
+                // Alinhamento e Fonte
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                e.CellStyle.Font = new Font(dgvStock.Font, FontStyle.Bold);
             }
         }
     }

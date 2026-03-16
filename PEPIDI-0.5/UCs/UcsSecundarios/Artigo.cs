@@ -55,6 +55,9 @@ namespace PEPIDI.UCs.UcsSecundarios
                     cmbModelo.FillColor = Color.White;
                     cmbTamanho.FillColor = Color.White;
 
+                    btnEliminar.Visible = false;
+                    btnEliminar.Enabled = false;
+
                     // LIMPAR AS TAGS (FUNÇÕES)
                     foreach (Control c in flpFuncoes.Controls)
                     {
@@ -520,15 +523,44 @@ namespace PEPIDI.UCs.UcsSecundarios
 
         private void btnEliminar_Click(object sender, EventArgs e)
         {
+            // Usa a tua MSGBX personalizada que configurámos para o "Sim/Não"
             using (MSGBX m = new MSGBX("Deseja mesmo eliminar este EPI?", "Eliminar EPI"))
             {
                 if (m.ShowDialog() == DialogResult.Yes)
                 {
-                    // EXECUTA O SQL DE GUARDAR
-                }
-                else
-                {
-                    // UTILIZADOR CANCELOU
+                    try
+                    {
+                        using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+                        {
+                            conn.Open();
+
+                            // USAR PARÂMETROS para ser mais seguro e profissional
+                            string sql = "DELETE FROM EPI WHERE ID = @id";
+
+                            using (SqlCommand elimina = new SqlCommand(sql, conn))
+                            {
+                                elimina.Parameters.AddWithValue("@id", id);
+
+                                // O "ENTER" NO CORREIO: Executa o comando na BD
+                                int linhasAfetadas = elimina.ExecuteNonQuery();
+
+                                if (linhasAfetadas > 0)
+                                {
+                                    M.AbrirMensagem("Artigo eliminado com sucesso!", "Sucesso");
+
+                                    // DISPARAR O EVENTO PARA O PAI ATUALIZAR A TABELA
+                                    ArtigoGuardado?.Invoke(this, EventArgs.Empty);
+
+                                    // FECHAR A UC DE EDIÇÃO
+                                    btnCancelar_Click(null, null);
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        M.AbrirMensagem("Erro ao eliminar: " + ex.Message, "Erro SQL");
+                    }
                 }
             }
         }
