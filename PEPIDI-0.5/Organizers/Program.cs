@@ -1,10 +1,4 @@
-using Microsoft.VisualBasic.Logging;
-using PEPIDI;
-using PEPIDI.Organizers;
 using PEPIDI.Utils;
-using System;
-using System.IO;
-using System.Windows.Forms;
 
 namespace PEPIDI.Organizers
 {
@@ -13,6 +7,7 @@ namespace PEPIDI.Organizers
         [STAThread]
         static void Main()
         {
+            EfeitoUI M = new();
             // 1. Inicializações de Sistema
             ApplicationConfiguration.Initialize();
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
@@ -68,7 +63,6 @@ namespace PEPIDI.Organizers
                 }
                 else
                 {
-                    EfeitoUI M = new EfeitoUI();
                     M.AbrirMensagem($"Configuração do modo {modoBDAtivo} cancelada.\nA encerrar...", "Erro");
                     return;
                 }
@@ -76,10 +70,6 @@ namespace PEPIDI.Organizers
 
             // 5. ATRIBUIR A CONEXÃO À CLASSE GLOBAL
             GetConn.ConnectionString = connString;
-
-            // 6. ARRANCAR O PROGRAMA
-            // Mantive o teu utilizador 1077 por defeito
-            int nr = 1077;
             //Application.Run(new FormGestao(nr, PermissoesPerfil.VerPermissoes(nr)));
             Application.Run(new FrmLogIn());
         }
