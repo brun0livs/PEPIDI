@@ -8,6 +8,7 @@ namespace PEPIDI.UCs
     {
         int IDGestor;
         bool aCarregar = true; // <-- O nosso travão de segurança!
+        EfeitoUI M = new ();
 
         public Definicoes(int _IDGestor)
         {
@@ -43,6 +44,17 @@ namespace PEPIDI.UCs
 
             // 4. Tirar o travão de segurança agora que tudo está carregado
             aCarregar = false;
+
+            // 5. Verificar o que está na memória ("Teste" ou "Real")
+            string modoAtual = Properties.Settings.Default.ModoBD;
+
+            // 6. Colocar o Switch na posição correta SEM disparar o evento de mensagem
+            // Desativamos o evento temporariamente para não abrir a MessageBox ao carregar o ecrã
+            switchBD.CheckedChanged -= switchBD_CheckedChanged;
+
+            switchBD.Checked = (modoAtual == "Real");
+
+            switchBD.CheckedChanged += switchBD_CheckedChanged;
         }
 
         private void cmbDisplay_SelectedIndexChanged(object sender, EventArgs e)
@@ -81,6 +93,31 @@ namespace PEPIDI.UCs
                 // Se ele cancelar, voltamos a meter o travão e revertemos a ComboBox para o que estava guardado
                 aCarregar = true;
                 Definicoes_Load(null, null); // Re-executa o Load para meter o valor antigo
+            }
+        }
+
+        private void switchBD_CheckedChanged(object sender, EventArgs e)
+        {
+            // False = Teste (Local)
+            // True = Real (Azure)
+            string novoModo = switchBD.Checked ? "Real" : "Teste";
+
+            // 1. Grava a preferência nas Settings do projeto
+            Properties.Settings.Default.ModoBD = novoModo;
+            Properties.Settings.Default.Save();
+
+            // 2. Feedback visual para o utilizador
+            if (switchBD.Checked)
+            {
+                M.AbrirMensagem("Modo REAL (Azure) selecionado.\n\n" +
+                               "Atenção: A aplicação precisa de ser reiniciada para estabelecer a ligação à Nuvem.",
+                               "Alteração de Servidor");
+            }
+            else
+            {
+                M.AbrirMensagem("Modo TESTE (Local) selecionado.\n\n" +
+                               "A aplicação precisa de ser reiniciada para ligar ao servidor local.",
+                               "Alteração de Servidor");
             }
         }
     }

@@ -2,6 +2,9 @@ using Microsoft.VisualBasic.Logging;
 using PEPIDI;
 using PEPIDI.Organizers;
 using PEPIDI.Utils;
+using System;
+using System.IO;
+using System.Windows.Forms;
 
 namespace PEPIDI.Organizers
 {
@@ -10,67 +13,75 @@ namespace PEPIDI.Organizers
         [STAThread]
         static void Main()
         {
+            // 1. Inicializações de Sistema
             ApplicationConfiguration.Initialize();
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+            System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.High;
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
-            // 1. IR BUSCAR A MEMÓRIA ÀS SETTINGS
-            string memoria = Properties.Settings.Default.ModoEcraGuardado;
-
-            // 2. TRADUZIR A STRING DA MEMÓRIA PARA O NOSSO ENUM
-            // O TryParse tenta ler o texto (ex: "Surface") e converter para o TipoEcra.Surface
-            if (Enum.TryParse(memoria, out TipoEcra modoLido))
+            // 2. CARREGAR PREFERÊNCIAS DE ECRÃ
+            string memoriaEcra = Properties.Settings.Default.ModoEcraGuardado;
+            if (Enum.TryParse(memoriaEcra, out TipoEcra modoLido))
             {
                 GestorTema.ModoAtual = modoLido;
             }
             else
             {
-                // Se der erro ou a memória estiver corrompida, arranca em modo seguro
-                GestorTema.ModoAtual = TipoEcra.MonitorFullHD;
+                GestorTema.ModoAtual = TipoEcra.MonitorFullHD; // Fallback seguro
             }
 
-            // Coloca logo no início do arranque da aplicação
-            System.Diagnostics.Process.GetCurrentProcess().PriorityClass = System.Diagnostics.ProcessPriorityClass.High;
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            // 3. LÓGICA DE SELEÇÃO DA BASE DE DADOS (TESTE vs REAL)
+            // Lemos a string que criaste nas Settings ("Teste" ou "Real")
+            string modoBDAtivo = Properties.Settings.Default.ModoBD;
 
             string pastaApp = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PEPIDI");
-            string caminhoBin = Path.Combine(pastaApp, "conn.bin");
 
-            // Garante que a pasta existe
+            // Se for Teste, lê o 'connteste.bin'. Se for Real (ou qualquer outra coisa), lê o 'conn.bin'
+            string nomeFicheiro = (modoBDAtivo == "Teste") ? "connteste.bin" : "conn.bin";
+            string caminhoArquivoBin = Path.Combine(pastaApp, nomeFicheiro);
+
+            // Garante que a pasta AppData\PEPIDI existe
             if (!Directory.Exists(pastaApp))
                 Directory.CreateDirectory(pastaApp);
 
             string connString = "";
 
-            if (File.Exists(caminhoBin))
+            // 4. CARREGAR OU CONFIGURAR A STRING DE CONEXÃO
+            if (File.Exists(caminhoArquivoBin))
             {
-                connString = Criptografia.DesencriptarDeFicheiro(caminhoBin);
+                // Tenta ler o ficheiro encriptado correspondente ao modo ativo
+                connString = Criptografia.DesencriptarDeFicheiro(caminhoArquivoBin);
             }
             else
             {
+                // Se o ficheiro do modo escolhido não existe, pede ao utilizador para configurar
                 using FormConfigDB frm = new();
+
+                // Personaliza o título do form para saberes o que estás a configurar
+                frm.Text = $"Configurar Conexão: MODO {modoBDAtivo.ToUpper()}";
+
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
                     connString = frm.ConnectionStringFinal;
-                    Criptografia.EncriptarParaFicheiro(connString, caminhoBin);
+                    Criptografia.EncriptarParaFicheiro(connString, caminhoArquivoBin);
                 }
                 else
                 {
                     EfeitoUI M = new EfeitoUI();
-                    M.AbrirMensagem("Configurção cancelada.\nA encerrar...", "Erro");
+                    M.AbrirMensagem($"Configuração do modo {modoBDAtivo} cancelada.\nA encerrar...", "Erro");
                     return;
                 }
             }
 
+            // 5. ATRIBUIR A CONEXÃO À CLASSE GLOBAL
             GetConn.ConnectionString = connString;
 
-            // 3. ARRANCAR O PROGRAMA
-            //int nr = 1077;
+            // 6. ARRANCAR O PROGRAMA
+            // Mantive o teu utilizador 1077 por defeito
+            int nr = 1077;
             //Application.Run(new FormGestao(nr, PermissoesPerfil.VerPermissoes(nr)));
-            //Application.Run(new FrmConsumosDetalhados(1016));
             Application.Run(new FrmLogIn());
-            //Application.Run(new Finalizacao(24, 666));
-            //Application.Run(new FrmCv());
         }
     }
 }

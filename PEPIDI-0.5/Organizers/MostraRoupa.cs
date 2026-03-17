@@ -84,7 +84,7 @@ namespace PEPIDI
                 SELECT DISTINCT E.Tamanho FROM PedidoPacote PP
                 INNER JOIN PedidoRegistos PR ON PP.IDPedReg = PR.ID
                 INNER JOIN EPI E ON PP.IDEPI = E.ID
-                WHERE PR.NrFunc = @NrFunc AND E.Modelo = @Modelo", conn))
+                WHERE PR.NrFunc = @NrFunc AND E.Modelo = @Modelo AND Ativo = '1'", conn))
             {
                 cmd.Parameters.AddWithValue("@NrFunc", nrFunc);
                 cmd.Parameters.AddWithValue("@Modelo", modelo);

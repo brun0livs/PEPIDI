@@ -55,5 +55,17 @@ namespace PEPIDI.Properties {
                 this["MenuExpandido"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Teste")]
+        public string ModoBD {
+            get {
+                return ((string)(this["ModoBD"]));
+            }
+            set {
+                this["ModoBD"] = value;
+            }
+        }
     }
 }

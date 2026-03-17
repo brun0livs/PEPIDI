@@ -18,12 +18,12 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             tlpMain = new TableLayoutPanel();
             pnlHeader = new Panel();
@@ -108,7 +108,7 @@
             lblTitulo.Margin = new Padding(4, 0, 4, 0);
             lblTitulo.Name = "lblTitulo";
             lblTitulo.Padding = new Padding(23, 0, 0, 0);
-            lblTitulo.Size = new Size(583, 69);
+            lblTitulo.Size = new Size(1030, 69);
             lblTitulo.TabIndex = 0;
             lblTitulo.Text = "IMPORTAR STOCK EM MASSA";
             lblTitulo.TextAlign = ContentAlignment.MiddleLeft;
@@ -166,23 +166,23 @@
             // 
             dgvImport.BackgroundColor = Color.White;
             dgvImport.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(240, 240, 240);
-            dataGridViewCellStyle1.Font = new Font("Roboto", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle1.ForeColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dgvImport.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.FromArgb(240, 240, 240);
+            dataGridViewCellStyle3.Font = new Font("Roboto", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            dgvImport.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dgvImport.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(254, 235, 226);
-            dataGridViewCellStyle2.SelectionForeColor = Color.FromArgb(242, 103, 34);
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            dgvImport.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Window;
+            dataGridViewCellStyle4.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle4.ForeColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle4.SelectionBackColor = Color.FromArgb(254, 235, 226);
+            dataGridViewCellStyle4.SelectionForeColor = Color.FromArgb(242, 103, 34);
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            dgvImport.DefaultCellStyle = dataGridViewCellStyle4;
             dgvImport.Dock = DockStyle.Fill;
             dgvImport.Location = new Point(23, 323);
             dgvImport.Margin = new Padding(23, 0, 23, 12);
@@ -212,7 +212,7 @@
             // 
             btnCancelar.BorderRadius = 15;
             btnCancelar.Cursor = Cursors.Hand;
-            btnCancelar.CustomizableEdges = customizableEdges1;
+            btnCancelar.CustomizableEdges = customizableEdges5;
             btnCancelar.Dock = DockStyle.Fill;
             btnCancelar.FillColor = Color.DarkGray;
             btnCancelar.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -220,7 +220,7 @@
             btnCancelar.Location = new Point(631, 6);
             btnCancelar.Margin = new Padding(12, 6, 12, 6);
             btnCancelar.Name = "btnCancelar";
-            btnCancelar.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            btnCancelar.ShadowDecoration.CustomizableEdges = customizableEdges6;
             btnCancelar.Size = new Size(209, 46);
             btnCancelar.TabIndex = 0;
             btnCancelar.Text = "Cancelar";
@@ -230,7 +230,7 @@
             // 
             btnImportar.BorderRadius = 15;
             btnImportar.Cursor = Cursors.Hand;
-            btnImportar.CustomizableEdges = customizableEdges3;
+            btnImportar.CustomizableEdges = customizableEdges7;
             btnImportar.Dock = DockStyle.Fill;
             btnImportar.FillColor = Color.FromArgb(242, 103, 34);
             btnImportar.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -238,7 +238,7 @@
             btnImportar.Location = new Point(864, 6);
             btnImportar.Margin = new Padding(12, 6, 12, 6);
             btnImportar.Name = "btnImportar";
-            btnImportar.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            btnImportar.ShadowDecoration.CustomizableEdges = customizableEdges8;
             btnImportar.Size = new Size(209, 46);
             btnImportar.TabIndex = 1;
             btnImportar.Text = "Importar Stock";

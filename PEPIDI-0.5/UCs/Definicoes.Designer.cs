@@ -28,20 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             tableLayoutPanel1 = new TableLayoutPanel();
             label1 = new Label();
+            guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pnlDefsPrev = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             tableLayoutPanel2 = new TableLayoutPanel();
             label2 = new Label();
             label3 = new Label();
             cmbDisplay = new Guna.UI2.WinForms.Guna2ComboBox();
-            guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
+            label4 = new Label();
+            switchBD = new Guna.UI2.WinForms.Guna2ToggleSwitch();
             tableLayoutPanel1.SuspendLayout();
             pnlDefsPrev.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
@@ -53,8 +57,8 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
-            tableLayoutPanel1.Controls.Add(pnlDefsPrev, 1, 1);
             tableLayoutPanel1.Controls.Add(guna2CustomGradientPanel1, 0, 1);
+            tableLayoutPanel1.Controls.Add(pnlDefsPrev, 1, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(4);
@@ -77,6 +81,20 @@
             label1.TabIndex = 2;
             label1.Text = "DEFINIÇÕES";
             label1.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // guna2CustomGradientPanel1
+            // 
+            guna2CustomGradientPanel1.BorderColor = Color.FromArgb(242, 103, 34);
+            guna2CustomGradientPanel1.BorderRadius = 25;
+            guna2CustomGradientPanel1.BorderThickness = 1;
+            guna2CustomGradientPanel1.CustomizableEdges = customizableEdges1;
+            guna2CustomGradientPanel1.Dock = DockStyle.Fill;
+            guna2CustomGradientPanel1.Location = new Point(19, 79);
+            guna2CustomGradientPanel1.Margin = new Padding(19);
+            guna2CustomGradientPanel1.Name = "guna2CustomGradientPanel1";
+            guna2CustomGradientPanel1.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            guna2CustomGradientPanel1.Size = new Size(880, 760);
+            guna2CustomGradientPanel1.TabIndex = 0;
             // 
             // pnlDefsPrev
             // 
@@ -103,14 +121,27 @@
             tableLayoutPanel2.Controls.Add(label2, 0, 0);
             tableLayoutPanel2.Controls.Add(label3, 0, 1);
             tableLayoutPanel2.Controls.Add(cmbDisplay, 1, 1);
+            tableLayoutPanel2.Controls.Add(label4, 0, 2);
+            tableLayoutPanel2.Controls.Add(switchBD, 1, 2);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 0);
             tableLayoutPanel2.Margin = new Padding(4);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 3;
+            tableLayoutPanel2.RowCount = 14;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 86F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 9F));
             tableLayoutPanel2.Size = new Size(881, 760);
             tableLayoutPanel2.TabIndex = 0;
             // 
@@ -148,7 +179,7 @@
             cmbDisplay.BackColor = Color.Transparent;
             cmbDisplay.BorderColor = Color.FromArgb(254, 107, 0);
             cmbDisplay.BorderRadius = 18;
-            cmbDisplay.CustomizableEdges = customizableEdges9;
+            cmbDisplay.CustomizableEdges = customizableEdges3;
             cmbDisplay.DisabledState.BorderColor = Color.FromArgb(254, 107, 0);
             cmbDisplay.DisplayMember = "TESTE1";
             cmbDisplay.Dock = DockStyle.Fill;
@@ -167,24 +198,44 @@
             cmbDisplay.Location = new Point(472, 67);
             cmbDisplay.Margin = new Padding(32, 14, 32, 14);
             cmbDisplay.Name = "cmbDisplay";
-            cmbDisplay.ShadowDecoration.CustomizableEdges = customizableEdges10;
+            cmbDisplay.ShadowDecoration.CustomizableEdges = customizableEdges4;
             cmbDisplay.Size = new Size(377, 38);
             cmbDisplay.TabIndex = 5;
             cmbDisplay.SelectedIndexChanged += cmbDisplay_SelectedIndexChanged;
             // 
-            // guna2CustomGradientPanel1
+            // label4
             // 
-            guna2CustomGradientPanel1.BorderColor = Color.FromArgb(242, 103, 34);
-            guna2CustomGradientPanel1.BorderRadius = 25;
-            guna2CustomGradientPanel1.BorderThickness = 1;
-            guna2CustomGradientPanel1.CustomizableEdges = customizableEdges11;
-            guna2CustomGradientPanel1.Dock = DockStyle.Fill;
-            guna2CustomGradientPanel1.Location = new Point(19, 79);
-            guna2CustomGradientPanel1.Margin = new Padding(19);
-            guna2CustomGradientPanel1.Name = "guna2CustomGradientPanel1";
-            guna2CustomGradientPanel1.ShadowDecoration.CustomizableEdges = customizableEdges12;
-            guna2CustomGradientPanel1.Size = new Size(880, 760);
-            guna2CustomGradientPanel1.TabIndex = 0;
+            label4.AutoSize = true;
+            label4.BackColor = Color.Transparent;
+            label4.Dock = DockStyle.Fill;
+            label4.Font = new Font("Roboto", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label4.Location = new Point(19, 110);
+            label4.Margin = new Padding(19, 4, 4, 4);
+            label4.Name = "label4";
+            label4.Size = new Size(417, 45);
+            label4.TabIndex = 6;
+            label4.Text = "Base de Dados Real";
+            label4.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // switchBD
+            // 
+            switchBD.CheckedState.BorderColor = Color.FromArgb(254, 107, 0);
+            switchBD.CheckedState.FillColor = Color.FromArgb(254, 107, 0);
+            switchBD.CheckedState.InnerBorderColor = Color.White;
+            switchBD.CheckedState.InnerColor = Color.White;
+            switchBD.CustomizableEdges = customizableEdges5;
+            switchBD.Dock = DockStyle.Left;
+            switchBD.Location = new Point(472, 121);
+            switchBD.Margin = new Padding(32, 15, 15, 15);
+            switchBD.Name = "switchBD";
+            switchBD.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            switchBD.Size = new Size(54, 23);
+            switchBD.TabIndex = 7;
+            switchBD.UncheckedState.BorderColor = Color.FromArgb(125, 137, 149);
+            switchBD.UncheckedState.FillColor = Color.FromArgb(125, 137, 149);
+            switchBD.UncheckedState.InnerBorderColor = Color.White;
+            switchBD.UncheckedState.InnerColor = Color.White;
+            switchBD.CheckedChanged += switchBD_CheckedChanged;
             // 
             // Definicoes
             // 
@@ -215,5 +266,7 @@
         private Label label2;
         private Label label3;
         private Guna.UI2.WinForms.Guna2ComboBox cmbDisplay;
+        private Label label4;
+        private Guna.UI2.WinForms.Guna2ToggleSwitch switchBD;
     }
 }

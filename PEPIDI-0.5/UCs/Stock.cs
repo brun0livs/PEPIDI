@@ -173,11 +173,11 @@ namespace PEPIDI.UCs
                     // CONFIGURAÇÃO DA COR (ADICIONA ISTO AQUI)
                     // ============================================
 
-                    //// 1. Configura a coluna que tem o Texto (ex: "Armazém")
-                    //dgvStock.BadgeColumnName = "Departamento";
+                    // 1. Configura a coluna que tem o Texto (ex: "Armazém")
+                    dgvStock.BadgeColumnName = "Departamento";
 
-                    //// 2. Configura a coluna que tem a Cor (ex: "#FF0000")
-                    //dgvStock.BadgeColorColumnName = "CorHex";
+                    // 2. Configura a coluna que tem a Cor (ex: "#FF0000")
+                    dgvStock.BadgeColorColumnName = "CorHex";
 
                     // 3. Esconde a coluna da cor para não ficar feio na tabela
                     if (dgvStock.Columns.Contains("CorHex"))
@@ -201,45 +201,51 @@ namespace PEPIDI.UCs
 
         private void dgvStock_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
+            // 1. Focar apenas na coluna certa
             if (dgvStock.Columns[e.ColumnIndex].Name == "Departamento" && e.Value != null)
             {
                 string textoCompleto = e.Value.ToString().Trim();
 
-                // Determinar a Cor e o Texto
-                Color corFinal;
-                string textoFinal = textoCompleto;
-
-                if (textoCompleto.Contains(",") || textoCompleto.Length > 13)
+                // 2. REGRA DO VÁRIOS (Laranja Diatosta)
+                if (textoCompleto.Contains(",") || textoCompleto.Length > 15)
                 {
-                    textoFinal = "Vários";
-                    corFinal = ColorTranslator.FromHtml("#F26722"); // Laranja Diatosta
+                    e.Value = "Vários"; // Texto limpo
+                    e.FormattingApplied = true;
                     dgvStock.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = textoCompleto;
+
+                    // Cores Sólidas (Alpha 255 implícito)
+                    e.CellStyle.BackColor = ColorTranslator.FromHtml("#F26722");
+                    e.CellStyle.ForeColor = Color.White;
+                    e.CellStyle.SelectionBackColor = ColorTranslator.FromHtml("#F26722");
+                    e.CellStyle.SelectionForeColor = Color.White;
+
+                    e.CellStyle.Font = fonteNegrito;
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
                 else
                 {
-                    // Tenta obter a cor da coluna CorHex
+                    // 3. REGRA DOS CURTOS (Cor que vem da BD)
+                    // IMPORTANTE: Resetamos o estilo para não herdar o laranja de cima
                     if (dgvStock.Rows[e.RowIndex].Cells["CorHex"].Value != DBNull.Value)
                     {
-                        corFinal = ColorTranslator.FromHtml(dgvStock.Rows[e.RowIndex].Cells["CorHex"].Value.ToString());
+                        string hex = dgvStock.Rows[e.RowIndex].Cells["CorHex"].Value.ToString();
+                        Color corBD = ColorTranslator.FromHtml(hex);
+
+                        e.CellStyle.BackColor = corBD;
+                        e.CellStyle.ForeColor = Color.White;
+                        e.CellStyle.SelectionBackColor = corBD;
+                        e.CellStyle.SelectionForeColor = Color.White;
                     }
                     else
                     {
-                        corFinal = Color.Gray; // Cor de fallback
+                        // Fallback caso a BD não tenha cor
+                        e.CellStyle.BackColor = Color.FromArgb(240, 240, 240);
+                        e.CellStyle.ForeColor = Color.Black;
                     }
+
+                    e.CellStyle.Font = dgvStock.Font; // Fonte normal
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
-
-                // APLICAR AO ESTILO
-                e.Value = textoFinal;
-                e.FormattingApplied = true;
-
-                e.CellStyle.BackColor = corFinal;
-                e.CellStyle.ForeColor = Color.White;
-                e.CellStyle.SelectionBackColor = corFinal;
-                e.CellStyle.SelectionForeColor = Color.White;
-
-                // Alinhamento e Fonte
-                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                e.CellStyle.Font = new Font(dgvStock.Font, FontStyle.Bold);
             }
         }
     }

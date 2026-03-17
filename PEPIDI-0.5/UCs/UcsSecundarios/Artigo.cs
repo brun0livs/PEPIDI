@@ -535,7 +535,7 @@ namespace PEPIDI.UCs.UcsSecundarios
                             conn.Open();
 
                             // USAR PARÂMETROS para ser mais seguro e profissional
-                            string sql = "DELETE FROM EPI WHERE ID = @id";
+                            string sql = "UPDATE EPI SET Ativo = '0' WHERE ID = @id";
 
                             using (SqlCommand elimina = new SqlCommand(sql, conn))
                             {
@@ -561,6 +561,11 @@ namespace PEPIDI.UCs.UcsSecundarios
                     {
                         M.AbrirMensagem("Erro ao eliminar: " + ex.Message, "Erro SQL");
                     }
+                }
+                else
+                {
+                    // FECHAR A UC DE EDIÇÃO
+                    btnCancelar_Click(null, null);
                 }
             }
         }

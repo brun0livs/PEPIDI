@@ -30,7 +30,7 @@ namespace PEPIDI.UCs
         private void CriarStock_Load(object sender, EventArgs e)
         {
             // Query para preencher a tabela com os dados essenciais
-            string sql = "SELECT ID, Modelo, Familia, Tamanho, Quantidade FROM EPI";
+            string sql = "SELECT ID, Modelo, Familia, Tamanho, Quantidade FROM EPI WHERE Ativo = '1'";
             PreencherTabela(sql);
 
             // Aplica os estilos (fontes, cores) definidos no teu GestorTema
