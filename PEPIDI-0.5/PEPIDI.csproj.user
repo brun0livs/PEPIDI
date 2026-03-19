@@ -64,6 +64,9 @@
     <Compile Update="UCs\Funcoes.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="UCs\Graficos.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="UCs\Pedidos.cs">
       <SubType>UserControl</SubType>
     </Compile>

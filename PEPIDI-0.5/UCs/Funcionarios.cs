@@ -252,5 +252,27 @@ namespace PEPIDI.UCs
                     break;
             }
         }
+
+        private void btnAbreGraficos_Click(object sender, EventArgs e)
+        {
+            // 1. Instanciar o teu novo UC de Gráficos
+            // (Atenção: Verifica se o nome da classe do teu UC é 'Graficos' ou outro parecido, como 'GraficosUC')
+            var ucGraficos = new Graficos();
+            ucGraficos.Dock = DockStyle.Fill; // Faz com que ocupe todo o espaço do painel
+
+            // 2. Obter o contentor pai (o Panel onde o UC Funcionarios está atualmente inserido)
+            Control painelPrincipal = this.Parent;
+
+            // Se o painel existir (por segurança)
+            if (painelPrincipal != null)
+            {
+                // 3. Remove o UC atual (Funcionarios) do painel
+                painelPrincipal.Controls.Clear();
+
+                // 4. Adiciona o novo UC (Gráficos) ao painel para aparecer no ecrã
+                painelPrincipal.Controls.Add(ucGraficos);
+                ucGraficos.BringToFront(); // Garante que fica por cima de tudo
+            }
+        }
     }
 }

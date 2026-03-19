@@ -33,6 +33,8 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
@@ -43,6 +45,7 @@
             txtPesquisa = new Guna.UI2.WinForms.Guna2TextBox();
             lblTituloFUNCIONARIOS = new Label();
             btnAddFunc = new Guna.UI2.WinForms.Guna2Button();
+            btnAbreGraficos = new Guna.UI2.WinForms.Guna2Button();
             dgvFuncs = new PEPIDI.Models.PEPIDIDataGridView();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
@@ -76,13 +79,16 @@
             // 
             // tableLayoutPanel2
             // 
-            tableLayoutPanel2.ColumnCount = 3;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel2.Controls.Add(txtPesquisa, 1, 0);
+            tableLayoutPanel2.ColumnCount = 5;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.6666679F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.6666641F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333244F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.6666679F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.6666679F));
+            tableLayoutPanel2.Controls.Add(txtPesquisa, 2, 0);
             tableLayoutPanel2.Controls.Add(lblTituloFUNCIONARIOS, 0, 0);
-            tableLayoutPanel2.Controls.Add(btnAddFunc, 2, 0);
+            tableLayoutPanel2.Controls.Add(btnAddFunc, 4, 0);
+            tableLayoutPanel2.Controls.Add(btnAbreGraficos, 3, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 0);
             tableLayoutPanel2.Margin = new Padding(0);
@@ -130,7 +136,7 @@
             lblTituloFUNCIONARIOS.Font = new Font("Roboto", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblTituloFUNCIONARIOS.Location = new Point(3, 0);
             lblTituloFUNCIONARIOS.Name = "lblTituloFUNCIONARIOS";
-            lblTituloFUNCIONARIOS.Size = new Size(606, 60);
+            lblTituloFUNCIONARIOS.Size = new Size(300, 60);
             lblTituloFUNCIONARIOS.TabIndex = 1;
             lblTituloFUNCIONARIOS.Text = "FUNCIONÁRIOS";
             lblTituloFUNCIONARIOS.TextAlign = ContentAlignment.MiddleLeft;
@@ -147,14 +153,35 @@
             btnAddFunc.FillColor = Color.FromArgb(243, 108, 33);
             btnAddFunc.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnAddFunc.ForeColor = Color.White;
-            btnAddFunc.Location = new Point(1253, 12);
+            btnAddFunc.Location = new Point(1559, 12);
             btnAddFunc.Margin = new Padding(29, 12, 29, 12);
             btnAddFunc.Name = "btnAddFunc";
             btnAddFunc.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            btnAddFunc.Size = new Size(555, 36);
+            btnAddFunc.Size = new Size(249, 36);
             btnAddFunc.TabIndex = 5;
             btnAddFunc.Text = "Novo Funcionário";
             btnAddFunc.Click += btnAddFunc_Click;
+            // 
+            // btnAbreGraficos
+            // 
+            btnAbreGraficos.BorderRadius = 10;
+            btnAbreGraficos.CustomizableEdges = customizableEdges5;
+            btnAbreGraficos.DisabledState.BorderColor = Color.DarkGray;
+            btnAbreGraficos.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnAbreGraficos.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnAbreGraficos.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnAbreGraficos.Dock = DockStyle.Fill;
+            btnAbreGraficos.FillColor = Color.FromArgb(243, 108, 33);
+            btnAbreGraficos.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnAbreGraficos.ForeColor = Color.White;
+            btnAbreGraficos.Location = new Point(1253, 12);
+            btnAbreGraficos.Margin = new Padding(29, 12, 29, 12);
+            btnAbreGraficos.Name = "btnAbreGraficos";
+            btnAbreGraficos.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            btnAbreGraficos.Size = new Size(248, 36);
+            btnAbreGraficos.TabIndex = 7;
+            btnAbreGraficos.Text = "Gráficos";
+            btnAbreGraficos.Click += btnAbreGraficos_Click;
             // 
             // dgvFuncs
             // 
@@ -239,5 +266,6 @@
         private PEPIDI.Models.PEPIDIDataGridView dgvFuncs;
         private Guna.UI2.WinForms.Guna2Button btnAddFunc;
         private Guna.UI2.WinForms.Guna2TextBox txtPesquisa;
+        private Guna.UI2.WinForms.Guna2Button btnAbreGraficos;
     }
 }
