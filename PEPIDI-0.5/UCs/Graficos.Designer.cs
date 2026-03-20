@@ -38,6 +38,10 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Graficos));
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
@@ -62,10 +66,6 @@
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             tableLayoutPanel1 = new TableLayoutPanel();
             guna2Panel4 = new Guna.UI2.WinForms.Guna2Panel();
             tableLayoutPanel4 = new TableLayoutPanel();
@@ -87,16 +87,16 @@
             lblInicio = new Label();
             lblFuncionario = new Label();
             guna2ComboBox1 = new Guna.UI2.WinForms.Guna2ComboBox();
+            dtpInicio = new Guna.UI2.WinForms.Guna2DateTimePicker();
+            dtpFim = new Guna.UI2.WinForms.Guna2DateTimePicker();
             tableLayoutPanel3 = new TableLayoutPanel();
             lblClose = new Label();
             lblTituloGRAFICOS = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
             guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
-            gunaChart1 = new Guna.Charts.WinForms.GunaChart();
+            Grafico = new Guna.Charts.WinForms.GunaChart();
             guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
-            Tabela = new PEPIDI.Models.PEPIDIDataGridView();
-            dtpInicio = new Guna.UI2.WinForms.Guna2DateTimePicker();
-            dtpFim = new Guna.UI2.WinForms.Guna2DateTimePicker();
+            dgvTabela = new PEPIDI.Models.PEPIDIDataGridView();
             tableLayoutPanel1.SuspendLayout();
             guna2Panel4.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
@@ -107,7 +107,7 @@
             tableLayoutPanel2.SuspendLayout();
             guna2Panel3.SuspendLayout();
             guna2Panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)Tabela).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvTabela).BeginInit();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -194,6 +194,7 @@
             flpTamanhos.Name = "flpTamanhos";
             flpTamanhos.Size = new Size(504, 258);
             flpTamanhos.TabIndex = 7;
+            flpTamanhos.Click += Filtros_Changed;
             // 
             // flpModelos
             // 
@@ -203,6 +204,7 @@
             flpModelos.Name = "flpModelos";
             flpModelos.Size = new Size(503, 258);
             flpModelos.TabIndex = 6;
+            flpModelos.Click += Filtros_Changed;
             // 
             // flpFamilia
             // 
@@ -212,6 +214,7 @@
             flpFamilia.Name = "flpFamilia";
             flpFamilia.Size = new Size(503, 258);
             flpFamilia.TabIndex = 5;
+            flpFamilia.Click += Filtros_Changed;
             // 
             // lblTamanhos
             // 
@@ -273,6 +276,7 @@
             flpFuncoes.Name = "flpFuncoes";
             flpFuncoes.Size = new Size(503, 258);
             flpFuncoes.TabIndex = 0;
+            flpFuncoes.Click += Filtros_Changed;
             // 
             // tableLayoutPanel6
             // 
@@ -313,6 +317,7 @@
             btnGuardar.Size = new Size(279, 43);
             btnGuardar.TabIndex = 36;
             btnGuardar.Text = "Exportar Tabela";
+            btnGuardar.Click += ExpTab_Click;
             // 
             // guna2Button1
             // 
@@ -330,6 +335,7 @@
             guna2Button1.Size = new Size(279, 43);
             guna2Button1.TabIndex = 36;
             guna2Button1.Text = "Exportar Gráfico";
+            guna2Button1.Click += ExpGraf_Click;
             // 
             // guna2Button3
             // 
@@ -432,6 +438,63 @@
             guna2ComboBox1.ShadowDecoration.CustomizableEdges = customizableEdges8;
             guna2ComboBox1.Size = new Size(473, 33);
             guna2ComboBox1.TabIndex = 0;
+            guna2ComboBox1.Click += Filtros_Changed;
+            // 
+            // dtpInicio
+            // 
+            dtpInicio.AutoRoundedCorners = true;
+            dtpInicio.BackColor = Color.White;
+            dtpInicio.BorderColor = Color.FromArgb(213, 218, 223);
+            dtpInicio.BorderThickness = 1;
+            dtpInicio.Checked = true;
+            dtpInicio.CheckedState.BorderColor = Color.FromArgb(243, 108, 33);
+            dtpInicio.CheckedState.FillColor = Color.White;
+            dtpInicio.CheckedState.ForeColor = Color.Black;
+            dtpInicio.CustomizableEdges = customizableEdges9;
+            dtpInicio.Dock = DockStyle.Fill;
+            dtpInicio.FillColor = Color.White;
+            dtpInicio.FocusedColor = Color.FromArgb(255, 128, 0);
+            dtpInicio.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dtpInicio.Format = DateTimePickerFormat.Long;
+            dtpInicio.Location = new Point(548, 32);
+            dtpInicio.Margin = new Padding(25, 0, 25, 0);
+            dtpInicio.MaxDate = new DateTime(2027, 12, 31, 0, 0, 0, 0);
+            dtpInicio.MinDate = new DateTime(1753, 1, 1, 0, 0, 0, 0);
+            dtpInicio.Name = "dtpInicio";
+            dtpInicio.ShadowDecoration.CustomizableEdges = customizableEdges10;
+            dtpInicio.Size = new Size(473, 33);
+            dtpInicio.TabIndex = 7;
+            dtpInicio.TextAlign = HorizontalAlignment.Center;
+            dtpInicio.Value = new DateTime(2026, 3, 19, 0, 0, 0, 0);
+            dtpInicio.Click += Filtros_Changed;
+            // 
+            // dtpFim
+            // 
+            dtpFim.AutoRoundedCorners = true;
+            dtpFim.BackColor = Color.White;
+            dtpFim.BorderColor = Color.FromArgb(213, 218, 223);
+            dtpFim.BorderThickness = 1;
+            dtpFim.Checked = true;
+            dtpFim.CheckedState.BorderColor = Color.FromArgb(243, 108, 33);
+            dtpFim.CheckedState.FillColor = Color.White;
+            dtpFim.CheckedState.ForeColor = Color.Black;
+            dtpFim.CustomizableEdges = customizableEdges11;
+            dtpFim.Dock = DockStyle.Fill;
+            dtpFim.FillColor = Color.White;
+            dtpFim.FocusedColor = Color.FromArgb(255, 128, 0);
+            dtpFim.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dtpFim.Format = DateTimePickerFormat.Long;
+            dtpFim.Location = new Point(1071, 32);
+            dtpFim.Margin = new Padding(25, 0, 25, 0);
+            dtpFim.MaxDate = new DateTime(2027, 12, 31, 0, 0, 0, 0);
+            dtpFim.MinDate = new DateTime(1753, 1, 1, 0, 0, 0, 0);
+            dtpFim.Name = "dtpFim";
+            dtpFim.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            dtpFim.Size = new Size(473, 33);
+            dtpFim.TabIndex = 7;
+            dtpFim.TextAlign = HorizontalAlignment.Center;
+            dtpFim.Value = new DateTime(2026, 3, 19, 0, 0, 0, 0);
+            dtpFim.Click += Filtros_Changed;
             // 
             // tableLayoutPanel3
             // 
@@ -496,7 +559,7 @@
             guna2Panel3.BorderColor = Color.FromArgb(254, 107, 0);
             guna2Panel3.BorderRadius = 25;
             guna2Panel3.BorderThickness = 1;
-            guna2Panel3.Controls.Add(gunaChart1);
+            guna2Panel3.Controls.Add(Grafico);
             guna2Panel3.CustomizableEdges = customizableEdges15;
             guna2Panel3.Dock = DockStyle.Fill;
             guna2Panel3.Location = new Point(3, 3);
@@ -505,50 +568,50 @@
             guna2Panel3.Size = new Size(1043, 510);
             guna2Panel3.TabIndex = 1;
             // 
-            // gunaChart1
+            // Grafico
             // 
-            gunaChart1.BackColor = Color.Transparent;
-            gunaChart1.Dock = DockStyle.Fill;
+            Grafico.BackColor = Color.Transparent;
+            Grafico.Dock = DockStyle.Fill;
             chartFont1.FontName = "Arial";
-            gunaChart1.Legend.LabelFont = chartFont1;
-            gunaChart1.Location = new Point(0, 0);
-            gunaChart1.Margin = new Padding(0);
-            gunaChart1.Name = "gunaChart1";
-            gunaChart1.Padding = new Padding(10);
-            gunaChart1.Size = new Size(1043, 510);
-            gunaChart1.TabIndex = 0;
+            Grafico.Legend.LabelFont = chartFont1;
+            Grafico.Location = new Point(0, 0);
+            Grafico.Margin = new Padding(0);
+            Grafico.Name = "Grafico";
+            Grafico.Padding = new Padding(10);
+            Grafico.Size = new Size(1043, 510);
+            Grafico.TabIndex = 0;
             chartFont2.FontName = "Arial";
             chartFont2.Size = 12;
             chartFont2.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
-            gunaChart1.Title.Font = chartFont2;
+            Grafico.Title.Font = chartFont2;
             chartFont3.FontName = "Arial";
-            gunaChart1.Tooltips.BodyFont = chartFont3;
+            Grafico.Tooltips.BodyFont = chartFont3;
             chartFont4.FontName = "Arial";
             chartFont4.Size = 9;
             chartFont4.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
-            gunaChart1.Tooltips.TitleFont = chartFont4;
-            gunaChart1.XAxes.GridLines = grid1;
+            Grafico.Tooltips.TitleFont = chartFont4;
+            Grafico.XAxes.GridLines = grid1;
             chartFont5.FontName = "Arial";
             tick1.Font = chartFont5;
-            gunaChart1.XAxes.Ticks = tick1;
-            gunaChart1.YAxes.GridLines = grid2;
+            Grafico.XAxes.Ticks = tick1;
+            Grafico.YAxes.GridLines = grid2;
             chartFont6.FontName = "Arial";
             tick2.Font = chartFont6;
-            gunaChart1.YAxes.Ticks = tick2;
-            gunaChart1.ZAxes.GridLines = grid3;
+            Grafico.YAxes.Ticks = tick2;
+            Grafico.ZAxes.GridLines = grid3;
             chartFont7.FontName = "Arial";
             pointLabel1.Font = chartFont7;
-            gunaChart1.ZAxes.PointLabels = pointLabel1;
+            Grafico.ZAxes.PointLabels = pointLabel1;
             chartFont8.FontName = "Arial";
             tick3.Font = chartFont8;
-            gunaChart1.ZAxes.Ticks = tick3;
+            Grafico.ZAxes.Ticks = tick3;
             // 
             // guna2Panel1
             // 
             guna2Panel1.BorderColor = Color.FromArgb(254, 107, 0);
             guna2Panel1.BorderRadius = 25;
             guna2Panel1.BorderThickness = 1;
-            guna2Panel1.Controls.Add(Tabela);
+            guna2Panel1.Controls.Add(dgvTabela);
             guna2Panel1.CustomizableEdges = customizableEdges17;
             guna2Panel1.Dock = DockStyle.Fill;
             guna2Panel1.Location = new Point(1052, 3);
@@ -557,17 +620,17 @@
             guna2Panel1.Size = new Size(1044, 510);
             guna2Panel1.TabIndex = 0;
             // 
-            // Tabela
+            // dgvTabela
             // 
-            Tabela.AllowUserToAddRows = false;
-            Tabela.AllowUserToResizeRows = false;
+            dgvTabela.AllowUserToAddRows = false;
+            dgvTabela.AllowUserToResizeRows = false;
             dataGridViewCellStyle1.BackColor = Color.Transparent;
-            Tabela.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            Tabela.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            Tabela.BackgroundColor = Color.White;
-            Tabela.BorderStyle = BorderStyle.None;
-            Tabela.CellBorderStyle = DataGridViewCellBorderStyle.None;
-            Tabela.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dgvTabela.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dgvTabela.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvTabela.BackgroundColor = Color.White;
+            dgvTabela.BorderStyle = BorderStyle.None;
+            dgvTabela.CellBorderStyle = DataGridViewCellBorderStyle.None;
+            dgvTabela.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle2.BackColor = Color.White;
             dataGridViewCellStyle2.Font = new Font("Roboto", 11.25F);
@@ -576,8 +639,8 @@
             dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            Tabela.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            Tabela.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvTabela.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dgvTabela.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = Color.Transparent;
             dataGridViewCellStyle3.Font = new Font("Roboto", 11.25F);
@@ -586,76 +649,21 @@
             dataGridViewCellStyle3.SelectionBackColor = Color.Transparent;
             dataGridViewCellStyle3.SelectionForeColor = Color.Black;
             dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            Tabela.DefaultCellStyle = dataGridViewCellStyle3;
-            Tabela.EnableHeadersVisualStyles = false;
-            Tabela.GridColor = SystemColors.Control;
-            Tabela.HeaderFontSize = 15F;
-            Tabela.Location = new Point(10, 10);
-            Tabela.Margin = new Padding(10);
-            Tabela.MultiSelect = false;
-            Tabela.Name = "Tabela";
-            Tabela.RowHeadersVisible = false;
+            dgvTabela.DefaultCellStyle = dataGridViewCellStyle3;
+            dgvTabela.EnableHeadersVisualStyles = false;
+            dgvTabela.GridColor = SystemColors.Control;
+            dgvTabela.HeaderFontSize = 15F;
+            dgvTabela.Location = new Point(22, 3);
+            dgvTabela.MultiSelect = false;
+            dgvTabela.Name = "dgvTabela";
+            dgvTabela.RowHeadersVisible = false;
             dataGridViewCellStyle4.BackColor = Color.Transparent;
-            Tabela.RowsDefaultCellStyle = dataGridViewCellStyle4;
-            Tabela.RowTemplate.Height = 54;
-            Tabela.ScrollBars = ScrollBars.None;
-            Tabela.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            Tabela.Size = new Size(1024, 490);
-            Tabela.TabIndex = 3;
-            // 
-            // dtpInicio
-            // 
-            dtpInicio.AutoRoundedCorners = true;
-            dtpInicio.BackColor = Color.White;
-            dtpInicio.BorderColor = Color.FromArgb(213, 218, 223);
-            dtpInicio.BorderThickness = 1;
-            dtpInicio.Checked = true;
-            dtpInicio.CheckedState.BorderColor = Color.FromArgb(243, 108, 33);
-            dtpInicio.CheckedState.FillColor = Color.White;
-            dtpInicio.CheckedState.ForeColor = Color.Black;
-            dtpInicio.CustomizableEdges = customizableEdges9;
-            dtpInicio.Dock = DockStyle.Fill;
-            dtpInicio.FillColor = Color.White;
-            dtpInicio.FocusedColor = Color.FromArgb(255, 128, 0);
-            dtpInicio.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dtpInicio.Format = DateTimePickerFormat.Long;
-            dtpInicio.Location = new Point(548, 32);
-            dtpInicio.Margin = new Padding(25, 0, 25, 0);
-            dtpInicio.MaxDate = new DateTime(2027, 12, 31, 0, 0, 0, 0);
-            dtpInicio.MinDate = new DateTime(1753, 1, 1, 0, 0, 0, 0);
-            dtpInicio.Name = "dtpInicio";
-            dtpInicio.ShadowDecoration.CustomizableEdges = customizableEdges10;
-            dtpInicio.Size = new Size(473, 33);
-            dtpInicio.TabIndex = 7;
-            dtpInicio.TextAlign = HorizontalAlignment.Center;
-            dtpInicio.Value = new DateTime(2026, 3, 19, 0, 0, 0, 0);
-            // 
-            // dtpFim
-            // 
-            dtpFim.AutoRoundedCorners = true;
-            dtpFim.BackColor = Color.White;
-            dtpFim.BorderColor = Color.FromArgb(213, 218, 223);
-            dtpFim.BorderThickness = 1;
-            dtpFim.Checked = true;
-            dtpFim.CheckedState.BorderColor = Color.FromArgb(243, 108, 33);
-            dtpFim.CheckedState.FillColor = Color.White;
-            dtpFim.CheckedState.ForeColor = Color.Black;
-            dtpFim.CustomizableEdges = customizableEdges11;
-            dtpFim.Dock = DockStyle.Fill;
-            dtpFim.FillColor = Color.White;
-            dtpFim.FocusedColor = Color.FromArgb(255, 128, 0);
-            dtpFim.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dtpFim.Format = DateTimePickerFormat.Long;
-            dtpFim.Location = new Point(1071, 32);
-            dtpFim.Margin = new Padding(25, 0, 25, 0);
-            dtpFim.MaxDate = new DateTime(2027, 12, 31, 0, 0, 0, 0);
-            dtpFim.MinDate = new DateTime(1753, 1, 1, 0, 0, 0, 0);
-            dtpFim.Name = "dtpFim";
-            dtpFim.ShadowDecoration.CustomizableEdges = customizableEdges12;
-            dtpFim.Size = new Size(473, 33);
-            dtpFim.TabIndex = 7;
-            dtpFim.TextAlign = HorizontalAlignment.Center;
-            dtpFim.Value = new DateTime(2026, 3, 19, 0, 0, 0, 0);
+            dgvTabela.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dgvTabela.RowTemplate.Height = 54;
+            dgvTabela.ScrollBars = ScrollBars.None;
+            dgvTabela.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvTabela.Size = new Size(1001, 504);
+            dgvTabela.TabIndex = 0;
             // 
             // Graficos
             // 
@@ -681,7 +689,7 @@
             tableLayoutPanel2.ResumeLayout(false);
             guna2Panel3.ResumeLayout(false);
             guna2Panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)Tabela).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvTabela).EndInit();
             ResumeLayout(false);
         }
 
@@ -707,7 +715,7 @@
         private Label lblFamilia;
         private Label lblFuncoes;
         private TableLayoutPanel tableLayoutPanel6;
-        private Guna.Charts.WinForms.GunaChart gunaChart1;
+        private Guna.Charts.WinForms.GunaChart Grafico;
         private Guna.UI2.WinForms.Guna2Button btnGuardar;
         private Guna.UI2.WinForms.Guna2Button guna2Button1;
         private Guna.UI2.WinForms.Guna2Button guna2Button3;
@@ -718,5 +726,6 @@
         private Guna.UI2.WinForms.Guna2ComboBox guna2ComboBox1;
         private Guna.UI2.WinForms.Guna2DateTimePicker dtpInicio;
         private Guna.UI2.WinForms.Guna2DateTimePicker dtpFim;
+        private Models.PEPIDIDataGridView dgvTabela;
     }
 }
