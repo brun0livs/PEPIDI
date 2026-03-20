@@ -126,10 +126,15 @@ namespace PEPIDI.Utils
             _ => 36
         };
 
+        public static void AplicarEstilos(Control pai)
+        {
+            AplicarEstilos(pai, AlturaCombos);
+        }
+
         // ==========================================
         // 4. O PINTOR (O Scanner Corrigido!)
         // ==========================================
-        public static void AplicarEstilos(Control pai)
+        public static void AplicarEstilos(Control pai, int alturaCombos)
         {
             Size tamanhoReferencia = Size.Empty;
             // 1º LOOP: Varredura rápida para capturar estilos globais do painel
@@ -148,6 +153,11 @@ namespace PEPIDI.Utils
             {
                 // Ignoramos a Combo porque já foi tratada no 1º loop
                 if (c is Guna.UI2.WinForms.Guna2ComboBox) continue;
+
+                if (c is Guna.UI2.WinForms.Guna2DateTimePicker dtp)
+                {
+                    dtp.Font = FonteLabel;
+                }
 
                 if (c is Guna.UI2.WinForms.Guna2Button btn)
                 {

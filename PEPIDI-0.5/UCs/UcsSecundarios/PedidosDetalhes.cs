@@ -499,7 +499,7 @@ namespace PEPIDI.UCs.UcsSecundarios
                                 try
                                 {
                                     string sqlUpdate = @"UPDATE PedidoRegistos 
-                                                 SET Estado = 'Concluido', PDF = @PDF, Notas = @Notas, AlteracaoData = GETDATE() 
+                                                 SET Estado = 'Finalizado', PDF = @PDF, Notas = @Notas, AlteracaoData = GETDATE() 
                                                  WHERE ID = @ID";
 
                                     using (SqlCommand cmd = new SqlCommand(sqlUpdate, conn, trans))

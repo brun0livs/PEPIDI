@@ -70,8 +70,9 @@ namespace PEPIDI.Organizers
 
             // 5. ATRIBUIR A CONEXÃO À CLASSE GLOBAL
             GetConn.ConnectionString = connString;
-            //Application.Run(new FormGestao(nr, PermissoesPerfil.VerPermissoes(nr)));
-            Application.Run(new FrmLogIn());
+            int nr = 1077;
+            Application.Run(new FormGestao(nr, PermissoesPerfil.VerPermissoes(nr)));
+            //Application.Run(new FrmLogIn());
         }
     }
 }
