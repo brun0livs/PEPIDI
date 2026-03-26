@@ -28,6 +28,9 @@
     <Compile Update="FormsSecundarios\FormGestaoDeFiltros.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="FormsSecundarios\FormImportarFuncionarios.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="FormsSecundarios\FormImportarStock.cs">
       <SubType>Form</SubType>
     </Compile>

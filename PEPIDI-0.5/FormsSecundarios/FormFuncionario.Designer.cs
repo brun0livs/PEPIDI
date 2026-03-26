@@ -122,7 +122,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 75F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
             tableLayoutPanel1.Size = new Size(800, 500);
-            tableLayoutPanel1.TabIndex = 1;
+            tableLayoutPanel1.TabIndex = 0;
             // 
             // tableLayoutPanel4
             // 
@@ -147,7 +147,7 @@
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel4.Size = new Size(800, 375);
-            tableLayoutPanel4.TabIndex = 2;
+            tableLayoutPanel4.TabIndex = 0;
             // 
             // tableLayoutPanel8
             // 
@@ -189,7 +189,7 @@
             dtpDataAdmiss.Name = "dtpDataAdmiss";
             dtpDataAdmiss.ShadowDecoration.CustomizableEdges = customizableEdges2;
             dtpDataAdmiss.Size = new Size(390, 39);
-            dtpDataAdmiss.TabIndex = 3;
+            dtpDataAdmiss.TabIndex = 10;
             dtpDataAdmiss.TextAlign = HorizontalAlignment.Center;
             dtpDataAdmiss.Value = new DateTime(2026, 9, 28, 11, 49, 0, 0);
             // 
@@ -256,7 +256,7 @@
             cmbSapato.Name = "cmbSapato";
             cmbSapato.ShadowDecoration.CustomizableEdges = customizableEdges4;
             cmbSapato.Size = new Size(125, 36);
-            cmbSapato.TabIndex = 13;
+            cmbSapato.TabIndex = 9;
             // 
             // cmbCalca
             // 
@@ -285,7 +285,7 @@
             cmbCalca.Name = "cmbCalca";
             cmbCalca.ShadowDecoration.CustomizableEdges = customizableEdges6;
             cmbCalca.Size = new Size(123, 36);
-            cmbCalca.TabIndex = 12;
+            cmbCalca.TabIndex = 8;
             // 
             // cmbPolomc
             // 
@@ -314,7 +314,7 @@
             cmbPolomc.Name = "cmbPolomc";
             cmbPolomc.ShadowDecoration.CustomizableEdges = customizableEdges8;
             cmbPolomc.Size = new Size(123, 36);
-            cmbPolomc.TabIndex = 11;
+            cmbPolomc.TabIndex = 7;
             // 
             // cmbPolo
             // 
@@ -343,7 +343,7 @@
             cmbPolo.Name = "cmbPolo";
             cmbPolo.ShadowDecoration.CustomizableEdges = customizableEdges10;
             cmbPolo.Size = new Size(123, 36);
-            cmbPolo.TabIndex = 10;
+            cmbPolo.TabIndex = 6;
             // 
             // cmbCasaco
             // 
@@ -372,7 +372,7 @@
             cmbCasaco.Name = "cmbCasaco";
             cmbCasaco.ShadowDecoration.CustomizableEdges = customizableEdges12;
             cmbCasaco.Size = new Size(123, 36);
-            cmbCasaco.TabIndex = 9;
+            cmbCasaco.TabIndex = 5;
             // 
             // cmbTshirt
             // 
@@ -401,7 +401,7 @@
             cmbTshirt.Name = "cmbTshirt";
             cmbTshirt.ShadowDecoration.CustomizableEdges = customizableEdges14;
             cmbTshirt.Size = new Size(123, 36);
-            cmbTshirt.TabIndex = 8;
+            cmbTshirt.TabIndex = 4;
             // 
             // tableLayoutPanel6
             // 
@@ -548,7 +548,7 @@
             cmbFuncoes.Name = "cmbFuncoes";
             cmbFuncoes.ShadowDecoration.CustomizableEdges = customizableEdges16;
             cmbFuncoes.Size = new Size(446, 36);
-            cmbFuncoes.TabIndex = 7;
+            cmbFuncoes.TabIndex = 3;
             // 
             // label3
             // 
@@ -585,9 +585,10 @@
             txtNr.SelectedText = "";
             txtNr.ShadowDecoration.CustomizableEdges = customizableEdges18;
             txtNr.Size = new Size(187, 39);
-            txtNr.TabIndex = 5;
+            txtNr.TabIndex = 1;
             txtNr.TextOffset = new Point(10, 0);
             txtNr.KeyPress += txtNr_KeyPress;
+            txtNr.Leave += txtNr_Leave;
             // 
             // label2
             // 
@@ -638,13 +639,12 @@
             cmbEstab.HoverState.FillColor = Color.White;
             cmbEstab.HoverState.ForeColor = Color.Black;
             cmbEstab.ItemHeight = 30;
-            cmbEstab.Items.AddRange(new object[] { "E0100 (Central de Distribuição)", "E0101 (Costa do Valado)", "E0102 (Zona Industrial da Palhaça)" });
             cmbEstab.Location = new Point(405, 13);
             cmbEstab.Margin = new Padding(5, 13, 5, 10);
             cmbEstab.Name = "cmbEstab";
             cmbEstab.ShadowDecoration.CustomizableEdges = customizableEdges20;
             cmbEstab.Size = new Size(390, 36);
-            cmbEstab.TabIndex = 9;
+            cmbEstab.TabIndex = 11;
             // 
             // label11
             // 
@@ -697,7 +697,7 @@
             txtNome.SelectedText = "";
             txtNome.ShadowDecoration.CustomizableEdges = customizableEdges22;
             txtNome.Size = new Size(721, 39);
-            txtNome.TabIndex = 9;
+            txtNome.TabIndex = 2;
             txtNome.TextOffset = new Point(10, 0);
             // 
             // label1
@@ -739,7 +739,7 @@
             lblFechar.Margin = new Padding(10, 0, 0, 0);
             lblFechar.Name = "lblFechar";
             lblFechar.Size = new Size(67, 62);
-            lblFechar.TabIndex = 1;
+            lblFechar.TabIndex = 14;
             lblFechar.TextAlign = ContentAlignment.MiddleLeft;
             lblFechar.Click += lblFechar_Click;
             // 
@@ -793,7 +793,7 @@
             btnGuardar.Name = "btnGuardar";
             btnGuardar.ShadowDecoration.CustomizableEdges = customizableEdges24;
             btnGuardar.Size = new Size(180, 43);
-            btnGuardar.TabIndex = 5;
+            btnGuardar.TabIndex = 12;
             btnGuardar.Text = "Guardar";
             btnGuardar.Click += btnGuardar_Click;
             // 
@@ -814,7 +814,7 @@
             btnCancelar.Name = "btnCancelar";
             btnCancelar.ShadowDecoration.CustomizableEdges = customizableEdges26;
             btnCancelar.Size = new Size(180, 43);
-            btnCancelar.TabIndex = 5;
+            btnCancelar.TabIndex = 13;
             btnCancelar.Text = "Cancelar";
             btnCancelar.Click += lblFechar_Click;
             // 

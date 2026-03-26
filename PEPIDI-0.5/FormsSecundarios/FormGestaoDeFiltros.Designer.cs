@@ -27,6 +27,8 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
@@ -38,6 +40,7 @@
             lblFuncao = new Label();
             tlpConteudo = new TableLayoutPanel();
             tlpControlos = new TableLayoutPanel();
+            txtNome = new Guna.UI2.WinForms.Guna2TextBox();
             cmbVisaoNome = new Guna.UI2.WinForms.Guna2ComboBox();
             btnTestar = new Guna.UI2.WinForms.Guna2Button();
             btnEliminar = new Guna.UI2.WinForms.Guna2Button();
@@ -146,15 +149,17 @@
             // 
             // tlpControlos
             // 
-            tlpControlos.ColumnCount = 4;
-            tlpControlos.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
+            tlpControlos.ColumnCount = 5;
             tlpControlos.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             tlpControlos.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             tlpControlos.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            tlpControlos.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            tlpControlos.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            tlpControlos.Controls.Add(txtNome, 1, 0);
             tlpControlos.Controls.Add(cmbVisaoNome, 0, 0);
-            tlpControlos.Controls.Add(btnTestar, 1, 0);
-            tlpControlos.Controls.Add(btnEliminar, 2, 0);
-            tlpControlos.Controls.Add(btnGuardar, 3, 0);
+            tlpControlos.Controls.Add(btnTestar, 2, 0);
+            tlpControlos.Controls.Add(btnEliminar, 3, 0);
+            tlpControlos.Controls.Add(btnGuardar, 4, 0);
             tlpControlos.Dock = DockStyle.Fill;
             tlpControlos.Location = new Point(0, 0);
             tlpControlos.Margin = new Padding(0);
@@ -164,11 +169,37 @@
             tlpControlos.Size = new Size(990, 60);
             tlpControlos.TabIndex = 0;
             // 
+            // txtNome
+            // 
+            txtNome.AutoRoundedCorners = true;
+            txtNome.CustomizableEdges = customizableEdges1;
+            txtNome.DefaultText = "";
+            txtNome.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
+            txtNome.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
+            txtNome.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
+            txtNome.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+            txtNome.Dock = DockStyle.Fill;
+            txtNome.FocusedState.BorderColor = Color.FromArgb(243, 108, 33);
+            txtNome.Font = new Font("Roboto", 18.75F);
+            txtNome.ForeColor = Color.Black;
+            txtNome.HoverState.BorderColor = Color.Gray;
+            txtNome.Location = new Point(203, 13);
+            txtNome.Margin = new Padding(5, 13, 5, 10);
+            txtNome.MaxLength = 20;
+            txtNome.Name = "txtNome";
+            txtNome.PlaceholderForeColor = Color.Silver;
+            txtNome.PlaceholderText = "";
+            txtNome.SelectedText = "";
+            txtNome.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            txtNome.Size = new Size(188, 37);
+            txtNome.TabIndex = 10;
+            txtNome.TextOffset = new Point(10, 0);
+            // 
             // cmbVisaoNome
             // 
             cmbVisaoNome.BackColor = Color.Transparent;
-            cmbVisaoNome.BorderRadius = 10;
-            cmbVisaoNome.CustomizableEdges = customizableEdges1;
+            cmbVisaoNome.BorderRadius = 15;
+            cmbVisaoNome.CustomizableEdges = customizableEdges3;
             cmbVisaoNome.Dock = DockStyle.Fill;
             cmbVisaoNome.DrawMode = DrawMode.OwnerDrawFixed;
             cmbVisaoNome.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -179,15 +210,16 @@
             cmbVisaoNome.Location = new Point(3, 10);
             cmbVisaoNome.Margin = new Padding(3, 10, 15, 10);
             cmbVisaoNome.Name = "cmbVisaoNome";
-            cmbVisaoNome.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            cmbVisaoNome.Size = new Size(378, 36);
+            cmbVisaoNome.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            cmbVisaoNome.Size = new Size(180, 36);
             cmbVisaoNome.TabIndex = 0;
+            cmbVisaoNome.SelectedIndexChanged += cmbVisaoNome_SelectedIndexChanged;
             // 
             // btnTestar
             // 
             btnTestar.BorderRadius = 10;
             btnTestar.Cursor = Cursors.Hand;
-            btnTestar.CustomizableEdges = customizableEdges3;
+            btnTestar.CustomizableEdges = customizableEdges5;
             btnTestar.Dock = DockStyle.Fill;
             btnTestar.FillColor = Color.LightGray;
             btnTestar.Font = new Font("Roboto", 11.25F, FontStyle.Bold);
@@ -195,7 +227,7 @@
             btnTestar.Location = new Point(406, 10);
             btnTestar.Margin = new Padding(10);
             btnTestar.Name = "btnTestar";
-            btnTestar.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            btnTestar.ShadowDecoration.CustomizableEdges = customizableEdges6;
             btnTestar.Size = new Size(178, 40);
             btnTestar.TabIndex = 1;
             btnTestar.Text = "Testar";
@@ -205,7 +237,7 @@
             // 
             btnEliminar.BorderRadius = 10;
             btnEliminar.Cursor = Cursors.Hand;
-            btnEliminar.CustomizableEdges = customizableEdges5;
+            btnEliminar.CustomizableEdges = customizableEdges7;
             btnEliminar.Dock = DockStyle.Fill;
             btnEliminar.FillColor = Color.IndianRed;
             btnEliminar.Font = new Font("Roboto", 11.25F, FontStyle.Bold);
@@ -213,7 +245,7 @@
             btnEliminar.Location = new Point(604, 10);
             btnEliminar.Margin = new Padding(10);
             btnEliminar.Name = "btnEliminar";
-            btnEliminar.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            btnEliminar.ShadowDecoration.CustomizableEdges = customizableEdges8;
             btnEliminar.Size = new Size(178, 40);
             btnEliminar.TabIndex = 2;
             btnEliminar.Text = "Eliminar";
@@ -223,7 +255,7 @@
             // 
             btnGuardar.BorderRadius = 10;
             btnGuardar.Cursor = Cursors.Hand;
-            btnGuardar.CustomizableEdges = customizableEdges7;
+            btnGuardar.CustomizableEdges = customizableEdges9;
             btnGuardar.Dock = DockStyle.Fill;
             btnGuardar.FillColor = Color.FromArgb(242, 103, 34);
             btnGuardar.Font = new Font("Roboto", 11.25F, FontStyle.Bold);
@@ -231,7 +263,7 @@
             btnGuardar.Location = new Point(802, 10);
             btnGuardar.Margin = new Padding(10);
             btnGuardar.Name = "btnGuardar";
-            btnGuardar.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            btnGuardar.ShadowDecoration.CustomizableEdges = customizableEdges10;
             btnGuardar.Size = new Size(178, 40);
             btnGuardar.TabIndex = 3;
             btnGuardar.Text = "Guardar";
@@ -457,5 +489,6 @@
         private System.Windows.Forms.FlowLayoutPanel flpModelo;
         private System.Windows.Forms.FlowLayoutPanel flpTamanho;
         private Models.PEPIDIDataGridView dgvPreview;
+        private Guna.UI2.WinForms.Guna2TextBox txtNome;
     }
 }

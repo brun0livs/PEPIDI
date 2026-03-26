@@ -28,6 +28,7 @@ namespace PEPIDI.FormsSecundarios
             NMEC = _nr;
             IDGestor = _IDGestor;
             CarregarComboFuncoes();
+            CarregaComboEstabs();
             ConfigurarModo();
         }
 
@@ -48,7 +49,8 @@ namespace PEPIDI.FormsSecundarios
                 // --- MODO CRIAR ---
                 this.Text = "Novo Funcionário";
                 txtNr.Text = "";
-                txtNr.Enabled = true; // Deixa escrever o Nº
+                txtNr.Enabled = true; //Deixa escrever o Nº
+                txtNome.Focus();
             }
         }
 
@@ -86,7 +88,8 @@ namespace PEPIDI.FormsSecundarios
                         string sapato = rd["Sapato"]?.ToString() ?? "-";
 
                         DateTime? dtAdmiss = rd["DtAdmiss"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(rd["DtAdmiss"]);
-                        string estab = rd["Estab"]?.ToString() ?? "";
+                        int? estab = rd["Estab"] == DBNull.Value ? (int?)null : Convert.ToInt32(rd["Estab"]);
+                        string nomeEstab = rd["NomeEstab"]?.ToString() ?? "";
 
                         txtNome.Text = nome;
 
@@ -111,7 +114,7 @@ namespace PEPIDI.FormsSecundarios
                             dtpDataAdmiss.Checked = false;
                         }
 
-                        SelectByText(cmbEstab, estab);
+                        SelectByText(cmbEstab, nomeEstab);
 
                         Debug.WriteLine($"[EditFunc] Funcionário {nr} carregado com sucesso.");
                     }
@@ -166,7 +169,7 @@ namespace PEPIDI.FormsSecundarios
                     // 4. Dados Pessoais
                     cmd.Parameters.AddWithValue("@Nome", txtNome.Text.Trim());
                     cmd.Parameters.AddWithValue("@FuncaoId", cmbFuncoes.SelectedValue ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Estab", cmbEstab.Text.Trim());
+                    cmd.Parameters.AddWithValue("@EstabId", cmbEstab.SelectedValue ?? (object)DBNull.Value);
 
                     // Tratamento da Data de Admissão (pode ser nula?)
                     if (dtpDataAdmiss.Checked)
@@ -265,6 +268,28 @@ namespace PEPIDI.FormsSecundarios
             }
         }
 
+        private void CarregaComboEstabs()
+        {
+            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string query = "SELECT ID,Estab FROM Estab ORDER BY ID";
+                    SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    cmbEstab.DataSource = dt;
+                    cmbEstab.DisplayMember = "Estab";
+                    cmbEstab.ValueMember = "ID";
+                }
+                catch (Exception ex)
+                {
+                    M.AbrirMensagem("Erro ao carregar estabelecimentos: " + ex.Message, "Erro");
+                }
+            }
+        }
+
         private void lblFechar_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -284,6 +309,29 @@ namespace PEPIDI.FormsSecundarios
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
                 e.Handled = true; // "Come" o evento, impedindo a letra de aparecer
+            }
+        }
+
+        private void txtNr_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtNr.Text)) return;
+
+            if (VerificarSeNrExiste(txtNr.Text))
+            {
+                M.AbrirMensagem("Este Número Mecanográfico já está atribuído!", "Erro de Duplicado");
+                txtNr.Clear();
+                txtNr.Focus();
+            }
+        }
+
+        private bool VerificarSeNrExiste(string nr)
+        {
+            using (SqlConnection conn = GetConn.GetConnection())
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Funcionarios WHERE Nr = @nr", conn);
+                cmd.Parameters.AddWithValue("@nr", nr);
+                return (int)cmd.ExecuteScalar() > 0;
             }
         }
     }

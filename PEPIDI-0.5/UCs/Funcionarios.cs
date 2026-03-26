@@ -93,7 +93,7 @@ namespace PEPIDI.UCs
 
             // --- ACTIVAR BADGES COLORIDAS ---
             // Isto diz à tua classe personalizada para procurar a coluna com HeaderText "Função"
-            dgvFuncs.BadgeColumnName = "Função";
+            dgvFuncs.BadgeColumnName = "Funcao";
             dgvFuncs.BadgeColorColumnName = "CorHex";
 
             // --- MENU DE AÇÕES ---
@@ -272,6 +272,36 @@ namespace PEPIDI.UCs
                 // 4. Adiciona o novo UC (Gráficos) ao painel para aparecer no ecrã
                 painelPrincipal.Controls.Add(ucGraficos);
                 ucGraficos.BringToFront(); // Garante que fica por cima de tudo
+            }
+        }
+
+        private void btnImportacaoRapida_Click(object sender, EventArgs e)
+        {
+            using (Form overlay = new Form())
+            {
+                // Configurar o formulário "sombra"
+                overlay.StartPosition = FormStartPosition.CenterScreen;
+                overlay.WindowState = FormWindowState.Maximized;
+                overlay.FormBorderStyle = FormBorderStyle.None; // Sem bordas
+                overlay.Opacity = 0.50d;                        // 50% transparente
+                overlay.BackColor = Color.Black;                // Cor preta
+                overlay.ShowInTaskbar = false;                  // Não aparece na barra de tarefas
+
+                // Faz o overlay cobrir exatamente o formulário atual (this)
+                overlay.Location = this.Location;
+                overlay.Size = this.Size;
+
+                // Mostra a sombra
+                overlay.Show(this);
+                using (FormImportarFuncionarios frm = new FormImportarFuncionarios(IDGestor))
+                {
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        DataTable dt = mf.CarregarFuncionarios("");
+                        dgvFuncs.DataSource = dt;
+                        Configura(dgvFuncs);
+                    }
+                }
             }
         }
     }

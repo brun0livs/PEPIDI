@@ -1,6 +1,6 @@
 ﻿namespace PEPIDI.FormsSecundarios
 {
-    partial class FormImportarStock
+    partial class FormImportarFuncionarios
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -30,8 +30,6 @@
             lblFechar = new Label();
             lblTitulo = new Label();
             pnlInstrucoes = new Panel();
-            flpFuncoes = new FlowLayoutPanel();
-            lblTituloFuncoes = new Label();
             lblDica = new Label();
             dgvImport = new DataGridView();
             tlpBotoes = new TableLayoutPanel();
@@ -66,7 +64,7 @@
             tlpMain.Name = "tlpMain";
             tlpMain.RowCount = 4;
             tlpMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 69F));
-            tlpMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 254F));
+            tlpMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 142F));
             tlpMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tlpMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 81F));
             tlpMain.Size = new Size(1108, 865);
@@ -110,57 +108,32 @@
             lblTitulo.Padding = new Padding(23, 0, 0, 0);
             lblTitulo.Size = new Size(1030, 69);
             lblTitulo.TabIndex = 0;
-            lblTitulo.Text = "IMPORTAR STOCK EM MASSA";
+            lblTitulo.Text = "IMPORTAR FUNCIONÁRIOS EM MASSA";
             lblTitulo.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // pnlInstrucoes
             // 
             pnlInstrucoes.BackColor = Color.White;
-            pnlInstrucoes.Controls.Add(flpFuncoes);
-            pnlInstrucoes.Controls.Add(lblTituloFuncoes);
             pnlInstrucoes.Controls.Add(lblDica);
             pnlInstrucoes.Dock = DockStyle.Fill;
             pnlInstrucoes.Location = new Point(23, 92);
             pnlInstrucoes.Margin = new Padding(23);
             pnlInstrucoes.Name = "pnlInstrucoes";
             pnlInstrucoes.Padding = new Padding(18, 17, 18, 17);
-            pnlInstrucoes.Size = new Size(1062, 208);
+            pnlInstrucoes.Size = new Size(1062, 96);
             pnlInstrucoes.TabIndex = 1;
-            // 
-            // flpFuncoes
-            // 
-            flpFuncoes.AutoScroll = true;
-            flpFuncoes.Dock = DockStyle.Fill;
-            flpFuncoes.Location = new Point(18, 98);
-            flpFuncoes.Margin = new Padding(4, 3, 4, 3);
-            flpFuncoes.Name = "flpFuncoes";
-            flpFuncoes.Size = new Size(1026, 93);
-            flpFuncoes.TabIndex = 2;
-            // 
-            // lblTituloFuncoes
-            // 
-            lblTituloFuncoes.Dock = DockStyle.Top;
-            lblTituloFuncoes.Font = new Font("Roboto", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblTituloFuncoes.ForeColor = Color.FromArgb(64, 64, 64);
-            lblTituloFuncoes.Location = new Point(18, 63);
-            lblTituloFuncoes.Margin = new Padding(4, 0, 4, 0);
-            lblTituloFuncoes.Name = "lblTituloFuncoes";
-            lblTituloFuncoes.Size = new Size(1026, 35);
-            lblTituloFuncoes.TabIndex = 1;
-            lblTituloFuncoes.Text = "Funções Autorizadas (Aplica-se a toda a lista importada):";
-            lblTituloFuncoes.TextAlign = ContentAlignment.BottomLeft;
             // 
             // lblDica
             // 
-            lblDica.Dock = DockStyle.Top;
+            lblDica.Dock = DockStyle.Fill;
             lblDica.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblDica.ForeColor = Color.FromArgb(100, 100, 100);
             lblDica.Location = new Point(18, 17);
             lblDica.Margin = new Padding(4, 0, 4, 0);
             lblDica.Name = "lblDica";
-            lblDica.Size = new Size(1026, 46);
+            lblDica.Size = new Size(1026, 62);
             lblDica.TabIndex = 0;
-            lblDica.Text = "💡 Dica: Copia os dados do Excel (colunas: Modelo, Tamanho, Quantidade), clica na primeira célula da tabela abaixo e prime Ctrl + V.";
+            lblDica.Text = "💡 Dica: Copia os dados do Excel (colunas: NMEC, Nome, Função), clica na primeira célula da tabela abaixo e prime Ctrl + V.";
             // 
             // dgvImport
             // 
@@ -184,30 +157,29 @@
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             dgvImport.DefaultCellStyle = dataGridViewCellStyle2;
             dgvImport.Dock = DockStyle.Fill;
-            dgvImport.Location = new Point(23, 323);
+            dgvImport.Location = new Point(23, 211);
             dgvImport.Margin = new Padding(23, 0, 23, 12);
             dgvImport.Name = "dgvImport";
             dgvImport.RowTemplate.Height = 35;
-            dgvImport.Size = new Size(1062, 449);
+            dgvImport.Size = new Size(1062, 561);
             dgvImport.TabIndex = 2;
-            dgvImport.CellValueChanged += dgvImport_CellValueChanged;
-            dgvImport.KeyDown += DgvImport_KeyDown;
+            dgvImport.KeyDown += dgvImport_KeyDown;
             // 
             // tlpBotoes
             // 
             tlpBotoes.ColumnCount = 3;
-            tlpBotoes.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tlpBotoes.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 233F));
-            tlpBotoes.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 233F));
+            tlpBotoes.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tlpBotoes.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tlpBotoes.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tlpBotoes.Controls.Add(btnCancelar, 1, 0);
             tlpBotoes.Controls.Add(btnImportar, 2, 0);
             tlpBotoes.Dock = DockStyle.Fill;
-            tlpBotoes.Location = new Point(0, 784);
-            tlpBotoes.Margin = new Padding(0, 0, 23, 23);
+            tlpBotoes.Location = new Point(23, 784);
+            tlpBotoes.Margin = new Padding(23, 0, 23, 23);
             tlpBotoes.Name = "tlpBotoes";
             tlpBotoes.RowCount = 1;
             tlpBotoes.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlpBotoes.Size = new Size(1085, 58);
+            tlpBotoes.Size = new Size(1062, 58);
             tlpBotoes.TabIndex = 3;
             // 
             // btnCancelar
@@ -219,11 +191,11 @@
             btnCancelar.FillColor = Color.DarkGray;
             btnCancelar.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnCancelar.ForeColor = Color.White;
-            btnCancelar.Location = new Point(631, 6);
+            btnCancelar.Location = new Point(543, 6);
             btnCancelar.Margin = new Padding(12, 6, 12, 6);
             btnCancelar.Name = "btnCancelar";
             btnCancelar.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            btnCancelar.Size = new Size(209, 46);
+            btnCancelar.Size = new Size(241, 46);
             btnCancelar.TabIndex = 0;
             btnCancelar.Text = "Cancelar";
             btnCancelar.Click += btnCancelar_Click;
@@ -237,16 +209,16 @@
             btnImportar.FillColor = Color.FromArgb(242, 103, 34);
             btnImportar.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnImportar.ForeColor = Color.White;
-            btnImportar.Location = new Point(864, 6);
+            btnImportar.Location = new Point(808, 6);
             btnImportar.Margin = new Padding(12, 6, 12, 6);
             btnImportar.Name = "btnImportar";
             btnImportar.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            btnImportar.Size = new Size(209, 46);
+            btnImportar.Size = new Size(242, 46);
             btnImportar.TabIndex = 1;
-            btnImportar.Text = "Importar Stock";
+            btnImportar.Text = "Importar Funcionários";
             btnImportar.Click += btnImportar_Click;
             // 
-            // FormImportarStock
+            // FormImportarFuncionarios
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -255,10 +227,10 @@
             Controls.Add(tlpMain);
             FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(4, 3, 4, 3);
-            Name = "FormImportarStock";
+            Name = "FormImportarFuncionarios";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Importar Stock";
-            Load += FormImportarStock_Load;
+            Load += FormImportarFuncionarios_Load;
             tlpMain.ResumeLayout(false);
             pnlHeader.ResumeLayout(false);
             pnlInstrucoes.ResumeLayout(false);
@@ -277,8 +249,6 @@
         private System.Windows.Forms.Label lblFechar;
         private System.Windows.Forms.Panel pnlInstrucoes;
         private System.Windows.Forms.Label lblDica;
-        private System.Windows.Forms.Label lblTituloFuncoes;
-        private System.Windows.Forms.FlowLayoutPanel flpFuncoes;
         private System.Windows.Forms.DataGridView dgvImport;
         private System.Windows.Forms.TableLayoutPanel tlpBotoes;
         private Guna.UI2.WinForms.Guna2Button btnCancelar;

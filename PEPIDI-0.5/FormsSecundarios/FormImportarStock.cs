@@ -31,7 +31,7 @@ namespace PEPIDI.FormsSecundarios
         private async void FormImportarStock_Load(object sender, EventArgs e)
         {
             await CarregarFuncoesAsync();
-            await CarregarRegrasFamiliaAsync(); // Carrega o "cérebro" das famílias
+            await Task.Run(() => MotorIA.CarregarRegrasDaBD());
             GestorTema.AplicarEstilos(this);
         }
 
@@ -58,111 +58,70 @@ namespace PEPIDI.FormsSecundarios
             dgvImport.Columns["Tamanho"].Width = 120;
             dgvImport.Columns["Quantidade"].Width = 120;
             dgvImport.Columns["Familia"].Width = 200;
-
-            // Ativar evento de teclas para apanhar o Ctrl+V
-            dgvImport.KeyDown += DgvImport_KeyDown;
         }
 
         private void DgvImport_KeyDown(object sender, KeyEventArgs e)
         {
-            // O SEGREDINHO: Colar do Excel!
             if (e.Control && e.KeyCode == Keys.V)
             {
                 try
                 {
-                    string textoClipboard = Clipboard.GetText();
-                    string[] linhas = textoClipboard.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    int linhaAtual = dgvImport.CurrentRow != null ? dgvImport.CurrentRow.Index : 0;
-
-                    // Suspendemos o desenho da grelha para colar instantaneamente (Super rápido!)
+                    string[] linhas = Clipboard.GetText().Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    int linhaAtual = dgvImport.CurrentRow?.Index ?? 0;
                     dgvImport.SuspendLayout();
 
                     foreach (string linha in linhas)
                     {
                         string[] celulas = linha.Split('\t');
+                        if (linhaAtual >= dgvImport.Rows.Count - 1) dgvImport.Rows.Add();
 
-                        if (linhaAtual >= dgvImport.Rows.Count - 1)
-                            dgvImport.Rows.Add();
+                        string modeloColado = celulas[0].Trim();
+                        dgvImport["Modelo", linhaAtual].Value = modeloColado;
+                        dgvImport["Tamanho", linhaAtual].Value = celulas.Length > 1 ? celulas[1].Trim() : "";
+                        dgvImport["Quantidade", linhaAtual].Value = celulas.Length > 2 ? celulas[2].Trim() : "0";
 
-                        // 1. Colar os dados brutos (Modelo, Tamanho, Quantidade)
-                        for (int i = 0; i < celulas.Length && i < 3; i++) // Limitamos a 3 para não pisar a Família sem querer
+                        // 1. TENTATIVA DE DETECÇÃO
+                        string familiaIA = MotorIA.DetetarFamilia(modeloColado);
+
+                        // 2. O TRUQUE: Se a IA não sabe ("Null"), mas o utilizador já preencheu 
+                        // uma linha acima com o mesmo padrão, a IA aprende NA HORA.
+                        if (familiaIA == "Null")
                         {
-                            dgvImport[i, linhaAtual].Value = celulas[i].Trim();
+                            // Procura nas linhas acima se já existe um modelo que contenha a mesma palavra
+                            string primeiraPalavra = modeloColado.Split(' ')[0];
+                            familiaIA = ProcurarSugestaoNasLinhasAcima(primeiraPalavra, linhaAtual);
                         }
 
-                        // 2. MAGIA DA INTELIGÊNCIA ARTIFICIAL
-                        string modeloColado = dgvImport["Modelo", linhaAtual].Value?.ToString() ?? "";
-                        dgvImport["Familia", linhaAtual].Value = DetetarFamilia(modeloColado);
+                        dgvImport["Familia", linhaAtual].Value = familiaIA;
+
+                        if (familiaIA == "Null")
+                            dgvImport["Familia", linhaAtual].Style.BackColor = Color.LightGoldenrodYellow;
 
                         linhaAtual++;
                     }
-
                     dgvImport.ResumeLayout();
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erro ao colar dados: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
             }
         }
 
-        // ==========================================
-        // 2. O MOTOR INTELIGENTE 🧠
-        // ==========================================
-        private async Task CarregarRegrasFamiliaAsync()
+        // Método auxiliar para a IA "olhar para cima" na grelha
+        private string ProcurarSugestaoNasLinhasAcima(string keyword, int linhaLimite)
         {
-            regrasFamilia.Clear();
-            await Task.Run(() =>
+            for (int i = 0; i < linhaLimite; i++)
             {
-                using (SqlConnection conn = GetConn.GetConnection())
+                string modAnterior = dgvImport["Modelo", i].Value?.ToString() ?? "";
+                string famAnterior = dgvImport["Familia", i].Value?.ToString() ?? "";
+
+                // Se a linha de cima tem a mesma palavra e já tem família, usamos essa!
+                if (modAnterior.ToLower().Contains(keyword.ToLower()) && famAnterior != "Null")
                 {
-                    // Lemos a tabela que criaste. ORDER BY ID é crucial para regras prioritárias!
-                    using (SqlCommand cmd = new SqlCommand("SELECT PalavraChave, FamiliaDestino FROM RegrasFamilia ORDER BY ID", conn))
-                    {
-                        try
-                        {
-                            conn.Open();
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                while (reader.Read())
-                                {
-                                    string palavra = reader.GetString(0).ToLower().Trim();
-                                    string destino = reader.GetString(1).Trim();
-
-                                    if (!regrasFamilia.ContainsKey(palavra))
-                                    {
-                                        regrasFamilia.Add(palavra, destino);
-                                    }
-                                }
-                            }
-                        }
-                        catch { /* Ignora se a tabela ainda não existir para não crashar a app */ }
-                    }
-                }
-            });
-        }
-
-        private string DetetarFamilia(string modelo)
-        {
-            if (string.IsNullOrWhiteSpace(modelo)) return "Null";
-
-            string m = modelo.ToLower();
-
-            foreach (var regra in regrasFamilia)
-            {
-                if (m.Contains(regra.Key))
-                {
-                    return regra.Value;
+                    return famAnterior;
                 }
             }
-
             return "Null";
         }
 
-        // ==========================================
-        // 3. CARREGAR AS FUNÇÕES AUTORIZADAS (AS TAGS)
-        // ==========================================
         private async Task CarregarFuncoesAsync()
         {
             flpFuncoes.SuspendLayout();
@@ -239,38 +198,53 @@ namespace PEPIDI.FormsSecundarios
 
             if (funcoesSelecionadas.Count == 0)
             {
-                MessageBox.Show("Tens de selecionar pelo menos uma Função Autorizada que se aplique a este lote!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Tens de selecionar pelo menos uma Função!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // 2. Limpar linhas vazias da Grelha
+            // 2. Filtrar linhas válidas e ENSINAR A IA
             List<DataGridViewRow> linhasValidas = new List<DataGridViewRow>();
+
+            // Lista temporária para não abrir 500 conexões à BD dentro do loop
+            List<(string Key, string Fam)> novasRegras = new List<(string, string)>();
+
             foreach (DataGridViewRow row in dgvImport.Rows)
             {
-                if (!row.IsNewRow && row.Cells["Familia"].Value != null && row.Cells["Modelo"].Value != null)
+                if (row.IsNewRow) continue;
+
+                var cellModelo = row.Cells["Modelo"].Value;
+                var cellFamilia = row.Cells["Familia"].Value;
+
+                if (cellModelo != null && cellFamilia != null)
                 {
-                    linhasValidas.Add(row);
+                    string modelo = cellModelo.ToString();
+                    string familiaFinal = cellFamilia.ToString();
+
+                    if (familiaFinal != "Null" && familiaFinal != "")
+                    {
+                        linhasValidas.Add(row);
+
+                        // Se a IA não conhecia (estava amarelo ou Tag era Null)
+                        // Vamos preparar para ensinar
+                        string keyword = modelo.Split(' ')[0].ToLower().Trim();
+                        novasRegras.Add((keyword, familiaFinal));
+                    }
                 }
             }
 
             if (linhasValidas.Count == 0)
             {
-                MessageBox.Show("A tabela está vazia. Adiciona ou cola artigos do Excel antes de importar.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Não existem linhas válidas com Família definida.");
                 return;
             }
 
-            // 3. PERGUNTA AO UTILIZADOR COMO TRATAR OS DUPLICADOS
+            // 3. Pergunta duplicados
             DialogResult resposta = MessageBox.Show(
-                "Se algum destes artigos já existir no armazém, o que pretendes fazer?\n\n" +
-                "[ SIM ] - Somar as quantidades ao stock já existente (Recomendado)\n" +
-                "[ NÃO ] - Criar linhas repetidas na base de dados separadamente\n" +
-                "[ CANCELAR ] - Abortar a importação",
+                "Desejas somar as quantidades ao stock já existente?",
                 "Tratamento de Duplicados",
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question);
+                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
-            if (resposta == DialogResult.Cancel) return; // Aborta logo aqui
-
+            if (resposta == DialogResult.Cancel) return;
             bool somarAosExistentes = (resposta == DialogResult.Yes);
 
             // 4. Processar a Gravação
@@ -282,47 +256,43 @@ namespace PEPIDI.FormsSecundarios
                 using (SqlConnection conn = GetConn.GetConnection())
                 {
                     conn.Open();
-
                     using (SqlTransaction trans = conn.BeginTransaction())
                     {
                         try
                         {
-                            // A QUERY MUDA CONFORME A RESPOSTA DO UTILIZADOR
-                            string query = "";
-                            if (somarAosExistentes)
+                            // A. GUARDAR REGRAS NA BD (APRENDER)
+                            foreach (var regra in novasRegras.Distinct())
                             {
-                                query = @"IF EXISTS (SELECT 1 FROM EPI WHERE Modelo = @Modelo AND Tamanho = @Tamanho AND Acesso = @Acesso)
-                                        UPDATE EPI SET Quantidade = Quantidade + @Quantidade WHERE Modelo = @Modelo AND Tamanho = @Tamanho AND Acesso = @Acesso
-                                        ELSE
-                                        INSERT INTO EPI (Familia, Modelo, Tamanho, Acesso, Quantidade) VALUES (@Familia, @Modelo, @Tamanho, @Acesso, @Quantidade)";
+                                // Chamamos o método que criámos no MotorIA
+                                MotorIA.AprenderNovaRegra(regra.Key, regra.Fam, "Familia");
                             }
-                            else
-                            {
-                                query = @"INSERT INTO EPI (Familia, Modelo, Tamanho, Acesso, Quantidade) VALUES (@Familia, @Modelo, @Tamanho, @Acesso, @Quantidade)";
-                            }
+
+                            // B. GUARDAR STOCK
+                            string query = somarAosExistentes
+                                ? @"IF EXISTS (SELECT 1 FROM EPI WHERE Modelo = @Modelo AND Tamanho = @Tamanho AND Acesso = @Acesso)
+                                UPDATE EPI SET Quantidade = Quantidade + @Quantidade 
+                                WHERE Modelo = @Modelo AND Tamanho = @Tamanho AND Acesso = @Acesso
+                            ELSE
+                                INSERT INTO EPI (Familia, Modelo, Tamanho, Acesso, Quantidade) 
+                                VALUES (@Familia, @Modelo, @Tamanho, @Acesso, @Quantidade)"
+                                : @"INSERT INTO EPI (Familia, Modelo, Tamanho, Acesso, Quantidade) 
+                            VALUES (@Familia, @Modelo, @Tamanho, @Acesso, @Quantidade)";
 
                             using (SqlCommand cmd = new SqlCommand(query, conn, trans))
                             {
-                                cmd.Parameters.Add("@Familia", SqlDbType.NVarChar);
-                                cmd.Parameters.Add("@Modelo", SqlDbType.NVarChar);
-                                cmd.Parameters.Add("@Tamanho", SqlDbType.NVarChar);
+                                cmd.Parameters.Add("@Familia", SqlDbType.NVarChar, 100);
+                                cmd.Parameters.Add("@Modelo", SqlDbType.NVarChar, 100);
+                                cmd.Parameters.Add("@Tamanho", SqlDbType.NVarChar, 50);
                                 cmd.Parameters.Add("@Acesso", SqlDbType.Int);
                                 cmd.Parameters.Add("@Quantidade", SqlDbType.Int);
 
                                 foreach (DataGridViewRow row in linhasValidas)
                                 {
-                                    string familia = row.Cells["Familia"].Value?.ToString() ?? "";
-                                    string modelo = row.Cells["Modelo"].Value?.ToString() ?? "";
-                                    string tamanho = row.Cells["Tamanho"].Value?.ToString() ?? "";
-
-                                    int quantidade = 0;
-                                    int.TryParse(row.Cells["Quantidade"].Value?.ToString(), out quantidade);
-
-                                    cmd.Parameters["@Familia"].Value = familia;
-                                    cmd.Parameters["@Modelo"].Value = modelo;
-                                    cmd.Parameters["@Tamanho"].Value = tamanho;
+                                    cmd.Parameters["@Familia"].Value = row.Cells["Familia"].Value;
+                                    cmd.Parameters["@Modelo"].Value = row.Cells["Modelo"].Value;
+                                    cmd.Parameters["@Tamanho"].Value = row.Cells["Tamanho"].Value;
                                     cmd.Parameters["@Acesso"].Value = acessoID;
-                                    cmd.Parameters["@Quantidade"].Value = quantidade;
+                                    cmd.Parameters["@Quantidade"].Value = Convert.ToInt32(row.Cells["Quantidade"].Value ?? 0);
 
                                     cmd.ExecuteNonQuery();
                                     countSucesso++;
@@ -330,21 +300,23 @@ namespace PEPIDI.FormsSecundarios
                             }
 
                             trans.Commit();
-                            MessageBox.Show($"{countSucesso} artigos importados com sucesso para a Base de Dados!", "Importação Concluída", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // RECARREGAR A RAM DA IA PARA A PRÓXIMA VEZ
+                            MotorIA.CarregarRegrasDaBD();
+
+                            MessageBox.Show($"{countSucesso} artigos importados e IA atualizada!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            this.DialogResult = DialogResult.OK;
                             this.Close();
                         }
-                        catch (Exception exTrans)
+                        catch (Exception ex)
                         {
                             trans.Rollback();
-                            MessageBox.Show("Erro durante a importação. Nenhuma alteração foi guardada.\n" + exTrans.Message, "Erro SQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Erro na transação: " + ex.Message);
                         }
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro fatal: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            catch (Exception ex) { MessageBox.Show("Erro Fatal: " + ex.Message); }
         }
 
         private int ObterOuCriarAcessoID(List<string> funcoesSelecionadas)
@@ -399,6 +371,34 @@ namespace PEPIDI.FormsSecundarios
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void dgvImport_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            // Se o humano alterou a coluna "Familia"
+            if (e.RowIndex >= 0 && dgvImport.Columns[e.ColumnIndex].Name == "Familia")
+            {
+                string novaFamilia = dgvImport[e.ColumnIndex, e.RowIndex].Value?.ToString();
+                string modeloDestaLinha = dgvImport["Modelo", e.RowIndex].Value?.ToString() ?? "";
+
+                if (string.IsNullOrEmpty(modeloDestaLinha) || novaFamilia == "Null") return;
+
+                string keyword = modeloDestaLinha.Split(' ')[0]; // Ex: "T-Shirt"
+
+                // PERGUNTA MÁGICA: "Queres aplicar esta família a todos os modelos parecidos?"
+                // Ou faz automaticamente para as linhas que estão abaixo e estão vazias:
+                for (int i = e.RowIndex + 1; i < dgvImport.Rows.Count; i++)
+                {
+                    string modeloAbaixo = dgvImport["Modelo", i].Value?.ToString() ?? "";
+                    string familiaAbaixo = dgvImport["Familia", i].Value?.ToString() ?? "";
+
+                    if (modeloAbaixo.ToLower().Contains(keyword.ToLower()) && (familiaAbaixo == "Null" || string.IsNullOrEmpty(familiaAbaixo)))
+                    {
+                        dgvImport["Familia", i].Value = novaFamilia;
+                        dgvImport["Familia", i].Style.BackColor = Color.White; // Já não precisa de atenção
+                    }
+                }
+            }
         }
     }
 }

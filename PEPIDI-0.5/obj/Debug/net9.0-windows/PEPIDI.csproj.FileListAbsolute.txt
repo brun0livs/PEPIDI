@@ -232,3 +232,4 @@ C:\Users\Bruno\Documents\GitHub\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\r
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\PEPIDI.UCs.UcsSecundarios.Artigo.resources
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\PEPIDI.UCs.Graficos.resources
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\PEPIDI.FormsSecundarios.FormZoomGrafico.resources
+C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\PEPIDI.FormsSecundarios.FormImportarFuncionarios.resources

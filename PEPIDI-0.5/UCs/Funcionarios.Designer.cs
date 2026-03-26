@@ -45,10 +45,13 @@
             txtPesquisa = new Guna.UI2.WinForms.Guna2TextBox();
             lblTituloFUNCIONARIOS = new Label();
             btnAddFunc = new Guna.UI2.WinForms.Guna2Button();
+            cmsOpcoesFuncionario = new Guna.UI2.WinForms.Guna2ContextMenuStrip();
             btnAbreGraficos = new Guna.UI2.WinForms.Guna2Button();
             dgvFuncs = new PEPIDI.Models.PEPIDIDataGridView();
+            btnImportacaoRapida = new ToolStripMenuItem();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
+            cmsOpcoesFuncionario.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvFuncs).BeginInit();
             SuspendLayout();
             // 
@@ -144,6 +147,7 @@
             // btnAddFunc
             // 
             btnAddFunc.BorderRadius = 10;
+            btnAddFunc.ContextMenuStrip = cmsOpcoesFuncionario;
             btnAddFunc.CustomizableEdges = customizableEdges3;
             btnAddFunc.DisabledState.BorderColor = Color.DarkGray;
             btnAddFunc.DisabledState.CustomBorderColor = Color.DarkGray;
@@ -161,6 +165,23 @@
             btnAddFunc.TabIndex = 5;
             btnAddFunc.Text = "Novo Funcionário";
             btnAddFunc.Click += btnAddFunc_Click;
+            // 
+            // cmsOpcoesFuncionario
+            // 
+            cmsOpcoesFuncionario.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cmsOpcoesFuncionario.Items.AddRange(new ToolStripItem[] { btnImportacaoRapida });
+            cmsOpcoesFuncionario.Name = "cmsOpcoesFuncionario";
+            cmsOpcoesFuncionario.RenderMode = ToolStripRenderMode.Professional;
+            cmsOpcoesFuncionario.RenderStyle.ArrowColor = Color.FromArgb(151, 143, 255);
+            cmsOpcoesFuncionario.RenderStyle.BorderColor = Color.Gainsboro;
+            cmsOpcoesFuncionario.RenderStyle.ColorTable = null;
+            cmsOpcoesFuncionario.RenderStyle.RoundedEdges = true;
+            cmsOpcoesFuncionario.RenderStyle.SelectionArrowColor = Color.White;
+            cmsOpcoesFuncionario.RenderStyle.SelectionBackColor = Color.FromArgb(100, 88, 255);
+            cmsOpcoesFuncionario.RenderStyle.SelectionForeColor = Color.White;
+            cmsOpcoesFuncionario.RenderStyle.SeparatorColor = Color.Gainsboro;
+            cmsOpcoesFuncionario.RenderStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
+            cmsOpcoesFuncionario.Size = new Size(203, 48);
             // 
             // btnAbreGraficos
             // 
@@ -241,6 +262,13 @@
             dgvFuncs.Size = new Size(1815, 786);
             dgvFuncs.TabIndex = 1;
             // 
+            // btnImportacaoRapida
+            // 
+            btnImportacaoRapida.Name = "btnImportacaoRapida";
+            btnImportacaoRapida.Size = new Size(202, 22);
+            btnImportacaoRapida.Text = "Importação Rápida";
+            btnImportacaoRapida.Click += btnImportacaoRapida_Click;
+            // 
             // Funcionarios
             // 
             AutoScaleMode = AutoScaleMode.Inherit;
@@ -254,6 +282,7 @@
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
+            cmsOpcoesFuncionario.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvFuncs).EndInit();
             ResumeLayout(false);
         }
@@ -267,5 +296,7 @@
         private Guna.UI2.WinForms.Guna2Button btnAddFunc;
         private Guna.UI2.WinForms.Guna2TextBox txtPesquisa;
         private Guna.UI2.WinForms.Guna2Button btnAbreGraficos;
+        private Guna.UI2.WinForms.Guna2ContextMenuStrip cmsOpcoesFuncionario;
+        private ToolStripMenuItem btnImportacaoRapida;
     }
 }

@@ -219,11 +219,11 @@ namespace PEPIDI.UCs
                 using (SqlCommand cmd = new SqlCommand("sp_ConsumosFiltrados", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@NrFunc", nrFunc > 0 ? nrFunc : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Funcoes", string.IsNullOrEmpty(funcoesStr) ? DBNull.Value : funcoesStr);
-                    cmd.Parameters.AddWithValue("@Familias", string.IsNullOrEmpty(familiasStr) ? DBNull.Value : familiasStr);
-                    cmd.Parameters.AddWithValue("@Modelos", string.IsNullOrEmpty(modelosStr) ? DBNull.Value : modelosStr);
-                    cmd.Parameters.AddWithValue("@Tamanhos", string.IsNullOrEmpty(tamanhosStr) ? DBNull.Value : tamanhosStr);
+                    cmd.Parameters.AddWithValue("@NrFunc", nrFunc > 0 ? (object)nrFunc : DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Funcoes", string.IsNullOrEmpty(funcoesStr) ? (object)DBNull.Value : funcoesStr);
+                    cmd.Parameters.AddWithValue("@Familias", string.IsNullOrEmpty(familiasStr) ? (object)DBNull.Value : familiasStr);
+                    cmd.Parameters.AddWithValue("@Modelos", string.IsNullOrEmpty(modelosStr) ? (object)DBNull.Value : modelosStr);
+                    cmd.Parameters.AddWithValue("@Tamanhos", string.IsNullOrEmpty(tamanhosStr) ? (object)DBNull.Value : tamanhosStr);
                     cmd.Parameters.AddWithValue("@DataInicio", inicio);
                     cmd.Parameters.AddWithValue("@DataFim", fim);
 
@@ -232,7 +232,28 @@ namespace PEPIDI.UCs
                 }
             });
 
+            // 1. Atribuir os dados à tabela
             dgvTabela.DataSource = dt;
+
+            // 2. Ocultar colunas desnecessárias para a visualização da tabela
+            string[] colsToHide = { "Funcao", "Familia", "PrecoUnitario", "TotalGasto" };
+            foreach (string colName in colsToHide)
+            {
+                if (dgvTabela.Columns.Contains(colName))
+                    dgvTabela.Columns[colName].Visible = false;
+            }
+
+            // 3. Configuração de AutoSize (O SEGREDO DO DESIGN)
+            // Primeiro: todas as colunas ocupam apenas o espaço do texto
+            dgvTabela.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
+            // Segundo: A coluna do Nome "estica" para ocupar o resto do ecrã
+            if (dgvTabela.Columns.Contains("NomeFuncionario"))
+            {
+                dgvTabela.Columns["NomeFuncionario"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
+
+            // 4. Atualizar o gráfico (o gráfico continua a ter acesso às colunas ocultas via DT)
             AtualizarGrafico(dt, nivelDetalhe);
         }
 
@@ -261,6 +282,7 @@ namespace PEPIDI.UCs
 
             Grafico.Datasets.Add(dataset);
             Grafico.Update();
+            
         }
 
         // ==========================================
