@@ -1,121 +1,97 @@
-﻿using Microsoft.Data.SqlClient;
-using PEPIDI.Models;
-using PEPIDI.Organizers;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 
-namespace PEPIDI.Utils
+namespace PEPIDI.Organizers
 {
     public static class MotorIA
     {
-        private static Dictionary<string, string> _regrasFamilia = new Dictionary<string, string>();
-        private static List<string> _funcoesOficiais = new List<string>();
-        private static Dictionary<string, string> _regrasFuncao = new Dictionary<string, string>();
-
-        public static void Inicializar(Dictionary<string, string> regrasFam, List<string> funcoes, Dictionary<string, string> regrasFunc)
-        {
-            _regrasFamilia = regrasFam;
-            _funcoesOficiais = funcoes;
-            _regrasFuncao = regrasFunc;
-        }
+        // Mudámos para LISTA para garantir que o ORDER BY LEN do SQL seja respeitado no loop
+        private static List<KeyValuePair<string, string>> _regrasFamilia = new List<KeyValuePair<string, string>>();
+        private static List<KeyValuePair<string, string>> _regrasFuncao = new List<KeyValuePair<string, string>>();
 
         public static void CarregarRegrasDaBD()
         {
             _regrasFamilia.Clear();
+            _regrasFuncao.Clear();
+
             using (SqlConnection conn = GetConn.GetConnection())
             {
                 conn.Open();
-                // Lemos as regras de Família
-                using (SqlCommand cmd = new SqlCommand("SELECT PalavraChave, FamiliaDestino FROM RegrasFamilia", conn))
+
+                // FAMÍLIA (STOCK) - Mais compridas primeiro!
+                string sqlFam = "SELECT PalavraChave, FamiliaDestino FROM RegrasFamilia ORDER BY LEN(PalavraChave) DESC";
+                using (SqlCommand cmd = new SqlCommand(sqlFam, conn))
                 using (SqlDataReader rdr = cmd.ExecuteReader())
                 {
                     while (rdr.Read())
                     {
-                        string chave = rdr.GetString(0).ToLower().Trim();
-                        string destino = rdr.GetString(1).Trim();
-                        if (!_regrasFamilia.ContainsKey(chave)) _regrasFamilia.Add(chave, destino);
+                        _regrasFamilia.Add(new KeyValuePair<string, string>(
+                            rdr["PalavraChave"].ToString().ToLower().Trim(),
+                            rdr["FamiliaDestino"].ToString().Trim()));
+                    }
+                }
+
+                // FUNÇÃO (FUNCIONÁRIOS)
+                string sqlFunc = "SELECT PalavraChave, FuncaoDestino FROM RegrasFuncao ORDER BY LEN(PalavraChave) DESC";
+                using (SqlCommand cmd = new SqlCommand(sqlFunc, conn))
+                using (SqlDataReader rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        _regrasFuncao.Add(new KeyValuePair<string, string>(
+                            rdr["PalavraChave"].ToString().ToLower().Trim(),
+                            rdr["FuncaoDestino"].ToString().Trim()));
                     }
                 }
             }
         }
 
-        public static string DetetarFamilia(string modelo)
+        public static string CorrigirFamilia(string texto)
         {
-            if (string.IsNullOrWhiteSpace(modelo)) return "Null";
+            if (string.IsNullOrWhiteSpace(texto)) return "Verificar Colagem";
+            string busca = texto.ToLower().Trim();
 
-            // Passamos o modelo para minúsculas para bater com a PalavraChave da BD
-            string m = modelo.ToLower().Trim();
-
+            // O Loop agora respeita a ordem: testa "Polo Manga Comprida" ANTES de "Polo"
             foreach (var regra in _regrasFamilia)
             {
-                // Se o modelo contiver a palavra-chave (ex: "t-shirt")
-                if (m.Contains(regra.Key))
-                {
-                    return regra.Value;
-                }
+                if (busca.Contains(regra.Key)) return regra.Value;
             }
-            return "Null";
+            return "Verificar Colagem";
         }
 
-        public static string CorrigirFuncao(string input)
+        public static string CorrigirFuncao(string texto)
         {
-            if (string.IsNullOrWhiteSpace(input)) return "Verificar Colagem";
-            string busca = input.Trim();
+            if (string.IsNullOrWhiteSpace(texto)) return "Verificar Colagem";
+            string busca = texto.ToLower().Trim();
 
-            // 1. Verificação exata
-            var exata = _funcoesOficiais.FirstOrDefault(f => f.Equals(busca, StringComparison.OrdinalIgnoreCase));
-            if (exata != null) return exata;
-
-            // 2. Dicionário de Sinónimos aprendidos pela IA
-            if (_regrasFuncao.ContainsKey(busca.ToLower())) return _regrasFuncao[busca.ToLower()];
-
-            // 3. Levenshtein (Erros ortográficos)
-            string melhorMatch = null;
-            int menorDistancia = int.MaxValue;
-            foreach (var oficial in _funcoesOficiais)
+            foreach (var regra in _regrasFuncao)
             {
-                int dist = CalcularDistancia(busca.ToLower(), oficial.ToLower());
-                if (dist < menorDistancia && dist <= 2) { menorDistancia = dist; melhorMatch = oficial; }
+                if (busca.Contains(regra.Key)) return regra.Value;
             }
-
-            return melhorMatch ?? "Verificar Colagem";
+            return "Verificar Colagem";
         }
 
-        public static void AprenderNovaRegra(string termoErrado, string termoOficial, string tipo)
+        public static void AprenderNovaRegra(string errado, string certo, string tipo)
         {
-            if (string.IsNullOrWhiteSpace(termoErrado) || termoErrado == termoOficial || termoErrado == "Verificar Colagem") return;
-
+            if (string.IsNullOrWhiteSpace(errado) || string.IsNullOrWhiteSpace(certo)) return;
             using (SqlConnection conn = GetConn.GetConnection())
             {
                 conn.Open();
-                string tabela = (tipo == "Funcao") ? "RegrasFuncao" : "RegrasFamilia";
-                string colDestino = (tipo == "Funcao") ? "FuncaoDestino" : "FamiliaDestino";
-
-                string query = $@"IF EXISTS (SELECT 1 FROM {tabela} WHERE PalavraChave = @chave)
-                                UPDATE {tabela} SET {colDestino} = @destino WHERE PalavraChave = @chave
-                                ELSE INSERT INTO {tabela} (PalavraChave, {colDestino}) VALUES (@chave, @destino)";
-
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                string tabela = (tipo == "Familia") ? "RegrasFamilia" : "RegrasFuncao";
+                string col = (tipo == "Familia") ? "FamiliaDestino" : "FuncaoDestino";
+                string sql = $@"IF EXISTS (SELECT 1 FROM {tabela} WHERE PalavraChave = @e) 
+                                UPDATE {tabela} SET {col} = @c WHERE PalavraChave = @e 
+                                ELSE INSERT INTO {tabela} (PalavraChave, {col}) VALUES (@e, @c)";
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("@chave", termoErrado.ToLower().Trim());
-                    cmd.Parameters.AddWithValue("@destino", termoOficial.Trim());
+                    cmd.Parameters.AddWithValue("@e", errado.ToLower().Trim());
+                    cmd.Parameters.AddWithValue("@c", certo.Trim());
                     cmd.ExecuteNonQuery();
                 }
             }
-        }
-
-        private static int CalcularDistancia(string s, string t)
-        {
-            int n = s.Length, m = t.Length;
-            int[,] d = new int[n + 1, m + 1];
-            if (n == 0) return m; if (m == 0) return n;
-            for (int i = 0; i <= n; d[i, 0] = i++) ;
-            for (int j = 0; j <= m; d[0, j] = j++) ;
-            for (int i = 1; i <= n; i++)
-                for (int j = 1; j <= m; j++)
-                    d[i, j] = Math.Min(Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1), d[i - 1, j - 1] + ((t[j - 1] == s[i - 1]) ? 0 : 1));
-            return d[n, m];
+            CarregarRegrasDaBD();
         }
     }
 }

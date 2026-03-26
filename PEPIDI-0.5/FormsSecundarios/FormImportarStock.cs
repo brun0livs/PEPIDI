@@ -81,7 +81,7 @@ namespace PEPIDI.FormsSecundarios
                         dgvImport["Quantidade", linhaAtual].Value = celulas.Length > 2 ? celulas[2].Trim() : "0";
 
                         // 1. TENTATIVA DE DETECÇÃO
-                        string familiaIA = MotorIA.DetetarFamilia(modeloColado);
+                        string familiaIA = MotorIA.CorrigirFamilia(modeloColado);
 
                         // 2. O TRUQUE: Se a IA não sabe ("Null"), mas o utilizador já preencheu 
                         // uma linha acima com o mesmo padrão, a IA aprende NA HORA.
@@ -375,27 +375,19 @@ namespace PEPIDI.FormsSecundarios
 
         private void dgvImport_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            // Se o humano alterou a coluna "Familia"
+            // Se mudaste a coluna "Familia" (ou "Funcao")
             if (e.RowIndex >= 0 && dgvImport.Columns[e.ColumnIndex].Name == "Familia")
             {
-                string novaFamilia = dgvImport[e.ColumnIndex, e.RowIndex].Value?.ToString();
-                string modeloDestaLinha = dgvImport["Modelo", e.RowIndex].Value?.ToString() ?? "";
+                string modeloAtual = dgvImport.Rows[e.RowIndex].Cells["Modelo"].Value?.ToString();
+                string novoValor = dgvImport.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString();
 
-                if (string.IsNullOrEmpty(modeloDestaLinha) || novaFamilia == "Null") return;
-
-                string keyword = modeloDestaLinha.Split(' ')[0]; // Ex: "T-Shirt"
-
-                // PERGUNTA MÁGICA: "Queres aplicar esta família a todos os modelos parecidos?"
-                // Ou faz automaticamente para as linhas que estão abaixo e estão vazias:
-                for (int i = e.RowIndex + 1; i < dgvImport.Rows.Count; i++)
+                // Percorre a grid toda e "adapta" quem tiver o mesmo modelo
+                foreach (DataGridViewRow row in dgvImport.Rows)
                 {
-                    string modeloAbaixo = dgvImport["Modelo", i].Value?.ToString() ?? "";
-                    string familiaAbaixo = dgvImport["Familia", i].Value?.ToString() ?? "";
-
-                    if (modeloAbaixo.ToLower().Contains(keyword.ToLower()) && (familiaAbaixo == "Null" || string.IsNullOrEmpty(familiaAbaixo)))
+                    if (row.Index != e.RowIndex && row.Cells["Modelo"].Value?.ToString() == modeloAtual)
                     {
-                        dgvImport["Familia", i].Value = novaFamilia;
-                        dgvImport["Familia", i].Style.BackColor = Color.White; // Já não precisa de atenção
+                        row.Cells["Familia"].Value = novoValor;
+                        row.Cells["Familia"].Style.BackColor = Color.White; // Tira o amarelo
                     }
                 }
             }
