@@ -73,25 +73,41 @@ namespace PEPIDI.Organizers
             return "Verificar Colagem";
         }
 
-        public static void AprenderNovaRegra(string errado, string certo, string tipo)
+        public static void AprenderNovaRegra(string errado, string certo, string tipo, bool recarregar = true)
         {
+            // 1. Validação básica para não guardar lixo
             if (string.IsNullOrWhiteSpace(errado) || string.IsNullOrWhiteSpace(certo)) return;
+
             using (SqlConnection conn = GetConn.GetConnection())
             {
                 conn.Open();
+
+                // 2. Define dinamicamente a tabela e a coluna alvo
                 string tabela = (tipo == "Familia") ? "RegrasFamilia" : "RegrasFuncao";
-                string col = (tipo == "Familia") ? "FamiliaDestino" : "FuncaoDestino";
-                string sql = $@"IF EXISTS (SELECT 1 FROM {tabela} WHERE PalavraChave = @e) 
-                                UPDATE {tabela} SET {col} = @c WHERE PalavraChave = @e 
-                                ELSE INSERT INTO {tabela} (PalavraChave, {col}) VALUES (@e, @c)";
+                string colDestino = (tipo == "Familia") ? "FamiliaDestino" : "FuncaoDestino";
+
+                // 3. UPSERT: Se a palavra-chave já existe, atualiza o destino. Se não, insere nova.
+                string sql = $@"
+            IF EXISTS (SELECT 1 FROM {tabela} WHERE PalavraChave = @e)
+                UPDATE {tabela} SET {colDestino} = @c WHERE PalavraChave = @e
+            ELSE
+                INSERT INTO {tabela} (PalavraChave, {colDestino}) VALUES (@e, @c)";
+
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
+                    // Limpamos e pomos em lowercase para a IA não ser sensível a Caps Lock
                     cmd.Parameters.AddWithValue("@e", errado.ToLower().Trim());
                     cmd.Parameters.AddWithValue("@c", certo.Trim());
                     cmd.ExecuteNonQuery();
                 }
             }
-            CarregarRegrasDaBD();
+
+            // 4. A MAGIA DA PERFORMANCE:
+            // Só recarrega a lista da RAM se o utilizador pedir (padrão é sim)
+            if (recarregar)
+            {
+                CarregarRegrasDaBD();
+            }
         }
     }
 }

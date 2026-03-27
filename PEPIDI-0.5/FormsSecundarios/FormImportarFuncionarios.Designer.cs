@@ -164,6 +164,7 @@
             dgvImport.Size = new Size(1062, 561);
             dgvImport.TabIndex = 2;
             dgvImport.KeyDown += dgvImport_KeyDown;
+            dgvImport.CellValueChanged += dgvImport_CellValueChanged;
             // 
             // tlpBotoes
             // 

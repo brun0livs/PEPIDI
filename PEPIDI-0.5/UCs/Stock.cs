@@ -169,82 +169,55 @@ namespace PEPIDI.UCs
                     dgvStock.AutoGenerateColumns = true;
                     dgvStock.DataSource = dt;
 
-                    // ============================================
-                    // CONFIGURAÇÃO DA COR (ADICIONA ISTO AQUI)
-                    // ============================================
+                    // --- LIGAÇÃO À CLASSE PEPIDI ---
+                    // O BadgeColumnName tem de ser igual ao TÍTULO da coluna (HeaderText)
+                    if (dgvStock.Columns.Contains("NomeFuncao"))
+                    {
+                        // Mudamos o TÍTULO (HeaderText) para "Departamento"
+                        dgvStock.Columns["NomeFuncao"].HeaderText = "Departamento";
 
-                    // 1. Configura a coluna que tem o Texto (ex: "Armazém")
+                        // Escondemos o texto para a pílula aparecer limpa
+                        dgvStock.Columns["NomeFuncao"].DefaultCellStyle.ForeColor = Color.Transparent;
+                        dgvStock.Columns["NomeFuncao"].DefaultCellStyle.SelectionForeColor = Color.Transparent;
+                    }
                     dgvStock.BadgeColumnName = "Departamento";
 
-                    // 2. Configura a coluna que tem a Cor (ex: "#FF0000")
-                    dgvStock.BadgeColorColumnName = "CorHex";
+                    // O BadgeColorColumnName tem de ser igual ao NOME da coluna que traz o HEX (#RRGGBB)
+                    dgvStock.BadgeColorColumnName = "CorFuncao";
 
-                    // 3. Esconde a coluna da cor para não ficar feio na tabela
-                    if (dgvStock.Columns.Contains("CorHex"))
+                    if (dgvStock.Columns.Contains("Departamento"))
                     {
-                        dgvStock.Columns["CorHex"].Visible = false;
+                        // TRUQUE: Tornamos o texto transparente para a pílula aparecer
+                        dgvStock.Columns["Departamento"].DefaultCellStyle.ForeColor = Color.Transparent;
+                        dgvStock.Columns["Departamento"].DefaultCellStyle.SelectionForeColor = Color.Transparent;
+                        dgvStock.Columns["Departamento"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                     }
 
-                    // 4. Alinhamentos cosméticos
-                    if (dgvStock.Columns.Contains("Tamanho"))
-                    {
-                        dgvStock.Columns["Tamanho"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                    }
+                    // Esconde a coluna do código de cor para não aparecer texto feio
+                    if (dgvStock.Columns.Contains("CorFuncao")) dgvStock.Columns["CorFuncao"].Visible = false;
                 }
-                dgvStock.ReadOnly = true;
             }
-            catch (Exception ex)
-            {
-                M.AbrirMensagem("Erro ao aplicar visão: " + Environment.NewLine + ex.Message, "Erro");
-            }
+            catch (Exception ex) { M.AbrirMensagem(ex.Message, "Erro"); }
         }
 
         private void dgvStock_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            // 1. Focar apenas na coluna certa
+            // 1. Só nos interessa a coluna do Departamento
             if (dgvStock.Columns[e.ColumnIndex].Name == "Departamento" && e.Value != null)
             {
-                string textoCompleto = e.Value.ToString().Trim();
+                string textoOriginal = e.Value.ToString().Trim();
 
-                // 2. REGRA DO VÁRIOS (Laranja Diatosta)
-                if (textoCompleto.Contains(",") || textoCompleto.Length > 15)
+                // 2. Regra do "Vários"
+                if (textoOriginal.Contains(",") || textoOriginal.Length > 15)
                 {
-                    e.Value = "Vários"; // Texto limpo
+                    e.Value = "Vários";
                     e.FormattingApplied = true;
-                    dgvStock.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = textoCompleto;
 
-                    // Cores Sólidas (Alpha 255 implícito)
-                    e.CellStyle.BackColor = ColorTranslator.FromHtml("#F26722");
-                    e.CellStyle.ForeColor = Color.White;
-                    e.CellStyle.SelectionBackColor = ColorTranslator.FromHtml("#F26722");
-                    e.CellStyle.SelectionForeColor = Color.White;
-
-                    e.CellStyle.Font = fonteNegrito;
-                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                }
-                else
-                {
-                    // 3. REGRA DOS CURTOS (Cor que vem da BD)
-                    // IMPORTANTE: Resetamos o estilo para não herdar o laranja de cima
-                    if (dgvStock.Rows[e.RowIndex].Cells["CorHex"].Value != DBNull.Value)
+                    // Injetamos a cor Laranja na coluna invisível para a Badge saber que cor usar
+                    if (dgvStock.Columns.Contains("CorFuncao"))
                     {
-                        string hex = dgvStock.Rows[e.RowIndex].Cells["CorHex"].Value.ToString();
-                        Color corBD = ColorTranslator.FromHtml(hex);
-
-                        e.CellStyle.BackColor = corBD;
-                        e.CellStyle.ForeColor = Color.White;
-                        e.CellStyle.SelectionBackColor = corBD;
-                        e.CellStyle.SelectionForeColor = Color.White;
+                        dgvStock.Rows[e.RowIndex].Cells["CorFuncao"].Value = "#F26722";
                     }
-                    else
-                    {
-                        // Fallback caso a BD não tenha cor
-                        e.CellStyle.BackColor = Color.FromArgb(240, 240, 240);
-                        e.CellStyle.ForeColor = Color.Black;
-                    }
-
-                    e.CellStyle.Font = dgvStock.Font; // Fonte normal
-                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
             }
         }

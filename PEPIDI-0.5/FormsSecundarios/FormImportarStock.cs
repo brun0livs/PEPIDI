@@ -375,21 +375,41 @@ namespace PEPIDI.FormsSecundarios
 
         private void dgvImport_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            // Se mudaste a coluna "Familia" (ou "Funcao")
-            if (e.RowIndex >= 0 && dgvImport.Columns[e.ColumnIndex].Name == "Familia")
-            {
-                string modeloAtual = dgvImport.Rows[e.RowIndex].Cells["Modelo"].Value?.ToString();
-                string novoValor = dgvImport.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString();
+            // 1. Evita erros no cabeçalho ou em grelhas vazias
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
-                // Percorre a grid toda e "adapta" quem tiver o mesmo modelo
+            // 2. Identifica em que coluna estamos (Familia no Stock / Funcao nos Funcionarios)
+            string nomeColuna = dgvImport.Columns[e.ColumnIndex].Name;
+
+            if (nomeColuna == "Familia" || nomeColuna == "Funcao")
+            {
+                // 3. Descobre qual é a base da comparação (Modelo ou Nome)
+                string colunaChave = dgvImport.Columns.Contains("Modelo") ? "Modelo" : "Nome";
+
+                var valorChaveOriginal = dgvImport.Rows[e.RowIndex].Cells[colunaChave].Value?.ToString();
+                var novoValorAtribuido = dgvImport.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString();
+
+                if (string.IsNullOrEmpty(valorChaveOriginal)) return;
+
+                // --- INÍCIO DA MAGIA ---
+                // Desativamos temporariamente o evento para não entrar em loop infinito
+                dgvImport.CellValueChanged -= dgvImport_CellValueChanged;
+
                 foreach (DataGridViewRow row in dgvImport.Rows)
                 {
-                    if (row.Index != e.RowIndex && row.Cells["Modelo"].Value?.ToString() == modeloAtual)
+                    // Se o modelo/nome for igual ao que acabaste de mudar...
+                    if (row.Index != e.RowIndex && row.Cells[colunaChave].Value?.ToString() == valorChaveOriginal)
                     {
-                        row.Cells["Familia"].Value = novoValor;
-                        row.Cells["Familia"].Style.BackColor = Color.White; // Tira o amarelo
+                        // ...então adapta o resto!
+                        row.Cells[e.ColumnIndex].Value = novoValorAtribuido;
+
+                        // Limpa o amarelo (feedback visual de que agora está OK)
+                        row.Cells[e.ColumnIndex].Style.BackColor = Color.White;
                     }
                 }
+
+                // Voltamos a ligar o evento
+                dgvImport.CellValueChanged += dgvImport_CellValueChanged;
             }
         }
     }

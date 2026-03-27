@@ -93,7 +93,7 @@ namespace PEPIDI.UCs
 
             // --- ACTIVAR BADGES COLORIDAS ---
             // Isto diz à tua classe personalizada para procurar a coluna com HeaderText "Função"
-            dgvFuncs.BadgeColumnName = "Funcao";
+            dgvFuncs.BadgeColumnName = "Função";
             dgvFuncs.BadgeColorColumnName = "CorHex";
 
             // --- MENU DE AÇÕES ---
@@ -145,49 +145,6 @@ namespace PEPIDI.UCs
             if (dgvFuncs.Columns.Contains("CorHex"))
             {
                 dgvFuncs.Columns["CorHex"].Visible = false;
-            }
-
-            if (dgvFuncs.Columns.Contains("TShirt"))
-            {
-                dgvFuncs.Columns["TShirt"].HeaderText = "T-Shirt";
-                dgvFuncs.Columns["TShirt"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                dgvFuncs.Columns["TShirt"].FillWeight = 6;
-            }
-
-            // O CULPADO FOI DEVOLVIDO À GRELHA! 🧥
-            if (dgvFuncs.Columns.Contains("Casaco"))
-            {
-                dgvFuncs.Columns["Casaco"].HeaderText = "Casaco";
-                dgvFuncs.Columns["Casaco"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                dgvFuncs.Columns["Casaco"].FillWeight = 6;
-            }
-
-            if (dgvFuncs.Columns.Contains("PoloMCurta"))
-            {
-                dgvFuncs.Columns["PoloMCurta"].HeaderText = "P. M. Curta";
-                dgvFuncs.Columns["PoloMCurta"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                dgvFuncs.Columns["PoloMCurta"].FillWeight = 6;
-            }
-
-            if (dgvFuncs.Columns.Contains("PoloMCompr"))
-            {
-                dgvFuncs.Columns["PoloMCompr"].HeaderText = "P. M. Compr.";
-                dgvFuncs.Columns["PoloMCompr"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                dgvFuncs.Columns["PoloMCompr"].FillWeight = 6;
-            }
-
-            if (dgvFuncs.Columns.Contains("Calca"))
-            {
-                dgvFuncs.Columns["Calca"].HeaderText = "Calças";
-                dgvFuncs.Columns["Calca"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                dgvFuncs.Columns["Calca"].FillWeight = 6;
-            }
-
-            if (dgvFuncs.Columns.Contains("Sapato"))
-            {
-                dgvFuncs.Columns["Sapato"].HeaderText = "Sapatos";
-                dgvFuncs.Columns["Sapato"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                dgvFuncs.Columns["Sapato"].FillWeight = 6;
             }
 
             if (dgvFuncs.Columns.Contains("DtAdmiss"))
