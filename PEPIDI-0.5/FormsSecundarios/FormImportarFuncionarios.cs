@@ -77,6 +77,7 @@ namespace PEPIDI.FormsSecundarios
                         string funcIA = MotorIA.CorrigirFuncao(funcExcel);
 
                         dgvImport["Funcao", linhaAtual].Value = funcIA;
+                        // GUARDAMOS AQUI A FUNÇÃO ORIGINAL DO EXCEL NA TAG DA CÉLULA
                         dgvImport["Funcao", linhaAtual].Tag = funcExcel;
 
                         dgvImport["DtAdmissao", linhaAtual].Value = celulas.Length > 3 ? celulas[3].Trim() : DateTime.Now.ToShortDateString();
@@ -113,11 +114,16 @@ namespace PEPIDI.FormsSecundarios
             foreach (DataGridViewRow row in dgvImport.Rows)
             {
                 if (row.IsNewRow) continue;
+
+                // Extraímos a função original para ensinar a IA corretamente!
+                string funcOriginal = row.Cells["Funcao"].Tag?.ToString() ?? row.Cells["Funcao"].Value?.ToString() ?? "";
+
                 dadosParaImportar.Add(new
                 {
                     Index = row.Index,
                     Nr = row.Cells["Nr"].Value?.ToString() ?? "",
                     Nome = row.Cells["Nome"].Value?.ToString() ?? "",
+                    FuncaoOriginal = funcOriginal, // <-- A NOSSA CORREÇÃO
                     Funcao = row.Cells["Funcao"].Value?.ToString() ?? "",
                     Data = row.Cells["DtAdmissao"].Value?.ToString() ?? "",
                     Estab = row.Cells["Estab"].Value?.ToString() ?? ""
@@ -149,7 +155,8 @@ namespace PEPIDI.FormsSecundarios
             int sucessos = 0;
 
             // 4. PROCESSAR EM BACKGROUND
-            await Task.Run(() => {
+            await Task.Run(() =>
+            {
                 foreach (var item in dadosParaImportar)
                 {
                     // Lógica do Estabelecimento (Oliveirinha ID 2 por defeito)
@@ -166,16 +173,25 @@ namespace PEPIDI.FormsSecundarios
                         {
                             int idFunc = funcoesValidas[item.Funcao];
 
-                            // --- PONTO DE INTERROGAÇÃO PARA BREAKPOINT AQUI ---
                             ExecutarGravacaoNoSQL(item.Nr, item.Nome, idFunc, idEstab, item.Data);
 
-                            MotorIA.AprenderNovaRegra(item.Nome, item.Funcao, "Funcao", false);
+                            // AGORA SIM, ESTAMOS A ENSINAR A IA DA FORMA CERTA!
+                            MotorIA.AprenderNovaRegra(item.FuncaoOriginal, item.Funcao, "Funcao", false);
+
                             PintarLinha(item.Index, Color.LightGreen, Color.Black);
                             sucessos++;
                         }
-                        catch (Exception ex) { PintarLinha(item.Index, Color.Red, Color.White, "Erro SQL: " + ex.Message); }
+                        catch (Exception ex)
+                        {
+                            PintarLinha(item.Index, Color.Red, Color.White, "Erro SQL: " + ex.Message);
+                            MessageBox.Show("Erro técnico a gravar a linha " + item.Index + ":\n" + ex.Message, "Depuração PEPIDI");
+                        }
                     }
-                    else { PintarLinha(item.Index, Color.Red, Color.White, "Função não existe na BD"); }
+                    else
+                    {
+                        PintarLinha(item.Index, Color.Red, Color.White, "Função não existe na BD");
+                        MessageBox.Show($"A função '{item.Funcao}' não foi encontrada no dicionário de funções válidas.", "Depuração PEPIDI");
+                    }
                 }
                 MotorIA.CarregarRegrasDaBD();
             });
@@ -187,7 +203,8 @@ namespace PEPIDI.FormsSecundarios
         // MÉTODOS AUXILIARES (THREAD-SAFE)
         private void PintarLinha(int index, Color fundo, Color letra, string msg = "")
         {
-            this.Invoke((MethodInvoker)delegate {
+            this.Invoke((MethodInvoker)delegate
+            {
                 dgvImport.Rows[index].DefaultCellStyle.BackColor = fundo;
                 dgvImport.Rows[index].DefaultCellStyle.ForeColor = letra;
                 if (!string.IsNullOrEmpty(msg)) dgvImport.Rows[index].Cells["Funcao"].ToolTipText = msg;
@@ -201,11 +218,11 @@ namespace PEPIDI.FormsSecundarios
             using (var conn = GetConn.GetConnection())
             {
                 conn.Open();
-                string sql = @"IF EXISTS (SELECT 1 FROM Funcionarios WHERE NrMecanografico = @nr)
-                        UPDATE Funcionarios SET Nome=@nome, FuncaoID=@fid, DataAdmissao=@dt, EstabID=@eid WHERE NrMecanografico=@nr
+                string sql = @"IF EXISTS (SELECT 1 FROM Funcionarios WHERE Nr = @nr)
+                        UPDATE Funcionarios SET Nome=@nome, Funcao=@fid, DtAdmiss=@dt, Estab=@eid, AlteradoPor=@idgestor WHERE Nr=@nr
                        ELSE
-                        INSERT INTO Funcionarios (NrMecanografico, Nome, FuncaoID, DataAdmissao, EstabID, Ativo, PalavraPasse) 
-                        VALUES (@nr, @nome, @fid, @dt, @eid, 1, '1234')";
+                        INSERT INTO Funcionarios (Nr, Nome, Funcao, DtAdmiss, Estab, CriadoPor)
+                        VALUES (@nr, @nome, @fid, @dt, @eid, @idgestor)";
 
                 using (var cmd = new SqlCommand(sql, conn))
                 {
@@ -213,6 +230,7 @@ namespace PEPIDI.FormsSecundarios
                     cmd.Parameters.AddWithValue("@nome", nome);
                     cmd.Parameters.AddWithValue("@fid", idFunc);
                     cmd.Parameters.AddWithValue("@eid", idEstab);
+                    cmd.Parameters.AddWithValue("@idgestor", IDGestor);
 
                     DateTime dt;
                     if (!DateTime.TryParse(data, out dt)) dt = DateTime.Now;
@@ -223,67 +241,50 @@ namespace PEPIDI.FormsSecundarios
             }
         }
 
-        private void GravarFuncionarioNoSQL(DataGridViewRow row, int idFuncao, int idEstab)
-        {
-            using (var conn = GetConn.GetConnection())
-            {
-                conn.Open();
-                string sql = @"
-                    IF EXISTS (SELECT 1 FROM Funcionarios WHERE NrMecanografico = @nr)
-                        UPDATE Funcionarios SET Nome=@nome, FuncaoID=@fid, DataAdmissao=@dt, EstabID=@eid 
-                        WHERE NrMecanografico=@nr
-                    ELSE
-                        INSERT INTO Funcionarios (NrMecanografico, Nome, FuncaoID, DataAdmissao, EstabID, Ativo, PalavraPasse) 
-                        VALUES (@nr, @nome, @fid, @dt, @eid, 1, '1234')";
-
-                using (var cmd = new SqlCommand(sql, conn))
-                {
-                    cmd.Parameters.AddWithValue("@nr", row.Cells["Nr"].Value?.ToString() ?? "");
-                    cmd.Parameters.AddWithValue("@nome", row.Cells["Nome"].Value?.ToString() ?? "");
-                    cmd.Parameters.AddWithValue("@fid", idFuncao);
-                    cmd.Parameters.AddWithValue("@eid", idEstab);
-
-                    DateTime dt;
-                    if (!DateTime.TryParse(row.Cells["DtAdmissao"].Value?.ToString(), out dt)) dt = DateTime.Now;
-                    cmd.Parameters.AddWithValue("@dt", dt);
-
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
-        private void MarcarErro(DataGridViewRow row, string msg)
-        {
-            this.Invoke((MethodInvoker)delegate {
-                row.DefaultCellStyle.BackColor = Color.Red;
-                row.DefaultCellStyle.ForeColor = Color.White;
-                row.Cells["Funcao"].ToolTipText = msg;
-            });
-        }
-
         private void dgvImport_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            // 1. Evita erros no cabeçalho ou em grelhas vazias
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            // 2. Identifica em que coluna estamos
             string nomeColuna = dgvImport.Columns[e.ColumnIndex].Name;
 
             if (nomeColuna == "Funcao")
             {
-                string colunaChave = "Nome";
-                var valorChaveOriginal = dgvImport.Rows[e.RowIndex].Cells[colunaChave].Value?.ToString();
-                var novoValorAtribuido = dgvImport.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString();
+                // 3. Em vez de usarmos o "Nome", a nossa chave de comparação é a Tag (a palavra original do Excel)
+                var tagOriginal = dgvImport.Rows[e.RowIndex].Cells["Funcao"].Tag;
+                string palavraErradaDoExcel = tagOriginal != null ? tagOriginal.ToString() : "";
 
-                if (string.IsNullOrEmpty(valorChaveOriginal)) return;
+                string novoValorAtribuido = dgvImport.Rows[e.RowIndex].Cells["Funcao"].Value?.ToString();
 
+                // Se a Tag estiver vazia, não há o que replicar
+                if (string.IsNullOrEmpty(palavraErradaDoExcel)) return;
+
+                // --- INÍCIO DA MAGIA ---
+                // Desativamos temporariamente o evento para não entrar em loop infinito
                 dgvImport.CellValueChanged -= dgvImport_CellValueChanged;
+
                 foreach (DataGridViewRow row in dgvImport.Rows)
                 {
-                    if (row.Index != e.RowIndex && row.Cells[colunaChave].Value?.ToString() == valorChaveOriginal)
+                    if (row.IsNewRow) continue;
+
+                    // Vamos ver qual é a Tag da linha que estamos a analisar
+                    var tagDestino = row.Cells["Funcao"].Tag;
+                    string palavraDestino = tagDestino != null ? tagDestino.ToString() : "";
+
+                    // Se a palavra original do Excel for igual (ex: "quali" == "quali"), aplicamos a correção!
+                    if (row.Index != e.RowIndex && palavraDestino == palavraErradaDoExcel)
                     {
-                        row.Cells[e.ColumnIndex].Value = novoValorAtribuido;
-                        row.Cells[e.ColumnIndex].Style.BackColor = Color.White;
-                        row.Cells[e.ColumnIndex].Style.ForeColor = Color.Black;
+                        // ...então adapta o resto!
+                        row.Cells["Funcao"].Value = novoValorAtribuido;
+
+                        // Limpa o amarelo (feedback visual de que agora está OK)
+                        row.Cells["Funcao"].Style.BackColor = Color.White;
+                        row.Cells["Funcao"].Style.ForeColor = Color.Black;
                     }
                 }
+
+                // Voltamos a ligar o evento
                 dgvImport.CellValueChanged += dgvImport_CellValueChanged;
             }
         }

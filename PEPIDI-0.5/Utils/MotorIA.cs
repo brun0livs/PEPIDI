@@ -33,8 +33,9 @@ namespace PEPIDI.Organizers
                     }
                 }
 
-                // FUNÇÃO (FUNCIONÁRIOS)
+                // FUNÇÃO (FUNCIONÁRIOS) - Mais compridas primeiro!
                 string sqlFunc = "SELECT PalavraChave, FuncaoDestino FROM RegrasFuncao ORDER BY LEN(PalavraChave) DESC";
+
                 using (SqlCommand cmd = new SqlCommand(sqlFunc, conn))
                 using (SqlDataReader rdr = cmd.ExecuteReader())
                 {
@@ -42,7 +43,8 @@ namespace PEPIDI.Organizers
                     {
                         _regrasFuncao.Add(new KeyValuePair<string, string>(
                             rdr["PalavraChave"].ToString().ToLower().Trim(),
-                            rdr["FuncaoDestino"].ToString().Trim()));
+                            rdr["FuncaoDestino"].ToString().Trim()
+                        ));
                     }
                 }
             }
