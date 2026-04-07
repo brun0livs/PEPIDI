@@ -79,7 +79,6 @@ namespace PEPIDI.UCs
             TouchScrollHelper.AtivarScrollPorArrasto(dgvFuncs);
             GestorTema.AplicarEstilos(this);
 
-
         }
 
         private void Configura(PEPIDIDataGridView dgvFuncs)
@@ -186,23 +185,25 @@ namespace PEPIDI.UCs
                 case "Historico":
                     try
                     {
-                        //var frm = new FrmConsumosDetalhados(id);
-                        //frm.TopMost = true;
+                        using (Form formHistorico = new Form())
+                        {
+                            formHistorico.Text = "PEPIDI - Histórico e Gráficos";
+                            formHistorico.WindowState = FormWindowState.Maximized;
+                            formHistorico.StartPosition = FormStartPosition.CenterScreen;
+                            formHistorico.ShowIcon = false;
 
-                        //// quando o form fechar → recarrega o UC
-                        //frm.FormClosed += (s, e) =>
-                        //{
-                        //    UCFuncionarios_Load("", EventArgs.Empty);
-                        //};
+                            Graficos ucHistorico = new Graficos(id); // Leva o ID na mochila!
+                            ucHistorico.Dock = DockStyle.Fill;
 
-                        //frm.Show();
+                            formHistorico.Controls.Add(ucHistorico);
+                            formHistorico.ShowDialog(); // Fica aqui até o utilizador fechar!
+                        }
                     }
                     catch (Exception ex)
                     {
                         M.AbrirMensagem($"Erro ao analisar Consumos: {ex.Message}", "Erro");
                     }
                     break;
-
                 case "ReporPass":
                     //M.AbrirMensagem($"Password reposta para o funcionário #{id}", "PEPIDI");
                     MessageBox.Show(this.Size.ToString());
@@ -212,23 +213,19 @@ namespace PEPIDI.UCs
 
         private void btnAbreGraficos_Click(object sender, EventArgs e)
         {
-            // 1. Instanciar o teu novo UC de Gráficos
-            // (Atenção: Verifica se o nome da classe do teu UC é 'Graficos' ou outro parecido, como 'GraficosUC')
-            var ucGraficos = new Graficos();
-            ucGraficos.Dock = DockStyle.Fill; // Faz com que ocupe todo o espaço do painel
-
-            // 2. Obter o contentor pai (o Panel onde o UC Funcionarios está atualmente inserido)
-            Control painelPrincipal = this.Parent;
-
-            // Se o painel existir (por segurança)
-            if (painelPrincipal != null)
+            using (Form formHistorico = new Form())
             {
-                // 3. Remove o UC atual (Funcionarios) do painel
-                painelPrincipal.Controls.Clear();
+                formHistorico.Text = "PEPIDI - Dashboard Global";
+                formHistorico.WindowState = FormWindowState.Maximized;
+                formHistorico.StartPosition = FormStartPosition.CenterScreen;
+                formHistorico.ShowIcon = false;
 
-                // 4. Adiciona o novo UC (Gráficos) ao painel para aparecer no ecrã
-                painelPrincipal.Controls.Add(ucGraficos);
-                ucGraficos.BringToFront(); // Garante que fica por cima de tudo
+                // Aqui abre SEM ID, mostra o global!
+                Graficos ucGraficos = new Graficos();
+                ucGraficos.Dock = DockStyle.Fill;
+
+                formHistorico.Controls.Add(ucGraficos);
+                formHistorico.ShowDialog();
             }
         }
 

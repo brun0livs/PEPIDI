@@ -43,8 +43,10 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Graficos));
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             Guna.Charts.WinForms.ChartFont chartFont1 = new Guna.Charts.WinForms.ChartFont();
             Guna.Charts.WinForms.ChartFont chartFont2 = new Guna.Charts.WinForms.ChartFont();
             Guna.Charts.WinForms.ChartFont chartFont3 = new Guna.Charts.WinForms.ChartFont();
@@ -60,12 +62,6 @@
             Guna.Charts.WinForms.ChartFont chartFont7 = new Guna.Charts.WinForms.ChartFont();
             Guna.Charts.WinForms.Tick tick3 = new Guna.Charts.WinForms.Tick();
             Guna.Charts.WinForms.ChartFont chartFont8 = new Guna.Charts.WinForms.ChartFont();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             tableLayoutPanel1 = new TableLayoutPanel();
             guna2Panel4 = new Guna.UI2.WinForms.Guna2Panel();
             tableLayoutPanel4 = new TableLayoutPanel();
@@ -81,7 +77,7 @@
             tableLayoutPanel6 = new TableLayoutPanel();
             btnGuardar = new Guna.UI2.WinForms.Guna2Button();
             guna2Button1 = new Guna.UI2.WinForms.Guna2Button();
-            guna2Button3 = new Guna.UI2.WinForms.Guna2Button();
+            btnClear = new Guna.UI2.WinForms.Guna2Button();
             tbNivelGrafico = new Guna.UI2.WinForms.Guna2TrackBar();
             tableLayoutPanel7 = new TableLayoutPanel();
             lblFim = new Label();
@@ -94,11 +90,9 @@
             lblClose = new Label();
             lblTituloGRAFICOS = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
-            guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
-            lblFS = new Label();
+            dgvTabela1 = new PEPIDI.Models.PEPIDIDataGridView();
+            flowLayoutPanel1 = new FlowLayoutPanel();
             Grafico = new Guna.Charts.WinForms.GunaChart();
-            guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
-            dgvTabela = new PEPIDI.Models.PEPIDIDataGridView();
             tableLayoutPanel1.SuspendLayout();
             guna2Panel4.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
@@ -107,9 +101,8 @@
             tableLayoutPanel7.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
-            guna2Panel3.SuspendLayout();
-            guna2Panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvTabela).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvTabela1).BeginInit();
+            flowLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -292,7 +285,7 @@
             tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             tableLayoutPanel6.Controls.Add(btnGuardar, 5, 0);
             tableLayoutPanel6.Controls.Add(guna2Button1, 4, 0);
-            tableLayoutPanel6.Controls.Add(guna2Button3, 0, 0);
+            tableLayoutPanel6.Controls.Add(btnClear, 0, 0);
             tableLayoutPanel6.Controls.Add(tbNivelGrafico, 1, 0);
             tableLayoutPanel6.Dock = DockStyle.Fill;
             tableLayoutPanel6.Location = new Point(0, 373);
@@ -341,24 +334,25 @@
             guna2Button1.Text = "Exportar Gráfico";
             guna2Button1.Click += ExpGraf_Click;
             // 
-            // guna2Button3
+            // btnClear
             // 
-            guna2Button3.BorderColor = Color.FromArgb(242, 103, 34);
-            guna2Button3.BorderRadius = 15;
-            guna2Button3.BorderThickness = 1;
-            guna2Button3.Cursor = Cursors.Hand;
-            guna2Button3.CustomizableEdges = customizableEdges5;
-            guna2Button3.Dock = DockStyle.Fill;
-            guna2Button3.FillColor = Color.White;
-            guna2Button3.Font = new Font("Roboto", 11.25F);
-            guna2Button3.ForeColor = Color.Black;
-            guna2Button3.Location = new Point(10, 10);
-            guna2Button3.Margin = new Padding(10);
-            guna2Button3.Name = "guna2Button3";
-            guna2Button3.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            guna2Button3.Size = new Size(278, 43);
-            guna2Button3.TabIndex = 36;
-            guna2Button3.Text = "Limpar";
+            btnClear.BorderColor = Color.FromArgb(242, 103, 34);
+            btnClear.BorderRadius = 15;
+            btnClear.BorderThickness = 1;
+            btnClear.Cursor = Cursors.Hand;
+            btnClear.CustomizableEdges = customizableEdges5;
+            btnClear.Dock = DockStyle.Fill;
+            btnClear.FillColor = Color.White;
+            btnClear.Font = new Font("Roboto", 11.25F);
+            btnClear.ForeColor = Color.Black;
+            btnClear.Location = new Point(10, 10);
+            btnClear.Margin = new Padding(10);
+            btnClear.Name = "btnClear";
+            btnClear.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            btnClear.Size = new Size(278, 43);
+            btnClear.TabIndex = 36;
+            btnClear.Text = "Limpar";
+            btnClear.Click += btnClear_Click;
             // 
             // tbNivelGrafico
             // 
@@ -561,47 +555,74 @@
             tableLayoutPanel2.ColumnCount = 2;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.Controls.Add(guna2Panel3, 0, 0);
-            tableLayoutPanel2.Controls.Add(guna2Panel1, 1, 0);
+            tableLayoutPanel2.Controls.Add(dgvTabela1, 1, 0);
+            tableLayoutPanel2.Controls.Add(flowLayoutPanel1, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 514);
             tableLayoutPanel2.Margin = new Padding(0);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel2.Size = new Size(2099, 516);
             tableLayoutPanel2.TabIndex = 4;
             // 
-            // guna2Panel3
+            // dgvTabela1
             // 
-            guna2Panel3.BorderColor = Color.FromArgb(254, 107, 0);
-            guna2Panel3.BorderRadius = 25;
-            guna2Panel3.BorderThickness = 1;
-            guna2Panel3.Controls.Add(lblFS);
-            guna2Panel3.Controls.Add(Grafico);
-            guna2Panel3.CustomizableEdges = customizableEdges15;
-            guna2Panel3.Dock = DockStyle.Fill;
-            guna2Panel3.Location = new Point(3, 3);
-            guna2Panel3.Name = "guna2Panel3";
-            guna2Panel3.ShadowDecoration.CustomizableEdges = customizableEdges16;
-            guna2Panel3.Size = new Size(1043, 510);
-            guna2Panel3.TabIndex = 1;
+            dgvTabela1.AllowUserToAddRows = false;
+            dgvTabela1.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.BackColor = Color.Transparent;
+            dgvTabela1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dgvTabela1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvTabela1.BackgroundColor = Color.White;
+            dgvTabela1.BorderStyle = BorderStyle.None;
+            dgvTabela1.CellBorderStyle = DataGridViewCellBorderStyle.None;
+            dgvTabela1.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = Color.White;
+            dataGridViewCellStyle2.Font = new Font("Roboto", 11.25F);
+            dataGridViewCellStyle2.ForeColor = Color.Black;
+            dataGridViewCellStyle2.Padding = new Padding(0, 8, 0, 8);
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dgvTabela1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dgvTabela1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.Transparent;
+            dataGridViewCellStyle3.Font = new Font("Roboto", 11.25F);
+            dataGridViewCellStyle3.ForeColor = Color.Black;
+            dataGridViewCellStyle3.Padding = new Padding(18, 10, 18, 10);
+            dataGridViewCellStyle3.SelectionBackColor = Color.Transparent;
+            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            dgvTabela1.DefaultCellStyle = dataGridViewCellStyle3;
+            dgvTabela1.Dock = DockStyle.Fill;
+            dgvTabela1.EnableHeadersVisualStyles = false;
+            dgvTabela1.GridColor = SystemColors.Control;
+            dgvTabela1.HeaderFontSize = 15F;
+            dgvTabela1.Location = new Point(1059, 10);
+            dgvTabela1.Margin = new Padding(10);
+            dgvTabela1.MultiSelect = false;
+            dgvTabela1.Name = "dgvTabela1";
+            dgvTabela1.RowHeadersVisible = false;
+            dataGridViewCellStyle4.BackColor = Color.Transparent;
+            dgvTabela1.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dgvTabela1.RowTemplate.Height = 54;
+            dgvTabela1.ScrollBars = ScrollBars.None;
+            dgvTabela1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvTabela1.Size = new Size(1030, 496);
+            dgvTabela1.TabIndex = 2;
             // 
-            // lblFS
+            // flowLayoutPanel1
             // 
-            lblFS.AutoSize = true;
-            lblFS.BackColor = Color.Transparent;
-            lblFS.Cursor = Cursors.Hand;
-            lblFS.Dock = DockStyle.Right;
-            lblFS.Image = (Image)resources.GetObject("lblFS.Image");
-            lblFS.Location = new Point(975, 0);
-            lblFS.Name = "lblFS";
-            lblFS.Padding = new Padding(20);
-            lblFS.Size = new Size(68, 58);
-            lblFS.TabIndex = 1;
-            lblFS.Text = "     ";
-            lblFS.TextAlign = ContentAlignment.MiddleCenter;
-            lblFS.Click += lblFS_Click;
+            flowLayoutPanel1.Controls.Add(Grafico);
+            flowLayoutPanel1.Dock = DockStyle.Fill;
+            flowLayoutPanel1.Location = new Point(0, 0);
+            flowLayoutPanel1.Margin = new Padding(0);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(1049, 516);
+            flowLayoutPanel1.TabIndex = 3;
             // 
             // Grafico
             // 
@@ -609,12 +630,11 @@
             Grafico.Dock = DockStyle.Fill;
             chartFont1.FontName = "Arial";
             Grafico.Legend.LabelFont = chartFont1;
-            Grafico.Location = new Point(0, 0);
-            Grafico.Margin = new Padding(0);
+            Grafico.Location = new Point(10, 10);
+            Grafico.Margin = new Padding(10);
             Grafico.Name = "Grafico";
-            Grafico.Padding = new Padding(10);
-            Grafico.Size = new Size(1043, 510);
-            Grafico.TabIndex = 0;
+            Grafico.Size = new Size(1029, 0);
+            Grafico.TabIndex = 2;
             chartFont2.FontName = "Arial";
             chartFont2.Size = 12;
             chartFont2.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
@@ -641,67 +661,6 @@
             tick3.Font = chartFont8;
             Grafico.ZAxes.Ticks = tick3;
             // 
-            // guna2Panel1
-            // 
-            guna2Panel1.BorderColor = Color.FromArgb(254, 107, 0);
-            guna2Panel1.BorderRadius = 25;
-            guna2Panel1.BorderThickness = 1;
-            guna2Panel1.Controls.Add(dgvTabela);
-            guna2Panel1.CustomizableEdges = customizableEdges17;
-            guna2Panel1.Dock = DockStyle.Fill;
-            guna2Panel1.Location = new Point(1052, 3);
-            guna2Panel1.Name = "guna2Panel1";
-            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges18;
-            guna2Panel1.Size = new Size(1044, 510);
-            guna2Panel1.TabIndex = 0;
-            // 
-            // dgvTabela
-            // 
-            dgvTabela.AllowUserToAddRows = false;
-            dgvTabela.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = Color.Transparent;
-            dgvTabela.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgvTabela.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvTabela.BackgroundColor = Color.White;
-            dgvTabela.BorderStyle = BorderStyle.None;
-            dgvTabela.CellBorderStyle = DataGridViewCellBorderStyle.None;
-            dgvTabela.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = Color.White;
-            dataGridViewCellStyle2.Font = new Font("Roboto", 11.25F);
-            dataGridViewCellStyle2.ForeColor = Color.Black;
-            dataGridViewCellStyle2.Padding = new Padding(0, 8, 0, 8);
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvTabela.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            dgvTabela.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.Transparent;
-            dataGridViewCellStyle3.Font = new Font("Roboto", 11.25F);
-            dataGridViewCellStyle3.ForeColor = Color.Black;
-            dataGridViewCellStyle3.Padding = new Padding(18, 10, 18, 10);
-            dataGridViewCellStyle3.SelectionBackColor = Color.Transparent;
-            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            dgvTabela.DefaultCellStyle = dataGridViewCellStyle3;
-            dgvTabela.Dock = DockStyle.Fill;
-            dgvTabela.EnableHeadersVisualStyles = false;
-            dgvTabela.GridColor = SystemColors.Control;
-            dgvTabela.HeaderFontSize = 15F;
-            dgvTabela.Location = new Point(0, 0);
-            dgvTabela.Margin = new Padding(20);
-            dgvTabela.MultiSelect = false;
-            dgvTabela.Name = "dgvTabela";
-            dgvTabela.RowHeadersVisible = false;
-            dataGridViewCellStyle4.BackColor = Color.Transparent;
-            dgvTabela.RowsDefaultCellStyle = dataGridViewCellStyle4;
-            dgvTabela.RowTemplate.Height = 54;
-            dgvTabela.ScrollBars = ScrollBars.None;
-            dgvTabela.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvTabela.Size = new Size(1044, 510);
-            dgvTabela.TabIndex = 0;
-            // 
             // Graficos
             // 
             AutoScaleDimensions = new SizeF(8F, 18F);
@@ -724,10 +683,8 @@
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
-            guna2Panel3.ResumeLayout(false);
-            guna2Panel3.PerformLayout();
-            guna2Panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgvTabela).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvTabela1).EndInit();
+            flowLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -738,10 +695,8 @@
         private TableLayoutPanel tableLayoutPanel3;
         private Label lblClose;
         private TableLayoutPanel tableLayoutPanel2;
-        private Guna.UI2.WinForms.Guna2Panel guna2Panel1;
         private Models.PEPIDIDataGridView Tabela;
         private Guna.UI2.WinForms.Guna2Panel guna2Panel4;
-        private Guna.UI2.WinForms.Guna2Panel guna2Panel3;
         private TableLayoutPanel tableLayoutPanel4;
         private FlowLayoutPanel flpFuncoes;
         private TableLayoutPanel tableLayoutPanel5;
@@ -753,10 +708,9 @@
         private Label lblFamilia;
         private Label lblFuncoes;
         private TableLayoutPanel tableLayoutPanel6;
-        private Guna.Charts.WinForms.GunaChart Grafico;
         private Guna.UI2.WinForms.Guna2Button btnGuardar;
         private Guna.UI2.WinForms.Guna2Button guna2Button1;
-        private Guna.UI2.WinForms.Guna2Button guna2Button3;
+        private Guna.UI2.WinForms.Guna2Button btnClear;
         private TableLayoutPanel tableLayoutPanel7;
         private Label lblFim;
         private Label lblInicio;
@@ -764,8 +718,9 @@
         private Guna.UI2.WinForms.Guna2ComboBox cmbFuncs;
         private Guna.UI2.WinForms.Guna2DateTimePicker dtpInicio;
         private Guna.UI2.WinForms.Guna2DateTimePicker dtpFim;
-        private Models.PEPIDIDataGridView dgvTabela;
         private Guna.UI2.WinForms.Guna2TrackBar tbNivelGrafico;
-        private Label lblFS;
+        private Models.PEPIDIDataGridView dgvTabela1;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private Guna.Charts.WinForms.GunaChart Grafico;
     }
 }

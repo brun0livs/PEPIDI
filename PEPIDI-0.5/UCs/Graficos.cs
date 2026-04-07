@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using PEPIDI.Models;
 
 namespace PEPIDI.UCs
 {
@@ -30,9 +31,12 @@ namespace PEPIDI.UCs
         // Token para cancelar a query anterior se o utilizador clicar rápido demais (Debounce)
         private System.Threading.CancellationTokenSource _filtroCts = new();
 
-        public Graficos()
+        private int? _idFuncionarioFiltroInicial = null;
+
+        public Graficos(int? idFuncionario = null)
         {
             InitializeComponent();
+            _idFuncionarioFiltroInicial = idFuncionario;
         }
 
         // ==========================================
@@ -60,12 +64,11 @@ namespace PEPIDI.UCs
 
                 await Task.WhenAll(tarefas);
 
-                // Configuração inicial das datas
-                dtpInicio.Value = DateTime.Now.AddMonths(-1);
+                dtpInicio.Value = new DateTime(DateTime.Now.Year, 1, 1);
                 dtpFim.Value = DateTime.Now;
 
                 // 4. Desenha o gráfico inicial
-                FiltrosWorking(tbNivelGrafico.Value);
+                FiltrosWorking(tbNivelGrafico.Value, dgvTabela1);
             }
             catch (Exception ex)
             {
@@ -75,7 +78,19 @@ namespace PEPIDI.UCs
             {
                 // 5. Liberta o desenho e força um refresh único
                 SendMessage(this.Handle, WM_SETREDRAW, true, 0);
+                // Ligar o Scroll Automático para os painéis de filtros não esconderem botões!
+                flpFuncoes.AutoScroll = true;
+                flpFamilia.AutoScroll = true;
+                flpModelos.AutoScroll = true;
+                flpTamanhos.AutoScroll = true;
+
+                // Para garantir que a barra de scroll não tapa o último botão à direita
+                flpFuncoes.WrapContents = true;
+                flpFamilia.WrapContents = true;
+                flpModelos.WrapContents = true;
+                flpTamanhos.WrapContents = true;
                 this.Refresh();
+                GestorTema.AplicarEstilos(this);
             }
         }
 
@@ -89,10 +104,14 @@ namespace PEPIDI.UCs
             dtFuncs.Columns.Add("Nr", typeof(int));
             dtFuncs.Columns.Add("NomeCompleto", typeof(string));
 
+            // 1. O NOVO ID FALSO (Impossível de conflitar com a BD)
+            dtFuncs.Rows.Add(-999, "— TODOS OS FUNCIONÁRIOS —");
+
             await Task.Run(() =>
             {
                 using (SqlConnection conn = new SqlConnection(_cs))
-                using (SqlCommand cmd = new SqlCommand("SELECT Nr, Nome FROM Funcionarios ORDER BY Nr", conn))
+                // 2. Filtramos os IDs de sistema (-1, 0, etc.) para não aparecerem na ComboBox
+                using (SqlCommand cmd = new SqlCommand("SELECT Nr, Nome FROM Funcionarios WHERE Nr > 0 ORDER BY Nr", conn))
                 {
                     conn.Open();
                     using (SqlDataReader r = cmd.ExecuteReader())
@@ -110,7 +129,19 @@ namespace PEPIDI.UCs
             cmbFuncs.DataSource = dtFuncs;
             cmbFuncs.DisplayMember = "NomeCompleto";
             cmbFuncs.ValueMember = "Nr";
-            cmbFuncs.SelectedIndex = -1;
+
+            // A NOSSA MAGIA: Se o ecrã foi chamado com um ID de funcionário, seleciona-o já!
+            if (_idFuncionarioFiltroInicial.HasValue)
+            {
+                cmbFuncs.SelectedValue = _idFuncionarioFiltroInicial.Value;
+                // Limpamos para não bloquear se o utilizador depois quiser ver "Todos"
+                _idFuncionarioFiltroInicial = null;
+            }
+            else
+            {
+                cmbFuncs.SelectedIndex = -1;
+            }
+
             cmbFuncs.SelectedIndexChanged += Filtros_Changed;
         }
 
@@ -188,7 +219,7 @@ namespace PEPIDI.UCs
             try
             {
                 await Task.Delay(400, _filtroCts.Token);
-                FiltrosWorking(tbNivelGrafico.Value);
+                FiltrosWorking(tbNivelGrafico.Value, dgvTabela1);
             }
             catch (OperationCanceledException) { }
         }
@@ -201,9 +232,9 @@ namespace PEPIDI.UCs
             return string.Join(",", ativos);
         }
 
-        private async void FiltrosWorking(int nivelDetalhe)
+        private async void FiltrosWorking(int nivelDetalhe, PEPIDIDataGridView dgvTabela)
         {
-            int nrFunc = cmbFuncs.SelectedValue is int i ? i : 0;
+            int nrFunc = cmbFuncs.SelectedValue is int i ? i : -999;
             string funcoesStr = GetSelectedTags(flpFuncoes);
             string familiasStr = GetSelectedTags(flpFamilia);
             string modelosStr = GetSelectedTags(flpModelos);
@@ -219,7 +250,7 @@ namespace PEPIDI.UCs
                 using (SqlCommand cmd = new SqlCommand("sp_ConsumosFiltrados", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@NrFunc", nrFunc > 0 ? (object)nrFunc : DBNull.Value);
+                    cmd.Parameters.AddWithValue("@NrFunc", nrFunc != -999 ? (object)nrFunc : DBNull.Value);
                     cmd.Parameters.AddWithValue("@Funcoes", string.IsNullOrEmpty(funcoesStr) ? (object)DBNull.Value : funcoesStr);
                     cmd.Parameters.AddWithValue("@Familias", string.IsNullOrEmpty(familiasStr) ? (object)DBNull.Value : familiasStr);
                     cmd.Parameters.AddWithValue("@Modelos", string.IsNullOrEmpty(modelosStr) ? (object)DBNull.Value : modelosStr);
@@ -260,7 +291,8 @@ namespace PEPIDI.UCs
         private void AtualizarGrafico(DataTable dt, int nivelDetalhe)
         {
             Grafico.Datasets.Clear();
-            if (dt.Rows.Count == 0) { Grafico.Update(); return; }
+            Grafico.Update();
+            if (dt.Rows.Count == 0) return;
 
             var dataset = new GunaBarDataset { Label = "Qtd Consumida" };
             dataset.FillColors.Add(Color.FromArgb(242, 103, 34));
@@ -268,48 +300,91 @@ namespace PEPIDI.UCs
             string colunaAgrupamento = nivelDetalhe switch
             {
                 1 => "Familia",
-                2 => "Modelo",
+                2 => dt.Columns.Contains("Modelo") ? "Modelo" : (dt.Columns.Contains("Artigo") ? "Artigo" : "Descricao"),
                 3 => "NomeFuncionario",
                 _ => "Funcao"
             };
 
+            if (!dt.Columns.Contains(colunaAgrupamento)) return;
+
             var agrupado = dt.AsEnumerable()
+                .Where(r => nivelDetalhe != 3 || (r["NomeFuncionario"]?.ToString() != "-1" && r["NomeFuncionario"]?.ToString() != "0" && r["NomeFuncionario"]?.ToString() != "-999"))
                 .GroupBy(r => r[colunaAgrupamento]?.ToString() ?? "N/A")
                 .Select(g => new { Chave = g.Key, Total = g.Sum(r => Convert.ToInt32(r["Quantidade"])) })
-                .OrderByDescending(x => x.Total);
+                .OrderByDescending(x => x.Total)
+                .ToList();
 
-            foreach (var item in agrupado) dataset.DataPoints.Add(item.Chave, item.Total);
+            // =========================================================================
+            // SCROLL HORIZONTAL DINÂMICO (Adaptado ao novo contentor)
+            // =========================================================================
+
+            // A MAGIA: Lemos o pai e dizemos logo ao C# para o tratar como um "Panel"
+            if (Grafico.Parent is Panel painelPai)
+            {
+                painelPai.AutoScroll = true;
+
+                Grafico.Dock = DockStyle.None;
+                Grafico.Location = new Point(0, 0);
+
+                // Altura do painel pai menos o espaço para a barra de scroll (para não tapar o eixo X)
+                Grafico.Height = painelPai.ClientSize.Height - 22;
+
+                int larguraNecessaria = agrupado.Count * 90;
+                Grafico.Width = Math.Max(painelPai.ClientSize.Width, larguraNecessaria);
+            }
+            // =========================================================================
+            foreach (var item in agrupado)
+            {
+                // Como agora temos espaço infinito, já NÃO cortamos o texto! Vai inteiro!
+                string nomeLabel = string.IsNullOrWhiteSpace(item.Chave) ? "Desconhecido" : item.Chave;
+                dataset.DataPoints.Add(nomeLabel, item.Total);
+            }
 
             Grafico.Datasets.Add(dataset);
+
+            Grafico.XAxes.Display = true;
+            if (Grafico.XAxes.Ticks != null) Grafico.XAxes.Ticks.Display = true;
+
             Grafico.Update();
-            
         }
 
         // ==========================================
         // 4. AÇÕES E EXPORTAÇÃO
         // ==========================================
-
         private void btnClear_Click(object sender, EventArgs e)
         {
+            // 1. Desligar temporariamente o evento para não disparar pesquisas falsas
             cmbFuncs.SelectedIndexChanged -= Filtros_Changed;
-            cmbFuncs.SelectedIndex = -1;
+
+            // 2. Limpar a ComboBox a 100% (Usar SelectedVALUE e não Index!)
+            cmbFuncs.SelectedValue = -999;
+            cmbFuncs.Text = "";
+
+            // 3. Voltar a ligar o evento
             cmbFuncs.SelectedIndexChanged += Filtros_Changed;
 
+            // 4. Repor as Datas para o primeiro dia do ano atual!
+            dtpInicio.Value = new DateTime(DateTime.Now.Year, 1, 1);
+            dtpFim.Value = DateTime.Now;
+
+            // 5. Varredura Total aos Filtros Visuais (Botões)
             foreach (var painel in new[] { flpFuncoes, flpFamilia, flpModelos, flpTamanhos })
             {
                 foreach (Guna2Button btn in painel.Controls.OfType<Guna2Button>())
                 {
                     btn.Tag = false;
-                    btn.FillColor = Color.FromArgb(230, 232, 235);
-                    btn.ForeColor = Color.FromArgb(64, 64, 64);
+                    btn.FillColor = Color.FromArgb(230, 232, 235); // Cor base
+                    btn.ForeColor = Color.FromArgb(64, 64, 64);    // Texto escuro
                 }
             }
-            AcionarFiltroComDelay();
+
+            // 6. Atualizar os gráficos INSTANTANEAMENTE
+            FiltrosWorking(tbNivelGrafico.Value, dgvTabela1);
         }
 
         private void ExpTab_Click(object sender, EventArgs e)
         {
-            if (dgvTabela.DataSource is DataTable dt && dt.Rows.Count > 0)
+            if (dgvTabela1.DataSource is DataTable dt && dt.Rows.Count > 0)
             {
                 using (SaveFileDialog sfd = new SaveFileDialog { Filter = "Excel Files|*.xlsx", FileName = $"PEPIDI_Export_{DateTime.Now:yyyyMMdd}.xlsx" })
                 {
@@ -343,7 +418,7 @@ namespace PEPIDI.UCs
         private void lblFS_Click(object sender, EventArgs e)
         {
             // 1. Verificar se existem dados
-            if (!(dgvTabela.DataSource is DataTable dtDados) || dtDados.Rows.Count == 0)
+            if (!(dgvTabela1.DataSource is DataTable dtDados) || dtDados.Rows.Count == 0)
             {
                 M.AbrirMensagem("Não existem dados para expandir.", "PEPIDI");
                 return;
@@ -415,10 +490,70 @@ namespace PEPIDI.UCs
 
         private void lblClose_Click(object sender, EventArgs e)
         {
-            this.Parent?.Controls.Remove(this);
-            this.Dispose();
+            // Procura o Form onde o UserControl foi colocado e fecha-o.
+            this.FindForm()?.Close();
         }
 
         private void tbNivelGrafico_ValueChanged(object sender, EventArgs e) => AcionarFiltroComDelay();
+
+        private void Grafico_DoubleClick(object sender, EventArgs e)
+        {
+            // 1. Verificar se existem dados
+            if (!(dgvTabela1.DataSource is DataTable dtDados) || dtDados.Rows.Count == 0)
+            {
+                M.AbrirMensagem("Não existem dados para expandir.", "PEPIDI");
+                return;
+            }
+
+            // 2. Criar o formulário de Zoom
+            using (Form formZoom = new Form())
+            {
+                formZoom.Text = "PEPIDI - Vista Detalhada: " + Grafico.Title.Text;
+                formZoom.WindowState = FormWindowState.Maximized;
+                formZoom.StartPosition = FormStartPosition.CenterScreen;
+                formZoom.BackColor = Color.White;
+                formZoom.ShowIcon = false;
+                formZoom.KeyPreview = true; // Para fechar com ESC
+
+                Guna.Charts.WinForms.GunaChart zoomChart = new Guna.Charts.WinForms.GunaChart();
+                zoomChart.Dock = DockStyle.Fill;
+                zoomChart.BackColor = Color.White;
+
+                // --- COPIAR CONFIGURAÇÕES VISUAIS DO ORIGINAL ---
+                zoomChart.Title.Text = Grafico.Title.Text;
+                zoomChart.Title.Font = Grafico.Title.Font;
+                zoomChart.Legend.Position = Grafico.Legend.Position;
+                zoomChart.XAxes.Display = Grafico.XAxes.Display;
+                zoomChart.YAxes.Display = Grafico.YAxes.Display;
+
+                // 3. CLONAR OS DATASETS
+                foreach (var originalDs in Grafico.Datasets)
+                {
+                    if (originalDs is Guna.Charts.WinForms.GunaBarDataset barDs)
+                    {
+                        var newDs = new Guna.Charts.WinForms.GunaBarDataset();
+                        newDs.Label = barDs.Label;
+
+                        foreach (object colorObj in barDs.FillColors)
+                        {
+                            if (colorObj is Color c) newDs.FillColors.Add(c);
+                        }
+
+                        foreach (var pointObj in barDs.DataPoints)
+                        {
+                            dynamic p = pointObj;
+                            newDs.DataPoints.Add(p.Label, p.Y);
+                        }
+                        zoomChart.Datasets.Add(newDs);
+                    }
+                }
+
+                formZoom.KeyDown += (s, args) => { if (args.KeyCode == Keys.Escape) formZoom.Close(); };
+                formZoom.Controls.Add(zoomChart);
+
+                zoomChart.Update();
+                formZoom.ShowDialog();
+            }
+        }
     }
 }

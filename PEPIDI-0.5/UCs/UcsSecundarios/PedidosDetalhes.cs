@@ -284,7 +284,8 @@ namespace PEPIDI.UCs.UcsSecundarios
                 int quantPedida = 0;
                 if (dt.Columns.Contains("QuantidadePedida")) quantPedida = Convert.ToInt32(row["QuantidadePedida"]);
                 else if (dt.Columns.Contains("Quantidade")) quantPedida = Convert.ToInt32(row["Quantidade"]);
-                if (quantPedida == 0) quantPedida = 1;
+
+                if (quantPedida <= 0) continue;
 
                 LinhaItem novaLinha = new LinhaItem(modelo, tamanho, quantDisp, quantPedida, estado);
                 novaLinha.IDEPI = idEpi;
@@ -390,15 +391,13 @@ namespace PEPIDI.UCs.UcsSecundarios
                             {
                                 if (c is LinhaItem linha)
                                 {
-                                    // A NOSSA CORREÇÃO: Se não estiver selecionado, a quantidade é zero (0)!
-                                    int qtdReal = linha.Selecionado ? linha.QuantidadeSelecionada : 0;
+                                    // Em PENDENTE, lê diretamente a Combobox (não há cá checkboxes para ninguém!)
+                                    int qtdReal = linha.QuantidadeSelecionada;
 
                                     SqlCommand cmdItem = new SqlCommand("sp_AtualizarQuantidadePedidoPacote", conn, trans);
                                     cmdItem.CommandType = CommandType.StoredProcedure;
                                     cmdItem.Parameters.AddWithValue("@IDPedido", this.ID);
                                     cmdItem.Parameters.AddWithValue("@IDEPI", linha.IDEPI);
-
-                                    // Passamos a enviar a qtdReal em vez da QuantidadeSelecionada crua
                                     cmdItem.Parameters.AddWithValue("@NovaQuantidade", qtdReal);
                                     cmdItem.ExecuteNonQuery();
                                 }
@@ -442,6 +441,9 @@ namespace PEPIDI.UCs.UcsSecundarios
                 var listaDevolver = new List<(int ID, string Artigo, string Tamanho, int Qtd)>();
                 var todosOsItens = new List<(int IDEPI, int QtdReal, bool Selecionado)>();
 
+                // 1. LISTA PARA OS CANCELADOS
+                List<string> itensCancelados = new List<string>();
+
                 foreach (Control c in flpLinhas.Controls)
                 {
                     if (c is LinhaItem linha)
@@ -453,7 +455,20 @@ namespace PEPIDI.UCs.UcsSecundarios
                         {
                             listaReceber.Add((linha.IDEPI, linha.DescricaoArtigo, linha.TamanhoSelecionado, linha.QuantidadeSelecionada));
                         }
+                        else
+                        {
+                            // O Utilizador tirou o visto na hora de entregar! Registamos para a Auditoria.
+                            itensCancelados.Add($"- {linha.DescricaoArtigo} ({linha.TamanhoSelecionado})");
+                        }
                     }
+                }
+
+                // 2. GERAR A NOTA DE AUDITORIA
+                if (itensCancelados.Count > 0)
+                {
+                    string aviso = "[Sistema]: Item(ns) cancelado(s) no momento da entrega:\n" + string.Join("\n", itensCancelados);
+                    if (string.IsNullOrEmpty(notasFinaisParaGravar)) notasFinaisParaGravar = aviso;
+                    else notasFinaisParaGravar += "\n\n" + aviso;
                 }
 
                 foreach (Control c in flpDevolucoes.Controls)
