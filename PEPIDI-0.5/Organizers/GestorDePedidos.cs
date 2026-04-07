@@ -16,7 +16,7 @@ namespace PEPIDI.Organizers
         public Dictionary<int, int> quantidadesSelecionadas = new Dictionary<int, int>();
         EfeitoUI M = new EfeitoUI();
 
-        public DataTable  CarregarPedidosPorEstado(string estado)
+        public DataTable CarregarPedidosPorEstado(string estado)
         {
             using (SqlConnection conn = GetConn.GetConnection())
             using (SqlCommand cmd = new SqlCommand("sp_CarregarPedidosPorEstado", conn))
@@ -27,7 +27,7 @@ namespace PEPIDI.Organizers
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
-                return dt; 
+                return dt;
             }
         }
 
@@ -49,27 +49,40 @@ namespace PEPIDI.Organizers
                         if (row.IsNewRow) continue;
                         if (!int.TryParse(row.Cells["ID"]?.Value?.ToString(), out int idEPI)) continue;
 
-                        int original = 0;
-                        if (row.Cells["QuantidadePedida"]?.Value != null)
-                            int.TryParse(row.Cells["QuantidadePedida"].Value.ToString(), out original);
-
-                        int atual = original;
-
-                        if (quantidadesAlteradas != null && quantidadesAlteradas.ContainsKey(idEPI))
+                        // 1. A NOSSA NOVA VALIDAÇÃO: Ler o estado da Checkbox (Selecionar)
+                        bool selecionado = false;
+                        if (row.Cells["Selecionar"]?.Value != null)
                         {
-                            atual = quantidadesAlteradas[idEPI].Item2;
-                        }
-                        else if (row.Cells["Quantidade"]?.Value != null)
-                        {
-                            int.TryParse(row.Cells["Quantidade"].Value.ToString(), out atual);
+                            selecionado = Convert.ToBoolean(row.Cells["Selecionar"].Value);
                         }
 
+                        // 2. Definir a quantidade atual baseada na seleção
+                        int atual = 0;
+
+                        // Só vamos procurar o número real se a linha estiver com o "visto"!
+                        // Caso contrário, fica a 0.
+                        if (selecionado)
+                        {
+                            if (quantidadesAlteradas != null && quantidadesAlteradas.ContainsKey(idEPI))
+                            {
+                                atual = quantidadesAlteradas[idEPI].Item2;
+                            }
+                            else if (row.Cells["Quantidade"]?.Value != null)
+                            {
+                                int.TryParse(row.Cells["Quantidade"].Value.ToString(), out atual);
+                            }
+                            else if (row.Cells["QuantidadePedida"]?.Value != null)
+                            {
+                                int.TryParse(row.Cells["QuantidadePedida"].Value.ToString(), out atual);
+                            }
+                        }
+
+                        // --- Daqui para baixo o teu código continua igual ---
                         SqlCommand cmd = new SqlCommand("SELECT Quantidade FROM EPI WHERE ID = @ID", conn, tran);
                         cmd.Parameters.AddWithValue("@ID", idEPI);
                         int stock = Convert.ToInt32(cmd.ExecuteScalar());
 
                         Debug.WriteLine($"[Aprovar] EPI {idEPI} → Pedido: {atual}, Stock: {stock}");
-
                         if (atual > stock)
                         {
                             string modelo = row.Cells["Modelo"]?.Value?.ToString() ?? "Desconhecido";

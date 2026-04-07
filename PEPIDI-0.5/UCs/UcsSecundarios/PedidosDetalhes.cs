@@ -390,11 +390,16 @@ namespace PEPIDI.UCs.UcsSecundarios
                             {
                                 if (c is LinhaItem linha)
                                 {
+                                    // A NOSSA CORREÇÃO: Se não estiver selecionado, a quantidade é zero (0)!
+                                    int qtdReal = linha.Selecionado ? linha.QuantidadeSelecionada : 0;
+
                                     SqlCommand cmdItem = new SqlCommand("sp_AtualizarQuantidadePedidoPacote", conn, trans);
                                     cmdItem.CommandType = CommandType.StoredProcedure;
                                     cmdItem.Parameters.AddWithValue("@IDPedido", this.ID);
                                     cmdItem.Parameters.AddWithValue("@IDEPI", linha.IDEPI);
-                                    cmdItem.Parameters.AddWithValue("@NovaQuantidade", linha.QuantidadeSelecionada);
+
+                                    // Passamos a enviar a qtdReal em vez da QuantidadeSelecionada crua
+                                    cmdItem.Parameters.AddWithValue("@NovaQuantidade", qtdReal);
                                     cmdItem.ExecuteNonQuery();
                                 }
                             }

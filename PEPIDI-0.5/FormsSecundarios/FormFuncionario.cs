@@ -20,7 +20,7 @@ namespace PEPIDI.FormsSecundarios
     {
         private int? NMEC = null;
         private int? IDGestor;
-        EfeitoUI M = new EfeitoUI();
+        EfeitoUI M = new();
 
         public FormFuncionario(int? _nr = null, int? _IDGestor = null)
         {
@@ -206,6 +206,7 @@ namespace PEPIDI.FormsSecundarios
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
+                    GestorDeLogins.RegistarOuAtualizarLogin(nrFunc.ToString());
 
                     M.AbrirMensagem(isEdicao ? "Dados atualizados com sucesso!" : "Funcionário criado com sucesso!", "Sucesso");
 

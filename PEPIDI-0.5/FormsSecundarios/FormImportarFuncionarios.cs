@@ -32,6 +32,8 @@ namespace PEPIDI.FormsSecundarios
 
         private void FormImportarFuncionarios_Load(object sender, EventArgs e)
         {
+            MotorIA.CarregarRegrasDaBD();
+
             ConfigurarColunasGrid();
             dgvImport.Focus();
         }
@@ -123,7 +125,7 @@ namespace PEPIDI.FormsSecundarios
                     Index = row.Index,
                     Nr = row.Cells["Nr"].Value?.ToString() ?? "",
                     Nome = row.Cells["Nome"].Value?.ToString() ?? "",
-                    FuncaoOriginal = funcOriginal, // <-- A NOSSA CORREÇÃO
+                    FuncaoOriginal = funcOriginal,
                     Funcao = row.Cells["Funcao"].Value?.ToString() ?? "",
                     Data = row.Cells["DtAdmissao"].Value?.ToString() ?? "",
                     Estab = row.Cells["Estab"].Value?.ToString() ?? ""
@@ -173,31 +175,64 @@ namespace PEPIDI.FormsSecundarios
                         {
                             int idFunc = funcoesValidas[item.Funcao];
 
+                            // 1º - GRAVAR O FUNCIONÁRIO (Para ele passar a existir no sistema)
                             ExecutarGravacaoNoSQL(item.Nr, item.Nome, idFunc, idEstab, item.Data);
 
-                            // AGORA SIM, ESTAMOS A ENSINAR A IA DA FORMA CERTA!
+                            // 2º - CRIAR O LOGIN COM HASH (Agora sim, já podemos associar a password)
+                            GestorDeLogins.RegistarOuAtualizarLogin(item.Nr);
+
+                            // 3º - ENSINAR A IA DA FORMA CERTA
                             MotorIA.AprenderNovaRegra(item.FuncaoOriginal, item.Funcao, "Funcao", false);
 
-                            PintarLinha(item.Index, Color.LightGreen, Color.Black);
+                            // Apenas incrementamos, já não pintamos de verde!
                             sucessos++;
                         }
                         catch (Exception ex)
                         {
                             PintarLinha(item.Index, Color.Red, Color.White, "Erro SQL: " + ex.Message);
-                            MessageBox.Show("Erro técnico a gravar a linha " + item.Index + ":\n" + ex.Message, "Depuração PEPIDI");
                         }
                     }
                     else
                     {
                         PintarLinha(item.Index, Color.Red, Color.White, "Função não existe na BD");
-                        MessageBox.Show($"A função '{item.Funcao}' não foi encontrada no dicionário de funções válidas.", "Depuração PEPIDI");
                     }
                 }
                 MotorIA.CarregarRegrasDaBD();
             });
 
+            // 5. LIMPEZA VISUAL DA GRELHA (Remover as linhas processadas com sucesso)
+            // Feito de trás para a frente para não baralhar os Índices da DataGridView
+            for (int i = dgvImport.Rows.Count - 1; i >= 0; i--)
+            {
+                DataGridViewRow row = dgvImport.Rows[i];
+                if (row.IsNewRow) continue;
+
+                // Se a linha NÃO está vermelha, é porque foi um sucesso absoluto. Limpamos do ecrã!
+                if (row.DefaultCellStyle.BackColor != Color.Red)
+                {
+                    dgvImport.Rows.Remove(row);
+                }
+            }
+
             ResetBotao();
-            M.AbrirMensagem($"Sucessos: {sucessos}", "PEPIDI");
+            ResetBotao();
+
+            // 6. VERIFICAÇÃO FINAL: Sobraram erros?
+            // Se Count for <= 1, significa que só lá está a linha vazia do fundo (tudo o resto foi sucesso e apagado)
+            if (dgvImport.Rows.Count <= 1)
+            {
+                M.AbrirMensagem($"Importação concluída com perfeição! {sucessos} funcionários adicionados.", "PEPIDI - Sucesso");
+
+                // Define o DialogResult e fecha automaticamente
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            else
+            {
+                // Se sobrou mais do que 1 linha, é porque há linhas a vermelho para o utilizador corrigir. NÃO FECHA.
+                int errosPendentes = dgvImport.Rows.Count - 1; // Desconta a linha nova do fundo
+                M.AbrirMensagem($"Foram importados {sucessos} funcionários.\n\nPor favor, corrige os {errosPendentes} registos a vermelho e volta a clicar em Importar.", "PEPIDI - Atenção");
+            }
         }
 
         // MÉTODOS AUXILIARES (THREAD-SAFE)
