@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using PEPIDI.Models;
+using ClosedXML.Excel;
+using System.IO;
 
 namespace PEPIDI.UCs
 {
@@ -382,22 +384,65 @@ namespace PEPIDI.UCs
             FiltrosWorking(tbNivelGrafico.Value, dgvTabela1);
         }
 
-        private void ExpTab_Click(object sender, EventArgs e)
+        private async void ExpTab_Click(object sender, EventArgs e)
         {
-            if (dgvTabela1.DataSource is DataTable dt && dt.Rows.Count > 0)
+            // 1. Verificação de segurança: temos dados?
+            if (!(dgvTabela1.DataSource is DataTable dt) || dt.Rows.Count == 0)
             {
-                using (SaveFileDialog sfd = new SaveFileDialog { Filter = "Excel Files|*.xlsx", FileName = $"PEPIDI_Export_{DateTime.Now:yyyyMMdd}.xlsx" })
+                M.AbrirMensagem("Não existem dados para exportar.", "Aviso");
+                return;
+            }
+
+            // 2. Configuração do SaveFileDialog
+            using (SaveFileDialog sfd = new SaveFileDialog
+            {
+                Filter = "Excel Files|*.xlsx",
+                FileName = $"PEPIDI_Analise_{DateTime.Now:yyyyMMdd}.xlsx"
+            })
+            {
+                if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    if (sfd.ShowDialog() == DialogResult.OK)
-                    {
-                        try
-                        {
-                            // Exemplo simplificado de CSV se não tiveres ClosedXML configurado
-                            M.AbrirMensagem("Exportação iniciada para: " + sfd.FileName, "Exportar");
-                        }
-                        catch (Exception ex) { MessageBox.Show(ex.Message); }
-                    }
+                    // Chamamos a Task e passamos o caminho escolhido
+                    await ExportarParaTemplateHardcore(dt, sfd.FileName);
                 }
+            }
+        }
+
+        public async Task ExportarParaTemplateHardcore(DataTable dt, string destinationPath)
+        {
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+                    string resourceName = "PEPIDI.RelatorioConsumos.xlsx";
+
+                    using (Stream s = assembly.GetManifestResourceStream(resourceName))
+                    {
+                        if (s == null) throw new Exception("Template não encontrado!");
+
+                        using (var workbook = new XLWorkbook(s))
+                        {
+                            var ws = workbook.Worksheet("Dados");
+                            ws.Clear(XLClearOptions.All);
+
+                            // Insere a tabela (Garante que o nome bate com o Gestor de Nomes do Excel)
+                            ws.Cell(1, 1).InsertTable(dt, "TabelaDados", true);
+
+                            ws.Columns().AdjustToContents();
+                            workbook.SaveAs(destinationPath);
+                        }
+                    }
+                });
+
+                M.AbrirMensagem("Dashboard gerado com sucesso! O Excel vai abrir agora.", "PEPIDI");
+
+                // --- A LINHA MÁGICA PARA ABRIR O FICHEIRO ---
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(destinationPath) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Erro de Recurso");
             }
         }
 

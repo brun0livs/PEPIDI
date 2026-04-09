@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             tableLayoutPanel1 = new TableLayoutPanel();
             tableLayoutPanel2 = new TableLayoutPanel();
             btnAddFuncao = new Guna.UI2.WinForms.Guna2Button();
@@ -92,7 +92,7 @@
             // btnAddFuncao
             // 
             btnAddFuncao.BorderRadius = 10;
-            btnAddFuncao.CustomizableEdges = customizableEdges3;
+            btnAddFuncao.CustomizableEdges = customizableEdges1;
             btnAddFuncao.DisabledState.BorderColor = Color.DarkGray;
             btnAddFuncao.DisabledState.CustomBorderColor = Color.DarkGray;
             btnAddFuncao.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -104,7 +104,7 @@
             btnAddFuncao.Location = new Point(1256, 13);
             btnAddFuncao.Margin = new Padding(32, 13, 32, 13);
             btnAddFuncao.Name = "btnAddFuncao";
-            btnAddFuncao.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            btnAddFuncao.ShadowDecoration.CustomizableEdges = customizableEdges2;
             btnAddFuncao.Size = new Size(549, 34);
             btnAddFuncao.TabIndex = 4;
             btnAddFuncao.Text = "Criar Função";
@@ -128,34 +128,34 @@
             dgvFuncoes.AllowUserToAddRows = false;
             dgvFuncoes.AllowUserToDeleteRows = false;
             dgvFuncoes.AllowUserToResizeRows = false;
-            dataGridViewCellStyle5.BackColor = Color.Transparent;
-            dgvFuncoes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.BackColor = Color.Transparent;
+            dgvFuncoes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dgvFuncoes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvFuncoes.BackgroundColor = Color.White;
             dgvFuncoes.BorderStyle = BorderStyle.None;
             dgvFuncoes.CellBorderStyle = DataGridViewCellBorderStyle.None;
             dgvFuncoes.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.BackColor = Color.White;
-            dataGridViewCellStyle6.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle6.ForeColor = Color.Black;
-            dataGridViewCellStyle6.Padding = new Padding(0, 8, 0, 8);
-            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
-            dgvFuncoes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = Color.White;
+            dataGridViewCellStyle2.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle2.ForeColor = Color.Black;
+            dataGridViewCellStyle2.Padding = new Padding(0, 8, 0, 8);
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dgvFuncoes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvFuncoes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvFuncoes.Columns.AddRange(new DataGridViewColumn[] { ID, Nome, PodeVerStock, PodeInserirStock, PodeCriarStock, PodeEditarFunc, PodeSubmeter, PodeAprovar, PodeEntregar, PodeCriarFuncoes, PodeAlterarDefinicoes, CorHex });
             dgvFuncoes.Cursor = Cursors.Hand;
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = Color.Transparent;
-            dataGridViewCellStyle7.Font = new Font("Roboto Medium", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle7.ForeColor = Color.Black;
-            dataGridViewCellStyle7.Padding = new Padding(18, 10, 18, 10);
-            dataGridViewCellStyle7.SelectionBackColor = Color.Transparent;
-            dataGridViewCellStyle7.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
-            dgvFuncoes.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.Transparent;
+            dataGridViewCellStyle3.Font = new Font("Roboto Medium", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = Color.Black;
+            dataGridViewCellStyle3.Padding = new Padding(18, 10, 18, 10);
+            dataGridViewCellStyle3.SelectionBackColor = Color.Transparent;
+            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            dgvFuncoes.DefaultCellStyle = dataGridViewCellStyle3;
             dgvFuncoes.Dock = DockStyle.Fill;
             dgvFuncoes.EnableHeadersVisualStyles = false;
             dgvFuncoes.GridColor = Color.White;
@@ -165,9 +165,9 @@
             dgvFuncoes.MultiSelect = false;
             dgvFuncoes.Name = "dgvFuncoes";
             dgvFuncoes.RowHeadersVisible = false;
-            dataGridViewCellStyle8.BackColor = Color.Transparent;
-            dataGridViewCellStyle8.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dgvFuncoes.RowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle4.BackColor = Color.Transparent;
+            dataGridViewCellStyle4.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dgvFuncoes.RowsDefaultCellStyle = dataGridViewCellStyle4;
             dgvFuncoes.RowTemplate.Height = 54;
             dgvFuncoes.ScrollBars = ScrollBars.None;
             dgvFuncoes.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -194,85 +194,78 @@
             // 
             // PodeVerStock
             // 
-            PodeVerStock.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            PodeVerStock.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             PodeVerStock.DataPropertyName = "PodeVerStock";
             PodeVerStock.HeaderText = "Ver Stock";
             PodeVerStock.Name = "PodeVerStock";
             PodeVerStock.Resizable = DataGridViewTriState.True;
             PodeVerStock.SortMode = DataGridViewColumnSortMode.Automatic;
-            PodeVerStock.Width = 89;
             // 
             // PodeInserirStock
             // 
-            PodeInserirStock.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            PodeInserirStock.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             PodeInserirStock.DataPropertyName = "PodeInserirStock";
             PodeInserirStock.HeaderText = "Inserir Stock";
             PodeInserirStock.Name = "PodeInserirStock";
-            PodeInserirStock.Width = 87;
             // 
             // PodeCriarStock
             // 
-            PodeCriarStock.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            PodeCriarStock.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             PodeCriarStock.DataPropertyName = "PodeCriarStock";
             PodeCriarStock.HeaderText = "Criar Stock";
             PodeCriarStock.Name = "PodeCriarStock";
-            PodeCriarStock.Width = 78;
             // 
             // PodeEditarFunc
             // 
-            PodeEditarFunc.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            PodeEditarFunc.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             PodeEditarFunc.DataPropertyName = "PodeEditarFunc";
             PodeEditarFunc.HeaderText = "Editar Func";
             PodeEditarFunc.Name = "PodeEditarFunc";
-            PodeEditarFunc.Width = 78;
             // 
             // PodeSubmeter
             // 
-            PodeSubmeter.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            PodeSubmeter.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             PodeSubmeter.DataPropertyName = "PodeSubmeter";
             PodeSubmeter.HeaderText = "Submeter";
             PodeSubmeter.Name = "PodeSubmeter";
-            PodeSubmeter.Width = 76;
             // 
             // PodeAprovar
             // 
-            PodeAprovar.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            PodeAprovar.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             PodeAprovar.DataPropertyName = "PodeAprovar";
             PodeAprovar.HeaderText = "Aprovar";
             PodeAprovar.Name = "PodeAprovar";
-            PodeAprovar.Width = 64;
             // 
             // PodeEntregar
             // 
-            PodeEntregar.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            PodeEntregar.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             PodeEntregar.DataPropertyName = "PodeEntregar";
             PodeEntregar.HeaderText = "Entregar";
             PodeEntregar.Name = "PodeEntregar";
-            PodeEntregar.Width = 68;
             // 
             // PodeCriarFuncoes
             // 
-            PodeCriarFuncoes.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            PodeCriarFuncoes.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             PodeCriarFuncoes.DataPropertyName = "PodeCriarFuncoes";
             PodeCriarFuncoes.HeaderText = "Criar Funcoes";
             PodeCriarFuncoes.Name = "PodeCriarFuncoes";
-            PodeCriarFuncoes.Width = 94;
+            PodeCriarFuncoes.Width = 110;
             // 
             // PodeAlterarDefinicoes
             // 
-            PodeAlterarDefinicoes.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            PodeAlterarDefinicoes.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             PodeAlterarDefinicoes.DataPropertyName = "PodeAlterarDefinicoes";
             PodeAlterarDefinicoes.HeaderText = "Alterar Definicoes";
             PodeAlterarDefinicoes.Name = "PodeAlterarDefinicoes";
-            PodeAlterarDefinicoes.Width = 119;
+            PodeAlterarDefinicoes.Width = 130;
             // 
             // CorHex
             // 
-            CorHex.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
+            CorHex.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             CorHex.DataPropertyName = "CorHex";
             CorHex.HeaderText = "Cor";
             CorHex.Name = "CorHex";
-            CorHex.Width = 5;
+            CorHex.Width = 120;
             // 
             // Funcoes
             // 

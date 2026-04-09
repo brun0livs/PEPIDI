@@ -290,6 +290,7 @@
             // flpLinhas
             // 
             flpLinhas.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            flpLinhas.AutoScroll = true;
             flpLinhas.Location = new Point(0, 151);
             flpLinhas.Margin = new Padding(0);
             flpLinhas.Name = "flpLinhas";

@@ -42,7 +42,6 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Graficos));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
@@ -86,9 +85,6 @@
             cmbFuncs = new Guna.UI2.WinForms.Guna2ComboBox();
             dtpInicio = new Guna.UI2.WinForms.Guna2DateTimePicker();
             dtpFim = new Guna.UI2.WinForms.Guna2DateTimePicker();
-            tableLayoutPanel3 = new TableLayoutPanel();
-            lblClose = new Label();
-            lblTituloGRAFICOS = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
             dgvTabela1 = new PEPIDI.Models.PEPIDIDataGridView();
             flowLayoutPanel1 = new FlowLayoutPanel();
@@ -99,7 +95,6 @@
             tableLayoutPanel5.SuspendLayout();
             tableLayoutPanel6.SuspendLayout();
             tableLayoutPanel7.SuspendLayout();
-            tableLayoutPanel3.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvTabela1).BeginInit();
             flowLayoutPanel1.SuspendLayout();
@@ -109,17 +104,16 @@
             // 
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(guna2Panel4, 0, 1);
-            tableLayoutPanel1.Controls.Add(tableLayoutPanel3, 0, 0);
-            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 2);
+            tableLayoutPanel1.Controls.Add(guna2Panel4, 0, 0);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 3;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 7F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 43F));
+            tableLayoutPanel1.RowCount = 2;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Size = new Size(2099, 1030);
             tableLayoutPanel1.TabIndex = 0;
             // 
@@ -131,10 +125,10 @@
             guna2Panel4.Controls.Add(tableLayoutPanel4);
             guna2Panel4.CustomizableEdges = customizableEdges13;
             guna2Panel4.Dock = DockStyle.Fill;
-            guna2Panel4.Location = new Point(3, 75);
+            guna2Panel4.Location = new Point(3, 3);
             guna2Panel4.Name = "guna2Panel4";
             guna2Panel4.ShadowDecoration.CustomizableEdges = customizableEdges14;
-            guna2Panel4.Size = new Size(2093, 436);
+            guna2Panel4.Size = new Size(2093, 509);
             guna2Panel4.TabIndex = 5;
             // 
             // tableLayoutPanel4
@@ -153,7 +147,7 @@
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.0550461F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 69.4954147F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2857141F));
-            tableLayoutPanel4.Size = new Size(2093, 436);
+            tableLayoutPanel4.Size = new Size(2093, 509);
             tableLayoutPanel4.TabIndex = 0;
             // 
             // tableLayoutPanel5
@@ -172,42 +166,42 @@
             tableLayoutPanel5.Controls.Add(lblFuncoes, 0, 0);
             tableLayoutPanel5.Controls.Add(flpFuncoes, 0, 1);
             tableLayoutPanel5.Dock = DockStyle.Fill;
-            tableLayoutPanel5.Location = new Point(0, 70);
+            tableLayoutPanel5.Location = new Point(0, 81);
             tableLayoutPanel5.Margin = new Padding(0);
             tableLayoutPanel5.Name = "tableLayoutPanel5";
             tableLayoutPanel5.RowCount = 2;
-            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 9.570957F));
-            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 90.42905F));
-            tableLayoutPanel5.Size = new Size(2093, 303);
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 10.1694918F));
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 89.8305054F));
+            tableLayoutPanel5.Size = new Size(2093, 354);
             tableLayoutPanel5.TabIndex = 1;
             // 
             // flpTamanhos
             // 
             flpTamanhos.Dock = DockStyle.Fill;
-            flpTamanhos.Location = new Point(1579, 32);
+            flpTamanhos.Location = new Point(1579, 39);
             flpTamanhos.Margin = new Padding(10, 3, 10, 3);
             flpTamanhos.Name = "flpTamanhos";
-            flpTamanhos.Size = new Size(504, 268);
+            flpTamanhos.Size = new Size(504, 312);
             flpTamanhos.TabIndex = 7;
             flpTamanhos.Click += Filtros_Changed;
             // 
             // flpModelos
             // 
             flpModelos.Dock = DockStyle.Fill;
-            flpModelos.Location = new Point(1056, 32);
+            flpModelos.Location = new Point(1056, 39);
             flpModelos.Margin = new Padding(10, 3, 10, 3);
             flpModelos.Name = "flpModelos";
-            flpModelos.Size = new Size(503, 268);
+            flpModelos.Size = new Size(503, 312);
             flpModelos.TabIndex = 6;
             flpModelos.Click += Filtros_Changed;
             // 
             // flpFamilia
             // 
             flpFamilia.Dock = DockStyle.Fill;
-            flpFamilia.Location = new Point(533, 32);
+            flpFamilia.Location = new Point(533, 39);
             flpFamilia.Margin = new Padding(10, 3, 10, 3);
             flpFamilia.Name = "flpFamilia";
-            flpFamilia.Size = new Size(503, 268);
+            flpFamilia.Size = new Size(503, 312);
             flpFamilia.TabIndex = 5;
             flpFamilia.Click += Filtros_Changed;
             // 
@@ -219,7 +213,7 @@
             lblTamanhos.Location = new Point(1569, 0);
             lblTamanhos.Margin = new Padding(0);
             lblTamanhos.Name = "lblTamanhos";
-            lblTamanhos.Size = new Size(524, 29);
+            lblTamanhos.Size = new Size(524, 36);
             lblTamanhos.TabIndex = 4;
             lblTamanhos.Text = "Tamanhos";
             lblTamanhos.TextAlign = ContentAlignment.MiddleCenter;
@@ -232,7 +226,7 @@
             lblModelos.Location = new Point(1046, 0);
             lblModelos.Margin = new Padding(0);
             lblModelos.Name = "lblModelos";
-            lblModelos.Size = new Size(523, 29);
+            lblModelos.Size = new Size(523, 36);
             lblModelos.TabIndex = 3;
             lblModelos.Text = "Modelos";
             lblModelos.TextAlign = ContentAlignment.MiddleCenter;
@@ -245,7 +239,7 @@
             lblFamilia.Location = new Point(523, 0);
             lblFamilia.Margin = new Padding(0);
             lblFamilia.Name = "lblFamilia";
-            lblFamilia.Size = new Size(523, 29);
+            lblFamilia.Size = new Size(523, 36);
             lblFamilia.TabIndex = 2;
             lblFamilia.Text = "Família";
             lblFamilia.TextAlign = ContentAlignment.MiddleCenter;
@@ -258,7 +252,7 @@
             lblFuncoes.Location = new Point(0, 0);
             lblFuncoes.Margin = new Padding(0);
             lblFuncoes.Name = "lblFuncoes";
-            lblFuncoes.Size = new Size(523, 29);
+            lblFuncoes.Size = new Size(523, 36);
             lblFuncoes.TabIndex = 1;
             lblFuncoes.Text = "Funções";
             lblFuncoes.TextAlign = ContentAlignment.MiddleCenter;
@@ -266,10 +260,10 @@
             // flpFuncoes
             // 
             flpFuncoes.Dock = DockStyle.Fill;
-            flpFuncoes.Location = new Point(10, 32);
+            flpFuncoes.Location = new Point(10, 39);
             flpFuncoes.Margin = new Padding(10, 3, 10, 3);
             flpFuncoes.Name = "flpFuncoes";
-            flpFuncoes.Size = new Size(503, 268);
+            flpFuncoes.Size = new Size(503, 312);
             flpFuncoes.TabIndex = 0;
             flpFuncoes.Click += Filtros_Changed;
             // 
@@ -288,14 +282,14 @@
             tableLayoutPanel6.Controls.Add(btnClear, 0, 0);
             tableLayoutPanel6.Controls.Add(tbNivelGrafico, 1, 0);
             tableLayoutPanel6.Dock = DockStyle.Fill;
-            tableLayoutPanel6.Location = new Point(0, 373);
+            tableLayoutPanel6.Location = new Point(0, 435);
             tableLayoutPanel6.Margin = new Padding(0);
             tableLayoutPanel6.Name = "tableLayoutPanel6";
             tableLayoutPanel6.RowCount = 1;
             tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel6.Size = new Size(2093, 63);
+            tableLayoutPanel6.Size = new Size(2093, 74);
             tableLayoutPanel6.TabIndex = 2;
             // 
             // btnGuardar
@@ -311,7 +305,7 @@
             btnGuardar.Margin = new Padding(10);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            btnGuardar.Size = new Size(283, 43);
+            btnGuardar.Size = new Size(283, 54);
             btnGuardar.TabIndex = 36;
             btnGuardar.Text = "Exportar Tabela";
             btnGuardar.Click += ExpTab_Click;
@@ -329,7 +323,7 @@
             guna2Button1.Margin = new Padding(10);
             guna2Button1.Name = "guna2Button1";
             guna2Button1.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            guna2Button1.Size = new Size(278, 43);
+            guna2Button1.Size = new Size(278, 54);
             guna2Button1.TabIndex = 36;
             guna2Button1.Text = "Exportar Gráfico";
             guna2Button1.Click += ExpGraf_Click;
@@ -349,7 +343,7 @@
             btnClear.Margin = new Padding(10);
             btnClear.Name = "btnClear";
             btnClear.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            btnClear.Size = new Size(278, 43);
+            btnClear.Size = new Size(278, 54);
             btnClear.TabIndex = 36;
             btnClear.Text = "Limpar";
             btnClear.Click += btnClear_Click;
@@ -362,7 +356,7 @@
             tbNivelGrafico.Maximum = 3;
             tbNivelGrafico.MouseWheelBarPartitions = 3;
             tbNivelGrafico.Name = "tbNivelGrafico";
-            tbNivelGrafico.Size = new Size(592, 57);
+            tbNivelGrafico.Size = new Size(592, 68);
             tbNivelGrafico.TabIndex = 37;
             tbNivelGrafico.ThumbColor = Color.FromArgb(255, 128, 0);
             tbNivelGrafico.Value = 0;
@@ -386,9 +380,9 @@
             tableLayoutPanel7.Margin = new Padding(0);
             tableLayoutPanel7.Name = "tableLayoutPanel7";
             tableLayoutPanel7.RowCount = 2;
-            tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Percent, 32.3076935F));
-            tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Percent, 67.69231F));
-            tableLayoutPanel7.Size = new Size(2093, 70);
+            tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Percent, 38.2716064F));
+            tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Percent, 61.7283936F));
+            tableLayoutPanel7.Size = new Size(2093, 81);
             tableLayoutPanel7.TabIndex = 3;
             // 
             // lblFim
@@ -399,7 +393,7 @@
             lblFim.Location = new Point(1071, 0);
             lblFim.Margin = new Padding(25, 0, 0, 0);
             lblFim.Name = "lblFim";
-            lblFim.Size = new Size(498, 22);
+            lblFim.Size = new Size(498, 31);
             lblFim.TabIndex = 4;
             lblFim.Text = "Fim";
             lblFim.TextAlign = ContentAlignment.MiddleLeft;
@@ -412,7 +406,7 @@
             lblInicio.Location = new Point(548, 0);
             lblInicio.Margin = new Padding(25, 0, 0, 0);
             lblInicio.Name = "lblInicio";
-            lblInicio.Size = new Size(498, 22);
+            lblInicio.Size = new Size(498, 31);
             lblInicio.TabIndex = 3;
             lblInicio.Text = "Início";
             lblInicio.TextAlign = ContentAlignment.MiddleLeft;
@@ -425,7 +419,7 @@
             lblFuncionario.Location = new Point(25, 0);
             lblFuncionario.Margin = new Padding(25, 0, 0, 0);
             lblFuncionario.Name = "lblFuncionario";
-            lblFuncionario.Size = new Size(498, 22);
+            lblFuncionario.Size = new Size(498, 31);
             lblFuncionario.TabIndex = 2;
             lblFuncionario.Text = "Funcionário";
             lblFuncionario.TextAlign = ContentAlignment.MiddleLeft;
@@ -444,7 +438,7 @@
             cmbFuncs.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             cmbFuncs.ForeColor = Color.FromArgb(68, 88, 112);
             cmbFuncs.ItemHeight = 42;
-            cmbFuncs.Location = new Point(25, 22);
+            cmbFuncs.Location = new Point(25, 31);
             cmbFuncs.Margin = new Padding(25, 0, 25, 0);
             cmbFuncs.Name = "cmbFuncs";
             cmbFuncs.ShadowDecoration.CustomizableEdges = customizableEdges8;
@@ -463,18 +457,17 @@
             dtpInicio.CheckedState.FillColor = Color.White;
             dtpInicio.CheckedState.ForeColor = Color.Black;
             dtpInicio.CustomizableEdges = customizableEdges9;
-            dtpInicio.Dock = DockStyle.Fill;
             dtpInicio.FillColor = Color.White;
             dtpInicio.FocusedColor = Color.FromArgb(255, 128, 0);
             dtpInicio.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             dtpInicio.Format = DateTimePickerFormat.Long;
-            dtpInicio.Location = new Point(548, 22);
-            dtpInicio.Margin = new Padding(25, 0, 25, 0);
+            dtpInicio.Location = new Point(548, 31);
+            dtpInicio.Margin = new Padding(25, 0, 25, 5);
             dtpInicio.MaxDate = new DateTime(2027, 12, 31, 0, 0, 0, 0);
             dtpInicio.MinDate = new DateTime(1753, 1, 1, 0, 0, 0, 0);
             dtpInicio.Name = "dtpInicio";
             dtpInicio.ShadowDecoration.CustomizableEdges = customizableEdges10;
-            dtpInicio.Size = new Size(473, 48);
+            dtpInicio.Size = new Size(473, 43);
             dtpInicio.TabIndex = 7;
             dtpInicio.TextAlign = HorizontalAlignment.Center;
             dtpInicio.Value = new DateTime(2026, 3, 19, 0, 0, 0, 0);
@@ -491,64 +484,21 @@
             dtpFim.CheckedState.FillColor = Color.White;
             dtpFim.CheckedState.ForeColor = Color.Black;
             dtpFim.CustomizableEdges = customizableEdges11;
-            dtpFim.Dock = DockStyle.Fill;
             dtpFim.FillColor = Color.White;
             dtpFim.FocusedColor = Color.FromArgb(255, 128, 0);
             dtpFim.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             dtpFim.Format = DateTimePickerFormat.Long;
-            dtpFim.Location = new Point(1071, 22);
-            dtpFim.Margin = new Padding(25, 0, 25, 0);
+            dtpFim.Location = new Point(1071, 31);
+            dtpFim.Margin = new Padding(25, 0, 25, 5);
             dtpFim.MaxDate = new DateTime(2027, 12, 31, 0, 0, 0, 0);
             dtpFim.MinDate = new DateTime(1753, 1, 1, 0, 0, 0, 0);
             dtpFim.Name = "dtpFim";
             dtpFim.ShadowDecoration.CustomizableEdges = customizableEdges12;
-            dtpFim.Size = new Size(473, 48);
+            dtpFim.Size = new Size(473, 43);
             dtpFim.TabIndex = 7;
             dtpFim.TextAlign = HorizontalAlignment.Center;
             dtpFim.Value = new DateTime(2026, 3, 19, 0, 0, 0, 0);
             dtpFim.CursorChanged += Filtros_Changed;
-            // 
-            // tableLayoutPanel3
-            // 
-            tableLayoutPanel3.ColumnCount = 2;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel3.Controls.Add(lblClose, 1, 0);
-            tableLayoutPanel3.Controls.Add(lblTituloGRAFICOS, 0, 0);
-            tableLayoutPanel3.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Location = new Point(0, 0);
-            tableLayoutPanel3.Margin = new Padding(0);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 1;
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel3.Size = new Size(2099, 72);
-            tableLayoutPanel3.TabIndex = 3;
-            // 
-            // lblClose
-            // 
-            lblClose.AutoSize = true;
-            lblClose.Cursor = Cursors.Hand;
-            lblClose.Dock = DockStyle.Right;
-            lblClose.Image = (Image)resources.GetObject("lblClose.Image");
-            lblClose.Location = new Point(2024, 0);
-            lblClose.Name = "lblClose";
-            lblClose.Size = new Size(72, 72);
-            lblClose.TabIndex = 1;
-            lblClose.Text = "                ";
-            lblClose.Click += lblClose_Click;
-            // 
-            // lblTituloGRAFICOS
-            // 
-            lblTituloGRAFICOS.AutoSize = true;
-            lblTituloGRAFICOS.Dock = DockStyle.Fill;
-            lblTituloGRAFICOS.Font = new Font("Roboto", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblTituloGRAFICOS.Location = new Point(3, 0);
-            lblTituloGRAFICOS.Name = "lblTituloGRAFICOS";
-            lblTituloGRAFICOS.Size = new Size(1043, 72);
-            lblTituloGRAFICOS.TabIndex = 2;
-            lblTituloGRAFICOS.Text = "GRÁFICOS";
-            lblTituloGRAFICOS.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // tableLayoutPanel2
             // 
@@ -558,13 +508,13 @@
             tableLayoutPanel2.Controls.Add(dgvTabela1, 1, 0);
             tableLayoutPanel2.Controls.Add(flowLayoutPanel1, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(0, 514);
+            tableLayoutPanel2.Location = new Point(0, 515);
             tableLayoutPanel2.Margin = new Padding(0);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel2.Size = new Size(2099, 516);
+            tableLayoutPanel2.Size = new Size(2099, 515);
             tableLayoutPanel2.TabIndex = 4;
             // 
             // dgvTabela1
@@ -611,7 +561,7 @@
             dgvTabela1.RowTemplate.Height = 54;
             dgvTabela1.ScrollBars = ScrollBars.None;
             dgvTabela1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvTabela1.Size = new Size(1030, 496);
+            dgvTabela1.Size = new Size(1030, 495);
             dgvTabela1.TabIndex = 2;
             // 
             // flowLayoutPanel1
@@ -621,7 +571,7 @@
             flowLayoutPanel1.Location = new Point(0, 0);
             flowLayoutPanel1.Margin = new Padding(0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(1049, 516);
+            flowLayoutPanel1.Size = new Size(1049, 515);
             flowLayoutPanel1.TabIndex = 3;
             // 
             // Grafico
@@ -680,8 +630,6 @@
             tableLayoutPanel6.ResumeLayout(false);
             tableLayoutPanel7.ResumeLayout(false);
             tableLayoutPanel7.PerformLayout();
-            tableLayoutPanel3.ResumeLayout(false);
-            tableLayoutPanel3.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvTabela1).EndInit();
             flowLayoutPanel1.ResumeLayout(false);
@@ -691,9 +639,6 @@
         #endregion
 
         private TableLayoutPanel tableLayoutPanel1;
-        private Label lblTituloGRAFICOS;
-        private TableLayoutPanel tableLayoutPanel3;
-        private Label lblClose;
         private TableLayoutPanel tableLayoutPanel2;
         private Models.PEPIDIDataGridView Tabela;
         private Guna.UI2.WinForms.Guna2Panel guna2Panel4;

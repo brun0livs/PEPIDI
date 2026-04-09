@@ -1,4 +1,6 @@
-﻿using PEPIDI.Models;
+﻿using Guna.UI2.WinForms;
+using PEPIDI.FormsSecundarios;
+using PEPIDI.Models;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -126,6 +128,16 @@ namespace PEPIDI.Utils
             _ => 36
         };
 
+
+        public static Font FonteData => ModoAtual switch
+        {
+            TipoEcra.Portatil => new Font("Roboto", 9),
+            TipoEcra.MonitorFullHD => new Font("Roboto", 11),
+            TipoEcra.Surface => new Font("Roboto", 12),
+            TipoEcra.Televisao => new Font("Roboto", 24F),
+            _ => new Font("Roboto", 9F)
+        };
+
         public static void AplicarEstilos(Control pai)
         {
             AplicarEstilos(pai, AlturaCombos);
@@ -142,9 +154,9 @@ namespace PEPIDI.Utils
             {
                 if (c is Guna.UI2.WinForms.Guna2ComboBox cmbRef)
                 {
-                    tamanhoReferencia = cmbRef.Size; // Guardamos o tamanho da combo
                     cmbRef.Font = FonteLabel;
                     cmbRef.ItemHeight = AlturaCombos;
+                    tamanhoReferencia = cmbRef.Size; // Guardamos o tamanho da combo
                     //MessageBox.Show(tamanhoReferencia.ToString());
                 }
             }
@@ -156,7 +168,8 @@ namespace PEPIDI.Utils
 
                 if (c is Guna.UI2.WinForms.Guna2DateTimePicker dtp)
                 {
-                    dtp.Font = FonteLabel;
+                    dtp.Size = tamanhoReferencia;
+                    dtp.Font = FonteData;
                 }
 
                 if (c is Guna.UI2.WinForms.Guna2Button btn)
@@ -175,8 +188,15 @@ namespace PEPIDI.Utils
                 }
                 else if (c is Label lbl)
                 {
-                    lbl.Font = lbl.Name.Contains("lblNome") ? FonteNome :
+                    if(lbl.Name == "lblMessage")
+                    {
+                        lbl.Font = FonteNome;
+                    }
+                    else
+                    {
+                        lbl.Font = lbl.Name.Contains("lblNome") ? FonteNome :
                                lbl.Name.Contains("Titulo") ? FonteTitulo : FonteLabel;
+                    }
                 }
                 else if (c is Guna.UI2.WinForms.Guna2TextBox txt)
                 {
@@ -194,10 +214,7 @@ namespace PEPIDI.Utils
                 }
 
                 // RECURSIVIDADE: Entrar em painéis/containers
-                if (c.HasChildren)
-                {
-                    AplicarEstilos(c);
-                }
+                if (c.HasChildren) AplicarEstilos(c);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using PEPIDI.FormsSecundarios;
+using PEPIDI.Models;
 using PEPIDI.Organizers;
 using PEPIDI.Utils;
 using System;
@@ -31,7 +32,7 @@ namespace PEPIDI.UCs
         }
 
 
-        private DataTable CarregarDGV(DataGridView dgv)
+        private DataTable CarregarDGV(PEPIDIDataGridView dgv)
         {
             dgv.AutoGenerateColumns = false;
 
@@ -51,6 +52,14 @@ namespace PEPIDI.UCs
                 }
             }
             dgv.DataSource = dt;
+
+            // --- ACTIVAR BADGES COLORIDAS ---
+            // Isto diz à tua classe personalizada para procurar a coluna com HeaderText "Função"
+            dgv.BadgeColumnName = "Nome";
+            dgv.BadgeColorColumnName = "CorHex";
+            dgv.Columns["CorHex"].Visible = false; // Esconder a coluna que tem o código da cor, já que a cor vai ser mostrada no badge  
+            dgv.Columns["Nome"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
             return dt;
         }
 

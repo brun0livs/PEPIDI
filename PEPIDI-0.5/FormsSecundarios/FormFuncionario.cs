@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
+using PEPIDI.Utils;
 
 
 namespace PEPIDI.FormsSecundarios
@@ -30,6 +31,7 @@ namespace PEPIDI.FormsSecundarios
             CarregarComboFuncoes();
             CarregaComboEstabs();
             ConfigurarModo();
+            GestorTema.AplicarEstilos(this);
         }
 
         private void ConfigurarModo()
