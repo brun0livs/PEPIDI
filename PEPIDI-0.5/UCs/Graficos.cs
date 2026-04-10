@@ -424,25 +424,38 @@ namespace PEPIDI.UCs
                         using (var workbook = new XLWorkbook(s))
                         {
                             var ws = workbook.Worksheet("Dados");
-                            ws.Clear(XLClearOptions.All);
 
-                            // Insere a tabela (Garante que o nome bate com o Gestor de Nomes do Excel)
-                            ws.Cell(1, 1).InsertTable(dt, "TabelaDados", true);
+                            // 1. Vai buscar a Tabela que JÁ EXISTE no template (Presumo que se chame "TabelaDados")
+                            var tabelaExcel = ws.Table("TabelaDados");
+
+                            // 2. Limpa a linha em branco original para não atrapalhar
+                            if (tabelaExcel.DataRange != null)
+                            {
+                                tabelaExcel.DataRange.Clear();
+                            }
+
+                            // 3. Injeta os dados E GUARDA na variável 'novoIntervalo' o espaço que eles ocuparam!
+                            var novoIntervalo = ws.Cell(2, 1).InsertData(dt);
+
+                            // 4. O SEGREDO: Obrigar a Tabela a redimensionar-se!
+                            // Vai da Linha 1 (cabeçalhos) até à última linha que acabámos de inserir.
+                            // Vai da Coluna 1 até ao total de colunas da tua DataTable (neste caso J = 10).
+                            tabelaExcel.Resize(ws.Range(1, 1, novoIntervalo.LastRow().RowNumber(), dt.Columns.Count));
 
                             ws.Columns().AdjustToContents();
+
+                            // Gravar o ficheiro destino
                             workbook.SaveAs(destinationPath);
                         }
                     }
                 });
 
                 M.AbrirMensagem("Dashboard gerado com sucesso! O Excel vai abrir agora.", "PEPIDI");
-
-                // --- A LINHA MÁGICA PARA ABRIR O FICHEIRO ---
                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(destinationPath) { UseShellExecute = true });
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Erro de Recurso");
+                MessageBox.Show($"Erro na exportação: {ex.Message}", "Erro de Recurso");
             }
         }
 

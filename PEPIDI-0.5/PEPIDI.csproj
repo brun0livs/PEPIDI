@@ -43,10 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="RelatorioConsumos.xlsx" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="Guna.Charts.WinForms" Version="1.1.0" />
     <PackageReference Include="Guna.UI2.WinForms" Version="2.0.4.7" />
@@ -58,6 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="RelatorioConsumos.xlsx" />
     <Resource Include="Resources\box_add_50dp_000000_FILL0_wght400_GRAD0_opsz48.png" />
     <Resource Include="Resources\box_edit_50dp_000000_FILL0_wght400_GRAD0_opsz48.png" />
     <Resource Include="Resources\Close.png" />
