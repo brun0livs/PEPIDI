@@ -121,9 +121,9 @@ namespace PEPIDI
 
                 var linha = new PEPIDI.Organizers.LinhaPedido
                 {
-                    Size = new Size(flpLinhas.Width, 100),
+                    Size = new Size(flpLinhas.Width - 20, 100),
                     Dock = DockStyle.Top,
-                    Margin = new Padding(0, 0, 0, 8),
+                    Margin = new Padding(0, 0, 0, 5),
                     Tag = item
                 };
 

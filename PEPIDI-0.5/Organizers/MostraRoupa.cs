@@ -62,13 +62,21 @@ namespace PEPIDI
                         var modelo = reader["Modelo"].ToString();
                         var tamanho = reader["Tamanho"].ToString();
 
-                        resultado.Add(new LinhaPedidoInfo
+                        // 1. VERIFICAÇÃO CHAVE: 
+                        // Lê-se: "Se NÃO (!) existir NENHUM (Any) item no resultado onde o Modelo seja igual a este..."
+                        if (!resultado.Any(x => x.Modelo == modelo))
                         {
-                            IdEpi = Convert.ToInt32(reader["IDEPI"]),
-                            Modelo = modelo,
-                            TamanhoAtual = tamanho,
-                            TamanhosDisponiveis = ObterTamanhosUsadosPorFuncionario(modelo, nrFuncionario)
-                        });
+                            resultado.Add(new LinhaPedidoInfo
+                            {
+                                IdEpi = Convert.ToInt32(reader["IDEPI"]),
+                                Modelo = modelo,
+                                TamanhoAtual = tamanho, // Fica como tamanho padrão inicial
+
+                                // Vai buscar a lista completa de tamanhos para a ComboBox
+                                TamanhosDisponiveis = ObterTamanhosUsadosPorFuncionario(modelo, nrFuncionario)
+                            });
+                        }
+                        // Se já existir na lista, o if é ignorado e o ciclo avança, evitando a acumulação!
                     }
                 }
             }

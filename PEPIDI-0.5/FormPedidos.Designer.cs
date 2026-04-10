@@ -63,6 +63,7 @@
             // 
             splitContainer1.BackColor = Color.White;
             splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.IsSplitterFixed = true;
             splitContainer1.Location = new Point(0, 0);
             splitContainer1.Margin = new Padding(0);
             splitContainer1.Name = "splitContainer1";
@@ -70,15 +71,15 @@
             // splitContainer1.Panel1
             // 
             splitContainer1.Panel1.Controls.Add(tableLayoutPanel1);
-            splitContainer1.Panel1MinSize = 447;
+            splitContainer1.Panel1MinSize = 0;
             // 
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.BackColor = Color.White;
             splitContainer1.Panel2.Controls.Add(tableLayoutPanel3);
-            splitContainer1.Panel2MinSize = 1469;
+            splitContainer1.Panel2MinSize = 1000;
             splitContainer1.Size = new Size(1920, 1009);
-            splitContainer1.SplitterDistance = 447;
+            splitContainer1.SplitterDistance = 380;
             splitContainer1.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -95,7 +96,7 @@
             tableLayoutPanel1.RowCount = 2;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 15F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 85F));
-            tableLayoutPanel1.Size = new Size(447, 1009);
+            tableLayoutPanel1.Size = new Size(380, 1009);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // panel1
@@ -107,7 +108,7 @@
             panel1.Location = new Point(0, 0);
             panel1.Margin = new Padding(0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(447, 151);
+            panel1.Size = new Size(380, 151);
             panel1.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -133,7 +134,7 @@
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tableLayoutPanel2.Size = new Size(447, 858);
+            tableLayoutPanel2.Size = new Size(380, 858);
             tableLayoutPanel2.TabIndex = 1;
             // 
             // Nav2
@@ -158,7 +159,7 @@
             Nav2.Margin = new Padding(0, 3, 0, 3);
             Nav2.Name = "Nav2";
             Nav2.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            Nav2.Size = new Size(447, 79);
+            Nav2.Size = new Size(380, 79);
             Nav2.TabIndex = 1;
             Nav2.Text = "Devolver Fardamento";
             Nav2.TextAlign = HorizontalAlignment.Left;
@@ -187,7 +188,7 @@
             Nav1.Margin = new Padding(0, 3, 0, 3);
             Nav1.Name = "Nav1";
             Nav1.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            Nav1.Size = new Size(447, 79);
+            Nav1.Size = new Size(380, 79);
             Nav1.TabIndex = 0;
             Nav1.Text = "Pedir Fardamento";
             Nav1.TextAlign = HorizontalAlignment.Left;
@@ -211,7 +212,7 @@
             Nav3.Margin = new Padding(0, 3, 0, 3);
             Nav3.Name = "Nav3";
             Nav3.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            Nav3.Size = new Size(447, 87);
+            Nav3.Size = new Size(380, 87);
             Nav3.TabIndex = 1;
             Nav3.Text = "Sair";
             Nav3.TextAlign = HorizontalAlignment.Left;
@@ -232,7 +233,7 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 15F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 76F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 9F));
-            tableLayoutPanel3.Size = new Size(1469, 1009);
+            tableLayoutPanel3.Size = new Size(1536, 1009);
             tableLayoutPanel3.TabIndex = 0;
             // 
             // tableLayoutPanel4
@@ -248,7 +249,7 @@
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 1;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel4.Size = new Size(1469, 92);
+            tableLayoutPanel4.Size = new Size(1536, 92);
             tableLayoutPanel4.TabIndex = 0;
             // 
             // btnSubmeter
@@ -265,11 +266,11 @@
             btnSubmeter.HoverState.FillColor = Color.FromArgb(249, 160, 90);
             btnSubmeter.HoverState.Font = new Font("Roboto", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnSubmeter.HoverState.ForeColor = Color.White;
-            btnSubmeter.Location = new Point(978, 3);
+            btnSubmeter.Location = new Point(1024, 3);
             btnSubmeter.Margin = new Padding(0, 3, 0, 3);
             btnSubmeter.Name = "btnSubmeter";
             btnSubmeter.ShadowDecoration.CustomizableEdges = customizableEdges8;
-            btnSubmeter.Size = new Size(491, 86);
+            btnSubmeter.Size = new Size(512, 86);
             btnSubmeter.TabIndex = 4;
             btnSubmeter.Text = "SUBMETER";
             btnSubmeter.Click += btnSubmeter_Click;
@@ -282,7 +283,7 @@
             lblNome.Location = new Point(10, 0);
             lblNome.Margin = new Padding(10, 0, 3, 0);
             lblNome.Name = "lblNome";
-            lblNome.Size = new Size(1456, 151);
+            lblNome.Size = new Size(1523, 151);
             lblNome.TabIndex = 1;
             lblNome.Text = "Nome : X";
             lblNome.TextAlign = ContentAlignment.MiddleLeft;
@@ -294,7 +295,7 @@
             flpLinhas.Location = new Point(0, 151);
             flpLinhas.Margin = new Padding(0);
             flpLinhas.Name = "flpLinhas";
-            flpLinhas.Size = new Size(1469, 766);
+            flpLinhas.Size = new Size(1536, 766);
             flpLinhas.TabIndex = 2;
             // 
             // FormPedidos
