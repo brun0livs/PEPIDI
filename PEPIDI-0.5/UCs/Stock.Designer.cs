@@ -98,6 +98,7 @@
             dgvStock.Margin = new Padding(13, 13, 13, 0);
             dgvStock.MultiSelect = false;
             dgvStock.Name = "dgvStock";
+            dgvStock.ReadOnly = true;
             dgvStock.RowHeadersVisible = false;
             dataGridViewCellStyle4.BackColor = Color.Transparent;
             dgvStock.RowsDefaultCellStyle = dataGridViewCellStyle4;
@@ -107,6 +108,7 @@
             dgvStock.Size = new Size(1811, 785);
             dgvStock.TabIndex = 2;
             dgvStock.CellFormatting += dgvStock_CellFormatting;
+            dgvStock.CellToolTipTextNeeded += dgvStock_CellToolTipTextNeeded;
             // 
             // tableLayoutPanel2
             // 

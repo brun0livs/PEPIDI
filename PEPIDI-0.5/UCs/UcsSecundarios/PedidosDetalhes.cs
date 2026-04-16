@@ -24,6 +24,7 @@ namespace PEPIDI.UCs.UcsSecundarios
         string NMEC = "0000";
         string FuncaoFuncionario = "-";
         EfeitoUI M = new EfeitoUI();
+        public event EventHandler AcaoConcluida;
 
         // Controlo de Fluxo para o MX Master 3S
         private DateTime lastScrollTime = DateTime.Now;
@@ -364,11 +365,8 @@ namespace PEPIDI.UCs.UcsSecundarios
 
         private void close_Click(object sender, EventArgs e)
         {
-            if (this.Parent != null)
-            {
-                this.Parent.Controls.Remove(this);
-                this.Dispose();
-            }
+            // O UC avisa o Form Principal que quer fechar. O Form trata do resto!
+            AcaoConcluida?.Invoke(this, EventArgs.Empty);
         }
 
         private void btnAprovar_Click(object sender, EventArgs e)
@@ -417,9 +415,7 @@ namespace PEPIDI.UCs.UcsSecundarios
 
                             trans.Commit();
                             M.AbrirMensagem("Pedido Aprovado! Agora está pronto para entrega.", "Sucesso");
-
-                            this.Parent.Controls.Remove(this);
-                            this.Dispose();
+                            AcaoConcluida?.Invoke(this, EventArgs.Empty);
                         }
                         catch (Exception ex)
                         {
@@ -557,9 +553,7 @@ namespace PEPIDI.UCs.UcsSecundarios
 
                                     M.AbrirMensagem("Entrega e retoma finalizadas com sucesso!\nPDF Gerado.", "Sucesso");
                                     try { System.Diagnostics.Process.Start("explorer.exe", caminhoPDF); } catch { }
-
-                                    this.Parent.Controls.Remove(this);
-                                    this.Dispose();
+                                    AcaoConcluida?.Invoke(this, EventArgs.Empty);
                                 }
                                 catch (Exception)
                                 {
@@ -680,8 +674,7 @@ namespace PEPIDI.UCs.UcsSecundarios
                     cmd.ExecuteNonQuery();
                     M.AbrirMensagem("Pedido reprovado com sucesso.", "Sucesso");
 
-                    this.Parent.Controls.Remove(this);
-                    this.Dispose();
+                    AcaoConcluida?.Invoke(this, EventArgs.Empty);
                 }
             }
             catch (Exception ex) { M.AbrirMensagem("Erro ao reprovar: " + ex.Message, "Erro"); }

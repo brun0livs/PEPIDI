@@ -23,12 +23,12 @@ namespace PEPIDI.FormsSecundarios
         private int? IDGestor;
         EfeitoUI M = new();
 
-        public FormFuncionario(int? _nr = null, int? _IDGestor = null)
+        public FormFuncionario(int? _nr = null, int? _IDGestor = null, int _nivelAcesso = 0)
         {
             InitializeComponent();
             NMEC = _nr;
             IDGestor = _IDGestor;
-            CarregarComboFuncoes();
+            CarregarComboFuncoes(_nivelAcesso);
             CarregaComboEstabs();
             ConfigurarModo();
             GestorTema.AplicarEstilos(this);
@@ -227,7 +227,7 @@ namespace PEPIDI.FormsSecundarios
             }
         }
 
-        private void CarregarComboFuncoes()
+        private void CarregarComboFuncoes(int NivelAcesso)
         {
             using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
             {
@@ -235,7 +235,7 @@ namespace PEPIDI.FormsSecundarios
                 {
                     conn.Open();
                     // 1. A Query para ir buscar os dados
-                    string query = "SELECT ID, Nome FROM Funcoes ORDER BY ID";
+                    string query = $"SELECT ID, Nome FROM Funcoes WHERE NivelAcesso >= {NivelAcesso} ORDER BY Nome";
 
                     SqlDataAdapter da = new SqlDataAdapter(query, conn);
                     DataTable dt = new DataTable();

@@ -23,6 +23,7 @@ namespace PEPIDI.UCs
         public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
         private const int WM_SETREDRAW = 11;
         private CancellationTokenSource _cts = new();
+        private bool _aAtualizar = false;
 
         public Pedidos(int _IDGestor, string _estado)
         {
@@ -36,6 +37,7 @@ namespace PEPIDI.UCs
         {
             // 1. Bloqueamos a geração automática para respeitar o que fizeste no Designer
             dgvPedidos.AutoGenerateColumns = false;
+
             GereEstados();
             TouchScrollHelper.AtivarScrollPorArrasto(dgvPedidos);
             GestorTema.AplicarEstilos(this);
@@ -53,7 +55,12 @@ namespace PEPIDI.UCs
             {
                 lblTituloPedidos.Text = "PEDIDOS APROVADOS";
                 lblTituloPedidos.ForeColor = Color.Green;
-                if (dgvPedidos.Columns.Contains("Check")) dgvPedidos.Columns["Check"].Visible = true;
+                if (dgvPedidos.Columns.Contains("Check"))
+                {
+                    dgvPedidos.Columns["Check"].Visible = true;
+                    dgvPedidos.Columns["Check"].HeaderText = "Selecionar Tudo";
+                    dgvPedidos.Columns["Check"].Width = 200;
+                }
             }
             else
             {
@@ -63,6 +70,38 @@ namespace PEPIDI.UCs
             }
 
             CarregarPedidosPorEstado(dgvPedidos, estado);
+        }
+
+        private void dgvPedidos_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            // Apenas quando ENTRA no cabeçalho da coluna Check
+            if (e.RowIndex == -1 && e.ColumnIndex >= 0 && dgvPedidos.Columns[e.ColumnIndex].Name == "Check")
+            {
+                dgvPedidos.Cursor = Cursors.Hand;
+            }
+        }
+
+        private void dgvPedidos_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            // Apenas quando SAI do cabeçalho da coluna Check
+            if (e.RowIndex == -1 && e.ColumnIndex >= 0 && dgvPedidos.Columns[e.ColumnIndex].Name == "Check")
+            {
+                dgvPedidos.Cursor = Cursors.Default;
+            }
+        }
+
+        private void dgvPedidos_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            // O RowIndex == -1 significa que estamos na zona do Cabeçalho!
+            if (e.RowIndex == -1 && e.ColumnIndex >= 0 && dgvPedidos.Columns[e.ColumnIndex].Name == "Check")
+            {
+                dgvPedidos.Cursor = Cursors.Hand;
+            }
+            else
+            {
+                // Se estivermos noutra coluna qualquer, o cursor volta ao normal
+                dgvPedidos.Cursor = Cursors.Default;
+            }
         }
 
         private void CarregarPedidosPorEstado(PEPIDIDataGridView dgv, string estado)
@@ -123,9 +162,10 @@ namespace PEPIDI.UCs
 
                 if (cellValue != null && int.TryParse(cellValue.ToString(), out int idPedidoSelecionado))
                 {
-                    // Criamos a UC. Dica: Se o construtor da UC faz SQL, ela vai lagar.
-                    // O ideal é a UC ser criada vazia e carregar os dados num evento 'Load' asíncrono.
                     var ucDetalhes = new UcsSecundarios.PedidosDetalhes(idPedidoSelecionado, IDGestor, estado);
+
+                    // A MÁGICA QUE FALTOU: Ligar o fio para o Chefe ouvir o UC!
+                    ucDetalhes.AcaoConcluida += FecharDetalhes_AtualizarLista;
 
                     AbrirControl(ucDetalhes);
                 }
@@ -165,20 +205,35 @@ namespace PEPIDI.UCs
 
         private void ValidarBotaoRelatorio()
         {
-            bool temSelecionado = false;
+            int linhasSelecionadas = 0;
+            int totalLinhas = dgvPedidos.Rows.Count;
 
+            // 1. Conta quantas linhas têm o visto
             foreach (DataGridViewRow row in dgvPedidos.Rows)
             {
                 if (row.Cells["Check"].Value != null && Convert.ToBoolean(row.Cells["Check"].Value) == true)
                 {
-                    temSelecionado = true;
-                    break;
+                    linhasSelecionadas++;
                 }
             }
 
-            // Assumindo que o botão se chama btnRelatorio no teu Designer
-            btnRelatorio.Visible = temSelecionado;
-            btnRelatorio.Enabled = temSelecionado;
+            // 2. Gere o Botão do Relatório (Aparece se houver pelo menos 1 selecionado)
+            btnRelatorio.Visible = linhasSelecionadas > 0;
+            btnRelatorio.Enabled = linhasSelecionadas > 0;
+
+            // 3. MÁGICA DO CABEÇALHO DA COLUNA: 
+            // Se selecionou TODAS, muda o texto para Desmarcar. Caso contrário, mantém Selecionar.
+            if (dgvPedidos.Columns.Contains("Check"))
+            {
+                if (linhasSelecionadas > 0 && linhasSelecionadas == totalLinhas)
+                {
+                    dgvPedidos.Columns["Check"].HeaderText = "✗ Desmarcar Tudo";
+                }
+                else
+                {
+                    dgvPedidos.Columns["Check"].HeaderText = "✓ Selecionar Tudo";
+                }
+            }
         }
 
         private void btnRecolhaArmazem_Click(object sender, EventArgs e)
@@ -272,6 +327,54 @@ namespace PEPIDI.UCs
                 EfeitoUI M = new EfeitoUI();
                 string detalhe = ex.InnerException != null ? $"\nDetalhe: {ex.InnerException.Message}" : "";
                 M.AbrirMensagem($"Erro ao gerar relatório: {ex.Message}{detalhe}", "Erro");
+            }
+        }
+
+        private void FecharDetalhes_AtualizarLista(object sender, EventArgs e)
+        {
+            // 1. Limpa o painel (fecha os detalhes)
+            pnlDetails.Controls.Clear();
+
+            // 2. Agora sim, como a ação já terminou em segurança, recarrega a grelha!
+            Pedidos_Load(null, EventArgs.Empty);
+        }
+
+        private void dgvPedidos_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            // 1. Só nos interessa se o clique for no cabeçalho da coluna "Check"
+            if (e.ColumnIndex >= 0 && dgvPedidos.Columns[e.ColumnIndex].Name == "Check")
+            {
+                // 2. Pausa a atualização visual
+                dgvPedidos.SuspendLayout();
+
+                // 3. VERIFICAÇÃO INTELIGENTE: Vamos ver se TODAS estão marcadas
+                bool todasJaEstaoMarcadas = true;
+                foreach (DataGridViewRow row in dgvPedidos.Rows)
+                {
+                    if (row.Cells["Check"].Value == null || Convert.ToBoolean(row.Cells["Check"].Value) == false)
+                    {
+                        // Encontrámos uma linha sem visto! Logo, não estão todas marcadas.
+                        todasJaEstaoMarcadas = false;
+                        break; // Pára de procurar, já sabemos a resposta.
+                    }
+                }
+
+                // 4. O novo estado é o inverso: se todas estavam marcadas, desmarca. Caso contrário, marca todas!
+                bool novoEstado = !todasJaEstaoMarcadas;
+
+                // 5. Aplica o novo estado a todas as linhas
+                foreach (DataGridViewRow row in dgvPedidos.Rows)
+                {
+                    row.Cells["Check"].Value = novoEstado;
+                }
+
+                // 6. Força a grelha a assumir e a desenhar os novos valores
+                dgvPedidos.EndEdit();
+                dgvPedidos.RefreshEdit(); // OBRIGATÓRIO para forçar os vistos a aparecerem na hora!
+                dgvPedidos.ResumeLayout();
+
+                // 7. Valida o botão do Relatório
+                ValidarBotaoRelatorio();
             }
         }
     }

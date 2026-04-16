@@ -412,6 +412,75 @@ namespace PEPIDI
             }
         }
 
+        public void AtualizarTamanhoPadraoFuncionario(int nrFunc, int idEpi, string novoTamanho)
+        {
+            try
+            {
+                using (var conn = GetConn.GetConnection())
+                {
+                    conn.Open();
+
+                    // 1. Descobrir a Família do EPI na base de dados
+                    string familia = "";
+                    using (var cmdBusca = new Microsoft.Data.SqlClient.SqlCommand("SELECT Familia FROM EPI WHERE ID = @IDEPI", conn))
+                    {
+                        cmdBusca.Parameters.AddWithValue("@IDEPI", idEpi);
+                        var result = cmdBusca.ExecuteScalar();
+
+                        // Se encontrou a família, guarda em minúsculas para ser mais fácil de comparar
+                        if (result != null)
+                            familia = result.ToString().ToLower().Trim();
+                    }
+
+                    // Se o artigo não tiver família, aborta a missão em segurança.
+                    if (string.IsNullOrEmpty(familia)) return;
+
+                    // 2. Mapear a Família para a Coluna da tabela Funcionarios
+                    string colunaTabela = "";
+
+                    // Agora avaliamos pela FAMÍLIA e não pelo nome do Modelo!
+                    if (familia.Contains("t-shirt") || familia.Contains("tshirt"))
+                        colunaTabela = "TShirt";
+
+                    else if (familia.Contains("casaco"))
+                        colunaTabela = "Casaco";
+
+                    else if (familia.Contains("polo manga curta") || familia.Contains("polo m. curta"))
+                        colunaTabela = "PoloMCurta";
+
+                    else if (familia.Contains("polo manga comprida") || familia.Contains("polo m. comprida"))
+                        colunaTabela = "PoloMCompr";
+
+                    else if (familia.Contains("calça") || familia.Contains("calca"))
+                        colunaTabela = "Calca";
+
+                    // Aqui podes apanhar a família inteira do calçado (sapatos, botas, socas, etc)
+                    else if (familia.Contains("sapato") || familia.Contains("calçado") || familia.Contains("bota"))
+                        colunaTabela = "Sapato";
+
+                    else if (familia.Contains("bata"))
+                        colunaTabela = "Bata";
+
+                    else
+                        return; // Família não mapeada para gravar tamanho
+
+                    // 3. Atualizar o funcionário na Base de Dados
+                    string query = $"UPDATE Funcionarios SET {colunaTabela} = @Tamanho WHERE Nr = @NrFunc";
+                    using (var cmdUpdate = new Microsoft.Data.SqlClient.SqlCommand(query, conn))
+                    {
+                        cmdUpdate.Parameters.AddWithValue("@Tamanho", novoTamanho);
+                        cmdUpdate.Parameters.AddWithValue("@NrFunc", nrFunc);
+                        cmdUpdate.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Ignoramos silenciosamente para que um erro na gravação do tamanho 
+                // não impeça o utilizador de fazer o pedido!
+            }
+        }
+
         public void SubmeterEntregaParaPedidoReg(int idPedReg, List<(int idRoupa, string tamanho, int qtd)> itens)
         {
             using (var conn = GetConn.GetConnection())

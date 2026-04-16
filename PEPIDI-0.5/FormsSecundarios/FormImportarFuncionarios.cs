@@ -254,10 +254,10 @@ namespace PEPIDI.FormsSecundarios
             {
                 conn.Open();
                 string sql = @"IF EXISTS (SELECT 1 FROM Funcionarios WHERE Nr = @nr)
-                        UPDATE Funcionarios SET Nome=@nome, Funcao=@fid, DtAdmiss=@dt, Estab=@eid, AlteradoPor=@idgestor WHERE Nr=@nr
+                        UPDATE Funcionarios SET Nome=@nome, Funcao=@fid, TShirt=@tshirt, Casaco=@casaco, PoloMCurta=@polomcurta, PoloMCompr=@polomcompr, Calca=@calca, Sapato=@sapato, DtAdmiss=@dt, Estab=@eid, AlteradoPor=@idgestor WHERE Nr=@nr
                        ELSE
-                        INSERT INTO Funcionarios (Nr, Nome, Funcao, DtAdmiss, Estab, CriadoPor)
-                        VALUES (@nr, @nome, @fid, @dt, @eid, @idgestor)";
+                        INSERT INTO Funcionarios (Nr, Nome, Funcao, TShirt, Casaco, PoloMCurta, PoloMCompr, Calca, Sapato, DtAdmiss, Estab, CriadoPor)
+                        VALUES (@nr, @nome, @fid, @tshirt, @casaco, @polomcurta, @polomcompr, @calca, @sapato, @dt, @eid, @idgestor)";
 
                 using (var cmd = new SqlCommand(sql, conn))
                 {
@@ -266,6 +266,12 @@ namespace PEPIDI.FormsSecundarios
                     cmd.Parameters.AddWithValue("@fid", idFunc);
                     cmd.Parameters.AddWithValue("@eid", idEstab);
                     cmd.Parameters.AddWithValue("@idgestor", IDGestor);
+                    cmd.Parameters.AddWithValue("@tshirt", "M");
+                    cmd.Parameters.AddWithValue("@casaco", "M");
+                    cmd.Parameters.AddWithValue("@polomcurta", "M");
+                    cmd.Parameters.AddWithValue("@polomcompr", "M");
+                    cmd.Parameters.AddWithValue("@calca", "40");
+                    cmd.Parameters.AddWithValue("@sapato", "40");
 
                     DateTime dt;
                     if (!DateTime.TryParse(data, out dt)) dt = DateTime.Now;

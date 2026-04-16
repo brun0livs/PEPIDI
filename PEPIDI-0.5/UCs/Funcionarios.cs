@@ -41,6 +41,23 @@ namespace PEPIDI.UCs
             Configura(dgvFuncs);
         }
 
+        private void AplicaRegras(int IDGestor, int SessaoNivelAcesso)
+        {
+            if (SessaoNivelAcesso > 1)
+            {
+                btnAbreGraficos.Enabled = false;
+                btnAbreGraficos.Visible = false;
+                btnImportacaoRapida.Enabled = false;
+                btnImportacaoRapida.Visible = false;
+            }
+             else
+            {
+                btnAddFunc.Enabled = true;
+                btnImportacaoRapida.Enabled = true;
+                _menuAcoes.Items.Add("Ver histórico", null, (s, e) => AcaoSelecionada("Historico"));
+            }
+        }
+
         private void AbrirFuncionarios(int? idFunc, int idGestor)
         {
             using (Form overlay = new Form())
@@ -78,7 +95,7 @@ namespace PEPIDI.UCs
             Configura(dgvFuncs);
             TouchScrollHelper.AtivarScrollPorArrasto(dgvFuncs);
             GestorTema.AplicarEstilos(this);
-
+            AplicaRegras(IDGestor, Sessao.NivelAcessoAtual);
         }
 
         private void Configura(PEPIDIDataGridView dgvFuncs)
@@ -98,9 +115,8 @@ namespace PEPIDI.UCs
             // --- MENU DE AÇÕES ---
             _menuAcoes = new ContextMenuStrip();
             _menuAcoes.Items.Add("Editar", null, (s, e) => AcaoSelecionada("Editar"));
-            _menuAcoes.Items.Add("Ver histórico", null, (s, e) => AcaoSelecionada("Historico"));
-            _menuAcoes.Items.Add(new ToolStripSeparator());
-            _menuAcoes.Items.Add("Repor palavra-passe…", null, (s, e) => AcaoSelecionada("ReporPass"));
+            //_menuAcoes.Items.Add(new ToolStripSeparator());
+            //_menuAcoes.Items.Add("Repor palavra-passe…", null, (s, e) => AcaoSelecionada("ReporPass"));
 
             dgvFuncs.ShowActionDots = true;
             dgvFuncs.ActionDotsAfterColumn = "Estab";

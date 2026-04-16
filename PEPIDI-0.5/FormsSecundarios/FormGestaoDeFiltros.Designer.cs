@@ -37,7 +37,7 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             tableLayoutPanel2 = new TableLayoutPanel();
             lblFechar = new Label();
-            lblFuncao = new Label();
+            lblTitulo = new Label();
             tlpConteudo = new TableLayoutPanel();
             tlpControlos = new TableLayoutPanel();
             txtNome = new Guna.UI2.WinForms.Guna2TextBox();
@@ -93,7 +93,7 @@
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.Controls.Add(lblFechar, 1, 0);
-            tableLayoutPanel2.Controls.Add(lblFuncao, 0, 0);
+            tableLayoutPanel2.Controls.Add(lblTitulo, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 0);
             tableLayoutPanel2.Margin = new Padding(0);
@@ -115,19 +115,19 @@
             lblFechar.TabIndex = 1;
             lblFechar.Click += lblFechar_Click;
             // 
-            // lblFuncao
+            // lblTitulo
             // 
-            lblFuncao.AutoSize = true;
-            lblFuncao.Dock = DockStyle.Fill;
-            lblFuncao.Font = new Font("Roboto Medium", 18.75F, FontStyle.Bold);
-            lblFuncao.ForeColor = Color.White;
-            lblFuncao.Location = new Point(10, 0);
-            lblFuncao.Margin = new Padding(10, 0, 0, 0);
-            lblFuncao.Name = "lblFuncao";
-            lblFuncao.Size = new Size(505, 75);
-            lblFuncao.TabIndex = 0;
-            lblFuncao.Text = "GESTÃO DE FILTROS";
-            lblFuncao.TextAlign = ContentAlignment.MiddleLeft;
+            lblTitulo.AutoSize = true;
+            lblTitulo.Dock = DockStyle.Fill;
+            lblTitulo.Font = new Font("Roboto Medium", 18.75F, FontStyle.Bold);
+            lblTitulo.ForeColor = Color.White;
+            lblTitulo.Location = new Point(10, 0);
+            lblTitulo.Margin = new Padding(10, 0, 0, 0);
+            lblTitulo.Name = "lblTitulo";
+            lblTitulo.Size = new Size(505, 75);
+            lblTitulo.TabIndex = 0;
+            lblTitulo.Text = "GESTÃO DE FILTROS";
+            lblTitulo.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // tlpConteudo
             // 
@@ -470,7 +470,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Label lblFechar;
-        private System.Windows.Forms.Label lblFuncao;
+        private System.Windows.Forms.Label lblTitulo;
 
         private System.Windows.Forms.TableLayoutPanel tlpConteudo;
         private System.Windows.Forms.TableLayoutPanel tlpControlos;

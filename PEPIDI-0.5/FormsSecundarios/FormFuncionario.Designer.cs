@@ -731,6 +731,7 @@
             // 
             // lblFechar
             // 
+            lblFechar.Cursor = Cursors.Hand;
             lblFechar.Dock = DockStyle.Right;
             lblFechar.Font = new Font("Roboto", 18.75F);
             lblFechar.ForeColor = Color.White;

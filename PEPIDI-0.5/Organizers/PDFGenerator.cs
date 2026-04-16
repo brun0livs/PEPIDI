@@ -16,12 +16,42 @@ using iText.Kernel.Pdf.Annot;
 using iText.Forms.Fields;
 using System.Windows.Forms.VisualStyles;
 using VerticalAlignment = iText.Layout.Properties.VerticalAlignment;
+using Microsoft.Data.SqlClient;
 
 namespace PEPIDI.Organizers
 {
     public static class PDFGenerator
     {
         public static iText.Layout.Properties.VerticalAlignment? VerticalAlign { get; private set; }
+
+        private static string ObterCaminhoDoSQL(string chave, string pastaFallback)
+        {
+            try
+            {
+                using (var conn = GetConn.GetConnection())
+                {
+                    conn.Open();
+                    using (var cmd = new SqlCommand("SELECT Valor FROM Definicoes WHERE Chave = @Chave", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Chave", chave);
+                        var resultado = cmd.ExecuteScalar();
+
+                        if (resultado != null && !string.IsNullOrWhiteSpace(resultado.ToString()))
+                        {
+                            return resultado.ToString(); // Retorna o caminho que está no SQL
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Ignora o erro e avança para a alternativa abaixo
+            }
+
+            // Se falhar a BD, cria uma pasta no Ambiente de Trabalho para não perder o PDF!
+            string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            return Path.Combine(desktop, pastaFallback);
+        }
 
         public static string GerarComprovativo(
             int IDPEDIDO,
@@ -33,11 +63,11 @@ namespace PEPIDI.Organizers
             List<(int ID, string Artigo, string Tamanho, int Qtd)> listaDevolver,
             System.Drawing.Image AssinaturaFinal)
         {
-            // O teu caminho original (podes mudar se quiseres)
-            string desktopPath = @"U:\Bruno\ComprovativosPEPIDI\";
-            if (!Directory.Exists(desktopPath)) Directory.CreateDirectory(desktopPath);
+            string caminhoBase = ObterCaminhoDoSQL("CaminhoComprovativos", "ComprovativosPEPIDI_Backup");
 
-            string caminhoPDF = Path.Combine(desktopPath, $"ComprovativoNr{IDPEDIDO:D5}.pdf");
+            if (!Directory.Exists(caminhoBase)) Directory.CreateDirectory(caminhoBase);
+
+            string caminhoPDF = Path.Combine(caminhoBase, $"ComprovativoNr{IDPEDIDO:D5}.pdf");
 
             using (PdfWriter writer = new PdfWriter(caminhoPDF))
             using (PdfDocument pdf = new PdfDocument(writer))
@@ -302,10 +332,11 @@ namespace PEPIDI.Organizers
 
         public static string GerarListaSeparacaoPorFuncionario(List<(string NMEC, string Nome, string Modelo, string Tamanho, int Qtd)> itensParaArmazem)
         {
-            string desktopPath = @"U:\Bruno\ComprovativosPEPIDI\Relatorios\";
-            if (!Directory.Exists(desktopPath)) Directory.CreateDirectory(desktopPath);
+            string caminhoBase = ObterCaminhoDoSQL("CaminhoRelatorios", "RelatoriosPEPIDI_Backup");
 
-            string caminhoPDF = Path.Combine(desktopPath, $"ListaSeparacao_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
+            if (!Directory.Exists(caminhoBase)) Directory.CreateDirectory(caminhoBase);
+
+            string caminhoPDF = Path.Combine(caminhoBase, $"ListaSeparacao_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
 
             using (PdfWriter writer = new PdfWriter(caminhoPDF))
             using (PdfDocument pdf = new PdfDocument(writer))

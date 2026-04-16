@@ -38,6 +38,9 @@
             pnlDetails = new Panel();
             tableLayoutPanel2 = new TableLayoutPanel();
             dgvPedidos = new PEPIDI.Models.PEPIDIDataGridView();
+            tableLayoutPanel3 = new TableLayoutPanel();
+            btnRelatorio = new Guna.UI2.WinForms.Guna2Button();
+            lblTituloPedidos = new Label();
             ID = new DataGridViewTextBoxColumn();
             Data = new DataGridViewTextBoxColumn();
             NrFunc = new DataGridViewTextBoxColumn();
@@ -49,9 +52,6 @@
             NomeEntrega = new DataGridViewTextBoxColumn();
             PDF = new DataGridViewTextBoxColumn();
             Check = new DataGridViewCheckBoxColumn();
-            tableLayoutPanel3 = new TableLayoutPanel();
-            btnRelatorio = new Guna.UI2.WinForms.Guna2Button();
-            lblTituloPedidos = new Label();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPedidos).BeginInit();
@@ -148,8 +148,65 @@
             dgvPedidos.Size = new Size(1156, 778);
             dgvPedidos.TabIndex = 1;
             dgvPedidos.CellClick += DgvPedidos_CellClick;
+            dgvPedidos.CellMouseEnter += dgvPedidos_CellMouseEnter;
+            dgvPedidos.CellMouseLeave += dgvPedidos_CellMouseLeave;
+            dgvPedidos.CellMouseMove += dgvPedidos_CellMouseMove;
             dgvPedidos.CellValueChanged += dgvPedidos_CellValueChanged;
+            dgvPedidos.ColumnHeaderMouseClick += dgvPedidos_ColumnHeaderMouseClick;
             dgvPedidos.CurrentCellDirtyStateChanged += dgvPedidos_CurrentCellDirtyStateChanged;
+            // 
+            // tableLayoutPanel3
+            // 
+            tableLayoutPanel3.ColumnCount = 2;
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 77.80468F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.1953182F));
+            tableLayoutPanel3.Controls.Add(btnRelatorio, 1, 0);
+            tableLayoutPanel3.Controls.Add(lblTituloPedidos, 0, 0);
+            tableLayoutPanel3.Dock = DockStyle.Fill;
+            tableLayoutPanel3.Location = new Point(0, 0);
+            tableLayoutPanel3.Margin = new Padding(0);
+            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.RowCount = 1;
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel3.Size = new Size(1176, 60);
+            tableLayoutPanel3.TabIndex = 2;
+            // 
+            // btnRelatorio
+            // 
+            btnRelatorio.BorderRadius = 10;
+            btnRelatorio.CustomImages.ImageAlign = HorizontalAlignment.Left;
+            btnRelatorio.CustomizableEdges = customizableEdges1;
+            btnRelatorio.DisabledState.BorderColor = Color.DarkGray;
+            btnRelatorio.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnRelatorio.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnRelatorio.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnRelatorio.Dock = DockStyle.Fill;
+            btnRelatorio.Enabled = false;
+            btnRelatorio.FillColor = Color.FromArgb(243, 108, 33);
+            btnRelatorio.Font = new Font("Roboto", 15F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnRelatorio.ForeColor = Color.White;
+            btnRelatorio.Image = Properties.Resources.export;
+            btnRelatorio.Location = new Point(924, 12);
+            btnRelatorio.Margin = new Padding(10, 12, 10, 12);
+            btnRelatorio.Name = "btnRelatorio";
+            btnRelatorio.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            btnRelatorio.Size = new Size(242, 36);
+            btnRelatorio.TabIndex = 10;
+            btnRelatorio.Text = "Exportar";
+            btnRelatorio.Visible = false;
+            btnRelatorio.Click += btnRecolhaArmazem_Click;
+            // 
+            // lblTituloPedidos
+            // 
+            lblTituloPedidos.AutoSize = true;
+            lblTituloPedidos.Dock = DockStyle.Fill;
+            lblTituloPedidos.Font = new Font("Roboto Medium", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTituloPedidos.Location = new Point(3, 0);
+            lblTituloPedidos.Name = "lblTituloPedidos";
+            lblTituloPedidos.Size = new Size(908, 60);
+            lblTituloPedidos.TabIndex = 1;
+            lblTituloPedidos.Text = "PEDIDOS PENDENTES";
+            lblTituloPedidos.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // ID
             // 
@@ -228,63 +285,11 @@
             // 
             // Check
             // 
-            Check.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            Check.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
             Check.HeaderText = "Selecionar";
             Check.Name = "Check";
             Check.Visible = false;
-            // 
-            // tableLayoutPanel3
-            // 
-            tableLayoutPanel3.ColumnCount = 2;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 77.80468F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.1953182F));
-            tableLayoutPanel3.Controls.Add(btnRelatorio, 1, 0);
-            tableLayoutPanel3.Controls.Add(lblTituloPedidos, 0, 0);
-            tableLayoutPanel3.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Location = new Point(0, 0);
-            tableLayoutPanel3.Margin = new Padding(0);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 1;
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel3.Size = new Size(1176, 60);
-            tableLayoutPanel3.TabIndex = 2;
-            // 
-            // btnRelatorio
-            // 
-            btnRelatorio.BorderRadius = 10;
-            btnRelatorio.CustomImages.ImageAlign = HorizontalAlignment.Left;
-            btnRelatorio.CustomizableEdges = customizableEdges1;
-            btnRelatorio.DisabledState.BorderColor = Color.DarkGray;
-            btnRelatorio.DisabledState.CustomBorderColor = Color.DarkGray;
-            btnRelatorio.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
-            btnRelatorio.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            btnRelatorio.Dock = DockStyle.Fill;
-            btnRelatorio.Enabled = false;
-            btnRelatorio.FillColor = Color.FromArgb(243, 108, 33);
-            btnRelatorio.Font = new Font("Roboto", 15F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnRelatorio.ForeColor = Color.White;
-            btnRelatorio.Image = Properties.Resources.export;
-            btnRelatorio.Location = new Point(924, 12);
-            btnRelatorio.Margin = new Padding(10, 12, 10, 12);
-            btnRelatorio.Name = "btnRelatorio";
-            btnRelatorio.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            btnRelatorio.Size = new Size(242, 36);
-            btnRelatorio.TabIndex = 10;
-            btnRelatorio.Text = "Exportar";
-            btnRelatorio.Visible = false;
-            btnRelatorio.Click += btnRecolhaArmazem_Click;
-            // 
-            // lblTituloPedidos
-            // 
-            lblTituloPedidos.AutoSize = true;
-            lblTituloPedidos.Dock = DockStyle.Fill;
-            lblTituloPedidos.Font = new Font("Roboto Medium", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblTituloPedidos.Location = new Point(3, 0);
-            lblTituloPedidos.Name = "lblTituloPedidos";
-            lblTituloPedidos.Size = new Size(908, 60);
-            lblTituloPedidos.TabIndex = 1;
-            lblTituloPedidos.Text = "PEDIDOS PENDENTES";
-            lblTituloPedidos.TextAlign = ContentAlignment.MiddleLeft;
+            Check.Width = 83;
             // 
             // Pedidos
             // 
@@ -310,6 +315,9 @@
         private Panel pnlDetails;
         private TableLayoutPanel tableLayoutPanel2;
         private PEPIDI.Models.PEPIDIDataGridView dgvPedidos;
+        private TableLayoutPanel tableLayoutPanel3;
+        private Label lblTituloPedidos;
+        private Guna.UI2.WinForms.Guna2Button btnRelatorio;
         private DataGridViewTextBoxColumn ID;
         private DataGridViewTextBoxColumn Data;
         private DataGridViewTextBoxColumn NrFunc;
@@ -321,8 +329,5 @@
         private DataGridViewTextBoxColumn NomeEntrega;
         private DataGridViewTextBoxColumn PDF;
         private DataGridViewCheckBoxColumn Check;
-        private TableLayoutPanel tableLayoutPanel3;
-        private Label lblTituloPedidos;
-        private Guna.UI2.WinForms.Guna2Button btnRelatorio;
     }
 }

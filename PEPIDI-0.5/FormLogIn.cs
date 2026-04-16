@@ -72,13 +72,17 @@ namespace PEPIDI
 
                 if (count > 0)
                 {
-                    // SUCESSO: Limpar campos para segurança antes de mudar de ecrã
                     txtUser.Text = "";
                     pbPass.Text = "";
 
-                    // 3. Carregar permissões e redirecionar conforme o perfil
+                    // 1. Vais buscar as permissões à tua nova classe blindada
                     var permissoes = PermissoesPerfil.VerPermissoes(user);
 
+                    // 2. GRAVAR NA MEMÓRIA GLOBAL (SESSÃO)
+                    Sessao.IdFuncionarioAtual = user;
+                    Sessao.NivelAcessoAtual = permissoes.NivelAcesso;
+
+                    // 3. Redirecionar
                     if (permissoes.PodeSubmeter)
                     {
                         AbreFormUserPedido(user);

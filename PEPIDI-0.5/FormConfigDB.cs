@@ -12,7 +12,7 @@ namespace PEPIDI
 {
     public partial class FormConfigDB : Form
     {
-        public string ConnectionStringFinal { get; private set; }
+        public string ConnectionStringFinal { get; private set; } = string.Empty;
         EfeitoUI M = new EfeitoUI();
         public FormConfigDB()
         {

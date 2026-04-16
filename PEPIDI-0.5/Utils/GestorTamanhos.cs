@@ -184,6 +184,7 @@ namespace PEPIDI.Utils
                     else if (btn.Name.Contains("btn"))
                     {
                         btn.Font = FonteBotao;
+                        btn.Cursor = Cursors.Hand;
                     }
                 }
                 else if (c is Label lbl)

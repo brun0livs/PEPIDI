@@ -37,6 +37,9 @@
     <Compile Update="FormsSecundarios\FormMotivo.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="FormsSecundarios\FormNovaPasse.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="FormsSecundarios\FormZoomGrafico.cs">
       <SubType>Form</SubType>
     </Compile>

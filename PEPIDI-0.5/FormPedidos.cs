@@ -302,6 +302,10 @@ namespace PEPIDI
                     }
 
                     listaPedidoInsert.Add((idEpi, it.Tamanho, it.Quantidade));
+
+                    // --- NOVA LINHA AQUI! ---
+                    // Sempre que pedir um artigo, atualiza o perfil dele com este tamanho!
+                    _mr.AtualizarTamanhoPadraoFuncionario(_nrFunc, idEpi, it.Tamanho);
                 }
 
                 var listaDevInsert = new List<(int idRoupa, string tamanho, int qtd)>();

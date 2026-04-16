@@ -6,6 +6,7 @@ namespace PEPIDI.Organizers
     // Criei esta classe para "arrumar" o método
     public class PermissoesPerfil
     {
+        public int NivelAcesso { get; set; }
         public bool PodeSubmeter { get; set; }
         public bool PodeVerStock { get; set; }
         public bool PodeInserirStock { get; set; }
@@ -28,7 +29,7 @@ namespace PEPIDI.Organizers
 
                 SqlCommand cmd = new SqlCommand(@"
                     SELECT 
-                    PodeVerStock, PodeInserirStock, PodeCriarStock, PodeVerHistorico, PodeEditarFunc,
+                    NivelAcesso, PodeVerStock, PodeInserirStock, PodeCriarStock, PodeVerHistorico, PodeEditarFunc,
                     PodeSubmeter, PodeAprovar, PodeEntregar, PodeCriarFuncoes, PodeAlterarDefinicoes
                     FROM Funcionarios FU
                     JOIN Funcoes F ON FU.Funcao = F.ID
@@ -42,17 +43,19 @@ namespace PEPIDI.Organizers
                     {
                         return new PermissoesPerfil
                         {
-                            // Validações para evitar erro se o campo for NULL na BD
-                            PodeVerStock = !reader.IsDBNull(0) && reader.GetBoolean(0),
-                            PodeCriarStock = !reader.IsDBNull(1) && reader.GetBoolean(1),
-                            PodeInserirStock = !reader.IsDBNull(2) && reader.GetBoolean(2),
-                            PodeVerHistorico = !reader.IsDBNull(3) && reader.GetBoolean(3),
-                            PodeEditarFunc = !reader.IsDBNull(4) && reader.GetBoolean(4),
-                            PodeSubmeter = !reader.IsDBNull(5) && reader.GetBoolean(5),
-                            PodeAprovar = !reader.IsDBNull(6) && reader.GetBoolean(6),
-                            PodeEntregar = !reader.IsDBNull(7) && reader.GetBoolean(7),
-                            PodeCriarFuncoes = !reader.IsDBNull(8) && reader.GetBoolean(8),
-                            PodeAlterarDefinicoes = !reader.IsDBNull(9) && reader.GetBoolean(9)
+                            // Ao chamar pelo nome (reader["NomeColuna"]), não interessa a ordem do SELECT!
+                            NivelAcesso = reader["NivelAcesso"] != DBNull.Value ? Convert.ToInt32(reader["NivelAcesso"]) : 3, // 3 por defeito (menos poderes)
+
+                            PodeVerStock = reader["PodeVerStock"] != DBNull.Value && Convert.ToBoolean(reader["PodeVerStock"]),
+                            PodeInserirStock = reader["PodeInserirStock"] != DBNull.Value && Convert.ToBoolean(reader["PodeInserirStock"]),
+                            PodeCriarStock = reader["PodeCriarStock"] != DBNull.Value && Convert.ToBoolean(reader["PodeCriarStock"]),
+                            PodeVerHistorico = reader["PodeVerHistorico"] != DBNull.Value && Convert.ToBoolean(reader["PodeVerHistorico"]),
+                            PodeEditarFunc = reader["PodeEditarFunc"] != DBNull.Value && Convert.ToBoolean(reader["PodeEditarFunc"]),
+                            PodeSubmeter = reader["PodeSubmeter"] != DBNull.Value && Convert.ToBoolean(reader["PodeSubmeter"]),
+                            PodeAprovar = reader["PodeAprovar"] != DBNull.Value && Convert.ToBoolean(reader["PodeAprovar"]),
+                            PodeEntregar = reader["PodeEntregar"] != DBNull.Value && Convert.ToBoolean(reader["PodeEntregar"]),
+                            PodeCriarFuncoes = reader["PodeCriarFuncoes"] != DBNull.Value && Convert.ToBoolean(reader["PodeCriarFuncoes"]),
+                            PodeAlterarDefinicoes = reader["PodeAlterarDefinicoes"] != DBNull.Value && Convert.ToBoolean(reader["PodeAlterarDefinicoes"])
                         };
                     }
                 }

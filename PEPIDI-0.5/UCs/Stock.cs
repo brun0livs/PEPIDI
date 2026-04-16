@@ -47,7 +47,7 @@ namespace PEPIDI.UCs
                 await Task.Run(() =>
                 {
                     using (var con = new SqlConnection(_cs))
-                    using (var cmd = new SqlCommand(@"SELECT ID, Nome, [Query] FROM dbo.[Query] ORDER BY Nome;", con))
+                    using (var cmd = new SqlCommand(@"SELECT ID, Nome, [Query] FROM dbo.[Query] ORDER BY ID;", con))
                     using (var da = new SqlDataAdapter(cmd))
                     {
                         da.Fill(dtTemp);
@@ -198,17 +198,43 @@ namespace PEPIDI.UCs
                 }
             }
             catch (Exception ex) { M.AbrirMensagem(ex.Message, "Erro"); }
+            // ==========================================
+            // BALANCEAMENTO DAS COLUNAS (55, 15, 15, 15)
+            // ==========================================
+
+            // 1. OBRIGATÓRIO: Dizemos à grelha para esticar as colunas para ocuparem 100% da largura total
+            dgvStock.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            // 2. Apanhamos apenas as colunas que estão a ser mostradas ao utilizador
+            var colunasVisiveis = new System.Collections.Generic.List<DataGridViewColumn>();
+            foreach (DataGridViewColumn col in dgvStock.Columns)
+            {
+                if (col.Visible)
+                {
+                    colunasVisiveis.Add(col);
+                }
+            }
+
+            // 3. Se houver pelo menos 4 colunas visíveis, aplicamos a tua matemática!
+            if (colunasVisiveis.Count >= 4)
+            {
+                colunasVisiveis[0].FillWeight = 55; // Modelo / Descrição
+                colunasVisiveis[1].FillWeight = 15; // Tamanho
+                colunasVisiveis[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter; // Centraliza a coluna do Tamanho
+                colunasVisiveis[2].FillWeight = 15; // Quantidade
+                colunasVisiveis[3].FillWeight = 15; // Departamento (Onde aparece o Vários)
+            }
         }
 
         private void dgvStock_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            // 1. Só nos interessa a coluna do Departamento
-            if (dgvStock.Columns[e.ColumnIndex].Name == "Departamento" && e.Value != null)
+            // 1. O Nome interno da coluna que vem da BD (NomeFuncao)
+            if (dgvStock.Columns[e.ColumnIndex].Name == "NomeFuncao" && e.Value != null)
             {
                 string textoOriginal = e.Value.ToString().Trim();
 
-                // 2. Regra do "Vários"
-                if (textoOriginal.Contains(",") || textoOriginal.Length > 15)
+                // 2. Regra do "Vários" (Se tiver o separador | ou for muito grande)
+                if (textoOriginal.Contains("|") || textoOriginal.Length > 15)
                 {
                     e.Value = "Vários";
                     e.FormattingApplied = true;
@@ -218,6 +244,26 @@ namespace PEPIDI.UCs
                     {
                         dgvStock.Rows[e.RowIndex].Cells["CorFuncao"].Value = "#F26722";
                     }
+                }
+            }
+        }
+
+        private void dgvStock_CellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e)
+        {
+            // 1. Ignorar os cabeçalhos das colunas e linhas inválidas
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            // 2. Só queremos mostrar o balão se o rato estiver por cima da coluna certa!
+            if (dgvStock.Columns[e.ColumnIndex].Name == "NomeFuncao")
+            {
+                // 3. Vamos buscar o texto verdadeiro (o que veio da BD, que tem os '|')
+                string textoOriginal = dgvStock.Rows[e.RowIndex].Cells["NomeFuncao"].Value?.ToString();
+
+                // 4. Se for daqueles que tu escondes atrás do "Vários"...
+                if (!string.IsNullOrEmpty(textoOriginal) && (textoOriginal.Contains("|") || textoOriginal.Length > 15))
+                {
+                    // Substituímos o "|" por um "\n" (Quebra de linha) para ficar uma lista impecável
+                    e.ToolTipText = "Departamentos:\n" + textoOriginal.Replace("|", "\n");
                 }
             }
         }

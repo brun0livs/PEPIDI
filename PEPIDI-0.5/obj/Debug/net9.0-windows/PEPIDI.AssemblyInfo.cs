@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PEPIDI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("0.5.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.5+994e3bc247e50472c057bc50f5e435fde83a7488")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.5+32b4379db8208e6957132e268da21b14ccc0f314")]
 [assembly: System.Reflection.AssemblyProductAttribute("PEPIDI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PEPIDI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("0.5.0.0")]

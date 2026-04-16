@@ -29,6 +29,14 @@ namespace PEPIDI.UCs
             CarregarDGV(dgvFuncoes);
             TouchScrollHelper.AtivarScrollPorArrasto(dgvFuncoes);
             GestorTema.AplicarEstilos(this);
+
+            if (Sessao.NivelAcessoAtual > 1)
+            {
+                btnAddFuncao.Visible = false; // Ajusta para os nomes dos teus botões
+
+                // Opcional: Bloquear a grelha para ser só de leitura
+                dgvFuncoes.ReadOnly = true;
+            }
         }
 
 
@@ -41,6 +49,13 @@ namespace PEPIDI.UCs
                                     [PodeCriarFuncoes], [PodeAlterarDefinicoes], [CorHex] FROM Funcoes";
 
             DataTable dt = new DataTable();
+
+            // Se quem está a ver a grelha NÃO for o Super Admin (0)...
+            if (Sessao.NivelAcessoAtual > 0)
+            {
+                // ... adicionamos um filtro para esconder as funções de Nível 0!
+                query += " WHERE NivelAcesso > 0";
+            }
 
             using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
             {
