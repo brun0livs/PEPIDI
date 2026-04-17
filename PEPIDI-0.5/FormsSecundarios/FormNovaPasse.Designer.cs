@@ -174,6 +174,7 @@
             btnGuardar.Size = new Size(180, 55);
             btnGuardar.TabIndex = 12;
             btnGuardar.Text = "Guardar";
+            btnGuardar.Click += BtnGuardar_Click;
             // 
             // btnCancelar
             // 
@@ -194,6 +195,7 @@
             btnCancelar.Size = new Size(180, 55);
             btnCancelar.TabIndex = 13;
             btnCancelar.Text = "Cancelar";
+            btnCancelar.Click += Close;
             // 
             // tableLayoutPanel4
             // 
@@ -239,7 +241,7 @@
             txtAtual.TabIndex = 2;
             txtAtual.TextOffset = new Point(10, 0);
             txtAtual.UseSystemPasswordChar = true;
-            txtAtual.AutoSizeChanged += Verifica;
+            txtAtual.IconRightClick += MostraPass_IconRightClick;
             // 
             // label1
             // 
@@ -296,7 +298,7 @@
             txtNova.TabIndex = 2;
             txtNova.TextOffset = new Point(10, 0);
             txtNova.UseSystemPasswordChar = true;
-            txtNova.AutoSizeChanged += Verifica;
+            txtNova.IconRightClick += MostraPass_IconRightClick;
             // 
             // label2
             // 
@@ -353,7 +355,7 @@
             txtConfirma.TabIndex = 2;
             txtConfirma.TextOffset = new Point(10, 0);
             txtConfirma.UseSystemPasswordChar = true;
-            txtConfirma.AutoSizeChanged += Verifica;
+            txtConfirma.IconRightClick += MostraPass_IconRightClick;
             // 
             // label3
             // 
