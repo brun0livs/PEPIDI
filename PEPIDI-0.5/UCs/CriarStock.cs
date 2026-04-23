@@ -14,16 +14,18 @@ namespace PEPIDI.UCs
 
         private bool BtnCriar;
         int Gestor;
+        string funcao;
 
         [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
         private const int WM_SETREDRAW = 11;
 
-        public CriarStock(int _Gestor, bool _BtnNovo)
+        public CriarStock(int _Gestor, bool _BtnNovo, string _funcao)
         {
             InitializeComponent();
             BtnCriar = _BtnNovo;
             Gestor = _Gestor;
+            funcao = _funcao;
         }
 
         // 1. CARREGAMENTO DA DGV NO LOAD
@@ -58,9 +60,12 @@ namespace PEPIDI.UCs
 
                     dgvStock.DataSource = dt;
 
-                    // Esconde o ID mas mantém-no acessível para o CellClick
-                    if (dgvStock.Columns.Contains("ID"))
-                        dgvStock.Columns["ID"].Visible = false;
+                    if(funcao != "Programador")
+                    {
+                        // Esconde o ID mas mantém-no acessível para o CellClick
+                        if (dgvStock.Columns.Contains("ID"))
+                            dgvStock.Columns["ID"].Visible = false;
+                    }
 
                     // Estética: Centraliza o texto da coluna Tamanho
                     if (dgvStock.Columns.Contains("Tamanho"))

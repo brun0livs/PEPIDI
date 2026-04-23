@@ -31,8 +31,15 @@ namespace PEPIDI.FormsSecundarios
 
         private async void FormGestaoDeFiltros_Load(object sender, EventArgs e)
         {
-            CarregarVisoes();
+            // 1. Primeiro carregamos os filtros (Cria os botões nos FlowLayoutPanels)
+            // Usamos o await para garantir que ele só passa para a linha seguinte quando terminar
             await CarregarFiltrosAsync();
+
+            // 2. Agora que os botões JÁ EXISTEM, carregamos as visões
+            // Isto vai disparar o SelectedIndexChanged e o CarregarEstadoDosBotoes vai encontrar os botões
+            CarregarVisoes();
+
+            // 3. Aplica os estilos do tema
             GestorTema.AplicarEstilos(this);
         }
 
@@ -321,16 +328,18 @@ namespace PEPIDI.FormsSecundarios
             if (cmbVisaoNome.Text == "+ Nova Visão")
             {
                 MostrarModoEscrita();
+                ResetarEstiloBotoes();
             }
             else
             {
                 txtNome.Text = cmbVisaoNome.Text;
+                CarregarEstadoDosBotoes(cmbVisaoNome.Text);
+                btnTestar.PerformClick(); // Opcional: Atualiza a grid logo
             }
         }
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            // O txtNome é o mestre, quer venha da Combo ou escrito à mão
             string nome = txtNome.Text.Trim();
             string query = GerarQuery();
 
@@ -340,7 +349,6 @@ namespace PEPIDI.FormsSecundarios
                 return;
             }
 
-            // Se não selecionou nada, a query será o SELECT geral, convém avisar
             if (!ObterSelecionados(flpFuncoes).Any() && !ObterSelecionados(flpFamilia).Any() &&
                 !ObterSelecionados(flpModelo).Any() && !ObterSelecionados(flpTamanho).Any())
             {
@@ -350,38 +358,188 @@ namespace PEPIDI.FormsSecundarios
 
             try
             {
+                // === AQUI: GERAR A CONFIGURAÇÃO DOS BOTÕES ===
+                string configVisual = string.Join("|",
+                    "Funcoes:" + string.Join(",", ObterSelecionados(flpFuncoes)),
+                    "Familia:" + string.Join(",", ObterSelecionados(flpFamilia)),
+                    "Modelo:" + string.Join(",", ObterSelecionados(flpModelo)),
+                    "Tamanho:" + string.Join(",", ObterSelecionados(flpTamanho))
+                );
+
                 using (SqlConnection conn = GetConn.GetConnection())
                 {
                     conn.Open();
-                    // 1. Verificar se já existe para decidir entre UPDATE ou INSERT
                     SqlCommand checkCmd = new SqlCommand("SELECT COUNT(*) FROM Query WHERE Nome = @nome", conn);
                     checkCmd.Parameters.AddWithValue("@nome", nome);
                     int count = (int)checkCmd.ExecuteScalar();
 
+                    // === AJUSTE NO SQL PARA INCLUIR A NOVA COLUNA ===
                     string sql = count > 0
-                        ? "UPDATE Query SET Query = @query WHERE Nome = @nome"
-                        : "INSERT INTO Query (Nome, Query) VALUES (@nome, @query)";
+                        ? "UPDATE Query SET Query = @query, ConfigFiltros = @config WHERE Nome = @nome"
+                        : "INSERT INTO Query (Nome, Query, ConfigFiltros) VALUES (@nome, @query, @config)";
 
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@nome", nome);
                         cmd.Parameters.AddWithValue("@query", query);
+                        cmd.Parameters.AddWithValue("@config", configVisual); // <--- PARÂMETRO NOVO
                         cmd.ExecuteNonQuery();
                     }
                 }
 
                 M.AbrirMensagem("Visão '" + nome + "' guardada com sucesso!", "");
-
-                // 2. Refresh total
                 CarregarVisoes();
-
-                // 3. Voltar ao modo de seleção para o utilizador ver o que acabou de fazer
                 MostrarModoSelecao();
                 cmbVisaoNome.Text = nome;
             }
             catch (Exception ex)
             {
                 M.AbrirMensagem("Erro ao guardar na base de dados: " + ex.Message, "Erro Crítico");
+            }
+        }
+
+        private void CarregarEstadoDosBotoes(string nomeVisao)
+        {
+            string config = "";
+            using (SqlConnection conn = GetConn.GetConnection())
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT ConfigFiltros FROM Query WHERE Nome = @nome", conn);
+                cmd.Parameters.AddWithValue("@nome", nomeVisao);
+                config = cmd.ExecuteScalar()?.ToString();
+            }
+
+            if (string.IsNullOrEmpty(config)) return;
+
+            // 1. Resetar todos os botões (para não misturar visões)
+            ResetarEstiloBotoes();
+
+            // 2. Aplicar o estado guardado
+            var categorias = config.Split('|');
+            foreach (var cat in categorias)
+            {
+                var partes = cat.Split(':');
+                if (partes.Length < 2 || string.IsNullOrEmpty(partes[1])) continue;
+
+                string categoria = partes[0];
+                List<string> valores = partes[1].Split(',').ToList();
+
+                FlowLayoutPanel flp = categoria switch
+                {
+                    "Funcoes" => flpFuncoes,
+                    "Familia" => flpFamilia,
+                    "Modelo" => flpModelo,
+                    "Tamanho" => flpTamanho,
+                    _ => null
+                };
+
+                if (flp != null)
+                {
+                    foreach (Guna2Button btn in flp.Controls.OfType<Guna2Button>())
+                    {
+                        if (valores.Contains(btn.Text))
+                        {
+                            // Ativa o botão visualmente e logicamente
+                            btn.Tag = true;
+                            btn.FillColor = Color.FromArgb(254, 235, 226);
+                            btn.BorderColor = Color.FromArgb(254, 107, 0);
+                            btn.ForeColor = Color.FromArgb(254, 107, 0);
+                            btn.Font = new Font("Roboto", 10F, FontStyle.Bold);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Auxiliar para limpar tudo antes de carregar uma nova visão
+        private void ResetarEstiloBotoes()
+        {
+            var paineis = new[] { flpFuncoes, flpFamilia, flpModelo, flpTamanho };
+            foreach (var p in paineis)
+            {
+                foreach (Guna2Button btn in p.Controls.OfType<Guna2Button>())
+                {
+                    btn.Tag = false;
+                    btn.FillColor = Color.White;
+                    btn.BorderColor = Color.FromArgb(200, 200, 200);
+                    btn.ForeColor = Color.FromArgb(64, 64, 64);
+                    btn.Font = new Font("Roboto", 10F, FontStyle.Regular);
+                }
+            }
+        }
+
+        private void CarregarEstadoFiltros(string nomeVisao)
+        {
+            string config = "";
+            using (SqlConnection conn = GetConn.GetConnection())
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT ConfigFiltros FROM Query WHERE Nome = @nome", conn);
+                cmd.Parameters.AddWithValue("@nome", nomeVisao);
+                config = cmd.ExecuteScalar()?.ToString();
+            }
+
+            if (string.IsNullOrEmpty(config)) return;
+
+            // 1. Resetar todos os botões para branco/desligado
+            ResetarFiltrosVisuais();
+
+            // 2. Separar as categorias (Funcoes, Familia, etc.)
+            var categorias = config.Split('|');
+            foreach (var cat in categorias)
+            {
+                var partes = cat.Split(':');
+                if (partes.Length < 2) continue;
+
+                string categoriaNome = partes[0];
+                string[] valoresGuardados = partes[1].Split(',');
+
+                // 3. Encontrar o FlowLayoutPanel correspondente
+                FlowLayoutPanel painel = categoriaNome switch
+                {
+                    "Funcoes" => flpFuncoes,
+                    "Familia" => flpFamilia,
+                    "Modelo" => flpModelo,
+                    "Tamanho" => flpTamanho,
+                    _ => null
+                };
+
+                // 4. "Ligar" os botões que coincidem com o texto guardado
+                if (painel != null)
+                {
+                    foreach (Guna2Button btn in painel.Controls.OfType<Guna2Button>())
+                    {
+                        if (valoresGuardados.Contains(btn.Text))
+                        {
+                            // Simular o clique ou aplicar o estilo diretamente
+                            btn.Tag = true;
+                            btn.FillColor = Color.FromArgb(254, 235, 226);
+                            btn.BorderColor = Color.FromArgb(254, 107, 0);
+                            btn.ForeColor = Color.FromArgb(254, 107, 0);
+                            btn.Font = new Font("Roboto", 10F, FontStyle.Bold);
+                        }
+                    }
+                }
+            }
+
+            // 5. Opcional: Atualizar a grid automaticamente
+            btnTestar.PerformClick();
+        }
+
+        private void ResetarFiltrosVisuais()
+        {
+            // Percorre todos os botões nos teus 4 painéis e volta-os ao estado original
+            var paineis = new[] { flpFuncoes, flpFamilia, flpModelo, flpTamanho };
+            foreach (var painel in paineis)
+            {
+                foreach (Guna2Button btn in painel.Controls.OfType<Guna2Button>())
+                {
+                    btn.Tag = false;
+                    btn.FillColor = Color.White;
+                    btn.BorderColor = Color.FromArgb(200, 200, 200);
+                    btn.ForeColor = Color.FromArgb(64, 64, 64);
+                    btn.Font = new Font("Roboto", 10F, FontStyle.Regular);
+                }
             }
         }
 

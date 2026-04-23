@@ -17,6 +17,7 @@ namespace PEPIDI.Organizers
         public bool PodeEntregar { get; set; }
         public bool PodeCriarFuncoes { get; set; }
         public bool PodeAlterarDefinicoes { get; set; }
+        public bool PodeVerUsados { get; set; }
 
         // Mudei de 'void' para 'PermissoesPerfil' e pus 'static' para ser mais fácil usar
         public static PermissoesPerfil VerPermissoes(int idFuncionario)
@@ -30,7 +31,7 @@ namespace PEPIDI.Organizers
                 SqlCommand cmd = new SqlCommand(@"
                     SELECT 
                     NivelAcesso, PodeVerStock, PodeInserirStock, PodeCriarStock, PodeVerHistorico, PodeEditarFunc,
-                    PodeSubmeter, PodeAprovar, PodeEntregar, PodeCriarFuncoes, PodeAlterarDefinicoes
+                    PodeSubmeter, PodeAprovar, PodeEntregar, PodeCriarFuncoes, PodeAlterarDefinicoes, PodeVerUsados
                     FROM Funcionarios FU
                     JOIN Funcoes F ON FU.Funcao = F.ID
                     WHERE FU.Nr = @NrFunc", conn);
@@ -55,7 +56,8 @@ namespace PEPIDI.Organizers
                             PodeAprovar = reader["PodeAprovar"] != DBNull.Value && Convert.ToBoolean(reader["PodeAprovar"]),
                             PodeEntregar = reader["PodeEntregar"] != DBNull.Value && Convert.ToBoolean(reader["PodeEntregar"]),
                             PodeCriarFuncoes = reader["PodeCriarFuncoes"] != DBNull.Value && Convert.ToBoolean(reader["PodeCriarFuncoes"]),
-                            PodeAlterarDefinicoes = reader["PodeAlterarDefinicoes"] != DBNull.Value && Convert.ToBoolean(reader["PodeAlterarDefinicoes"])
+                            PodeAlterarDefinicoes = reader["PodeAlterarDefinicoes"] != DBNull.Value && Convert.ToBoolean(reader["PodeAlterarDefinicoes"]),
+                            PodeVerUsados = reader["PodeVerUsados"] != DBNull.Value && Convert.ToBoolean(reader["PodeVerUsados"])
                         };
                     }
                 }

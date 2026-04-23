@@ -18,10 +18,12 @@ namespace PEPIDI.UCs
     public partial class Funcoes : UserControl
     {
         private int IDGestor;
-        public Funcoes(int _IDGestor)
+        string funcao;
+        public Funcoes(int _IDGestor, string _funcao)
         {
             InitializeComponent();
             IDGestor = _IDGestor;
+            funcao = _funcao;
         }
 
         private void Funcoes_Load(object sender, EventArgs e)
@@ -46,7 +48,8 @@ namespace PEPIDI.UCs
 
             string query = @"SELECT [ID], [Nome], [PodeVerStock], [PodeInserirStock], [PodeCriarStock],
                                     [PodeEditarFunc], [PodeSubmeter], [PodeAprovar], [PodeEntregar],
-                                    [PodeCriarFuncoes], [PodeAlterarDefinicoes], [CorHex] FROM Funcoes";
+                                    [PodeCriarFuncoes], [PodeAlterarDefinicoes], [PodeVerUsados], 
+                                    [CorHex] FROM Funcoes";
 
             DataTable dt = new DataTable();
 
@@ -70,6 +73,7 @@ namespace PEPIDI.UCs
 
             // --- ACTIVAR BADGES COLORIDAS ---
             // Isto diz à tua classe personalizada para procurar a coluna com HeaderText "Função"
+            dgv.Columns["ID"].Visible = true;
             dgv.BadgeColumnName = "Nome";
             dgv.BadgeColorColumnName = "CorHex";
             dgv.Columns["CorHex"].Visible = false; // Esconder a coluna que tem o código da cor, já que a cor vai ser mostrada no badge  
@@ -119,6 +123,7 @@ namespace PEPIDI.UCs
                 cmd.Parameters.AddWithValue("@PodeEntregar", row.Cells["PodeEntregar"].Value ?? false);
                 cmd.Parameters.AddWithValue("@PodeCriarFuncoes", row.Cells["PodeCriarFuncoes"].Value ?? false);
                 cmd.Parameters.AddWithValue("@PodeAlterarDefinicoes", row.Cells["PodeAlterarDefinicoes"].Value ?? false);
+                cmd.Parameters.AddWithValue("@PodeVerUsados", row.Cells["PodeVerUsados"].Value ?? false);
 
                 cmd.Parameters.AddWithValue("@AlteradoPor", IDGestor);
 

@@ -425,7 +425,7 @@ namespace PEPIDI.UCs
                         {
                             var ws = workbook.Worksheet("Dados");
 
-                            // 1. Vai buscar a Tabela que JÁ EXISTE no template (Presumo que se chame "TabelaDados")
+                            // 1. Vai buscar a Tabela que JÁ EXISTE no template
                             var tabelaExcel = ws.Table("TabelaDados");
 
                             // 2. Limpa a linha em branco original para não atrapalhar
@@ -434,12 +434,10 @@ namespace PEPIDI.UCs
                                 tabelaExcel.DataRange.Clear();
                             }
 
-                            // 3. Injeta os dados E GUARDA na variável 'novoIntervalo' o espaço que eles ocuparam!
+                            // 3. Injeta os dados E GUARDA na variável 'novoIntervalo' o espaço que eles ocuparam
                             var novoIntervalo = ws.Cell(2, 1).InsertData(dt);
 
                             // 4. O SEGREDO: Obrigar a Tabela a redimensionar-se!
-                            // Vai da Linha 1 (cabeçalhos) até à última linha que acabámos de inserir.
-                            // Vai da Coluna 1 até ao total de colunas da tua DataTable (neste caso J = 10).
                             tabelaExcel.Resize(ws.Range(1, 1, novoIntervalo.LastRow().RowNumber(), dt.Columns.Count));
 
                             ws.Columns().AdjustToContents();
@@ -453,9 +451,22 @@ namespace PEPIDI.UCs
                 M.AbrirMensagem("Dashboard gerado com sucesso! O Excel vai abrir agora.", "PEPIDI");
                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(destinationPath) { UseShellExecute = true });
             }
+            catch (System.IO.IOException ex)
+            {
+                // Verifica se o erro é especificamente de "Ficheiro em uso" (HResult 0x80070020)
+                if ((uint)ex.HResult == 0x80070020)
+                {
+                    M.AbrirMensagem("O ficheiro Excel que estás a tentar substituir encontra-se aberto.\n\nPor favor, fecha o ficheiro no Excel e tenta novamente.", "Ficheiro em Uso");
+                }
+                else
+                {
+                    M.AbrirMensagem($"Ocorreu um erro ao aceder ao ficheiro:\n{ex.Message}", "Erro de Ficheiro");
+                }
+            }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro na exportação: {ex.Message}", "Erro de Recurso");
+                // Captura outros erros genéricos (template em falta, tabela não encontrada, etc.)
+                M.AbrirMensagem($"Erro na exportação: {ex.Message}", "Erro de Recurso");
             }
         }
 

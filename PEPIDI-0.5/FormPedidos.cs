@@ -27,7 +27,6 @@ namespace PEPIDI
         private ModoPedidos _modoAtual = ModoPedidos.Pedido;
 
         // ----------------- CLASSES DE SESSÃO -----------------
-
         private class LinhaSessao
         {
             public int IdEpiOriginal { get; set; }   // IDEPI que veio da SP
@@ -80,110 +79,85 @@ namespace PEPIDI
                 M.AbrirMensagem(
                     "Erro em Pedidos_Load / CarregarLinhas:\n\n" + ex,
                     "Erro");
-                    
+
             }
         }
 
         private void CarregarLinhas()
         {
-            if (_mr == null)
-                return;
+            if (_mr == null) return;
 
-            if (_sessao == null)
-                _sessao = new SessaoPedido();
+            var itensRaw = (_modoAtual == ModoPedidos.Pedido)
+                ? _mr.ObterRoupaPorFuncionarioNovo(_nrFunc)
+                : _mr.ObterRoupaUsadaPorFuncionarioNovo(_nrFunc);
 
-            List<LinhaPedidoInfo> itens;
-
-            // Escolhe a fonte de dados conforme o modo atual
-            if (_modoAtual == ModoPedidos.Pedido)
-            {
-                itens = _mr.ObterRoupaPorFuncionarioNovo(_nrFunc)
-                        ?? new List<LinhaPedidoInfo>();
-            }
-            else // Devolução
-            {
-                itens = _mr.ObterRoupaUsadaPorFuncionarioNovo(_nrFunc)
-                        ?? new List<LinhaPedidoInfo>();
-            }
-
-            if (flpLinhas == null)
-                return;
-
+            if (flpLinhas == null) return;
+            flpLinhas.SuspendLayout();
             flpLinhas.Controls.Clear();
 
-            var estadoLista = (_modoAtual == ModoPedidos.Pedido)
-                ? _sessao.Pedido
-                : _sessao.Devolucao;
+            // Agrupamos por Família
+            var grupos = itensRaw.GroupBy(x => x.Familia).ToList();
 
-            foreach (var item in itens)
+            foreach (var grupo in grupos)
             {
-                if (item == null) continue;
+                // 1. Pergunta ao MostraRoupa qual foi o último modelo desta família (ex: Sapato)
+                string ultimoModelo = _mr.ObterUltimoModeloConsumidoPorFamilia(_nrFunc, grupo.Key);
+
+                // 2. Tenta encontrar esse modelo na lista de itens que o gajo pode pedir
+                // Se não encontrar (ex: é o primeiro pedido da vida dele), usa o .First()
+                var itemPrincipal = grupo.FirstOrDefault(x => x.Modelo == ultimoModelo) ?? grupo.First();
+
+                var listaModelos = grupo.Select(x => x.Modelo).Distinct().ToList();
+                bool variosModelos = listaModelos.Count > 1;
 
                 var linha = new PEPIDI.Organizers.LinhaPedido
                 {
-                    Size = new Size(flpLinhas.Width - 20, 100),
+                    Size = new Size(flpLinhas.Width - 25, 100),
                     Dock = DockStyle.Top,
-                    Margin = new Padding(0, 0, 0, 5),
-                    Tag = item
+                    Tag = itemPrincipal
                 };
 
-                linha.DescricaoEPI = item.Modelo ?? "";
+                // 3. Configura o Layout (Elastic) e o Nome Bonito
+                linha.ConfigurarLayout(variosModelos, itemPrincipal.Familia, itemPrincipal.Modelo);
 
-                var combo = linha.ComboTamanho;
-                if (combo != null)
+                if (variosModelos)
                 {
-                    combo.Items.Clear();
+                    linha.ComboModelo.Items.Clear();
+                    foreach (var mod in listaModelos) linha.ComboModelo.Items.Add(mod);
 
-                    var tamanhos = item.TamanhosDisponiveis ?? new List<string>();
-                    foreach (var t in tamanhos)
-                        combo.Items.Add(t);
-
-                    // Ver se já temos estado guardado para este modelo
-                    var estadoLinha = estadoLista.FirstOrDefault(x => x.Modelo == item.Modelo);
-
-                    if (estadoLinha != null)
-                    {
-                        // Recupera tamanho e quantidade alterados pelo utilizador
-                        if (!string.IsNullOrEmpty(estadoLinha.Tamanho) &&
-                            combo.Items.Contains(estadoLinha.Tamanho))
-                        {
-                            combo.SelectedItem = estadoLinha.Tamanho;
-                        }
-                        else if (!string.IsNullOrEmpty(item.TamanhoAtual) &&
-                                 combo.Items.Contains(item.TamanhoAtual))
-                        {
-                            combo.SelectedItem = item.TamanhoAtual;
-                        }
-                        else if (combo.Items.Count > 0)
-                        {
-                            combo.SelectedIndex = 0;
-                        }
-
-                        linha.Quantidade = estadoLinha.Quantidade;
-                    }
-                    else
-                    {
-                        // Sem estado guardado, usar tamanho atual / default
-                        if (!string.IsNullOrEmpty(item.TamanhoAtual) &&
-                            combo.Items.Contains(item.TamanhoAtual))
-                        {
-                            combo.SelectedItem = item.TamanhoAtual;
-                        }
-                        else if (combo.Items.Count > 0)
-                        {
-                            combo.SelectedIndex = 0;
-                        }
-
-                        linha.Quantidade = 0;
-                    }
-                }
-                else
-                {
-                    linha.Quantidade = 0;
+                    // FORÇA a seleção do modelo que o histórico indicou
+                    linha.ComboModelo.SelectedItem = itemPrincipal.Modelo;
                 }
 
+                // 4. Carrega os tamanhos baseados no modelo histórico encontrado
+                var tamanhos = itemPrincipal.TamanhosDisponiveis ?? new List<string>();
+                if (!string.IsNullOrEmpty(itemPrincipal.TamanhoAtual) && !tamanhos.Contains(itemPrincipal.TamanhoAtual))
+                    tamanhos.Add(itemPrincipal.TamanhoAtual);
+
+                linha.ComboTamanho.Items.Clear();
+                foreach (var t in tamanhos.OrderBy(x => x)) linha.ComboTamanho.Items.Add(t);
+
+                linha.DefinirTamanhoSemConfirmar(itemPrincipal.TamanhoAtual);
                 flpLinhas.Controls.Add(linha);
             }
+            flpLinhas.ResumeLayout(true);
+        }
+
+        // Método auxiliar para não repetir código
+        private void CarregarTamanhosDaLinha(PEPIDI.Organizers.LinhaPedido linha, LinhaPedidoInfo item)
+        {
+            var comboT = linha.ComboTamanho;
+            comboT.Items.Clear();
+
+            var listaTamanhos = item.TamanhosDisponiveis ?? new List<string>();
+            if (!string.IsNullOrEmpty(item.TamanhoAtual) && !listaTamanhos.Contains(item.TamanhoAtual))
+                listaTamanhos.Add(item.TamanhoAtual);
+
+            foreach (var t in listaTamanhos.OrderBy(x => x))
+                comboT.Items.Add(t);
+
+            linha.DefinirTamanhoSemConfirmar(item.TamanhoAtual);
+            comboT.Refresh();
         }
 
         private void AtualizarNavButtons()
@@ -252,16 +226,22 @@ namespace PEPIDI
                 var info = linha.Tag as LinhaPedidoInfo;
                 if (info == null) continue;
 
+                // AQUI: Se a combo de modelos estiver visível, usamos o que o user escolheu.
+                // Caso contrário (ex: T-Shirt), usamos o modelo original da info.
+                string modeloFinal = linha.ComboModelo.Visible
+                                     ? linha.ComboModelo.SelectedItem?.ToString()
+                                     : info.Modelo;
+
                 string tamanho = linha.ComboTamanho?.SelectedItem?.ToString();
                 int qtd = linha.Quantidade;
 
-                if (string.IsNullOrWhiteSpace(tamanho) || qtd <= 0)
+                if (string.IsNullOrWhiteSpace(tamanho) || string.IsNullOrWhiteSpace(modeloFinal) || qtd <= 0)
                     continue;
 
                 lista.Add(new LinhaSessao
                 {
-                    IdEpiOriginal = info.IdEpi,
-                    Modelo = info.Modelo ?? "",
+                    // Importante: ResolveEpiIdPorModeloTamanho vai garantir o ID correto do Wurth
+                    Modelo = modeloFinal,
                     Tamanho = tamanho,
                     Quantidade = qtd
                 });
@@ -292,19 +272,20 @@ namespace PEPIDI
                 // ----- Resolver IDs e validar devoluções -----
 
                 var listaPedidoInsert = new List<(int idEpi, string tamanho, int qtd)>();
+                // No loop do btnSubmeter_Click
                 foreach (var it in itensPedido)
                 {
+                    // EM VEZ DE: int idEpi = it.IdEpiOriginal;
+                    // VAMOS FAZER:
                     int idEpi = _mr.ResolveEpiIdPorModeloTamanho(it.Modelo, it.Tamanho);
+
                     if (idEpi <= 0)
                     {
-                        M.AbrirMensagem($"Não encontrei EPI para {it.Modelo} - {it.Tamanho}. Operação cancelada.", "Erro");
+                        M.AbrirMensagem($"Erro ao validar ID para {it.Modelo} {it.Tamanho}.", "Erro");
                         return;
                     }
 
                     listaPedidoInsert.Add((idEpi, it.Tamanho, it.Quantidade));
-
-                    // --- NOVA LINHA AQUI! ---
-                    // Sempre que pedir um artigo, atualiza o perfil dele com este tamanho!
                     _mr.AtualizarTamanhoPadraoFuncionario(_nrFunc, idEpi, it.Tamanho);
                 }
 
@@ -357,6 +338,34 @@ namespace PEPIDI
             catch (Exception ex)
             {
                 M.AbrirMensagem("Erro ao submeter pedido:\n\n" + ex, "Erro");
+            }
+        }
+
+        private void NavD_Click(object sender, EventArgs e)
+        {
+            using (Form overlay = new Form())
+            {
+                // Configurar o formulário "sombra"
+                overlay.StartPosition = FormStartPosition.CenterScreen;
+                overlay.WindowState = FormWindowState.Maximized;
+                overlay.FormBorderStyle = FormBorderStyle.None; // Sem bordas
+                overlay.Opacity = 0.50d;                        // 50% transparente
+                overlay.BackColor = Color.Black;                // Cor preta
+                overlay.ShowInTaskbar = false;                  // Não aparece na barra de tarefas
+
+                // Faz o overlay cobrir exatamente o formulário atual (this)
+                overlay.Location = this.Location;
+                overlay.Size = this.Size;
+
+                // Mostra a sombra
+                overlay.Show(this);
+                using (FormNovaPasse frm = new FormNovaPasse(_nrFunc))
+                {
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+
+                    }
+                }
             }
         }
     }

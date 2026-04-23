@@ -19,18 +19,20 @@ namespace PEPIDI.UCs
         readonly int IDGestor;
         readonly private GestorDePedidos gdp;
         readonly string estado;
+        readonly string funcao;
         [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
         private const int WM_SETREDRAW = 11;
         private CancellationTokenSource _cts = new();
         private bool _aAtualizar = false;
 
-        public Pedidos(int _IDGestor, string _estado)
+        public Pedidos(int _IDGestor, string _estado, string _funcao)
         {
             InitializeComponent();
             gdp = new GestorDePedidos();
             IDGestor = _IDGestor;
             estado = _estado;
+            funcao = _funcao;
         }
 
         private void Pedidos_Load(object sender, EventArgs e)
@@ -41,6 +43,7 @@ namespace PEPIDI.UCs
             GereEstados();
             TouchScrollHelper.AtivarScrollPorArrasto(dgvPedidos);
             GestorTema.AplicarEstilos(this);
+            GereFuncoes(funcao);
         }
 
         private void GereEstados()
@@ -70,6 +73,18 @@ namespace PEPIDI.UCs
             }
 
             CarregarPedidosPorEstado(dgvPedidos, estado);
+        }
+
+        private void GereFuncoes(string funcao)
+        {
+            if (funcao == "Programador")
+            {
+                dgvPedidos.Columns["ID"].Visible = true;
+                dgvPedidos.Columns["NomeAprovador"].Visible = true;
+                dgvPedidos.Columns["NomeEntrega"].Visible = true;
+                dgvPedidos.Columns["PDF"].Visible = true;
+                dgvPedidos.Columns["PedidoEstado"].Visible = true;
+            }
         }
 
         private void dgvPedidos_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
@@ -113,33 +128,37 @@ namespace PEPIDI.UCs
 
             if (dt == null || dt.Rows.Count == 0) return;
 
-            // 1. CONFIGURAÇÃO DOS NOMES (Bater exatamente com o Designer)
-            // O nome da coluna no Designer é "Funcao" (pelo InitializeComponent)
-            // Mas o HeaderText é "Função". A classe usa o HeaderText na comparação.
-            dgv.BadgeColumnName = "Função";
+            // 1. CONFIGURAÇÃO DOS BADGES
+            dgv.BadgeColumnName = "Estado"; // HeaderText da coluna PedidoEstado
             dgv.BadgeColorColumnName = "CorHex";
 
-            // 2. MAPEAMENTO DOS DADOS (Vincular colunas do Designer ao SQL)
+            // 2. MAPEAMENTO TOTAL (SQL -> Designer)
+            // Básicos
             if (dgv.Columns.Contains("ID")) dgv.Columns["ID"].DataPropertyName = "ID";
             if (dgv.Columns.Contains("Data")) dgv.Columns["Data"].DataPropertyName = "Data";
-
-            // De acordo com o teu Designer e DT:
             if (dgv.Columns.Contains("NrFunc")) dgv.Columns["NrFunc"].DataPropertyName = "NrFunc";
             if (dgv.Columns.Contains("NomeFunc")) dgv.Columns["NomeFunc"].DataPropertyName = "NomeFunc";
 
-            // Vincula o texto à coluna "Funcao" e a cor à coluna "CorHex"
-            if (dgv.Columns.Contains("Funcao")) dgv.Columns["Funcao"].DataPropertyName = "Funcao";
+            // O QUE FALTA (Baseado no teu Designer)
+            if (dgv.Columns.Contains("PedidoEstado")) dgv.Columns["PedidoEstado"].DataPropertyName = "Funcao";
+            if (dgv.Columns.Contains("PedidoEstado")) dgv.Columns["PedidoEstado"].DataPropertyName = "Funcao1";
+            if (dgv.Columns.Contains("PedidoEstado")) dgv.Columns["PedidoEstado"].DataPropertyName = "Estado";
+            if (dgv.Columns.Contains("NomeAprovador")) dgv.Columns["NomeAprovador"].DataPropertyName = "NomeAprovador";
+            if (dgv.Columns.Contains("NomeEntrega")) dgv.Columns["NomeEntrega"].DataPropertyName = "NomeEntrega";
+            if (dgv.Columns.Contains("PDF")) dgv.Columns["PDF"].DataPropertyName = "PDF";
+
+            // Coluna da cor (Lógica)
             if (dgv.Columns.Contains("CorHex")) dgv.Columns["CorHex"].DataPropertyName = "Funcao1";
 
-            // 3. ATRIBUIÇÃO DOS DADOS
+            // 3. ATRIBUIÇÃO
             dgv.DataSource = dt;
 
-            // 4. APLICAÇÃO DA TRANSPARÊNCIA (Para o texto não encavalitar)
-            if (dgv.Columns.Contains("Funcao"))
+            // 4. AJUSTES VISUAIS
+            if (dgv.Columns.Contains("PedidoEstado"))
             {
-                // O ForeColor deve ser transparente para o OnCellPaintingModern da tua classe brilhar
-                dgv.Columns["Funcao"].DefaultCellStyle.ForeColor = Color.Transparent;
-                dgv.Columns["Funcao"].DefaultCellStyle.SelectionForeColor = Color.Transparent;
+                // Transparência para o badge da classe PEPIDIDataGridView
+                dgv.Columns["PedidoEstado"].DefaultCellStyle.ForeColor = Color.Transparent;
+                dgv.Columns["PedidoEstado"].DefaultCellStyle.SelectionForeColor = Color.Transparent;
             }
 
             if (dgv.Columns.Contains("CorHex")) dgv.Columns["CorHex"].Visible = false;

@@ -208,7 +208,11 @@ namespace PEPIDI.FormsSecundarios
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
-                    GestorDeLogins.RegistarOuAtualizarLogin(nrFunc.ToString());
+                    if(!isEdicao)
+                    {
+                        // Se for criação, precisamos registar o login com a password inicial
+                        GestorDeLogins.RegistarOuAtualizarLogin(nrFunc.ToString());
+                    }
 
                     M.AbrirMensagem(isEdicao ? "Dados atualizados com sucesso!" : "Funcionário criado com sucesso!", "Sucesso");
 

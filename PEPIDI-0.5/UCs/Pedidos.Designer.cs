@@ -45,7 +45,7 @@
             Data = new DataGridViewTextBoxColumn();
             NrFunc = new DataGridViewTextBoxColumn();
             NomeFunc = new DataGridViewTextBoxColumn();
-            Funcao = new DataGridViewTextBoxColumn();
+            TextoFuncao = new DataGridViewTextBoxColumn();
             CorHex = new DataGridViewTextBoxColumn();
             PedidoEstado = new DataGridViewTextBoxColumn();
             NomeAprovador = new DataGridViewTextBoxColumn();
@@ -121,7 +121,7 @@
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
             dgvPedidos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvPedidos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvPedidos.Columns.AddRange(new DataGridViewColumn[] { ID, Data, NrFunc, NomeFunc, Funcao, CorHex, PedidoEstado, NomeAprovador, NomeEntrega, PDF, Check });
+            dgvPedidos.Columns.AddRange(new DataGridViewColumn[] { ID, Data, NrFunc, NomeFunc, TextoFuncao, CorHex, PedidoEstado, NomeAprovador, NomeEntrega, PDF, Check });
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = Color.Transparent;
             dataGridViewCellStyle3.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -210,6 +210,7 @@
             // 
             // ID
             // 
+            ID.DataPropertyName = "ID";
             ID.HeaderText = "ID";
             ID.Name = "ID";
             ID.ReadOnly = true;
@@ -218,6 +219,7 @@
             // Data
             // 
             Data.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            Data.DataPropertyName = "Data";
             Data.HeaderText = "Data";
             Data.Name = "Data";
             Data.ReadOnly = true;
@@ -227,6 +229,7 @@
             // NrFunc
             // 
             NrFunc.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            NrFunc.DataPropertyName = "NrFunc";
             NrFunc.HeaderText = "NMEC";
             NrFunc.Name = "NrFunc";
             NrFunc.ReadOnly = true;
@@ -236,20 +239,21 @@
             // NomeFunc
             // 
             NomeFunc.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            NomeFunc.DataPropertyName = "NomeFunc";
             NomeFunc.HeaderText = "Nome";
             NomeFunc.Name = "NomeFunc";
             NomeFunc.ReadOnly = true;
             // 
-            // Funcao
+            // TextoFuncao
             // 
-            Funcao.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            Funcao.HeaderText = "Função";
-            Funcao.Name = "Funcao";
-            Funcao.ReadOnly = true;
-            Funcao.Width = 80;
+            TextoFuncao.DataPropertyName = "Funcao";
+            TextoFuncao.HeaderText = "Funcao";
+            TextoFuncao.Name = "TextoFuncao";
+            TextoFuncao.ReadOnly = true;
             // 
             // CorHex
             // 
+            CorHex.DataPropertyName = "Funcao1";
             CorHex.HeaderText = "CorHex";
             CorHex.Name = "CorHex";
             CorHex.ReadOnly = true;
@@ -257,6 +261,7 @@
             // 
             // PedidoEstado
             // 
+            PedidoEstado.DataPropertyName = "Estado";
             PedidoEstado.HeaderText = "Estado";
             PedidoEstado.Name = "PedidoEstado";
             PedidoEstado.ReadOnly = true;
@@ -264,6 +269,7 @@
             // 
             // NomeAprovador
             // 
+            NomeAprovador.DataPropertyName = "NomeAprovador";
             NomeAprovador.HeaderText = "Aprovador";
             NomeAprovador.Name = "NomeAprovador";
             NomeAprovador.ReadOnly = true;
@@ -271,6 +277,7 @@
             // 
             // NomeEntrega
             // 
+            NomeEntrega.DataPropertyName = "Entrega";
             NomeEntrega.HeaderText = "Entrega";
             NomeEntrega.Name = "NomeEntrega";
             NomeEntrega.ReadOnly = true;
@@ -278,6 +285,7 @@
             // 
             // PDF
             // 
+            PDF.DataPropertyName = "PDF";
             PDF.HeaderText = "PDF";
             PDF.Name = "PDF";
             PDF.ReadOnly = true;
@@ -322,12 +330,12 @@
         private DataGridViewTextBoxColumn Data;
         private DataGridViewTextBoxColumn NrFunc;
         private DataGridViewTextBoxColumn NomeFunc;
-        private DataGridViewTextBoxColumn Funcao;
         private DataGridViewTextBoxColumn CorHex;
         private DataGridViewTextBoxColumn PedidoEstado;
         private DataGridViewTextBoxColumn NomeAprovador;
         private DataGridViewTextBoxColumn NomeEntrega;
         private DataGridViewTextBoxColumn PDF;
         private DataGridViewCheckBoxColumn Check;
+        private DataGridViewTextBoxColumn TextoFuncao;
     }
 }

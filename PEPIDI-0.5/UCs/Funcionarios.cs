@@ -50,11 +50,12 @@ namespace PEPIDI.UCs
                 btnImportacaoRapida.Enabled = false;
                 btnImportacaoRapida.Visible = false;
             }
-             else
+            else
             {
                 btnAddFunc.Enabled = true;
                 btnImportacaoRapida.Enabled = true;
                 _menuAcoes.Items.Add("Ver histórico", null, (s, e) => AcaoSelecionada("Historico"));
+                _menuAcoes.Items.Add("Repor palavra-passe…", null, (s, e) => AcaoSelecionada("ReporPass"));
             }
         }
 

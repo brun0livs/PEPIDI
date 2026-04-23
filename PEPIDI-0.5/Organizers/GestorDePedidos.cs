@@ -33,7 +33,6 @@ namespace PEPIDI.Organizers
 
         public void Aprovar(int idPedido, int idAprovador, DataGridView dgvPacote, string txtObservacoes, Dictionary<int, Tuple<int, int>> quantidadesAlteradas)
         {
-
             using (SqlConnection conn = GetConn.GetConnection())
             {
                 conn.Open();

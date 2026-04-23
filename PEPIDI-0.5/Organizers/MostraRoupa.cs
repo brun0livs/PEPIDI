@@ -29,19 +29,37 @@ namespace PEPIDI
                     while (reader.Read())
                     {
                         var modelo = reader["Modelo"].ToString();
-                        var tamanho = reader["Tamanho"].ToString();
+                        var familia = reader["Familia"].ToString();
 
                         resultado.Add(new LinhaPedidoInfo
                         {
                             IdEpi = Convert.ToInt32(reader["ID"]),
                             Modelo = modelo,
-                            TamanhoAtual = tamanho,
-                            TamanhosDisponiveis = ObterTamanhosDisponiveis(modelo)
+                            Familia = familia,
+                            TamanhoAtual = reader["Tamanho"].ToString(),
+                            TamanhosDisponiveis = ObterTamanhosDisponiveis(modelo),
+                            // NOVA LINHA: Para o C# saber quais modelos existem nesta família
+                            ModelosDisponiveis = ObterModelosPorFamilia(familia)
                         });
                     }
                 }
             }
             return resultado;
+        }
+
+        // Método auxiliar novo
+        private List<string> ObterModelosPorFamilia(string familia)
+        {
+            var modelos = new List<string>();
+            using (SqlConnection conn = GetConn.GetConnection())
+            using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT Modelo FROM EPI WHERE Familia = @fam", conn))
+            {
+                cmd.Parameters.AddWithValue("@fam", familia);
+                conn.Open();
+                using (var r = cmd.ExecuteReader())
+                    while (r.Read()) modelos.Add(r.GetString(0));
+            }
+            return modelos;
         }
 
         public List<LinhaPedidoInfo> ObterRoupaUsadaPorFuncionarioNovo(int nrFuncionario)
@@ -61,6 +79,7 @@ namespace PEPIDI
                     {
                         var modelo = reader["Modelo"].ToString();
                         var tamanho = reader["Tamanho"].ToString();
+                        var familia = reader["Familia"].ToString();
 
                         // 1. VERIFICAÇÃO CHAVE: 
                         // Lê-se: "Se NÃO (!) existir NENHUM (Any) item no resultado onde o Modelo seja igual a este..."
@@ -70,6 +89,7 @@ namespace PEPIDI
                             {
                                 IdEpi = Convert.ToInt32(reader["IDEPI"]),
                                 Modelo = modelo,
+                                Familia = familia,
                                 TamanhoAtual = tamanho, // Fica como tamanho padrão inicial
 
                                 // Vai buscar a lista completa de tamanhos para a ComboBox
@@ -478,6 +498,31 @@ namespace PEPIDI
             {
                 // Ignoramos silenciosamente para que um erro na gravação do tamanho 
                 // não impeça o utilizador de fazer o pedido!
+            }
+        }
+
+        public string ObterUltimoModeloConsumidoPorFamilia(int nrFunc, string familia)
+        {
+            using (SqlConnection conn = GetConn.GetConnection())
+            {
+                // Procuramos no histórico de pedidos (PedidoPacote + PedidoRegistos) 
+                // o modelo mais recente de uma determinada família
+                string sql = @"
+            SELECT TOP 1 E.Modelo 
+            FROM PedidoPacote PP
+            INNER JOIN PedidoRegistos PR ON PP.IDPedReg = PR.ID
+            INNER JOIN EPI E ON PP.IDEPI = E.ID
+            WHERE PR.NrFunc = @nr AND E.Familia = @fam
+            ORDER BY PR.Data DESC, PR.ID DESC";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@nr", nrFunc);
+                    cmd.Parameters.AddWithValue("@fam", familia);
+                    conn.Open();
+                    object res = cmd.ExecuteScalar();
+                    return res?.ToString() ?? string.Empty;
+                }
             }
         }
 

@@ -3,20 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\formssecundarios\\formnovapasse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:formssecundarios\\formnovapasse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\formpedidos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:formpedidos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\formlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:formlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\formssecundarios\\formnovapasse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:formssecundarios\\formnovapasse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\formlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:formlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|c:\\users\\bruno.oliveira\\desktop\\pepidi-0.5\\pepidi-0.5\\formpedidos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{0D2AB274-069E-4311-9B83-A03FB8AECFA1}|PEPIDI.csproj|solutionrelative:formpedidos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,60 +18,39 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{9d2016e5-735e-4d98-a9af-fff43b64a526}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "FormLogIn.cs",
-              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormLogIn.cs",
-              "RelativeDocumentMoniker": "FormLogIn.cs",
-              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormLogIn.cs",
-              "RelativeToolTip": "FormLogIn.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-17T09:39:50.009Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "FormLogIn.cs [Projeto]",
-              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormLogIn.cs",
-              "RelativeDocumentMoniker": "FormLogIn.cs",
-              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormLogIn.cs [Projeto]",
-              "RelativeToolTip": "FormLogIn.cs [Projeto]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-17T09:39:45.8Z",
-              "EditorCaption": " [Projeto]"
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "FormNovaPasse.cs",
-              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormsSecundarios\\FormNovaPasse.cs",
-              "RelativeDocumentMoniker": "FormsSecundarios\\FormNovaPasse.cs",
-              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormsSecundarios\\FormNovaPasse.cs",
-              "RelativeToolTip": "FormsSecundarios\\FormNovaPasse.cs",
-              "ViewState": "AgIAAHAAAAAAAAAAAAAUwD8AAABVAAAAAAAAAA==",
+              "Title": "FormPedidos.cs",
+              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormPedidos.cs",
+              "RelativeDocumentMoniker": "FormPedidos.cs",
+              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormPedidos.cs",
+              "RelativeToolTip": "FormPedidos.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAADwvw8AAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T16:30:05.653Z",
+              "WhenOpened": "2026-04-23T12:13:25.697Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "FormNovaPasse.cs [Projeto]",
-              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormsSecundarios\\FormNovaPasse.cs",
-              "RelativeDocumentMoniker": "FormsSecundarios\\FormNovaPasse.cs",
-              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormsSecundarios\\FormNovaPasse.cs [Projeto]",
-              "RelativeToolTip": "FormsSecundarios\\FormNovaPasse.cs [Projeto]",
+              "DocumentIndex": 1,
+              "Title": "FormPedidos.cs [Projeto]",
+              "DocumentMoniker": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormPedidos.cs",
+              "RelativeDocumentMoniker": "FormPedidos.cs",
+              "ToolTip": "C:\\Users\\bruno.oliveira\\Desktop\\PEPIDI-0.5\\PEPIDI-0.5\\FormPedidos.cs [Projeto]",
+              "RelativeToolTip": "FormPedidos.cs [Projeto]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T15:36:43.061Z",
+              "WhenOpened": "2026-04-23T12:13:23.768Z",
               "EditorCaption": " [Projeto]"
             }
           ]

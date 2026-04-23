@@ -388,6 +388,7 @@
             Name = "FormNovaPasse";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "FormNovaPasse";
+            TopMost = true;
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();

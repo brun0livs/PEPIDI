@@ -7,6 +7,8 @@ namespace PEPIDI.Models
         public int IdEpi { get; set; }
         public string Modelo { get; set; }
         public string TamanhoAtual { get; set; }
+        public string Familia { get; set; }
         public List<string> TamanhosDisponiveis { get; set; } = new List<string>();
+        public List<string> ModelosDisponiveis { get; set; } = new List<string>();
     }
 }

@@ -20,11 +20,13 @@ namespace PEPIDI.UCs
         private PermissoesPerfil permissoes;
         EfeitoUI M = new EfeitoUI();
         private Font fonteNegrito = new Font("Roboto", 11.25F, FontStyle.Bold);
+        string Funcao;
 
-        public Stock(PermissoesPerfil _permissoes)
+        public Stock(PermissoesPerfil _permissoes, string _Funcao)
         {
             InitializeComponent();
             permissoes = _permissoes;
+            Funcao = _Funcao;
         }
 
         private void Stock_Load(object sender, EventArgs e)
@@ -59,14 +61,24 @@ namespace PEPIDI.UCs
                 {
                     DataRow rowGerir = dtTemp.NewRow();
                     rowGerir["ID"] = -1;
-                    rowGerir["Nome"] = "---------------- Gerir Filtros";
+                    rowGerir["Nome"] = "- Gerir Filtros -";
                     rowGerir["Query"] = "ACTION_GERIR";
                     dtTemp.Rows.Add(rowGerir);
                 }
 
+                //3. Adiciona a linha "Stock Usado" se tiver permissões
+                if (permissoes.PodeVerUsados)
+                {
+                    DataRow rowUsado = dtTemp.NewRow();
+                    rowUsado["ID"] = -2;
+                    rowUsado["Nome"] = "- Stock Usado -";
+                    rowUsado["Query"] = "ACTION_USADO";
+                    dtTemp.Rows.Add(rowUsado);
+                }
+
                 _dtQueries = dtTemp;
 
-                // 3. Vinculação de dados (UI Thread)
+                // 4. Vinculação de dados (UI Thread)
                 // Definimos os membros ANTES do DataSource para evitar erros de cast
                 cmbVisoes.DisplayMember = "Nome";
                 cmbVisoes.ValueMember = "Query";
@@ -74,7 +86,7 @@ namespace PEPIDI.UCs
                 // Atribuir o DataSource dispara o SelectedIndexChanged automaticamente
                 cmbVisoes.DataSource = _dtQueries;
 
-                // 4. Lógica para encontrar o ID 1 e expor no Load
+                // 5. Lógica para encontrar o ID 1 e expor no Load
                 if (_dtQueries.Rows.Count > 0)
                 {
                     // Lemos o ID que guardaste nas definições do projeto
@@ -152,6 +164,13 @@ namespace PEPIDI.UCs
                 return;
             }
 
+            if (sql == "ACTION_USADO")
+            {
+                // Se for a ação "Stock Usado", aplica a lógica correspondente
+                AplicarQueryNaDgv("SELECT * FROM Roupa");
+                return;
+            }
+
             // Se for uma Query normal, aplica na grelha!
             AplicarQueryNaDgv(sql);
         }
@@ -168,6 +187,21 @@ namespace PEPIDI.UCs
 
                     dgvStock.AutoGenerateColumns = true;
                     dgvStock.DataSource = dt;
+
+                    if(Funcao == "Programador")
+                    {
+                        if (dgvStock.Columns.Contains("ID"))
+                        {
+                            dgvStock.Columns["ID"].Visible =true; // Mostra a coluna ID para os Programadores
+                        }
+                    }
+                    else
+                    {
+                        if (dgvStock.Columns.Contains("ID"))
+                        {
+                            dgvStock.Columns["ID"].Visible = false; // Esconde a coluna ID para os outros
+                        }
+                    }
 
                     // --- LIGAÇÃO À CLASSE PEPIDI ---
                     // O BadgeColumnName tem de ser igual ao TÍTULO da coluna (HeaderText)
@@ -204,25 +238,18 @@ namespace PEPIDI.UCs
 
             // 1. OBRIGATÓRIO: Dizemos à grelha para esticar as colunas para ocuparem 100% da largura total
             dgvStock.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-            // 2. Apanhamos apenas as colunas que estão a ser mostradas ao utilizador
-            var colunasVisiveis = new System.Collections.Generic.List<DataGridViewColumn>();
-            foreach (DataGridViewColumn col in dgvStock.Columns)
+            dgvStock.Columns["Modelo"].FillWeight = 55; // Modelo / Descrição
+            dgvStock.Columns["Tamanho"].FillWeight = 15; // Tamanho
+            dgvStock.Columns["Tamanho"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter; // Centraliza a coluna do Tamanho
+            //dgvStock.Columns["NomeFuncao"].FillWeight = 15; // Departamento (Onde aparece o Vários)
+            if (dgvStock.Columns.Contains("ID"))
             {
-                if (col.Visible)
-                {
-                    colunasVisiveis.Add(col);
-                }
+                dgvStock.Columns["ID"].FillWeight = 7; // Quantidade
+                dgvStock.Columns["Quantidade"].FillWeight = 8; // Quantidade
             }
-
-            // 3. Se houver pelo menos 4 colunas visíveis, aplicamos a tua matemática!
-            if (colunasVisiveis.Count >= 4)
+            else
             {
-                colunasVisiveis[0].FillWeight = 55; // Modelo / Descrição
-                colunasVisiveis[1].FillWeight = 15; // Tamanho
-                colunasVisiveis[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter; // Centraliza a coluna do Tamanho
-                colunasVisiveis[2].FillWeight = 15; // Quantidade
-                colunasVisiveis[3].FillWeight = 15; // Departamento (Onde aparece o Vários)
+                dgvStock.Columns["Quantidade"].FillWeight = 15; // Quantidade
             }
         }
 

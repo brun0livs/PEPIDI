@@ -34,6 +34,8 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPedidos));
@@ -49,6 +51,7 @@
             btnSubmeter = new Guna.UI2.WinForms.Guna2TileButton();
             lblNome = new Label();
             flpLinhas = new FlowLayoutPanel();
+            NavD = new Guna.UI2.WinForms.Guna2TileButton();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -119,6 +122,7 @@
             tableLayoutPanel2.Controls.Add(Nav2, 0, 1);
             tableLayoutPanel2.Controls.Add(Nav1, 0, 0);
             tableLayoutPanel2.Controls.Add(Nav3, 0, 9);
+            tableLayoutPanel2.Controls.Add(NavD, 0, 8);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 151);
             tableLayoutPanel2.Margin = new Padding(0);
@@ -254,7 +258,7 @@
             // 
             // btnSubmeter
             // 
-            btnSubmeter.CustomizableEdges = customizableEdges7;
+            btnSubmeter.CustomizableEdges = customizableEdges9;
             btnSubmeter.DisabledState.BorderColor = Color.DarkGray;
             btnSubmeter.DisabledState.CustomBorderColor = Color.DarkGray;
             btnSubmeter.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -269,7 +273,7 @@
             btnSubmeter.Location = new Point(1024, 3);
             btnSubmeter.Margin = new Padding(0, 3, 0, 3);
             btnSubmeter.Name = "btnSubmeter";
-            btnSubmeter.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            btnSubmeter.ShadowDecoration.CustomizableEdges = customizableEdges10;
             btnSubmeter.Size = new Size(512, 86);
             btnSubmeter.TabIndex = 4;
             btnSubmeter.Text = "SUBMETER";
@@ -297,6 +301,33 @@
             flpLinhas.Name = "flpLinhas";
             flpLinhas.Size = new Size(1536, 766);
             flpLinhas.TabIndex = 2;
+            // 
+            // NavD
+            // 
+            NavD.AccessibleRole = AccessibleRole.RadioButton;
+            NavD.CheckedState.FillColor = Color.FromArgb(243, 108, 33);
+            NavD.CheckedState.Font = new Font("Roboto", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NavD.CheckedState.ForeColor = Color.White;
+            NavD.CustomizableEdges = customizableEdges7;
+            NavD.DisabledState.BorderColor = Color.DarkGray;
+            NavD.DisabledState.CustomBorderColor = Color.DarkGray;
+            NavD.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            NavD.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            NavD.FillColor = Color.FromArgb(255, 230, 212);
+            NavD.Font = new Font("Roboto", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NavD.ForeColor = Color.Black;
+            NavD.HoverState.FillColor = Color.FromArgb(249, 160, 90);
+            NavD.HoverState.Font = new Font("Roboto", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NavD.HoverState.ForeColor = Color.Black;
+            NavD.Location = new Point(0, 683);
+            NavD.Margin = new Padding(0, 3, 0, 3);
+            NavD.Name = "NavD";
+            NavD.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            NavD.Size = new Size(380, 79);
+            NavD.TabIndex = 2;
+            NavD.Text = "Alterar Password";
+            NavD.TextAlign = HorizontalAlignment.Left;
+            NavD.Click += NavD_Click;
             // 
             // FormPedidos
             // 
@@ -340,5 +371,6 @@
         private Guna.UI2.WinForms.Guna2TileButton btnSubmeter;
         private Label lblNome;
         private FlowLayoutPanel flpLinhas;
+        private Guna.UI2.WinForms.Guna2TileButton NavD;
     }
 }

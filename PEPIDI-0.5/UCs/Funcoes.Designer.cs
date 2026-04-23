@@ -50,6 +50,7 @@
             PodeEntregar = new DataGridViewCheckBoxColumn();
             PodeCriarFuncoes = new DataGridViewCheckBoxColumn();
             PodeAlterarDefinicoes = new DataGridViewCheckBoxColumn();
+            PodeVerUsados = new DataGridViewCheckBoxColumn();
             CorHex = new DataGridViewTextBoxColumn();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
@@ -145,7 +146,7 @@
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
             dgvFuncoes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvFuncoes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvFuncoes.Columns.AddRange(new DataGridViewColumn[] { ID, Nome, PodeVerStock, PodeInserirStock, PodeCriarStock, PodeEditarFunc, PodeSubmeter, PodeAprovar, PodeEntregar, PodeCriarFuncoes, PodeAlterarDefinicoes, CorHex });
+            dgvFuncoes.Columns.AddRange(new DataGridViewColumn[] { ID, Nome, PodeVerStock, PodeInserirStock, PodeCriarStock, PodeEditarFunc, PodeSubmeter, PodeAprovar, PodeEntregar, PodeCriarFuncoes, PodeAlterarDefinicoes, PodeVerUsados, CorHex });
             dgvFuncoes.Cursor = Cursors.Hand;
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = Color.Transparent;
@@ -259,6 +260,14 @@
             PodeAlterarDefinicoes.Name = "PodeAlterarDefinicoes";
             PodeAlterarDefinicoes.Width = 130;
             // 
+            // PodeVerUsados
+            // 
+            PodeVerUsados.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            PodeVerUsados.DataPropertyName = "PodeVerUsados";
+            PodeVerUsados.HeaderText = "Ver Usados";
+            PodeVerUsados.Name = "PodeVerUsados";
+            PodeVerUsados.Width = 81;
+            // 
             // CorHex
             // 
             CorHex.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
@@ -302,6 +311,7 @@
         private DataGridViewCheckBoxColumn PodeEntregar;
         private DataGridViewCheckBoxColumn PodeCriarFuncoes;
         private DataGridViewCheckBoxColumn PodeAlterarDefinicoes;
+        private DataGridViewCheckBoxColumn PodeVerUsados;
         private DataGridViewTextBoxColumn CorHex;
     }
 }

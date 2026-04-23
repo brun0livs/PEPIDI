@@ -46,9 +46,9 @@
             lblTituloFUNCIONARIOS = new Label();
             btnAddFunc = new Guna.UI2.WinForms.Guna2Button();
             cmsOpcoesFuncionario = new Guna.UI2.WinForms.Guna2ContextMenuStrip();
+            btnImportacaoRapida = new ToolStripMenuItem();
             btnAbreGraficos = new Guna.UI2.WinForms.Guna2Button();
             dgvFuncs = new PEPIDI.Models.PEPIDIDataGridView();
-            btnImportacaoRapida = new ToolStripMenuItem();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             cmsOpcoesFuncionario.SuspendLayout();
@@ -181,7 +181,14 @@
             cmsOpcoesFuncionario.RenderStyle.SelectionForeColor = Color.White;
             cmsOpcoesFuncionario.RenderStyle.SeparatorColor = Color.Gainsboro;
             cmsOpcoesFuncionario.RenderStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
-            cmsOpcoesFuncionario.Size = new Size(203, 48);
+            cmsOpcoesFuncionario.Size = new Size(203, 26);
+            // 
+            // btnImportacaoRapida
+            // 
+            btnImportacaoRapida.Name = "btnImportacaoRapida";
+            btnImportacaoRapida.Size = new Size(202, 22);
+            btnImportacaoRapida.Text = "Importação Rápida";
+            btnImportacaoRapida.Click += btnImportacaoRapida_Click;
             // 
             // btnAbreGraficos
             // 
@@ -213,6 +220,7 @@
             dgvFuncs.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dgvFuncs.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvFuncs.BackgroundColor = Color.White;
+            dgvFuncs.BadgeColumnName = "                                                    ";
             dgvFuncs.BorderStyle = BorderStyle.None;
             dgvFuncs.CellBorderStyle = DataGridViewCellBorderStyle.None;
             dgvFuncs.CellPadding = new Padding(10);
@@ -261,13 +269,6 @@
             dgvFuncs.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvFuncs.Size = new Size(1815, 786);
             dgvFuncs.TabIndex = 1;
-            // 
-            // btnImportacaoRapida
-            // 
-            btnImportacaoRapida.Name = "btnImportacaoRapida";
-            btnImportacaoRapida.Size = new Size(202, 22);
-            btnImportacaoRapida.Text = "Importação Rápida";
-            btnImportacaoRapida.Click += btnImportacaoRapida_Click;
             // 
             // Funcionarios
             // 

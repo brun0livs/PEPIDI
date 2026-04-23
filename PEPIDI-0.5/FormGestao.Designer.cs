@@ -468,8 +468,8 @@
             tableLayoutPanel3.Margin = new Padding(0);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 2;
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 15F));
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 85F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 5.55005F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 94.44995F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel3.Size = new Size(1686, 1009);
             tableLayoutPanel3.TabIndex = 1;
@@ -482,7 +482,7 @@
             lblNome.Location = new Point(10, 0);
             lblNome.Margin = new Padding(10, 0, 0, 0);
             lblNome.Name = "lblNome";
-            lblNome.Size = new Size(1676, 151);
+            lblNome.Size = new Size(1676, 56);
             lblNome.TabIndex = 2;
             lblNome.Text = "lblNome";
             lblNome.TextAlign = ContentAlignment.MiddleLeft;
@@ -490,10 +490,10 @@
             // pnlConteudo
             // 
             pnlConteudo.Dock = DockStyle.Fill;
-            pnlConteudo.Location = new Point(0, 151);
+            pnlConteudo.Location = new Point(0, 56);
             pnlConteudo.Margin = new Padding(0);
             pnlConteudo.Name = "pnlConteudo";
-            pnlConteudo.Size = new Size(1686, 858);
+            pnlConteudo.Size = new Size(1686, 953);
             pnlConteudo.TabIndex = 1;
             // 
             // timerMenu

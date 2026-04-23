@@ -143,7 +143,7 @@ namespace PEPIDI.FormsSecundarios
                 if (txtBox.UseSystemPasswordChar)
                 {
                     txtBox.UseSystemPasswordChar = false;
-                    txtBox.IconRight = PEPIDI.Properties.Resources.eye_off;
+                    txtBox.IconRight = Properties.Resources.eye_off;
                 }
                 else
                 {
