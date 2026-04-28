@@ -28,23 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PedidosDetalhes));
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges23 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges24 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Curvas = new Guna.UI2.WinForms.Guna2Panel();
             Orientacao1 = new TableLayoutPanel();
             tlpDevolucoes = new TableLayoutPanel();
             tableLayoutPanel5 = new TableLayoutPanel();
+            lblDGVEstado2 = new Label();
             lblDGVModelo2 = new Label();
             lblDGVTamanho2 = new Label();
             lblDGVQuant2 = new Label();
@@ -64,10 +65,11 @@
             pnlConteudo = new Panel();
             tlpDesign = new TableLayoutPanel();
             tableLayoutPanel3 = new TableLayoutPanel();
+            lblDGVEstado = new Label();
             lblDGVModelo = new Label();
             lblDGVTamanho = new Label();
-            lblDGVQuantDisp = new Label();
             lblDGVQuant1 = new Label();
+            lblDGVQuantDisp = new Label();
             pnlScroll = new Panel();
             flpLinhas = new FlowLayoutPanel();
             lblClose = new Label();
@@ -93,11 +95,11 @@
             Curvas.BorderRadius = 15;
             Curvas.BorderThickness = 1;
             Curvas.Controls.Add(Orientacao1);
-            Curvas.CustomizableEdges = customizableEdges13;
+            Curvas.CustomizableEdges = customizableEdges11;
             Curvas.Dock = DockStyle.Fill;
             Curvas.Location = new Point(0, 0);
             Curvas.Name = "Curvas";
-            Curvas.ShadowDecoration.CustomizableEdges = customizableEdges14;
+            Curvas.ShadowDecoration.CustomizableEdges = customizableEdges12;
             Curvas.Size = new Size(651, 848);
             Curvas.TabIndex = 0;
             // 
@@ -148,14 +150,15 @@
             // tableLayoutPanel5
             // 
             tableLayoutPanel5.BackColor = Color.Transparent;
-            tableLayoutPanel5.ColumnCount = 3;
-            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel5.ColumnCount = 4;
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.5F));
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.5F));
+            tableLayoutPanel5.Controls.Add(lblDGVEstado2, 2, 0);
             tableLayoutPanel5.Controls.Add(lblDGVModelo2, 0, 0);
             tableLayoutPanel5.Controls.Add(lblDGVTamanho2, 1, 0);
-            tableLayoutPanel5.Controls.Add(lblDGVQuant2, 2, 0);
+            tableLayoutPanel5.Controls.Add(lblDGVQuant2, 3, 0);
             tableLayoutPanel5.Dock = DockStyle.Fill;
             tableLayoutPanel5.Location = new Point(1, 1);
             tableLayoutPanel5.Margin = new Padding(1);
@@ -165,19 +168,33 @@
             tableLayoutPanel5.Size = new Size(649, 46);
             tableLayoutPanel5.TabIndex = 6;
             // 
+            // lblDGVEstado2
+            // 
+            lblDGVEstado2.AutoSize = true;
+            lblDGVEstado2.Dock = DockStyle.Fill;
+            lblDGVEstado2.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
+            lblDGVEstado2.ForeColor = Color.FromArgb(64, 64, 64);
+            lblDGVEstado2.Location = new Point(356, 0);
+            lblDGVEstado2.Margin = new Padding(0);
+            lblDGVEstado2.Name = "lblDGVEstado2";
+            lblDGVEstado2.Size = new Size(146, 46);
+            lblDGVEstado2.TabIndex = 5;
+            lblDGVEstado2.Text = "Estado";
+            lblDGVEstado2.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // lblDGVModelo2
             // 
             lblDGVModelo2.AutoSize = true;
             lblDGVModelo2.Dock = DockStyle.Fill;
             lblDGVModelo2.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
             lblDGVModelo2.ForeColor = Color.FromArgb(64, 64, 64);
-            lblDGVModelo2.Location = new Point(3, 0);
-            lblDGVModelo2.Margin = new Padding(3, 0, 3, 5);
+            lblDGVModelo2.Location = new Point(0, 0);
+            lblDGVModelo2.Margin = new Padding(0);
             lblDGVModelo2.Name = "lblDGVModelo2";
-            lblDGVModelo2.Size = new Size(318, 41);
+            lblDGVModelo2.Size = new Size(259, 46);
             lblDGVModelo2.TabIndex = 0;
             lblDGVModelo2.Text = "Modelo";
-            lblDGVModelo2.TextAlign = ContentAlignment.BottomCenter;
+            lblDGVModelo2.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lblDGVTamanho2
             // 
@@ -185,13 +202,13 @@
             lblDGVTamanho2.Dock = DockStyle.Fill;
             lblDGVTamanho2.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
             lblDGVTamanho2.ForeColor = Color.FromArgb(64, 64, 64);
-            lblDGVTamanho2.Location = new Point(327, 0);
-            lblDGVTamanho2.Margin = new Padding(3, 0, 3, 5);
+            lblDGVTamanho2.Location = new Point(259, 0);
+            lblDGVTamanho2.Margin = new Padding(0);
             lblDGVTamanho2.Name = "lblDGVTamanho2";
-            lblDGVTamanho2.Size = new Size(156, 41);
+            lblDGVTamanho2.Size = new Size(97, 46);
             lblDGVTamanho2.TabIndex = 1;
             lblDGVTamanho2.Text = "Tamanho";
-            lblDGVTamanho2.TextAlign = ContentAlignment.BottomCenter;
+            lblDGVTamanho2.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lblDGVQuant2
             // 
@@ -199,13 +216,13 @@
             lblDGVQuant2.Dock = DockStyle.Fill;
             lblDGVQuant2.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
             lblDGVQuant2.ForeColor = Color.FromArgb(64, 64, 64);
-            lblDGVQuant2.Location = new Point(489, 0);
-            lblDGVQuant2.Margin = new Padding(3, 0, 3, 5);
+            lblDGVQuant2.Location = new Point(502, 0);
+            lblDGVQuant2.Margin = new Padding(0);
             lblDGVQuant2.Name = "lblDGVQuant2";
-            lblDGVQuant2.Size = new Size(157, 41);
+            lblDGVQuant2.Size = new Size(147, 46);
             lblDGVQuant2.TabIndex = 3;
             lblDGVQuant2.Text = "Quantidade";
-            lblDGVQuant2.TextAlign = ContentAlignment.BottomCenter;
+            lblDGVQuant2.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // pnlScroll2
             // 
@@ -234,15 +251,15 @@
             // 
             pnlPedidos.BorderRadius = 15;
             pnlPedidos.Controls.Add(OrientacaoPedidos);
-            customizableEdges15.BottomLeft = false;
-            customizableEdges15.BottomRight = false;
-            pnlPedidos.CustomizableEdges = customizableEdges15;
+            customizableEdges1.BottomLeft = false;
+            customizableEdges1.BottomRight = false;
+            pnlPedidos.CustomizableEdges = customizableEdges1;
             pnlPedidos.Dock = DockStyle.Fill;
             pnlPedidos.FillColor = Color.Gray;
             pnlPedidos.Location = new Point(0, 0);
             pnlPedidos.Margin = new Padding(0);
             pnlPedidos.Name = "pnlPedidos";
-            pnlPedidos.ShadowDecoration.CustomizableEdges = customizableEdges16;
+            pnlPedidos.ShadowDecoration.CustomizableEdges = customizableEdges2;
             pnlPedidos.Size = new Size(651, 57);
             pnlPedidos.TabIndex = 0;
             // 
@@ -296,15 +313,15 @@
             // 
             Devolucao.BorderRadius = 15;
             Devolucao.Controls.Add(tableLayoutPanel2);
-            customizableEdges17.BottomLeft = false;
-            customizableEdges17.BottomRight = false;
-            Devolucao.CustomizableEdges = customizableEdges17;
+            customizableEdges3.BottomLeft = false;
+            customizableEdges3.BottomRight = false;
+            Devolucao.CustomizableEdges = customizableEdges3;
             Devolucao.Dock = DockStyle.Fill;
             Devolucao.FillColor = Color.Gray;
             Devolucao.Location = new Point(0, 304);
             Devolucao.Margin = new Padding(0);
             Devolucao.Name = "Devolucao";
-            Devolucao.ShadowDecoration.CustomizableEdges = customizableEdges18;
+            Devolucao.ShadowDecoration.CustomizableEdges = customizableEdges4;
             Devolucao.Size = new Size(651, 57);
             Devolucao.TabIndex = 2;
             // 
@@ -357,7 +374,7 @@
             // btnAprovar
             // 
             btnAprovar.BorderRadius = 10;
-            btnAprovar.CustomizableEdges = customizableEdges19;
+            btnAprovar.CustomizableEdges = customizableEdges5;
             btnAprovar.DisabledState.BorderColor = Color.DarkGray;
             btnAprovar.DisabledState.CustomBorderColor = Color.DarkGray;
             btnAprovar.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -369,7 +386,7 @@
             btnAprovar.Location = new Point(331, 15);
             btnAprovar.Margin = new Padding(10, 15, 10, 15);
             btnAprovar.Name = "btnAprovar";
-            btnAprovar.ShadowDecoration.CustomizableEdges = customizableEdges20;
+            btnAprovar.ShadowDecoration.CustomizableEdges = customizableEdges6;
             btnAprovar.Size = new Size(205, 43);
             btnAprovar.TabIndex = 9;
             btnAprovar.Text = "Aprovar";
@@ -378,7 +395,7 @@
             // btnReprovar
             // 
             btnReprovar.BorderRadius = 10;
-            btnReprovar.CustomizableEdges = customizableEdges21;
+            btnReprovar.CustomizableEdges = customizableEdges7;
             btnReprovar.DisabledState.BorderColor = Color.DarkGray;
             btnReprovar.DisabledState.CustomBorderColor = Color.DarkGray;
             btnReprovar.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -390,7 +407,7 @@
             btnReprovar.Location = new Point(106, 15);
             btnReprovar.Margin = new Padding(10, 15, 10, 15);
             btnReprovar.Name = "btnReprovar";
-            btnReprovar.ShadowDecoration.CustomizableEdges = customizableEdges22;
+            btnReprovar.ShadowDecoration.CustomizableEdges = customizableEdges8;
             btnReprovar.Size = new Size(205, 43);
             btnReprovar.TabIndex = 7;
             btnReprovar.Text = "Reprovar";
@@ -400,7 +417,7 @@
             // 
             txtObs.BorderColor = Color.FromArgb(224, 224, 224);
             txtObs.BorderRadius = 15;
-            txtObs.CustomizableEdges = customizableEdges23;
+            txtObs.CustomizableEdges = customizableEdges9;
             txtObs.DefaultText = "";
             txtObs.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             txtObs.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
@@ -418,7 +435,7 @@
             txtObs.PlaceholderForeColor = Color.Silver;
             txtObs.PlaceholderText = "Observações";
             txtObs.SelectedText = "";
-            txtObs.ShadowDecoration.CustomizableEdges = customizableEdges24;
+            txtObs.ShadowDecoration.CustomizableEdges = customizableEdges10;
             txtObs.Size = new Size(631, 117);
             txtObs.TabIndex = 5;
             // 
@@ -451,24 +468,39 @@
             // tableLayoutPanel3
             // 
             tableLayoutPanel3.BackColor = Color.Transparent;
-            tableLayoutPanel3.ColumnCount = 4;
+            tableLayoutPanel3.ColumnCount = 5;
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+            tableLayoutPanel3.Controls.Add(lblDGVEstado, 2, 0);
             tableLayoutPanel3.Controls.Add(lblDGVModelo, 0, 0);
             tableLayoutPanel3.Controls.Add(lblDGVTamanho, 1, 0);
-            tableLayoutPanel3.Controls.Add(lblDGVQuantDisp, 2, 0);
-            tableLayoutPanel3.Controls.Add(lblDGVQuant1, 3, 0);
+            tableLayoutPanel3.Controls.Add(lblDGVQuant1, 4, 0);
+            tableLayoutPanel3.Controls.Add(lblDGVQuantDisp, 3, 0);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(1, 1);
             tableLayoutPanel3.Margin = new Padding(1);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 1;
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 73F));
             tableLayoutPanel3.Size = new Size(649, 46);
             tableLayoutPanel3.TabIndex = 6;
+            // 
+            // lblDGVEstado
+            // 
+            lblDGVEstado.AutoSize = true;
+            lblDGVEstado.Dock = DockStyle.Fill;
+            lblDGVEstado.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
+            lblDGVEstado.ForeColor = Color.FromArgb(64, 64, 64);
+            lblDGVEstado.Location = new Point(356, 0);
+            lblDGVEstado.Margin = new Padding(0);
+            lblDGVEstado.Name = "lblDGVEstado";
+            lblDGVEstado.Size = new Size(97, 46);
+            lblDGVEstado.TabIndex = 4;
+            lblDGVEstado.Text = "Estado";
+            lblDGVEstado.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lblDGVModelo
             // 
@@ -476,13 +508,13 @@
             lblDGVModelo.Dock = DockStyle.Fill;
             lblDGVModelo.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
             lblDGVModelo.ForeColor = Color.FromArgb(64, 64, 64);
-            lblDGVModelo.Location = new Point(3, 0);
-            lblDGVModelo.Margin = new Padding(3, 0, 3, 5);
+            lblDGVModelo.Location = new Point(0, 0);
+            lblDGVModelo.Margin = new Padding(0);
             lblDGVModelo.Name = "lblDGVModelo";
-            lblDGVModelo.Size = new Size(253, 41);
+            lblDGVModelo.Size = new Size(259, 46);
             lblDGVModelo.TabIndex = 0;
             lblDGVModelo.Text = "Modelo";
-            lblDGVModelo.TextAlign = ContentAlignment.BottomCenter;
+            lblDGVModelo.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lblDGVTamanho
             // 
@@ -490,27 +522,13 @@
             lblDGVTamanho.Dock = DockStyle.Fill;
             lblDGVTamanho.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
             lblDGVTamanho.ForeColor = Color.FromArgb(64, 64, 64);
-            lblDGVTamanho.Location = new Point(262, 0);
-            lblDGVTamanho.Margin = new Padding(3, 0, 3, 5);
+            lblDGVTamanho.Location = new Point(259, 0);
+            lblDGVTamanho.Margin = new Padding(0);
             lblDGVTamanho.Name = "lblDGVTamanho";
-            lblDGVTamanho.Size = new Size(123, 41);
+            lblDGVTamanho.Size = new Size(97, 46);
             lblDGVTamanho.TabIndex = 1;
             lblDGVTamanho.Text = "Tamanho";
-            lblDGVTamanho.TextAlign = ContentAlignment.BottomCenter;
-            // 
-            // lblDGVQuantDisp
-            // 
-            lblDGVQuantDisp.AutoSize = true;
-            lblDGVQuantDisp.Dock = DockStyle.Fill;
-            lblDGVQuantDisp.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
-            lblDGVQuantDisp.ForeColor = Color.FromArgb(64, 64, 64);
-            lblDGVQuantDisp.Location = new Point(391, 0);
-            lblDGVQuantDisp.Margin = new Padding(3, 0, 3, 5);
-            lblDGVQuantDisp.Name = "lblDGVQuantDisp";
-            lblDGVQuantDisp.Size = new Size(123, 41);
-            lblDGVQuantDisp.TabIndex = 2;
-            lblDGVQuantDisp.Text = "Quant. Disp";
-            lblDGVQuantDisp.TextAlign = ContentAlignment.BottomCenter;
+            lblDGVTamanho.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lblDGVQuant1
             // 
@@ -518,13 +536,27 @@
             lblDGVQuant1.Dock = DockStyle.Fill;
             lblDGVQuant1.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
             lblDGVQuant1.ForeColor = Color.FromArgb(64, 64, 64);
-            lblDGVQuant1.Location = new Point(520, 0);
-            lblDGVQuant1.Margin = new Padding(3, 0, 3, 5);
+            lblDGVQuant1.Location = new Point(550, 0);
+            lblDGVQuant1.Margin = new Padding(0);
             lblDGVQuant1.Name = "lblDGVQuant1";
-            lblDGVQuant1.Size = new Size(126, 41);
+            lblDGVQuant1.Size = new Size(99, 46);
             lblDGVQuant1.TabIndex = 3;
-            lblDGVQuant1.Text = "Quantidade";
-            lblDGVQuant1.TextAlign = ContentAlignment.BottomCenter;
+            lblDGVQuant1.Text = "Quant.";
+            lblDGVQuant1.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lblDGVQuantDisp
+            // 
+            lblDGVQuantDisp.AutoSize = true;
+            lblDGVQuantDisp.Dock = DockStyle.Fill;
+            lblDGVQuantDisp.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
+            lblDGVQuantDisp.ForeColor = Color.FromArgb(64, 64, 64);
+            lblDGVQuantDisp.Location = new Point(453, 0);
+            lblDGVQuantDisp.Margin = new Padding(0);
+            lblDGVQuantDisp.Name = "lblDGVQuantDisp";
+            lblDGVQuantDisp.Size = new Size(97, 46);
+            lblDGVQuantDisp.TabIndex = 2;
+            lblDGVQuantDisp.Text = "Quant. Disp";
+            lblDGVQuantDisp.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // pnlScroll
             // 
@@ -621,5 +653,7 @@
         private Label lblDGVQuant2;
         private Panel pnlScroll2;
         private FlowLayoutPanel flpDevolucoes;
+        private Label lblDGVEstado;
+        private Label lblDGVEstado2;
     }
 }

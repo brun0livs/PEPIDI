@@ -15,16 +15,16 @@ namespace PEPIDI.UCs.UcsSecundarios
 {
     public partial class Artigo : UserControl
     {
-        int id;
+        string codigoArtigo;
         int gestor;
         string estado;
         EfeitoUI M = new();
         public event EventHandler ArtigoGuardado;
 
-        public Artigo(string _estado, int _id, int _gestor)
+        public Artigo(string _estado, string _codigo, int _gestor) // Era int _id
         {
             InitializeComponent();
-            id = _id;
+            codigoArtigo = _codigo;
             estado = _estado;
             gestor = _gestor;
         }
@@ -39,6 +39,7 @@ namespace PEPIDI.UCs.UcsSecundarios
         {
             // Carregamento base obrigatório
             CarregarCombo(cmbFamilia);
+            CarregarComboCores(cmbCor);
             await CarregarFuncoesAsync();
 
             switch (estado)
@@ -50,10 +51,12 @@ namespace PEPIDI.UCs.UcsSecundarios
                     cmbFamilia.Enabled = true;
                     cmbModelo.Enabled = false;
                     cmbTamanho.Enabled = false;
+                    cmbCor.Enabled = true;
 
                     cmbFamilia.FillColor = Color.White;
                     cmbModelo.FillColor = Color.White;
                     cmbTamanho.FillColor = Color.White;
+                    cmbCor.FillColor = Color.White;
 
                     btnEliminar.Visible = false;
                     btnEliminar.Enabled = false;
@@ -71,7 +74,7 @@ namespace PEPIDI.UCs.UcsSecundarios
                     break;
 
                 case "Editar":
-                    await CarregarDadosArtigoAsync(id);
+                    await CarregarDadosArtigoAsync(codigoArtigo);
 
                     lblTituloCima.Text = "Editar EPI";
 
@@ -79,12 +82,14 @@ namespace PEPIDI.UCs.UcsSecundarios
                     cmbFamilia.Enabled = false;
                     cmbModelo.Enabled = false;
                     cmbTamanho.Enabled = false;
+                    cmbCor.Enabled = false; // A cor define o artigo, não pode ser editada
                     txtNovoModeloEPI.Enabled = false;
 
-                    // Feedback visual de bloqueio para o ecrã de 768px
+                    // Feedback visual de bloqueio
                     cmbFamilia.FillColor = Color.FromArgb(230, 232, 235);
                     cmbModelo.FillColor = Color.FromArgb(230, 232, 235);
                     cmbTamanho.FillColor = Color.FromArgb(230, 232, 235);
+                    cmbCor.FillColor = Color.FromArgb(230, 232, 235);
                     break;
 
                 default:
@@ -93,7 +98,6 @@ namespace PEPIDI.UCs.UcsSecundarios
             }
         }
 
-        // MOTOR DE DADOS: Obtém a tabela de modelos de forma síncrona para ser usada em Tasks
         private DataTable ObterTabelaModelos(string familia)
         {
             DataTable dtModelos = new DataTable();
@@ -125,14 +129,19 @@ namespace PEPIDI.UCs.UcsSecundarios
             return dtModelos;
         }
 
-        private async Task CarregarDadosArtigoAsync(int artigoId)
+        private async Task CarregarDadosArtigoAsync(string artigoCodigo) // <-- Mudou de int para string
         {
-            string queryArtigo = "SELECT Familia, Modelo, Tamanho, Quantidade FROM EPI WHERE ID = @id";
+            // A query agora procura por e.Codigo e o estado do Stock é 1 (sem plicas)
+            string queryArtigo = @"
+        SELECT e.Familia, e.Modelo, e.Tamanho, e.Cor, ISNULL(s.Quant, 0) AS Quantidade 
+        FROM EPI e
+        LEFT JOIN Stock s ON e.Codigo = s.Codigo AND s.Estado = 1
+        WHERE e.Codigo = @cod"; // <-- Mudou de ID para Codigo
 
             using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
             {
                 SqlCommand cmd = new SqlCommand(queryArtigo, conn);
-                cmd.Parameters.AddWithValue("@id", artigoId);
+                cmd.Parameters.AddWithValue("@cod", artigoCodigo); // <-- Passamos a string
 
                 try
                 {
@@ -144,52 +153,48 @@ namespace PEPIDI.UCs.UcsSecundarios
                             string fam = reader["Familia"].ToString();
                             string mod = reader["Modelo"].ToString();
                             string tam = reader["Tamanho"].ToString();
+                            string cor = reader["Cor"]?.ToString() ?? "00";
                             string quant = reader["Quantidade"].ToString();
 
-                            // 1. Bloquear eventos para evitar recarregamentos automáticos durante o preenchimento
                             cmbFamilia.SelectedIndexChanged -= cmbFamilia_SelectedIndexChanged;
                             cmbModelo.SelectedIndexChanged -= cmbModelo_SelectedIndexChanged;
 
-                            // 2. Preencher Família
                             cmbFamilia.SelectedValue = fam;
+                            cmbCor.SelectedValue = cor;
 
-                            // 3. Carregar e esperar pelos Modelos (Garante que o texto aparece)
                             DataTable dtModelos = await Task.Run(() => ObterTabelaModelos(fam));
-                            cmbModelo.DisplayMember = "Modelo"; // O que o utilizador vê
-                            cmbModelo.ValueMember = "Modelo";   // O valor por trás
+                            cmbModelo.DisplayMember = "Modelo";
+                            cmbModelo.ValueMember = "Modelo";
                             cmbModelo.DataSource = dtModelos;
+                            cmbModelo.Text = mod;
 
-                            cmbModelo.Text = mod; // Agora o texto selecionado será o nome real
-
-                            // 4. Preencher Tamanhos
                             CarregarTamanhos(fam);
                             cmbTamanho.SelectedValue = tam;
 
-                            // 5. Preencher Quantidade
                             txtQuantidadeEPI.Text = quant;
 
-                            // 6. Reativar eventos
                             cmbFamilia.SelectedIndexChanged += cmbFamilia_SelectedIndexChanged;
                             cmbModelo.SelectedIndexChanged += cmbModelo_SelectedIndexChanged;
                         }
                     }
-                    await MarcarFuncoesAtivasAsync(artigoId);
+                    // Chama a função das tags passando o CÓDIGO
+                    await MarcarFuncoesAtivasAsync(artigoCodigo);
                 }
                 catch (Exception ex) { M.AbrirMensagem("Erro: " + ex.Message, "Erro"); }
             }
         }
 
-        private async Task MarcarFuncoesAtivasAsync(int artigoId)
+        private async Task MarcarFuncoesAtivasAsync(string artigoCodigo) // <-- Passa a string
         {
             string queryFuncoes = @"SELECT f.Nome FROM Funcoes f 
-                                    INNER JOIN AcessoFuncoes af ON f.ID = af.FuncaoID 
-                                    INNER JOIN EPI e ON e.Acesso = af.AcessoID 
-                                    WHERE e.ID = @id";
+                            INNER JOIN AcessoFuncoes af ON f.ID = af.FuncaoID 
+                            INNER JOIN EPI e ON e.Acesso = af.AcessoID 
+                            WHERE e.Codigo = @cod"; // <-- Mudou de e.ID para e.Codigo
 
             using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
             {
                 SqlCommand cmd = new SqlCommand(queryFuncoes, conn);
-                cmd.Parameters.AddWithValue("@id", artigoId);
+                cmd.Parameters.AddWithValue("@cod", artigoCodigo);
                 try
                 {
                     await conn.OpenAsync();
@@ -237,6 +242,26 @@ namespace PEPIDI.UCs.UcsSecundarios
             combo.SelectedIndex = 0;
         }
 
+        private void CarregarComboCores(Guna2ComboBox combo)
+        {
+            DataTable dtCores = new DataTable();
+            dtCores.Columns.Add("ID", typeof(string));
+            dtCores.Columns.Add("Nome", typeof(string));
+
+            dtCores.Rows.Add("00", "Cor...");
+            dtCores.Rows.Add("01", "Branco");
+            dtCores.Rows.Add("02", "Beje");
+            dtCores.Rows.Add("03", "Azul Marinho");
+            dtCores.Rows.Add("04", "Azul Bebé");
+            dtCores.Rows.Add("05", "Cinzento");
+            dtCores.Rows.Add("06", "Verde");
+
+            combo.DataSource = dtCores;
+            combo.DisplayMember = "Nome";
+            combo.ValueMember = "ID";
+            combo.SelectedIndex = 0;
+        }
+
         private void CarregarTamanhos(string familia)
         {
             DataTable dtTamanhos = new DataTable();
@@ -254,7 +279,7 @@ namespace PEPIDI.UCs.UcsSecundarios
             }
             else if (familia != "Null")
             {
-                string[] tamanhosLetras = { "XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL" };
+                string[] tamanhosLetras = { "XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL", "3XL" };
                 foreach (string t in tamanhosLetras) dtTamanhos.Rows.Add(t, t);
             }
 
@@ -320,7 +345,6 @@ namespace PEPIDI.UCs.UcsSecundarios
             flpFuncoes.Controls.Add(tag);
         }
 
-        // EVENTOS DE UI (Necessários para a lógica de "Criar")
         private void cmbFamilia_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbFamilia.SelectedValue == null) return;
@@ -335,10 +359,8 @@ namespace PEPIDI.UCs.UcsSecundarios
 
                 this.Invoke(new MethodInvoker(() =>
                 {
-                    // ADICIONA ESTAS DUAS LINHAS AQUI:
                     cmbModelo.DisplayMember = "Modelo";
                     cmbModelo.ValueMember = "Modelo";
-
                     cmbModelo.DataSource = dt;
                 }));
             });
@@ -370,14 +392,10 @@ namespace PEPIDI.UCs.UcsSecundarios
 
         private async void btnGuardar_Click(object sender, EventArgs e)
         {
-            // --- 1. LÓGICA DO MODELO (O TEU FIX) ---
-            // Se a combo está na opção de novo modelo, usamos o texto da TextBox. 
-            // Caso contrário, usamos o que está selecionado na combo.
             string modeloFinal = (cmbModelo.Text == "+ Escrever Novo Modelo...")
                                  ? txtNovoModeloEPI.Text.Trim()
                                  : cmbModelo.Text.Trim();
 
-            // Validações de segurança
             if (string.IsNullOrEmpty(modeloFinal) || modeloFinal == "Modelo...")
             {
                 M.AbrirMensagem("Por favor, introduz um modelo válido.", "Aviso");
@@ -387,6 +405,14 @@ namespace PEPIDI.UCs.UcsSecundarios
             if (!int.TryParse(txtQuantidadeEPI.Text, out int novaQuantidade))
             {
                 M.AbrirMensagem("Insere uma quantidade válida.", "Aviso");
+                return;
+            }
+
+            // Validação de Cor no MODO CRIAR - Agora validamos pelo TEXTO da cor e não pelo Value
+            string nomeCorSelecionada = cmbCor.Text.Trim();
+            if (estado == "Criar" && (string.IsNullOrEmpty(nomeCorSelecionada) || nomeCorSelecionada == "Cor..."))
+            {
+                M.AbrirMensagem("Por favor, seleciona uma cor válida.", "Aviso");
                 return;
             }
 
@@ -405,68 +431,264 @@ namespace PEPIDI.UCs.UcsSecundarios
 
             try
             {
-                // 2. Obter ou Criar o Grupo de Funções (AcessoID)
                 int novoAcessoID = await Task.Run(() => ObterOuCriarAcessoID(funcoesMarcadas));
 
                 using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
                 {
                     await conn.OpenAsync();
 
-                    if (estado == "Editar")
+                    using (SqlTransaction tran = conn.BeginTransaction())
                     {
-                        // No modo editar, apenas mudamos quantidade e acesso (o modelo já está bloqueado)
-                        string sqlUpdate = "UPDATE EPI SET Quantidade = @q, Acesso = @a WHERE ID = @id";
-                        using (SqlCommand cmd = new SqlCommand(sqlUpdate, conn))
+                        try
                         {
-                            cmd.Parameters.AddWithValue("@q", novaQuantidade);
-                            cmd.Parameters.AddWithValue("@a", novoAcessoID);
-                            cmd.Parameters.AddWithValue("@id", id);
-                            await cmd.ExecuteNonQueryAsync();
-                        }
-                        M.AbrirMensagem("EPI atualizado com sucesso!", "Sucesso");
-                    }
-                    else
-                    {
-                        // MODO CRIAR: Verificar se já existe usando o MODELO FINAL
-                        string sqlCheck = "SELECT COUNT(*) FROM EPI WHERE Familia = @f AND Modelo = @m AND Tamanho = @t";
-                        using (SqlCommand cmdCheck = new SqlCommand(sqlCheck, conn))
-                        {
-                            cmdCheck.Parameters.AddWithValue("@f", cmbFamilia.SelectedValue.ToString());
-                            cmdCheck.Parameters.AddWithValue("@m", modeloFinal); // <--- FIX AQUI
-                            cmdCheck.Parameters.AddWithValue("@t", cmbTamanho.SelectedValue.ToString());
-
-                            int existe = (int)await cmdCheck.ExecuteScalarAsync();
-                            if (existe > 0)
+                            if (estado == "Editar")
                             {
-                                M.AbrirMensagem($"O artigo '{modeloFinal}' já existe no stock.", "Atenção");
-                                return;
-                            }
-                        }
+                                // 1. Obter o Código do EPI
+                                string sqlGetCod = "SELECT Codigo FROM EPI WHERE Codigo = @codigo";
+                                string codigoEpi = "";
+                                using (SqlCommand cmdCod = new SqlCommand(sqlGetCod, conn, tran))
+                                {
+                                    cmdCod.Parameters.AddWithValue("@codigo", codigoArtigo);
+                                    object resCod = await cmdCod.ExecuteScalarAsync();
+                                    if (resCod != null) codigoEpi = resCod.ToString();
+                                }
 
-                        string sqlInsert = "INSERT INTO EPI (Familia, Modelo, Tamanho, Quantidade, Acesso) VALUES (@f, @m, @t, @q, @a)";
-                        using (SqlCommand cmd = new SqlCommand(sqlInsert, conn))
-                        {
-                            cmd.Parameters.AddWithValue("@f", cmbFamilia.SelectedValue.ToString());
-                            cmd.Parameters.AddWithValue("@m", modeloFinal); // <--- FIX AQUI
-                            cmd.Parameters.AddWithValue("@t", cmbTamanho.SelectedValue.ToString());
-                            cmd.Parameters.AddWithValue("@q", novaQuantidade);
-                            cmd.Parameters.AddWithValue("@a", novoAcessoID);
-                            await cmd.ExecuteNonQueryAsync();
+                                // 2. Atualizar a tabela EPI (apenas Acesso)
+                                string sqlUpdateEpi = "UPDATE EPI SET Acesso = @a WHERE Codigo = @codigo";
+                                using (SqlCommand cmdEpi = new SqlCommand(sqlUpdateEpi, conn, tran))
+                                {
+                                    cmdEpi.Parameters.AddWithValue("@a", novoAcessoID);
+                                    cmdEpi.Parameters.AddWithValue("@codigo", codigoArtigo);
+                                    await cmdEpi.ExecuteNonQueryAsync();
+                                }
+
+                                // 3. Atualizar/Inserir no Stock (Estado = 1 sem plicas)
+                                string sqlUpsertStock = @"
+                            IF EXISTS (SELECT 1 FROM Stock WHERE Codigo = @cod AND Estado = 1)
+                                UPDATE Stock SET Quant = @q WHERE Codigo = @cod AND Estado = 1
+                            ELSE
+                                INSERT INTO Stock (Codigo, Estado, Quant) VALUES (@cod, 1, @q)";
+
+                                using (SqlCommand cmdStk = new SqlCommand(sqlUpsertStock, conn, tran))
+                                {
+                                    cmdStk.Parameters.AddWithValue("@cod", codigoEpi);
+                                    cmdStk.Parameters.AddWithValue("@q", novaQuantidade);
+                                    await cmdStk.ExecuteNonQueryAsync();
+                                }
+
+                                M.AbrirMensagem("Artigo e Stock atualizados com sucesso!", "Sucesso");
+                            }
+                            else // MODO CRIAR
+                            {
+                                // AQUI ESTÁ A MAGIA: Obtém o ID da Cor (se não existir, cria logo na BD)
+                                string idCorFinal = await ObterOuCriarCorAsync(conn, tran, nomeCorSelecionada);
+
+                                // 1. Verificar se o EPI já existe no catálogo (inclui Cor com o ID real)
+                                string sqlCheckEpi = "SELECT Codigo FROM EPI WHERE Familia = @f AND Modelo = @m AND Tamanho = @t AND Cor = @c AND Acesso = @a";
+                                string codigoEpi = null;
+
+                                using (SqlCommand cmdCheck = new SqlCommand(sqlCheckEpi, conn, tran))
+                                {
+                                    cmdCheck.Parameters.AddWithValue("@f", cmbFamilia.SelectedValue.ToString());
+                                    cmdCheck.Parameters.AddWithValue("@m", modeloFinal);
+                                    cmdCheck.Parameters.AddWithValue("@t", cmbTamanho.SelectedValue.ToString());
+                                    cmdCheck.Parameters.AddWithValue("@c", idCorFinal); // <-- Usa o ID validado/criado
+                                    cmdCheck.Parameters.AddWithValue("@a", novoAcessoID);
+
+                                    object result = await cmdCheck.ExecuteScalarAsync();
+                                    if (result != null) codigoEpi = result.ToString();
+                                }
+
+                                // 2. Se o EPI não existir, GERAMOS O CÓDIGO e criamos o registo
+                                if (codigoEpi == null)
+                                {
+                                    codigoEpi = await GerarCodigoEPIAsync(conn, tran, cmbFamilia.SelectedValue.ToString(), modeloFinal, cmbTamanho.SelectedValue.ToString(), idCorFinal);
+
+                                    string sqlInsertEpi = @"
+                                INSERT INTO EPI (Codigo, Familia, Modelo, Tamanho, Cor, Acesso, Ativo) 
+                                VALUES (@cod, @f, @m, @t, @c, @a, 1)";
+
+                                    using (SqlCommand cmdIns = new SqlCommand(sqlInsertEpi, conn, tran))
+                                    {
+                                        cmdIns.Parameters.AddWithValue("@cod", codigoEpi);
+                                        cmdIns.Parameters.AddWithValue("@f", cmbFamilia.SelectedValue.ToString());
+                                        cmdIns.Parameters.AddWithValue("@m", modeloFinal);
+                                        cmdIns.Parameters.AddWithValue("@t", cmbTamanho.SelectedValue.ToString());
+                                        cmdIns.Parameters.AddWithValue("@c", idCorFinal); // <-- Usa o ID validado/criado
+                                        cmdIns.Parameters.AddWithValue("@a", novoAcessoID);
+
+                                        await cmdIns.ExecuteNonQueryAsync();
+                                    }
+                                }
+
+                                // 3. SOMAMOS ao Stock "Novo" (Estado = 1 sem plicas)
+                                string sqlUpsertStock = @"
+                            IF EXISTS (SELECT 1 FROM Stock WHERE Codigo = @cod AND Estado = 1)
+                                UPDATE Stock SET Quant = Quant + @q WHERE Codigo = @cod AND Estado = 1
+                            ELSE
+                                INSERT INTO Stock (Codigo, Estado, Quant) VALUES (@cod, 1, @q)";
+
+                                using (SqlCommand cmdStk = new SqlCommand(sqlUpsertStock, conn, tran))
+                                {
+                                    cmdStk.Parameters.AddWithValue("@cod", codigoEpi);
+                                    cmdStk.Parameters.AddWithValue("@q", novaQuantidade);
+                                    await cmdStk.ExecuteNonQueryAsync();
+                                }
+
+                                M.AbrirMensagem("Stock registado com sucesso!", "Sucesso");
+                            }
+
+                            tran.Commit();
                         }
-                        M.AbrirMensagem("Novo EPI registado!", "Sucesso");
+                        catch (Exception)
+                        {
+                            tran.Rollback();
+                            throw;
+                        }
                     }
                 }
 
-                // Avisa o pai para atualizar a DGV
                 ArtigoGuardado?.Invoke(this, EventArgs.Empty);
-
-                // Fecha a janela
                 btnCancelar_Click(null, null);
             }
             catch (Exception ex)
             {
-                M.AbrirMensagem("Erro ao guardar: " + ex.Message, "Erro");
+                M.AbrirMensagem("Erro ao guardar: " + ex.Message, "Erro SQL");
             }
+        }
+
+        private async Task<string> ObterOuCriarCorAsync(SqlConnection conn, SqlTransaction tran, string nomeCor)
+        {
+            if (string.IsNullOrEmpty(nomeCor) || nomeCor == "Cor...") return "00";
+
+            // 1. Tenta achar a cor pelo NOME
+            string sqlCheck = "SELECT ID FROM Cor WHERE Nome = @nome";
+            using (SqlCommand cmd = new SqlCommand(sqlCheck, conn, tran))
+            {
+                cmd.Parameters.AddWithValue("@nome", nomeCor);
+                object res = await cmd.ExecuteScalarAsync();
+                if (res != null && res != DBNull.Value)
+                {
+                    if (int.TryParse(res.ToString(), out int idInt))
+                        return idInt.ToString("D2");
+                    return res.ToString().PadLeft(2, '0');
+                }
+            }
+
+            // 2. Se a cor não existe, vamos criar!
+            // Descobrimos qual é o maior ID atual para somar 1.
+            string sqlMax = "SELECT ISNULL(MAX(CAST(ID AS INT)), 0) FROM Cor";
+            int nextId = 1;
+            using (SqlCommand cmdMax = new SqlCommand(sqlMax, conn, tran))
+            {
+                object maxRes = await cmdMax.ExecuteScalarAsync();
+                if (maxRes != null && maxRes != DBNull.Value)
+                {
+                    nextId = Convert.ToInt32(maxRes) + 1;
+                }
+            }
+
+            string novoIdFormatado = nextId.ToString("D2");
+
+            // Tentamos inserir com o ID explícito (Caso a tua coluna ID seja manual)
+            try
+            {
+                string sqlInsertExplicit = "INSERT INTO Cor (ID, Nome) VALUES (@id, @nome)";
+                using (SqlCommand cmdIns = new SqlCommand(sqlInsertExplicit, conn, tran))
+                {
+                    cmdIns.Parameters.AddWithValue("@id", nextId);
+                    cmdIns.Parameters.AddWithValue("@nome", nomeCor);
+                    await cmdIns.ExecuteNonQueryAsync();
+                }
+                return novoIdFormatado;
+            }
+            catch (SqlException ex) when (ex.Number == 544)
+            {
+                // Erro 544: Identity Insert. Significa que a tua coluna ID é AUTO-INCREMENTO.
+                // Inserimos só o nome e o SQL gera o ID sozinho.
+                string sqlInsertIdentity = "INSERT INTO Cor (Nome) OUTPUT INSERTED.ID VALUES (@nome)";
+                using (SqlCommand cmdInsIden = new SqlCommand(sqlInsertIdentity, conn, tran))
+                {
+                    cmdInsIden.Parameters.AddWithValue("@nome", nomeCor);
+                    object insertedId = await cmdInsIden.ExecuteScalarAsync();
+                    return Convert.ToInt32(insertedId).ToString("D2");
+                }
+            }
+        }
+
+
+        // =================================================================================
+        // MÉTODOS DE GERAÇÃO DE CÓDIGOS E IDS
+        // =================================================================================
+
+        private async Task<string> GerarCodigoEPIAsync(SqlConnection conn, SqlTransaction tran, string familia, string modelo, string tamanho, string idCor)
+        {
+            // 1. ID Família (Baseado no Excel)
+            string idFam = familia switch
+            {
+                "TShirt" => "1",
+                "PoloMCurta" => "2",
+                "PoloMCompr" => "3",
+                "Casaco" => "4",
+                "Bata" => "5",
+                "Calca" => "6",
+                "Sapato" => "7",
+                _ => "9"
+            };
+
+            // 2. ID Modelo (Sempre a somar)
+            string idMod = await ObterProximoIdModeloAsync(conn, tran, familia, modelo);
+
+            // 3. ID Cor (Garantia de 2 dígitos)
+            string idC = (idCor == "00" || string.IsNullOrEmpty(idCor)) ? "00" : idCor.PadLeft(2, '0');
+
+            // 4. ID Tamanho (Calculado)
+            string idTam = CalcularIdTamanho(tamanho);
+
+            // Código final de 7 dígitos: Família(1) + Modelo(2) + Cor(2) + Tamanho(2)
+            return $"{idFam}{idMod}{idC}{idTam}";
+        }
+
+        private async Task<string> ObterProximoIdModeloAsync(SqlConnection conn, SqlTransaction tran, string familia, string modelo)
+        {
+            // Verifica se o modelo já tem um ID atribuído noutra cor/tamanho
+            // SUBSTRING 1-indexed: Posição 2, tamanho 2.
+            string sqlCheck = "SELECT TOP 1 SUBSTRING(Codigo, 2, 2) FROM EPI WHERE Modelo = @m AND LEN(Codigo) >= 7";
+            using (SqlCommand cmdCheck = new SqlCommand(sqlCheck, conn, tran))
+            {
+                cmdCheck.Parameters.AddWithValue("@m", modelo);
+                object res = await cmdCheck.ExecuteScalarAsync();
+                if (res != null && res != DBNull.Value) return res.ToString();
+            }
+
+            // Se é um modelo novo, pega no maior ID de modelo desta família
+            string sqlMax = "SELECT MAX(CAST(SUBSTRING(Codigo, 2, 2) AS INT)) FROM EPI WHERE Familia = @f AND LEN(Codigo) >= 7";
+            using (SqlCommand cmdMax = new SqlCommand(sqlMax, conn, tran))
+            {
+                cmdMax.Parameters.AddWithValue("@f", familia);
+                object resMax = await cmdMax.ExecuteScalarAsync();
+                if (resMax != null && resMax != DBNull.Value)
+                {
+                    int next = Convert.ToInt32(resMax) + 1;
+                    return next.ToString("D2");
+                }
+            }
+            return "01"; // Primeiro modelo desta família
+        }
+
+        private string CalcularIdTamanho(string tamanho)
+        {
+            var tamanhosLetras = new Dictionary<string, string> {
+                {"XXS","01"}, {"XS","02"}, {"S","03"}, {"M","04"},
+                {"L","05"}, {"XL","06"}, {"XXL","07"}, {"XXXL","08"}, {"3XL","08"}
+            };
+
+            if (tamanhosLetras.ContainsKey(tamanho)) return tamanhosLetras[tamanho];
+
+            // Para tamanhos numéricos (36 a 48) no excel o 36 corresponde ao ID 09. Matemática: Num - 27
+            if (int.TryParse(tamanho, out int tamNum)) return (tamNum - 27).ToString("D2");
+
+            return "00"; // fallback
         }
 
         private int ObterOuCriarAcessoID(List<string> funcoesSelecionadas)
@@ -474,8 +696,6 @@ namespace PEPIDI.UCs.UcsSecundarios
             using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
             {
                 conn.Open();
-
-                // 1. Buscar todos os grupos de acesso existentes
                 SqlCommand cmdIDs = new SqlCommand("SELECT DISTINCT AcessoID FROM AcessoFuncoes", conn);
                 List<int> gruposExistentes = new List<int>();
                 using (SqlDataReader rdr = cmdIDs.ExecuteReader())
@@ -483,12 +703,11 @@ namespace PEPIDI.UCs.UcsSecundarios
                     while (rdr.Read()) gruposExistentes.Add(rdr.GetInt32(0));
                 }
 
-                // 2. Comparar as funções de cada grupo com as selecionadas
                 foreach (int groupID in gruposExistentes)
                 {
                     SqlCommand cmdFuncoes = new SqlCommand(@"SELECT f.Nome FROM AcessoFuncoes af 
-                                                     INNER JOIN Funcoes f ON f.ID = af.FuncaoID 
-                                                     WHERE af.AcessoID = @id", conn);
+                                                             INNER JOIN Funcoes f ON f.ID = af.FuncaoID 
+                                                             WHERE af.AcessoID = @id", conn);
                     cmdFuncoes.Parameters.AddWithValue("@id", groupID);
 
                     List<string> funcoesDoGrupo = new List<string>();
@@ -497,33 +716,29 @@ namespace PEPIDI.UCs.UcsSecundarios
                         while (rdr.Read()) funcoesDoGrupo.Add(rdr.GetString(0).Trim());
                     }
 
-                    // Se o conjunto de funções for exatamente igual (mesma contagem e sem diferenças)
                     if (funcoesDoGrupo.Count == funcoesSelecionadas.Count && !funcoesDoGrupo.Except(funcoesSelecionadas).Any())
                     {
-                        return groupID; // Já existe um grupo com estas funções, usamos este ID
+                        return groupID;
                     }
                 }
 
-                // 3. Se chegou aqui, o conjunto é novo. Criar novo AcessoID
                 SqlCommand cmdNovoID = new SqlCommand("INSERT INTO Acessos DEFAULT VALUES; SELECT SCOPE_IDENTITY();", conn);
                 int novoID = Convert.ToInt32(cmdNovoID.ExecuteScalar());
 
                 foreach (string funcNome in funcoesSelecionadas)
                 {
                     SqlCommand cmdInsert = new SqlCommand(@"INSERT INTO AcessoFuncoes (AcessoID, FuncaoID) 
-                                                     VALUES (@aid, (SELECT ID FROM Funcoes WHERE Nome = @nome))", conn);
+                                                            VALUES (@aid, (SELECT ID FROM Funcoes WHERE Nome = @nome))", conn);
                     cmdInsert.Parameters.AddWithValue("@aid", novoID);
                     cmdInsert.Parameters.AddWithValue("@nome", funcNome);
                     cmdInsert.ExecuteNonQuery();
                 }
-
                 return novoID;
             }
         }
 
         private void btnEliminar_Click(object sender, EventArgs e)
         {
-            // Usa a tua MSGBX personalizada que configurámos para o "Sim/Não"
             using (MSGBX m = new MSGBX("Deseja mesmo eliminar este EPI?", "Eliminar EPI"))
             {
                 if (m.ShowDialog() == DialogResult.Yes)
@@ -533,25 +748,15 @@ namespace PEPIDI.UCs.UcsSecundarios
                         using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
                         {
                             conn.Open();
-
-                            // USAR PARÂMETROS para ser mais seguro e profissional
-                            string sql = "UPDATE EPI SET Ativo = '0' WHERE ID = @id";
-
+                            string sql = "UPDATE EPI SET Ativo = '0' WHERE Codigo = @codigo";
                             using (SqlCommand elimina = new SqlCommand(sql, conn))
                             {
-                                elimina.Parameters.AddWithValue("@id", id);
-
-                                // O "ENTER" NO CORREIO: Executa o comando na BD
+                                elimina.Parameters.AddWithValue("@codigo", codigoArtigo);
                                 int linhasAfetadas = elimina.ExecuteNonQuery();
-
                                 if (linhasAfetadas > 0)
                                 {
                                     M.AbrirMensagem("Artigo eliminado com sucesso!", "Sucesso");
-
-                                    // DISPARAR O EVENTO PARA O PAI ATUALIZAR A TABELA
                                     ArtigoGuardado?.Invoke(this, EventArgs.Empty);
-
-                                    // FECHAR A UC DE EDIÇÃO
                                     btnCancelar_Click(null, null);
                                 }
                             }
@@ -564,7 +769,6 @@ namespace PEPIDI.UCs.UcsSecundarios
                 }
                 else
                 {
-                    // FECHAR A UC DE EDIÇÃO
                     btnCancelar_Click(null, null);
                 }
             }

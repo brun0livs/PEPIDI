@@ -4,7 +4,8 @@ namespace PEPIDI.Models
 {
     public class LinhaPedidoInfo
     {
-        public int IdEpi { get; set; }
+        public string CodigoEpi { get; set; }
+        public string Cor { get; set; }
         public string Modelo { get; set; }
         public string TamanhoAtual { get; set; }
         public string Familia { get; set; }

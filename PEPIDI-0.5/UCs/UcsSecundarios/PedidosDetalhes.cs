@@ -235,7 +235,8 @@ namespace PEPIDI.UCs.UcsSecundarios
                 else if (dt.Columns.Contains("QuantidadeDevolvida")) quantDevolvida = Convert.ToInt32(row["QuantidadeDevolvida"]);
                 if (quantDevolvida == 0) quantDevolvida = 1;
 
-                PEPIDI.UCs.DGVS.LinhaDevolucao novaLinha = new PEPIDI.UCs.DGVS.LinhaDevolucao(idEpi, modelo, tamanho, quantDevolvida);
+                string cena = row["Estado"].ToString().Trim();
+                PEPIDI.UCs.DGVS.LinhaDevolucao novaLinha = new PEPIDI.UCs.DGVS.LinhaDevolucao(idEpi, modelo, tamanho, cena, quantDevolvida);
 
                 // ZERO MARGEM NAS LATERAIS
                 novaLinha.AutoSize = false;
@@ -255,7 +256,8 @@ namespace PEPIDI.UCs.UcsSecundarios
 
         public async Task CarregarPPacoteAsync(Panel pnlConteudo, int idPedido, string estado, Panel pnlScroll, FlowLayoutPanel flpLinhas)
         {
-            await Task.Delay(150);
+            // O delay ajuda a evitar flicker na UI
+            await Task.Delay(100);
 
             flpLinhas.Visible = false;
             flpLinhas.SuspendLayout();
@@ -277,27 +279,39 @@ namespace PEPIDI.UCs.UcsSecundarios
 
             foreach (DataRow row in dt.Rows)
             {
-                int idEpi = Convert.ToInt32(row["ID"]);
-                string modelo = row["Modelo"].ToString().Trim();
-                string tamanho = row["Tamanho"].ToString().Trim();
-                int quantDisp = Convert.ToInt32(row["QuantidadeDisponivel"]);
+                // --- ATENÇÃO AOS NOMES DAS COLUNAS AQUI ---
 
-                int quantPedida = 0;
-                if (dt.Columns.Contains("QuantidadePedida")) quantPedida = Convert.ToInt32(row["QuantidadePedida"]);
-                else if (dt.Columns.Contains("Quantidade")) quantPedida = Convert.ToInt32(row["Quantidade"]);
+                // No SQL novo chamámos 'IDLinhaPedido' ou 'Codigo'. Vou usar o Codigo para o ID do EPI
+                string codigoEpi = row["Codigo"].ToString();
+
+                // Usamos o Modelo que já traz a Cor concatenada pelo SQL
+                string modelo = row["ModeloComCor"].ToString().Trim();
+                string tamanho = row["Tamanho"].ToString().Trim();
+
+                // Agora temos dois stocks. Para a tua 'LinhaItem' antiga, 
+                // vou somar os dois ou escolher o Novo, tu decides:
+                int stockNovo = Convert.ToInt32(row["QtdStockNovo"]);
+                int stockUsado = Convert.ToInt32(row["QtdStockUsado"]);
+                int quantDisp = stockNovo + stockUsado; // Somamos para mostrar o total disponível
+
+                int quantPedida = Convert.ToInt32(row["QuantidadePedida"]);
 
                 if (quantPedida <= 0) continue;
 
+                // Criar a linha com os dados corrigidos
                 LinhaItem novaLinha = new LinhaItem(modelo, tamanho, quantDisp, quantPedida, estado);
-                novaLinha.IDEPI = idEpi;
+
+                // Atribuir o Código (string) ou o ID da linha (int) conforme o que a tua LinhaItem espera
+                novaLinha.Tag = codigoEpi;
                 novaLinha.QuantidadeOriginal = quantPedida;
+
+                // Eventos e Layout
                 novaLinha.QuantidadeAlterada += Linha_QuantidadeAlterada;
                 Linha_QuantidadeAlterada(novaLinha, EventArgs.Empty);
 
-                // ZERO MARGEM NAS LATERAIS
                 novaLinha.AutoSize = false;
                 novaLinha.Margin = new Padding(0, 2, 0, 2);
-                novaLinha.Width = flpLinhas.ClientSize.Width;
+                novaLinha.Width = flpLinhas.ClientSize.Width - 10; // Margem para o scroll
                 novaLinha.Height = 40;
 
                 flpLinhas.Controls.Add(novaLinha);
@@ -306,7 +320,6 @@ namespace PEPIDI.UCs.UcsSecundarios
             flpLinhas.ResumeLayout(true);
             flpLinhas.Visible = true;
 
-            // Força o ajuste imediatamente após desenhar
             AjustarLarguras(flpLinhas);
         }
 

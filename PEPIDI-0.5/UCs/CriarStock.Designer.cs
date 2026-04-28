@@ -26,18 +26,23 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
             dgvStock = new PEPIDI.Models.PEPIDIDataGridView();
-            lblTituloCriarEPI = new Label();
             tableLayoutPanel1 = new TableLayoutPanel();
             pnlDetails = new Panel();
             tableLayoutPanel2 = new TableLayoutPanel();
             btnImportarEPI = new Guna.UI2.WinForms.Guna2Button();
             btnCriarEPI = new Guna.UI2.WinForms.Guna2Button();
+            tableLayoutPanel3 = new TableLayoutPanel();
+            cmbEstado = new Guna.UI2.WinForms.Guna2ComboBox();
+            lblTituloCriarEPI = new Label();
             guna2Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvStock).BeginInit();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
+            tableLayoutPanel3.SuspendLayout();
             SuspendLayout();
             // 
             // guna2Panel1
@@ -107,27 +112,15 @@
             dgvStock.TabIndex = 4;
             dgvStock.CellClick += dgvStock_CellClick;
             // 
-            // lblTituloCriarEPI
-            // 
-            lblTituloCriarEPI.AutoSize = true;
-            lblTituloCriarEPI.Dock = DockStyle.Fill;
-            lblTituloCriarEPI.Font = new Font("Roboto", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblTituloCriarEPI.Location = new Point(3, 0);
-            lblTituloCriarEPI.Name = "lblTituloCriarEPI";
-            lblTituloCriarEPI.Size = new Size(912, 60);
-            lblTituloCriarEPI.TabIndex = 6;
-            lblTituloCriarEPI.Text = "GESTÃO DE EPI";
-            lblTituloCriarEPI.TextAlign = ContentAlignment.MiddleLeft;
-            // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 2;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Controls.Add(lblTituloCriarEPI, 0, 0);
             tableLayoutPanel1.Controls.Add(guna2Panel1, 0, 1);
             tableLayoutPanel1.Controls.Add(pnlDetails, 1, 1);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 1, 0);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel3, 0, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -198,7 +191,6 @@
             btnCriarEPI.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
             btnCriarEPI.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
             btnCriarEPI.Dock = DockStyle.Fill;
-            btnCriarEPI.Enabled = false;
             btnCriarEPI.FillColor = Color.FromArgb(243, 108, 33);
             btnCriarEPI.Font = new Font("Roboto", 15F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnCriarEPI.ForeColor = Color.White;
@@ -211,6 +203,57 @@
             btnCriarEPI.Text = "Adicionar Novo Artigo";
             btnCriarEPI.Visible = false;
             btnCriarEPI.Click += btnCriarEPI_Click;
+            // 
+            // tableLayoutPanel3
+            // 
+            tableLayoutPanel3.ColumnCount = 2;
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel3.Controls.Add(cmbEstado, 1, 0);
+            tableLayoutPanel3.Controls.Add(lblTituloCriarEPI, 0, 0);
+            tableLayoutPanel3.Dock = DockStyle.Fill;
+            tableLayoutPanel3.Location = new Point(0, 0);
+            tableLayoutPanel3.Margin = new Padding(0);
+            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.RowCount = 1;
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel3.Size = new Size(918, 60);
+            tableLayoutPanel3.TabIndex = 9;
+            // 
+            // cmbEstado
+            // 
+            cmbEstado.BackColor = Color.Transparent;
+            cmbEstado.BorderRadius = 18;
+            cmbEstado.CustomizableEdges = customizableEdges7;
+            cmbEstado.Dock = DockStyle.Fill;
+            cmbEstado.DrawMode = DrawMode.OwnerDrawFixed;
+            cmbEstado.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbEstado.FocusedColor = Color.FromArgb(242, 103, 34);
+            cmbEstado.FocusedState.BorderColor = Color.FromArgb(242, 103, 34);
+            cmbEstado.Font = new Font("Roboto", 11F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cmbEstado.ForeColor = Color.FromArgb(64, 64, 64);
+            cmbEstado.HoverState.BorderColor = Color.FromArgb(242, 103, 34);
+            cmbEstado.ItemHeight = 31;
+            cmbEstado.Location = new Point(469, 12);
+            cmbEstado.Margin = new Padding(10, 12, 10, 12);
+            cmbEstado.Name = "cmbEstado";
+            cmbEstado.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            cmbEstado.Size = new Size(439, 37);
+            cmbEstado.TabIndex = 29;
+            cmbEstado.TextAlign = HorizontalAlignment.Center;
+            cmbEstado.SelectedIndexChanged += cmbEstado_SelectedIndexChanged;
+            // 
+            // lblTituloCriarEPI
+            // 
+            lblTituloCriarEPI.AutoSize = true;
+            lblTituloCriarEPI.Dock = DockStyle.Fill;
+            lblTituloCriarEPI.Font = new Font("Roboto", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTituloCriarEPI.Location = new Point(3, 0);
+            lblTituloCriarEPI.Name = "lblTituloCriarEPI";
+            lblTituloCriarEPI.Size = new Size(453, 60);
+            lblTituloCriarEPI.TabIndex = 7;
+            lblTituloCriarEPI.Text = "GESTÃO DE EPI";
+            lblTituloCriarEPI.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // CriarStock
             // 
@@ -225,19 +268,22 @@
             guna2Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvStock).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel3.ResumeLayout(false);
+            tableLayoutPanel3.PerformLayout();
             ResumeLayout(false);
 
         }
 
         private Guna.UI2.WinForms.Guna2Panel guna2Panel1;
-        private Label lblTituloCriarEPI;
         private TableLayoutPanel tableLayoutPanel1;
         private Models.PEPIDIDataGridView dgvStock;
         private Panel pnlDetails;
         private TableLayoutPanel tableLayoutPanel2;
         private Guna.UI2.WinForms.Guna2Button btnImportarEPI;
         private Guna.UI2.WinForms.Guna2Button btnCriarEPI;
+        private TableLayoutPanel tableLayoutPanel3;
+        private Label lblTituloCriarEPI;
+        private Guna.UI2.WinForms.Guna2ComboBox cmbEstado;
     }
 }

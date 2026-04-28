@@ -1,10 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Guna.UI2.WinForms;
+using Microsoft.Data.SqlClient;
 using PEPIDI.Organizers;
-using PEPIDI.UCs.UcsSecundarios; // Garante que o namespace da UC Artigo está aqui
+using PEPIDI.UCs.UcsSecundarios;
 using PEPIDI.Utils;
+using System;
 using System.Data;
 using System.Runtime.InteropServices;
-
+using System.Windows.Forms;
 
 namespace PEPIDI.UCs
 {
@@ -31,9 +33,11 @@ namespace PEPIDI.UCs
         // 1. CARREGAMENTO DA DGV NO LOAD
         private void CriarStock_Load(object sender, EventArgs e)
         {
-            // Query para preencher a tabela com os dados essenciais
-            string sql = "SELECT ID, Modelo, Familia, Tamanho, Quantidade FROM EPI WHERE Ativo = '1'";
-            PreencherTabela(sql);
+            // Preencher os Estados na combo
+            PreencherCombo(cmbEstado);
+
+            // CORREÇÃO 1: Usar Convert.ToInt32 é o cinto de segurança do WinForms
+            PreencherTabela(Convert.ToInt32(cmbEstado.SelectedValue));
 
             // Aplica os estilos (fontes, cores) definidos no teu GestorTema
             GestorTema.AplicarEstilos(this);
@@ -47,27 +51,55 @@ namespace PEPIDI.UCs
             TouchScrollHelper.AtivarScrollPorArrasto(dgvStock);
         }
 
+        private void PreencherCombo(Guna2ComboBox combo)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Texto");
+            dt.Columns.Add("Valor", typeof(int));
+
+            dt.Rows.Add("Novo", 1);
+            dt.Rows.Add("Usado", 2);
+            dt.Rows.Add("Gasto", 3);
+
+            combo.DataSource = dt;
+            combo.DisplayMember = "Texto";
+            combo.ValueMember = "Valor";
+
+            combo.SelectedIndex = 0; // Por defeito seleciona "Novo" (Valor 1)
+        }
+
         // 2. MÉTODO PARA ALIMENTAR A DATA GRID VIEW
-        public void PreencherTabela(string sql)
+        public void PreencherTabela(int idEstado)
         {
             try
             {
+                // Query que junta a definição do EPI com o Stock filtrado pelo Estado
+                string query = @"
+            SELECT 
+                E.Codigo,
+                E.Modelo, 
+                E.Familia, 
+                E.Tamanho, 
+                S.Quant AS Quantidade 
+            FROM EPI E
+            INNER JOIN Stock S ON E.Codigo = S.Codigo
+            WHERE S.Estado = @estadoId AND E.Ativo = 1";
+
                 using (var con = new SqlConnection(GetConn.ConnectionString))
-                using (var da = new SqlDataAdapter(sql, con))
+                using (var cmd = new SqlCommand(query, con))
                 {
+                    cmd.Parameters.AddWithValue("@estadoId", idEstado);
+
+                    var da = new SqlDataAdapter(cmd);
                     var dt = new DataTable();
                     da.Fill(dt);
 
                     dgvStock.DataSource = dt;
 
-                    if(funcao != "Programador")
-                    {
-                        // Esconde o ID mas mantém-no acessível para o CellClick
-                        if (dgvStock.Columns.Contains("ID"))
-                            dgvStock.Columns["ID"].Visible = false;
-                    }
+                    // Formatação das colunas
+                    if (dgvStock.Columns.Contains("Codigo") && funcao != "Programador")
+                        dgvStock.Columns["Codigo"].Visible = false;
 
-                    // Estética: Centraliza o texto da coluna Tamanho
                     if (dgvStock.Columns.Contains("Tamanho"))
                         dgvStock.Columns["Tamanho"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
@@ -85,12 +117,14 @@ namespace PEPIDI.UCs
             // Verifica se clicaste numa linha (e não no cabeçalho)
             if (e.RowIndex >= 0)
             {
-                int id = Convert.ToInt16(dgvStock.Rows[e.RowIndex].Cells["ID"].Value);
-                AbrirControl(new Artigo(estado, id, Gestor));
+                // Agora vamos ler uma STRING (Codigo) em vez de um INT (ID)
+                string codigo = dgvStock.Rows[e.RowIndex].Cells["Codigo"].Value.ToString();
+
+                AbrirControl(new Artigo(estado, codigo, Gestor));
             }
         }
 
-        public void AbrirControl(UserControl control)
+        public void  AbrirControl(UserControl control)
         {
             // 1. Para o desenho do painel (evita o lag visual)
             SendMessage(pnlDetails.Handle, WM_SETREDRAW, false, 0);
@@ -109,9 +143,9 @@ namespace PEPIDI.UCs
             {
                 ucArtigo.ArtigoGuardado += (s, args) =>
                 {
-                    // Substitui pela tua query real de listagem
-                    string sqlRefresh = "SELECT ID, Modelo, Familia, Tamanho, Quantidade FROM EPI";
-                    PreencherTabela(sqlRefresh);
+                    // CORREÇÃO 2: Em vez de passar uma query string, passamos o estado atual da Combo!
+                    int estadoAtual = Convert.ToInt32(cmbEstado.SelectedValue);
+                    PreencherTabela(estadoAtual);
                 };
             }
 
@@ -126,12 +160,10 @@ namespace PEPIDI.UCs
 
         private void btnImportarEPI_Click(object sender, EventArgs e)
         {
-            // 1. Identificar o Form principal (Pai) para a sombra ocupar o ecrã todo
             Form pai = this.FindForm();
 
             using (Form overlay = new Form())
             {
-                // Configurações da Sombra
                 overlay.StartPosition = FormStartPosition.Manual;
                 overlay.FormBorderStyle = FormBorderStyle.None;
                 overlay.Opacity = 0.50d;
@@ -142,29 +174,41 @@ namespace PEPIDI.UCs
                 {
                     overlay.Location = pai.Location;
                     overlay.Size = pai.Size;
-                    overlay.Show(pai); // Mostra a sombra por cima do Form principal
+                    overlay.Show(pai);
                 }
 
-                // 2. Abrir o Form de Importação
-                // Nota: Verifica se o caminho/nome do Form está correto no teu projeto
                 using (FormsSecundarios.FormImportarStock frm = new FormsSecundarios.FormImportarStock())
                 {
-                    frm.ShowDialog(overlay); // Abre o form centralizado na sombra
+                    frm.ShowDialog(overlay);
                 }
 
-                // 3. Fechar a sombra e atualizar a tabela caso tenham sido importados dados novos
                 overlay.Close();
 
-                // Atualiza a DGV para mostrar o que foi importado
-                string sql = "SELECT ID, Modelo, Familia, Tamanho, Quantidade FROM EPI";
-                PreencherTabela(sql);
+                // CORREÇÃO 3: Atualiza a DGV baseada no Estado que a Combo tem no momento
+                if (cmbEstado.SelectedValue != null)
+                {
+                    PreencherTabela(Convert.ToInt32(cmbEstado.SelectedValue));
+                }
             }
         }
 
         private void btnCriarEPI_Click(object sender, EventArgs e)
         {
-            // "Criar" é o estado, 0 é o ID (novo), Gestor é a variável global que já tens na UC
-            AbrirControl(new Artigo("Criar", 0, Gestor));
+            // Passamos "" (vazio) em vez de 0, pois agora é uma string!
+            AbrirControl(new Artigo("Criar", "", Gestor));
+        }
+
+        private void cmbEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Verifica se o valor selecionado é um inteiro válido (forma super segura)
+            if (cmbEstado.SelectedValue is int idEstado)
+            {
+                PreencherTabela(idEstado);
+            }
+            else if (cmbEstado.SelectedValue != null && int.TryParse(cmbEstado.SelectedValue.ToString(), out int parsedId))
+            {
+                PreencherTabela(parsedId);
+            }
         }
     }
 }

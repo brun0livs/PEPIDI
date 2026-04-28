@@ -20,13 +20,14 @@ namespace PEPIDI.UCs.DGVS
         public string TamanhoSelecionado => lblTamanho.Text;
         public int QuantidadeDevolvida => Convert.ToInt32(lblQuantDevolvida.Text);
 
-        public LinhaDevolucao(int idEpi, string modelo, string tamanho, int quantDevolvida)
+        public LinhaDevolucao(int idEpi, string modelo, string tamanho, string estado, int quantDevolvida)
         {
             InitializeComponent();
 
             this.IDEPI = idEpi;
             lblModelo.Text = modelo;
             lblTamanho.Text = tamanho;
+            cmbEstado.Text = estado;
             lblQuantDevolvida.Text = quantDevolvida.ToString();
         }
     }

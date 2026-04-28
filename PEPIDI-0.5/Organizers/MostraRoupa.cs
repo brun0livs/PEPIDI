@@ -1,9 +1,11 @@
-﻿using PEPIDI.Models;
+﻿using ClosedXML.Graphics;
+using DocumentFormat.OpenXml.Office.Word;
+using Microsoft.Data.SqlClient;
+using PEPIDI.Models;
 using PEPIDI.Organizers;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Microsoft.Data.SqlClient;
 
 namespace PEPIDI
 {
@@ -33,12 +35,12 @@ namespace PEPIDI
 
                         resultado.Add(new LinhaPedidoInfo
                         {
-                            IdEpi = Convert.ToInt32(reader["ID"]),
+                            CodigoEpi = reader["Codigo"].ToString(), 
+                            Cor = reader["Cor"].ToString(),          
                             Modelo = modelo,
                             Familia = familia,
                             TamanhoAtual = reader["Tamanho"].ToString(),
-                            TamanhosDisponiveis = ObterTamanhosDisponiveis(modelo),
-                            // NOVA LINHA: Para o C# saber quais modelos existem nesta família
+                            TamanhosDisponiveis = ObterTamanhosDisponiveis(modelo, reader["Cor"].ToString()),
                             ModelosDisponiveis = ObterModelosPorFamilia(familia)
                         });
                     }
@@ -77,26 +79,24 @@ namespace PEPIDI
                 {
                     while (reader.Read())
                     {
+                        // No while (reader.Read()) do teu ObterRoupaUsadaPorFuncionarioNovo:
                         var modelo = reader["Modelo"].ToString();
                         var tamanho = reader["Tamanho"].ToString();
                         var familia = reader["Familia"].ToString();
+                        var cor = reader["Cor"].ToString(); // Lemos a cor
 
-                        // 1. VERIFICAÇÃO CHAVE: 
-                        // Lê-se: "Se NÃO (!) existir NENHUM (Any) item no resultado onde o Modelo seja igual a este..."
                         if (!resultado.Any(x => x.Modelo == modelo))
                         {
                             resultado.Add(new LinhaPedidoInfo
                             {
-                                IdEpi = Convert.ToInt32(reader["IDEPI"]),
+                                CodigoEpi = reader["Codigo"].ToString(), // Era IDEPI
+                                Cor = cor,                               // Guardamos a cor na mochila
                                 Modelo = modelo,
                                 Familia = familia,
-                                TamanhoAtual = tamanho, // Fica como tamanho padrão inicial
-
-                                // Vai buscar a lista completa de tamanhos para a ComboBox
+                                TamanhoAtual = tamanho,
                                 TamanhosDisponiveis = ObterTamanhosUsadosPorFuncionario(modelo, nrFuncionario)
                             });
                         }
-                        // Se já existir na lista, o if é ignorado e o ciclo avança, evitando a acumulação!
                     }
                 }
             }
@@ -109,10 +109,10 @@ namespace PEPIDI
 
             using (SqlConnection conn = GetConn.GetConnection())
             using (SqlCommand cmd = new SqlCommand(@"
-                SELECT DISTINCT E.Tamanho FROM PedidoPacote PP
-                INNER JOIN PedidoRegistos PR ON PP.IDPedReg = PR.ID
-                INNER JOIN EPI E ON PP.IDEPI = E.ID
-                WHERE PR.NrFunc = @NrFunc AND E.Modelo = @Modelo", conn))
+        SELECT DISTINCT E.Tamanho FROM PedidoPacote PP
+        INNER JOIN PedidoRegistos PR ON PP.IDPedReg = PR.ID
+        INNER JOIN EPI E ON PP.CodigoEPI = E.Codigo -- <--- AQUI TAMBÉM MUDOU
+        WHERE PR.NrFunc = @NrFunc AND E.Modelo = @Modelo", conn))
             {
                 cmd.Parameters.AddWithValue("@NrFunc", nrFunc);
                 cmd.Parameters.AddWithValue("@Modelo", modelo);
@@ -129,7 +129,8 @@ namespace PEPIDI
             return tamanhos;
         }
 
-        private List<string> ObterTamanhosDisponiveis(string modelo)
+        // 1. Atualizar o método que chama a tua SP alterada
+        private List<string> ObterTamanhosDisponiveis(string modelo, string cor) // <-- Adicionado string cor
         {
             List<string> tamanhos = new List<string>();
             using (SqlConnection conn = GetConn.GetConnection())
@@ -137,6 +138,7 @@ namespace PEPIDI
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Modelo", modelo);
+                cmd.Parameters.AddWithValue("@Cor", cor); // <-- Passar o parâmetro novo!
 
                 conn.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
@@ -150,17 +152,57 @@ namespace PEPIDI
             return tamanhos;
         }
 
-        public int GetConsumidoDisponivel(int nrFunc, int idEpi)
+        // 2. Atualizar o Resolutor de Código para ser 100% à prova de bala
+        public string ResolveCodigoEpi(string modelo, string tamanho, string cor)
+        {
+            string codigo = null;
+
+            // 1. Limpa os espaços. Se a cor vier nula/vazia, assumimos que é "00"
+            modelo = modelo?.Trim() ?? "";
+            tamanho = tamanho?.Trim() ?? "";
+            cor = string.IsNullOrWhiteSpace(cor) ? "00" : cor.Trim();
+
+            // 2. O LTRIM e RTRIM no SQL limpam os espaços invisíveis nas colunas
+            // O ISNULL(Cor, '00') garante que se o SQL tiver a cor a NULL, ele lê como '00'
+            string sql = @"SELECT TOP 1 Codigo 
+                            FROM EPI 
+                            WHERE LTRIM(RTRIM(Modelo)) = @m 
+                              AND LTRIM(RTRIM(Tamanho)) = @t 
+                              AND ISNULL(Cor, '00') = @c 
+                              AND Ativo = 1";
+
+            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@m", modelo);
+                cmd.Parameters.AddWithValue("@t", tamanho);
+                cmd.Parameters.AddWithValue("@c", cor);
+
+                try
+                {
+                    conn.Open();
+                    object res = cmd.ExecuteScalar();
+                    if (res != null && res != DBNull.Value)
+                    {
+                        codigo = res.ToString();
+                    }
+                }
+                catch { /* Opcional: Console.WriteLine(ex.Message) para debugar */ }
+            }
+
+            return codigo;
+        }
+
+        // ATENÇÃO: Mudou de int idEpi para string codigoEpi
+        public int GetConsumidoDisponivel(int nrFunc, string codigoEpi)
         {
             using (SqlConnection conn = GetConn.GetConnection())
-            using (SqlCommand cmd = new SqlCommand(@"
-                SELECT ISNULL(SUM(PP.Quantidade), 0)
-                FROM PedidoPacote PP
-                INNER JOIN PedidoRegistos PR ON PP.IDPedReg = PR.ID
-                WHERE PR.NrFunc = @nr AND PP.IDEPI = @id;", conn))
+            using (SqlCommand cmd = new SqlCommand(@"SELECT ISNULL(SUM(PP.Quantidade), 0) FROM PedidoPacote PP 
+                                                    INNER JOIN PedidoRegistos PR ON PP.IDPedReg = PR.ID
+                                                    WHERE PR.NrFunc = @nr AND PP.CodigoEPI = @codigo;", conn)) 
             {
                 cmd.Parameters.AddWithValue("@nr", nrFunc);
-                cmd.Parameters.AddWithValue("@id", idEpi);
+                cmd.Parameters.AddWithValue("@codigo", codigoEpi);
 
                 conn.Open();
                 return Convert.ToInt32(cmd.ExecuteScalar());
@@ -171,60 +213,55 @@ namespace PEPIDI
         // 2. RESOLVEDORES DE IDs
         // ====================================================================================
 
-        public int ResolveEpiIdPorModeloTamanho(string modelo, string tamanho)
-        {
-            using (SqlConnection conn = GetConn.GetConnection())
-            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 ID FROM EPI WHERE Modelo=@m AND Tamanho=@t", conn))
-            {
-                cmd.Parameters.AddWithValue("@m", modelo.Trim());
-                cmd.Parameters.AddWithValue("@t", tamanho.Trim());
-                conn.Open();
-                object r = cmd.ExecuteScalar();
-                return (r == null || r == DBNull.Value) ? 0 : Convert.ToInt32(r);
-            }
-        }
 
-        public int ResolveRoupaIdPorModeloTamanho(string modelo, string tamanho)
-        {
-            using (SqlConnection conn = GetConn.GetConnection())
-            {
-                conn.Open();
-
-                using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 ID FROM Roupa WHERE Modelo = @m AND Tamanho = @t", conn))
-                {
-                    cmd.Parameters.AddWithValue("@m", modelo.Trim());
-                    cmd.Parameters.AddWithValue("@t", tamanho.Trim());
-
-                    object r = cmd.ExecuteScalar();
-                    if (r != null && r != DBNull.Value)
-                        return Convert.ToInt32(r);
-                }
-
-                string familia = "Extra";
-                using (SqlCommand cmdFam = new SqlCommand("SELECT TOP 1 Familia FROM EPI WHERE Modelo = @m AND Tamanho = @t", conn))
-                {
-                    cmdFam.Parameters.AddWithValue("@m", modelo.Trim());
-                    cmdFam.Parameters.AddWithValue("@t", tamanho.Trim());
-                    object rf = cmdFam.ExecuteScalar();
-                    if (rf != null && rf != DBNull.Value) familia = rf.ToString();
-                }
-
-                using (SqlCommand insert = new SqlCommand(@"
-                    INSERT INTO Roupa (Familia, Modelo, Tamanho, Quantidade)
-                    OUTPUT INSERTED.ID
-                    VALUES (@Familia, @Modelo, @Tamanho, 0);", conn))
-                {
-                    insert.Parameters.AddWithValue("@Familia", familia);
-                    insert.Parameters.AddWithValue("@Modelo", modelo.Trim());
-                    insert.Parameters.AddWithValue("@Tamanho", tamanho.Trim());
-                    return Convert.ToInt32(insert.ExecuteScalar());
-                }
-            }
-        }
 
         // ====================================================================================
         // 3. SUBMISSÃO DE PEDIDOS E ENTREGAS (MÉTODOS NOVOS LIMPOS)
         // ====================================================================================
+
+
+
+        // 2. O INSERTER DE PEDIDOS (CEGOS)
+        public void GravarPedidosCegos(int idPedReg, List<(string codigoEpi, int qtd)> pedidos)
+        {
+            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+            {
+                conn.Open();
+                foreach (var p in pedidos)
+                {
+                    // O IDStock vai a NULL propositadamente!
+                    string sql = "INSERT INTO PedidoPacote (IDPedReg, CodigoEPI, Quantidade, IDStock) VALUES (@idReg, @codigo, @qtd, NULL)";
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@idReg", idPedReg);
+                        cmd.Parameters.AddWithValue("@codigo", p.codigoEpi);
+                        cmd.Parameters.AddWithValue("@qtd", p.qtd);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        // 3. O INSERTER DE DEVOLUÇÕES (CEGAS)
+        public void GravarDevolucoesCegas(int idPedReg, List<(string codigoEpi, int qtd)> devolucoes)
+        {
+            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+            {
+                conn.Open();
+                foreach (var d in devolucoes)
+                {
+                    // IDStock a NULL. O RH decide para onde vai esta devolução mais tarde.
+                    string sql = "INSERT INTO RoupaPacote (IDPedReg, CodigoEPI, Quantidade, IDStock) VALUES (@idReg, @codigo, @qtd, NULL)";
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@idReg", idPedReg);
+                        cmd.Parameters.AddWithValue("@codigo", d.codigoEpi);
+                        cmd.Parameters.AddWithValue("@qtd", d.qtd);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
 
         public int GetOrCreatePedidoPendente(int nrFunc)
         {
@@ -270,169 +307,8 @@ namespace PEPIDI
             }
         }
 
-        public int SubmeterPedidoNovo(int nrFunc, List<(int idEpi, string tamanho, int qtd)> itens)
-        {
-            using (var conn = GetConn.GetConnection())
-            {
-                conn.Open();
-                using (var tran = conn.BeginTransaction())
-                {
-                    try
-                    {
-                        var cmdReg = new SqlCommand(@"
-                            INSERT INTO PedidoRegistos (Data, NrFunc, Estado)
-                            OUTPUT INSERTED.ID
-                            VALUES (@Data, @NrFunc, 'Pendente');", conn, tran);
-                        cmdReg.Parameters.AddWithValue("@Data", DateTime.Now);
-                        cmdReg.Parameters.AddWithValue("@NrFunc", nrFunc);
-
-                        int idPedReg = Convert.ToInt32(cmdReg.ExecuteScalar());
-
-                        var cmdItem = new SqlCommand(@"
-                            IF EXISTS (SELECT 1 FROM PedidoPacote WHERE IDPedReg = @IDPedReg AND IDEPI = @IDEPI)
-                            BEGIN
-                            -- Se já existe, SOMA à quantidade que lá está
-                            UPDATE PedidoPacote 
-                            SET Quantidade = Quantidade + @Quantidade 
-                            WHERE IDPedReg = @IDPedReg AND IDEPI = @IDEPI;
-                            END
-                            ELSE
-                            BEGIN
-                            -- Se não existe, INSERE uma nova linha
-                            INSERT INTO PedidoPacote (IDPedReg, IDEPI, Quantidade)
-                            VALUES (@IDPedReg, @IDEPI, @Quantidade);
-                            END", conn, tran);
-                        cmdItem.Parameters.Add("@IDPedReg", SqlDbType.Int);
-                        cmdItem.Parameters.Add("@IDEPI", SqlDbType.Int);
-                        cmdItem.Parameters.Add("@Quantidade", SqlDbType.Int);
-
-                        foreach (var (idEpi, _, qtd) in itens)
-                        {
-                            if (qtd <= 0) continue;
-                            cmdItem.Parameters["@IDPedReg"].Value = idPedReg;
-                            cmdItem.Parameters["@IDEPI"].Value = idEpi;
-                            cmdItem.Parameters["@Quantidade"].Value = qtd;
-                            cmdItem.ExecuteNonQuery();
-                        }
-
-                        tran.Commit();
-                        return idPedReg;
-                    }
-                    catch
-                    {
-                        tran.Rollback();
-                        throw;
-                    }
-                }
-            }
-        }
-
-        public int SubmeterEntregaNovo(int nrFunc, List<(int idRoupa, string tamanho, int qtd)> itens)
-        {
-            using (var conn = GetConn.GetConnection())
-            {
-                conn.Open();
-                using (var tran = conn.BeginTransaction())
-                {
-                    try
-                    {
-                        var cmdReg = new SqlCommand(@"
-                            INSERT INTO PedidoRegistos (Data, NrFunc, Estado)
-                            OUTPUT INSERTED.ID
-                            VALUES (@Data, @NrFunc, 'Pendente');", conn, tran);
-                        cmdReg.Parameters.AddWithValue("@Data", DateTime.Now);
-                        cmdReg.Parameters.AddWithValue("@NrFunc", nrFunc);
-
-                        int idPedReg = Convert.ToInt32(cmdReg.ExecuteScalar());
-
-                        var cmdItem = new SqlCommand(@"
-                            IF EXISTS (SELECT 1 FROM RoupaPacote WHERE IDPedReg = @IDPedReg AND IDRoupa = @IDRoupa)
-                            BEGIN
-                            -- Se já existe, SOMA à quantidade
-                            UPDATE RoupaPacote 
-                            SET Quantidade = Quantidade + @Quantidade 
-                            WHERE IDPedReg = @IDPedReg AND IDRoupa = @IDRoupa;
-                            END
-                            ELSE
-                            BEGIN
-                            -- Se não existe, INSERE uma nova linha
-                            INSERT INTO RoupaPacote (IDPedReg, IDRoupa, Quantidade)
-                            VALUES (@IDPedReg, @IDRoupa, @Quantidade);
-                            END", conn, tran);
-                        cmdItem.Parameters.Add("@IDPedReg", SqlDbType.Int);
-                        cmdItem.Parameters.Add("@IDRoupa", SqlDbType.Int);
-                        cmdItem.Parameters.Add("@Quantidade", SqlDbType.Int);
-
-                        foreach (var (idRoupa, _, qtd) in itens)
-                        {
-                            if (qtd <= 0) continue;
-                            cmdItem.Parameters["@IDPedReg"].Value = idPedReg;
-                            cmdItem.Parameters["@IDRoupa"].Value = idRoupa;
-                            cmdItem.Parameters["@Quantidade"].Value = qtd;
-                            cmdItem.ExecuteNonQuery();
-                        }
-
-                        tran.Commit();
-                        return idPedReg;
-                    }
-                    catch
-                    {
-                        tran.Rollback();
-                        throw;
-                    }
-                }
-            }
-        }
-
-        public void SubmeterPedidoParaPedidoReg(int idPedReg, List<(int idEpi, string tamanho, int qtd)> itens)
-        {
-            using (var conn = GetConn.GetConnection())
-            {
-                conn.Open();
-                using (var tran = conn.BeginTransaction())
-                {
-                    try
-                    {
-                        using (var cmdItem = new SqlCommand(@"
-                            IF EXISTS (SELECT 1 FROM PedidoPacote WHERE IDPedReg = @IDPedReg AND IDEPI = @IDEPI)
-                            BEGIN
-                            -- Se já existe, SOMA à quantidade que lá está
-                            UPDATE PedidoPacote 
-                            SET Quantidade = Quantidade + @Quantidade 
-                            WHERE IDPedReg = @IDPedReg AND IDEPI = @IDEPI;
-                            END
-                            ELSE
-                            BEGIN
-                            -- Se não existe, INSERE uma nova linha
-                            INSERT INTO PedidoPacote (IDPedReg, IDEPI, Quantidade)
-                            VALUES (@IDPedReg, @IDEPI, @Quantidade);
-                            END", conn, tran))
-                        {
-                            cmdItem.Parameters.Add("@IDPedReg", SqlDbType.Int);
-                            cmdItem.Parameters.Add("@IDEPI", SqlDbType.Int);
-                            cmdItem.Parameters.Add("@Quantidade", SqlDbType.Int);
-
-                            foreach (var (idEpi, _, qtd) in itens)
-                            {
-                                if (qtd <= 0) continue;
-                                cmdItem.Parameters["@IDPedReg"].Value = idPedReg;
-                                cmdItem.Parameters["@IDEPI"].Value = idEpi;
-                                cmdItem.Parameters["@Quantidade"].Value = qtd;
-                                cmdItem.ExecuteNonQuery();
-                            }
-                        }
-                        tran.Commit();
-                    }
-                    catch
-                    {
-                        tran.Rollback();
-                        throw;
-                    }
-                }
-            }
-        }
-
-        public void AtualizarTamanhoPadraoFuncionario(int nrFunc, int idEpi, string novoTamanho)
+        // ATENÇÃO: Mudou de int idEpi para string codigoEpi
+        public void AtualizarTamanhoPadraoFuncionario(int nrFunc, string codigoEpi, string novoTamanho)
         {
             try
             {
@@ -440,53 +316,31 @@ namespace PEPIDI
                 {
                     conn.Open();
 
-                    // 1. Descobrir a Família do EPI na base de dados
                     string familia = "";
-                    using (var cmdBusca = new Microsoft.Data.SqlClient.SqlCommand("SELECT Familia FROM EPI WHERE ID = @IDEPI", conn))
+                    // Procura por Codigo em vez de ID
+                    using (var cmdBusca = new SqlCommand("SELECT Familia FROM EPI WHERE Codigo = @Codigo", conn))
                     {
-                        cmdBusca.Parameters.AddWithValue("@IDEPI", idEpi);
+                        cmdBusca.Parameters.AddWithValue("@Codigo", codigoEpi);
                         var result = cmdBusca.ExecuteScalar();
 
-                        // Se encontrou a família, guarda em minúsculas para ser mais fácil de comparar
                         if (result != null)
                             familia = result.ToString().ToLower().Trim();
                     }
 
-                    // Se o artigo não tiver família, aborta a missão em segurança.
                     if (string.IsNullOrEmpty(familia)) return;
 
-                    // 2. Mapear a Família para a Coluna da tabela Funcionarios
                     string colunaTabela = "";
+                    if (familia.Contains("t-shirt") || familia.Contains("tshirt")) colunaTabela = "TShirt";
+                    else if (familia.Contains("casaco")) colunaTabela = "Casaco";
+                    else if (familia.Contains("polo manga curta") || familia.Contains("polo m. curta")) colunaTabela = "PoloMCurta";
+                    else if (familia.Contains("polo manga comprida") || familia.Contains("polo m. comprida")) colunaTabela = "PoloMCompr";
+                    else if (familia.Contains("calça") || familia.Contains("calca")) colunaTabela = "Calca";
+                    else if (familia.Contains("sapato") || familia.Contains("calçado") || familia.Contains("bota")) colunaTabela = "Sapato";
+                    else if (familia.Contains("bata")) colunaTabela = "Bata";
+                    else return;
 
-                    // Agora avaliamos pela FAMÍLIA e não pelo nome do Modelo!
-                    if (familia.Contains("t-shirt") || familia.Contains("tshirt"))
-                        colunaTabela = "TShirt";
-
-                    else if (familia.Contains("casaco"))
-                        colunaTabela = "Casaco";
-
-                    else if (familia.Contains("polo manga curta") || familia.Contains("polo m. curta"))
-                        colunaTabela = "PoloMCurta";
-
-                    else if (familia.Contains("polo manga comprida") || familia.Contains("polo m. comprida"))
-                        colunaTabela = "PoloMCompr";
-
-                    else if (familia.Contains("calça") || familia.Contains("calca"))
-                        colunaTabela = "Calca";
-
-                    // Aqui podes apanhar a família inteira do calçado (sapatos, botas, socas, etc)
-                    else if (familia.Contains("sapato") || familia.Contains("calçado") || familia.Contains("bota"))
-                        colunaTabela = "Sapato";
-
-                    else if (familia.Contains("bata"))
-                        colunaTabela = "Bata";
-
-                    else
-                        return; // Família não mapeada para gravar tamanho
-
-                    // 3. Atualizar o funcionário na Base de Dados
                     string query = $"UPDATE Funcionarios SET {colunaTabela} = @Tamanho WHERE Nr = @NrFunc";
-                    using (var cmdUpdate = new Microsoft.Data.SqlClient.SqlCommand(query, conn))
+                    using (var cmdUpdate = new SqlCommand(query, conn))
                     {
                         cmdUpdate.Parameters.AddWithValue("@Tamanho", novoTamanho);
                         cmdUpdate.Parameters.AddWithValue("@NrFunc", nrFunc);
@@ -494,26 +348,21 @@ namespace PEPIDI
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                // Ignoramos silenciosamente para que um erro na gravação do tamanho 
-                // não impeça o utilizador de fazer o pedido!
-            }
+            catch { /* Ignorado silenciosamente */ }
         }
 
         public string ObterUltimoModeloConsumidoPorFamilia(int nrFunc, string familia)
         {
             using (SqlConnection conn = GetConn.GetConnection())
             {
-                // Procuramos no histórico de pedidos (PedidoPacote + PedidoRegistos) 
-                // o modelo mais recente de uma determinada família
+                // AQUI: Trocámos PP.IDEPI = E.ID por PP.CodigoEPI = E.Codigo
                 string sql = @"
-            SELECT TOP 1 E.Modelo 
-            FROM PedidoPacote PP
-            INNER JOIN PedidoRegistos PR ON PP.IDPedReg = PR.ID
-            INNER JOIN EPI E ON PP.IDEPI = E.ID
-            WHERE PR.NrFunc = @nr AND E.Familia = @fam
-            ORDER BY PR.Data DESC, PR.ID DESC";
+        SELECT TOP 1 E.Modelo 
+        FROM PedidoPacote PP
+        INNER JOIN PedidoRegistos PR ON PP.IDPedReg = PR.ID
+        INNER JOIN EPI E ON PP.CodigoEPI = E.Codigo 
+        WHERE PR.NrFunc = @nr AND E.Familia = @fam
+        ORDER BY PR.Data DESC, PR.ID DESC";
 
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
@@ -522,54 +371,6 @@ namespace PEPIDI
                     conn.Open();
                     object res = cmd.ExecuteScalar();
                     return res?.ToString() ?? string.Empty;
-                }
-            }
-        }
-
-        public void SubmeterEntregaParaPedidoReg(int idPedReg, List<(int idRoupa, string tamanho, int qtd)> itens)
-        {
-            using (var conn = GetConn.GetConnection())
-            {
-                conn.Open();
-                using (var tran = conn.BeginTransaction())
-                {
-                    try
-                    {
-                        using (var cmdItem = new SqlCommand(@"
-                            IF EXISTS (SELECT 1 FROM RoupaPacote WHERE IDPedReg = @IDPedReg AND IDRoupa = @IDRoupa)
-                            BEGIN
-                            -- Se já existe, SOMA à quantidade
-                            UPDATE RoupaPacote 
-                            SET Quantidade = Quantidade + @Quantidade 
-                            WHERE IDPedReg = @IDPedReg AND IDRoupa = @IDRoupa;
-                            END
-                            ELSE
-                            BEGIN
-                            -- Se não existe, INSERE uma nova linha
-                            INSERT INTO RoupaPacote (IDPedReg, IDRoupa, Quantidade)
-                            VALUES (@IDPedReg, @IDRoupa, @Quantidade);
-                            END", conn, tran))
-                        {
-                            cmdItem.Parameters.Add("@IDPedReg", SqlDbType.Int);
-                            cmdItem.Parameters.Add("@IDRoupa", SqlDbType.Int);
-                            cmdItem.Parameters.Add("@Quantidade", SqlDbType.Int);
-
-                            foreach (var (idRoupa, _, qtd) in itens)
-                            {
-                                if (qtd <= 0) continue;
-                                cmdItem.Parameters["@IDPedReg"].Value = idPedReg;
-                                cmdItem.Parameters["@IDRoupa"].Value = idRoupa;
-                                cmdItem.Parameters["@Quantidade"].Value = qtd;
-                                cmdItem.ExecuteNonQuery();
-                            }
-                        }
-                        tran.Commit();
-                    }
-                    catch
-                    {
-                        tran.Rollback();
-                        throw;
-                    }
                 }
             }
         }

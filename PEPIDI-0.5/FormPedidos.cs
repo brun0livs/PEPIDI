@@ -29,9 +29,9 @@ namespace PEPIDI
         // ----------------- CLASSES DE SESSÃO -----------------
         private class LinhaSessao
         {
-            public int IdEpiOriginal { get; set; }   // IDEPI que veio da SP
             public string Modelo { get; set; }
             public string Tamanho { get; set; }
+            public string Cor { get; set; }
             public int Quantidade { get; set; }
         }
 
@@ -160,6 +160,8 @@ namespace PEPIDI
             comboT.Refresh();
         }
 
+
+
         private void AtualizarNavButtons()
         {
             Nav1.Checked = _modoAtual == ModoPedidos.Pedido;
@@ -243,6 +245,7 @@ namespace PEPIDI
                     // Importante: ResolveEpiIdPorModeloTamanho vai garantir o ID correto do Wurth
                     Modelo = modeloFinal,
                     Tamanho = tamanho,
+                    Cor = info.Cor,
                     Quantidade = qtd
                 });
             }
@@ -252,12 +255,10 @@ namespace PEPIDI
         {
             try
             {
-                if (_mr == null)
-                    _mr = new MostraRoupa();
-                if (_sessao == null)
-                    _sessao = new SessaoPedido();
+                if (_mr == null) _mr = new MostraRoupa();
+                if (_sessao == null) _sessao = new SessaoPedido();
 
-                // Garante que o que está no modo visível também é guardado
+                // Guardar o que o utilizador selecionou no ecrã
                 GuardarEstadoModoAtual();
 
                 var itensPedido = _sessao.Pedido.ToList();
@@ -269,75 +270,55 @@ namespace PEPIDI
                     return;
                 }
 
-                // ----- Resolver IDs e validar devoluções -----
-
-                var listaPedidoInsert = new List<(int idEpi, string tamanho, int qtd)>();
-                // No loop do btnSubmeter_Click
+                // ----- 1. PREPARAR PEDIDOS (Usando Código em vez de ID) -----
+                var listaPedidoInsert = new List<(string codigoEpi, int qtd)>();
                 foreach (var it in itensPedido)
                 {
-                    // EM VEZ DE: int idEpi = it.IdEpiOriginal;
-                    // VAMOS FAZER:
-                    int idEpi = _mr.ResolveEpiIdPorModeloTamanho(it.Modelo, it.Tamanho);
+                    string codigoEpi = _mr.ResolveCodigoEpi(it.Modelo, it.Tamanho, it.Cor);
 
-                    if (idEpi <= 0)
+                    if (string.IsNullOrEmpty(codigoEpi))
                     {
-                        M.AbrirMensagem($"Erro ao validar ID para {it.Modelo} {it.Tamanho}.", "Erro");
+                        // Agora o erro vai dizer-te a cor e vai meter umas aspas para veres se há espaços invisíveis!
+                        M.AbrirMensagem($"Erro: Não encontrei Código para Modelo: '{it.Modelo}' | Tam: '{it.Tamanho}' | Cor: '{it.Cor}'", "Erro");
                         return;
                     }
 
-                    listaPedidoInsert.Add((idEpi, it.Tamanho, it.Quantidade));
-                    _mr.AtualizarTamanhoPadraoFuncionario(_nrFunc, idEpi, it.Tamanho);
+                    listaPedidoInsert.Add((codigoEpi, it.Quantidade));
+                    // Opcional: _mr.AtualizarTamanhoPadraoFuncionario(_nrFunc, codigoEpi, it.Tamanho);
                 }
 
-                var listaDevInsert = new List<(int idRoupa, string tamanho, int qtd)>();
+                // ----- 2. PREPARAR DEVOLUÇÕES (Usando Código em vez de ID) -----
+                var listaDevInsert = new List<(string codigoEpi, int qtd)>();
                 foreach (var it in itensDevolucao)
                 {
-                    int maxDevolver = _mr.GetConsumidoDisponivel(_nrFunc, it.IdEpiOriginal);
-                    if (it.Quantidade > maxDevolver)
+                    string codigoEpi = _mr.ResolveCodigoEpi(it.Modelo, it.Tamanho, it.Cor);
+
+                    if (string.IsNullOrEmpty(codigoEpi))
                     {
-                        M.AbrirMensagem(
-                            $"{it.Modelo} {it.Tamanho}: a devolver {it.Quantidade} excede o usado ({maxDevolver}).", "Erro");
+                        M.AbrirMensagem($"Erro: Não encontrei Código para {it.Modelo} {it.Tamanho}.", "Erro");
                         return;
                     }
 
-                    int idRoupa = _mr.ResolveRoupaIdPorModeloTamanho(it.Modelo, it.Tamanho);
-                    if (idRoupa <= 0)
-                    {
-                        M.AbrirMensagem($"Não encontrei Roupa para {it.Modelo} - {it.Tamanho}. Operação cancelada.", "Erro");
-                        return;
-                    }
-
-                    listaDevInsert.Add((idRoupa, it.Tamanho, it.Quantidade));
+                    listaDevInsert.Add((codigoEpi, it.Quantidade));
                 }
 
-                // ----- Ir buscar/criar PedidoRegistos pendente -----
+                // ----- 3. CRIAR/OBTER CABEÇALHO DO PEDIDO -----
+                int idPedReg = _sessao.IdPedidoReg ?? _mr.GetOrCreatePedidoPendente(_nrFunc);
+                _sessao.IdPedidoReg = idPedReg;
 
-                int idPedReg;
-                if (_sessao.IdPedidoReg.HasValue)
-                {
-                    idPedReg = _sessao.IdPedidoReg.Value;
-                }
-                else
-                {
-                    idPedReg = _mr.GetOrCreatePedidoPendente(_nrFunc);
-                    _sessao.IdPedidoReg = idPedReg;
-                }
-
-                // ----- Gravar itens nas duas tabelas com o MESMO IDPedReg -----
-
+                // ----- 4. GRAVAR NA BD (INSERTS CEGOS) -----
                 if (listaPedidoInsert.Any())
-                    _mr.SubmeterPedidoParaPedidoReg(idPedReg, listaPedidoInsert);
+                    _mr.GravarPedidosCegos(idPedReg, listaPedidoInsert);
 
                 if (listaDevInsert.Any())
-                    _mr.SubmeterEntregaParaPedidoReg(idPedReg, listaDevInsert);
+                    _mr.GravarDevolucoesCegas(idPedReg, listaDevInsert);
 
                 M.AbrirMensagem("Pedido submetido com sucesso!", "Sucesso");
-
                 this.Close();
             }
             catch (Exception ex)
             {
-                M.AbrirMensagem("Erro ao submeter pedido:\n\n" + ex, "Erro");
+                M.AbrirMensagem("Erro ao submeter pedido:\n\n" + ex.Message, "Erro SQL");
             }
         }
 

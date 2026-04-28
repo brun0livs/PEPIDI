@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using Guna.UI2.WinForms;
+using System.Data;
 
 namespace PEPIDI.UCs.DGVS
 {
@@ -123,8 +125,8 @@ namespace PEPIDI.UCs.DGVS
                 chkEntregar.Dock = DockStyle.Fill;
 
                 // Ajusta layout
-                tableLayoutPanel1.ColumnStyles[3].Width = 0F;  // Coluna da Combo (some)
-                tableLayoutPanel1.ColumnStyles[4].Width = 20F; // Coluna da Check (aparece)
+                tableLayoutPanel1.ColumnStyles[4].Width = 0F;  // Coluna da Combo (some)
+                tableLayoutPanel1.ColumnStyles[5].Width = 15F; // Coluna da Check (aparece)
 
                 // Lógica de Stock
                 if (QD <= 0)
@@ -149,8 +151,8 @@ namespace PEPIDI.UCs.DGVS
                 cmbQuant.Dock = DockStyle.Top;
 
                 // Ajusta layout
-                tableLayoutPanel1.ColumnStyles[3].Width = 20F; // Coluna da Combo (aparece)
-                tableLayoutPanel1.ColumnStyles[4].Width = 0F;  // Coluna da Check (some)
+                tableLayoutPanel1.ColumnStyles[4].Width = 15F; // Coluna da Combo (aparece)
+                tableLayoutPanel1.ColumnStyles[5].Width = 0F;  // Coluna da Check (some)
 
                 ConfigurarModoEdicao();
             }
@@ -171,6 +173,24 @@ namespace PEPIDI.UCs.DGVS
             // Seleciona a quantidade pedida (QA) ou o máximo possível se QA > Stock
             int valorParaSelecionar = (QA > limiteMaximo) ? limiteMaximo : QA;
             cmbQuant.Text = valorParaSelecionar.ToString();
+
+            Configura(cmbEstado);
+        }
+
+        private void Configura(Guna2ComboBox combo)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Texto");
+            dt.Columns.Add("Valor", typeof(int));
+
+            dt.Rows.Add("Novo", 1);
+            dt.Rows.Add("Usado", 2);
+
+            combo.DataSource = dt;
+            combo.DisplayMember = "Texto";
+            combo.ValueMember = "Valor";
+
+            combo.SelectedIndex = 0;
         }
 
         private void CmbQuant_SelectedIndexChanged(object sender, EventArgs e)
