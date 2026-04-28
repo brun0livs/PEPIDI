@@ -45,9 +45,9 @@
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 4;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.5F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 27.5F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.5F));
             tableLayoutPanel1.Controls.Add(cmbEstado, 2, 0);
             tableLayoutPanel1.Controls.Add(lblQuantDevolvida, 3, 0);
@@ -78,11 +78,11 @@
             cmbEstado.ForeColor = Color.FromArgb(64, 64, 64);
             cmbEstado.IntegralHeight = false;
             cmbEstado.ItemHeight = 29;
-            cmbEstado.Location = new Point(331, 3);
+            cmbEstado.Location = new Point(301, 3);
             cmbEstado.Margin = new Padding(5, 3, 5, 0);
             cmbEstado.Name = "cmbEstado";
             cmbEstado.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            cmbEstado.Size = new Size(123, 35);
+            cmbEstado.Size = new Size(153, 35);
             cmbEstado.TabIndex = 4;
             cmbEstado.TextAlign = HorizontalAlignment.Center;
             // 
@@ -105,7 +105,7 @@
             lblTamanho.Dock = DockStyle.Fill;
             lblTamanho.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblTamanho.ForeColor = Color.FromArgb(64, 64, 64);
-            lblTamanho.Location = new Point(240, 0);
+            lblTamanho.Location = new Point(210, 0);
             lblTamanho.Name = "lblTamanho";
             lblTamanho.Size = new Size(83, 40);
             lblTamanho.TabIndex = 1;
@@ -120,7 +120,7 @@
             lblModelo.ForeColor = Color.FromArgb(64, 64, 64);
             lblModelo.Location = new Point(3, 0);
             lblModelo.Name = "lblModelo";
-            lblModelo.Size = new Size(231, 40);
+            lblModelo.Size = new Size(201, 40);
             lblModelo.TabIndex = 0;
             lblModelo.Text = "Modelo";
             lblModelo.TextAlign = ContentAlignment.MiddleCenter;

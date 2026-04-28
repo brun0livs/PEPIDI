@@ -151,9 +151,9 @@
             // 
             tableLayoutPanel5.BackColor = Color.Transparent;
             tableLayoutPanel5.ColumnCount = 4;
-            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
             tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
-            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.5F));
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 27.5F));
             tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.5F));
             tableLayoutPanel5.Controls.Add(lblDGVEstado2, 2, 0);
             tableLayoutPanel5.Controls.Add(lblDGVModelo2, 0, 0);
@@ -174,10 +174,10 @@
             lblDGVEstado2.Dock = DockStyle.Fill;
             lblDGVEstado2.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
             lblDGVEstado2.ForeColor = Color.FromArgb(64, 64, 64);
-            lblDGVEstado2.Location = new Point(356, 0);
+            lblDGVEstado2.Location = new Point(324, 0);
             lblDGVEstado2.Margin = new Padding(0);
             lblDGVEstado2.Name = "lblDGVEstado2";
-            lblDGVEstado2.Size = new Size(146, 46);
+            lblDGVEstado2.Size = new Size(178, 46);
             lblDGVEstado2.TabIndex = 5;
             lblDGVEstado2.Text = "Estado";
             lblDGVEstado2.TextAlign = ContentAlignment.MiddleCenter;
@@ -191,7 +191,7 @@
             lblDGVModelo2.Location = new Point(0, 0);
             lblDGVModelo2.Margin = new Padding(0);
             lblDGVModelo2.Name = "lblDGVModelo2";
-            lblDGVModelo2.Size = new Size(259, 46);
+            lblDGVModelo2.Size = new Size(227, 46);
             lblDGVModelo2.TabIndex = 0;
             lblDGVModelo2.Text = "Modelo";
             lblDGVModelo2.TextAlign = ContentAlignment.MiddleCenter;
@@ -202,7 +202,7 @@
             lblDGVTamanho2.Dock = DockStyle.Fill;
             lblDGVTamanho2.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
             lblDGVTamanho2.ForeColor = Color.FromArgb(64, 64, 64);
-            lblDGVTamanho2.Location = new Point(259, 0);
+            lblDGVTamanho2.Location = new Point(227, 0);
             lblDGVTamanho2.Margin = new Padding(0);
             lblDGVTamanho2.Name = "lblDGVTamanho2";
             lblDGVTamanho2.Size = new Size(97, 46);
@@ -469,9 +469,9 @@
             // 
             tableLayoutPanel3.BackColor = Color.Transparent;
             tableLayoutPanel3.ColumnCount = 5;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
             tableLayoutPanel3.Controls.Add(lblDGVEstado, 2, 0);
@@ -494,10 +494,10 @@
             lblDGVEstado.Dock = DockStyle.Fill;
             lblDGVEstado.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
             lblDGVEstado.ForeColor = Color.FromArgb(64, 64, 64);
-            lblDGVEstado.Location = new Point(356, 0);
+            lblDGVEstado.Location = new Point(324, 0);
             lblDGVEstado.Margin = new Padding(0);
             lblDGVEstado.Name = "lblDGVEstado";
-            lblDGVEstado.Size = new Size(97, 46);
+            lblDGVEstado.Size = new Size(129, 46);
             lblDGVEstado.TabIndex = 4;
             lblDGVEstado.Text = "Estado";
             lblDGVEstado.TextAlign = ContentAlignment.MiddleCenter;
@@ -511,7 +511,7 @@
             lblDGVModelo.Location = new Point(0, 0);
             lblDGVModelo.Margin = new Padding(0);
             lblDGVModelo.Name = "lblDGVModelo";
-            lblDGVModelo.Size = new Size(259, 46);
+            lblDGVModelo.Size = new Size(227, 46);
             lblDGVModelo.TabIndex = 0;
             lblDGVModelo.Text = "Modelo";
             lblDGVModelo.TextAlign = ContentAlignment.MiddleCenter;
@@ -522,7 +522,7 @@
             lblDGVTamanho.Dock = DockStyle.Fill;
             lblDGVTamanho.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold);
             lblDGVTamanho.ForeColor = Color.FromArgb(64, 64, 64);
-            lblDGVTamanho.Location = new Point(259, 0);
+            lblDGVTamanho.Location = new Point(227, 0);
             lblDGVTamanho.Margin = new Padding(0);
             lblDGVTamanho.Name = "lblDGVTamanho";
             lblDGVTamanho.Size = new Size(97, 46);

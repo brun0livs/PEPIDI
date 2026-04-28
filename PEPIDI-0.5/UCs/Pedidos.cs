@@ -272,8 +272,7 @@ namespace PEPIDI.UCs
 
             if (idsSelecionados.Count == 0) return;
 
-            // 2. Query à Base de Dados para obter Itens COM DADOS DO FUNCIONÁRIO
-            // (A lista agora pede 5 dados: NMEC, Nome, Modelo, Tamanho, Qtd)
+            /// 2. Query à Base de Dados para obter Itens COM DADOS DO FUNCIONÁRIO
             var listaArmazem = new List<(string NMEC, string Nome, string Modelo, string Tamanho, int Qtd)>();
 
             using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
@@ -283,21 +282,24 @@ namespace PEPIDI.UCs
                 // Injeta os IDs na cláusula IN de forma segura
                 string inClause = string.Join(",", idsSelecionados);
 
-                // QUERY: Junta a tabela EPI, mas também PedidoRegistos e Funcionários para saber de quem é a roupa
+                // QUERY: Adicionámos o LEFT JOIN com a tabela Stock para sabermos o Estado (1=Novo, 2=Usado)
+                // QUERY: Trocámos o E.ID pelo E.Codigo, que é a verdadeira chave da tua tabela EPI!
                 string sql = $@"
-            SELECT 
-                F.Nr AS NrFunc, 
-                F.Nome, 
-                E.Modelo, 
-                E.Tamanho, 
-                SUM(PP.Quantidade) AS QtdTotal
-            FROM PedidoPacote PP
-            INNER JOIN EPI E ON PP.IDEPI = E.ID
-            INNER JOIN PedidoRegistos PR ON PP.IDPedReg = PR.ID
-            INNER JOIN Funcionarios F ON PR.NrFunc = F.Nr
-            WHERE PP.IDPedReg IN ({inClause}) AND PP.Quantidade > 0
-            GROUP BY F.Nr, F.Nome, E.Modelo, E.Tamanho
-            ORDER BY F.Nome, E.Modelo, E.Tamanho";
+                        SELECT 
+                            F.Nr AS NrFunc, 
+                            F.Nome, 
+                            E.Modelo, 
+                            E.Tamanho, 
+                            S.Estado,
+                            SUM(PP.Quantidade) AS QtdTotal
+                        FROM PedidoPacote PP
+                        INNER JOIN EPI E ON PP.CodigoEPI = E.Codigo
+                        INNER JOIN PedidoRegistos PR ON PP.IDPedReg = PR.ID
+                        INNER JOIN Funcionarios F ON PR.NrFunc = F.Nr
+                        LEFT JOIN Stock S ON PP.IDStock = S.ID
+                        WHERE PP.IDPedReg IN ({inClause}) AND PP.Quantidade > 0
+                        GROUP BY F.Nr, F.Nome, E.Modelo, E.Tamanho, S.Estado
+                        ORDER BY F.Nome, E.Modelo, E.Tamanho";
 
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
@@ -305,10 +307,19 @@ namespace PEPIDI.UCs
                     {
                         while (reader.Read())
                         {
+                            string modeloBase = reader["Modelo"]?.ToString() ?? "Artigo";
+
+                            // Lemos o estado (Se vier NULL assumimos 1 - Novo)
+                            int idEstado = reader["Estado"] != DBNull.Value ? Convert.ToInt32(reader["Estado"]) : 1;
+
+                            // Colamos a etiqueta [NOVO] ou [USADO] à frente do modelo para o gajo do armazém não se enganar!
+                            string etiquetaEstado = (idEstado == 2) ? " [USADO]" : " [NOVO]";
+                            string modeloComEstado = modeloBase + etiquetaEstado;
+
                             listaArmazem.Add((
                                 reader["NrFunc"]?.ToString() ?? "0000",
                                 reader["Nome"]?.ToString() ?? "Desconhecido",
-                                reader["Modelo"]?.ToString() ?? "Artigo",
+                                modeloComEstado, // <-- Entra aqui já com a etiqueta colada!
                                 reader["Tamanho"]?.ToString() ?? "-",
                                 Convert.ToInt32(reader["QtdTotal"])
                             ));

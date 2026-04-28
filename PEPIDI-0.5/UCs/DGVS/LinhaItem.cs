@@ -32,10 +32,24 @@ namespace PEPIDI.UCs.DGVS
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int QuantidadeOriginal { get; set; }
 
+        // --- AS DUAS PROPRIEDADES NOVAS PARA O MODO "GESTÃO INTELIGENTE" ---
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public string ObservacoesAutomaticas { get; set; } = "";
+
+        public string EstadoSelecionado
+        {
+            get { return cmbEstado != null ? cmbEstado.Text : "Novo"; }
+        }
+        public bool EstadoForcadoPeloSistema
+        {
+            get { return cmbEstado != null && !cmbEstado.Enabled; }
+        }
+
         // Evento para avisar o pai que algo mudou
         public event EventHandler QuantidadeAlterada;
+        public event EventHandler EstadoAlterado;
 
-        // --- PROPRIEDADES DE ACESSO PÚBLICO (CORRIGIDAS) ---
+        // --- PROPRIEDADES DE ACESSO PÚBLICO ---
 
         // 1. Descrição do Artigo
         public string DescricaoArtigo
@@ -55,7 +69,7 @@ namespace PEPIDI.UCs.DGVS
             get { return chkEntregar.Checked; }
         }
 
-        // 4. Quantidade Selecionada (A CORREÇÃO CRÍTICA ESTÁ AQUI)
+        // 4. Quantidade Selecionada
         public int QuantidadeSelecionada
         {
             get
@@ -110,12 +124,6 @@ namespace PEPIDI.UCs.DGVS
             lblTamanho.Text = T;
             lblQuantDisp.Text = (EstadoLinha == "Aprovado") ? QA.ToString() : QD.ToString();
 
-            // Configuração das colunas (garante que o TableLayoutPanel existe no designer)
-            tableLayoutPanel1.ColumnStyles[0].SizeType = SizeType.Percent;
-            tableLayoutPanel1.ColumnStyles[0].Width = 40F; // Modelo
-            tableLayoutPanel1.ColumnStyles[1].Width = 20F; // Tamanho
-            tableLayoutPanel1.ColumnStyles[2].Width = 20F; // Quant. Disp
-
             // 2. Configurar Estado
             if (EstadoLinha == "Aprovado")
             {
@@ -124,8 +132,11 @@ namespace PEPIDI.UCs.DGVS
                 chkEntregar.Visible = true;
                 chkEntregar.Dock = DockStyle.Fill;
 
+                // Esconde a Combo de Estado (Novo/Usado) porque na entrega não interessa
+                if (cmbEstado != null) cmbEstado.Visible = false;
+
                 // Ajusta layout
-                tableLayoutPanel1.ColumnStyles[4].Width = 0F;  // Coluna da Combo (some)
+                tableLayoutPanel1.ColumnStyles[4].Width = 0F;  // Coluna da Combo Quantidade (some)
                 tableLayoutPanel1.ColumnStyles[5].Width = 15F; // Coluna da Check (aparece)
 
                 // Lógica de Stock
@@ -149,6 +160,8 @@ namespace PEPIDI.UCs.DGVS
                 cmbQuant.Visible = true;
                 chkEntregar.Visible = false;
                 cmbQuant.Dock = DockStyle.Top;
+
+                if (cmbEstado != null) cmbEstado.Visible = true;
 
                 // Ajusta layout
                 tableLayoutPanel1.ColumnStyles[4].Width = 15F; // Coluna da Combo (aparece)
@@ -174,28 +187,18 @@ namespace PEPIDI.UCs.DGVS
             int valorParaSelecionar = (QA > limiteMaximo) ? limiteMaximo : QA;
             cmbQuant.Text = valorParaSelecionar.ToString();
 
-            Configura(cmbEstado);
-        }
-
-        private void Configura(Guna2ComboBox combo)
-        {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("Texto");
-            dt.Columns.Add("Valor", typeof(int));
-
-            dt.Rows.Add("Novo", 1);
-            dt.Rows.Add("Usado", 2);
-
-            combo.DataSource = dt;
-            combo.DisplayMember = "Texto";
-            combo.ValueMember = "Valor";
-
-            combo.SelectedIndex = 0;
+            // ATENÇÃO: Apaguei o "Configura(cmbEstado);" daqui porque estava a esmagar a lógica do ConfigurarSugestaoStock!
         }
 
         private void CmbQuant_SelectedIndexChanged(object sender, EventArgs e)
         {
             QuantidadeAlterada?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void cmbEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Avisa o Form Principal que o estado mudou!
+            EstadoAlterado?.Invoke(this, EventArgs.Empty);
         }
 
         private void ChkEntregar_CheckedChanged(object sender, EventArgs e)
@@ -204,6 +207,56 @@ namespace PEPIDI.UCs.DGVS
             this.BackColor = chkEntregar.Checked ? Color.FromArgb(224, 224, 224) : Color.MistyRose;
 
             QuantidadeAlterada?.Invoke(this, EventArgs.Empty);
+        }
+
+        // =========================================================================
+        // O CÉREBRO DA SUGESTÃO DE STOCK (Chamado pelo Formulário Pai)
+        // =========================================================================
+        public void ConfigurarSugestaoStock(int qtdNovo, int qtdUsado)
+        {
+            if (cmbEstado == null) return;
+
+            // Desliga os eventos temporariamente se necessário, mas aqui a ordem resolve.
+            cmbEstado.DataSource = null;
+            cmbEstado.Items.Clear();
+            this.ObservacoesAutomaticas = "";
+
+            bool temNovo = qtdNovo > 0;
+            bool temUsado = qtdUsado > 0;
+
+            if (temNovo && temUsado)
+            {
+                // CASO 1: Existem os dois tipos (Padrão Novo)
+                cmbEstado.Items.Add("Novo");
+                cmbEstado.Items.Add("Usado");
+                cmbEstado.Enabled = true;    // 1º Define o estado (Destrancado)
+                cmbEstado.SelectedIndex = 0; // 2º Dispara o evento
+            }
+            else if (temNovo)
+            {
+                // CASO 2: Só existe Novo
+                cmbEstado.Items.Add("Novo");
+                cmbEstado.Enabled = false;   // 1º Tranca
+                cmbEstado.SelectedIndex = 0; // 2º Dispara o evento
+            }
+            else if (temUsado)
+            {
+                // CASO 3: Só existe Usado
+                cmbEstado.Items.Add("Usado");
+
+                cmbEstado.Enabled = false; // 1º TRANCA LOGO!
+                this.ObservacoesAutomaticas = " (sem stock de novo)"; // 2º PREPARA A MENSAGEM!
+
+                cmbEstado.SelectedIndex = 0; // 3º AGORA SIM, DISPARA O EVENTO! (Ele já vai ler que está trancado)
+            }
+            else
+            {
+                // CASO 4: Não há stock de nenhum!
+                cmbEstado.Items.Add("SEM STOCK");
+                this.BackColor = Color.MistyRose;
+
+                if (cmbEstado.Items.Count > 0) cmbEstado.SelectedIndex = 0;
+            }
         }
     }
 }

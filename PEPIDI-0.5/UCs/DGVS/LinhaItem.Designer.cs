@@ -64,9 +64,9 @@
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 6;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7.5F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7.5F));
@@ -101,13 +101,14 @@
             cmbEstado.ForeColor = Color.FromArgb(64, 64, 64);
             cmbEstado.IntegralHeight = false;
             cmbEstado.ItemHeight = 29;
-            cmbEstado.Location = new Point(331, 3);
-            cmbEstado.Margin = new Padding(5, 3, 5, 0);
+            cmbEstado.Location = new Point(296, 3);
+            cmbEstado.Margin = new Padding(0, 3, 0, 5);
             cmbEstado.Name = "cmbEstado";
             cmbEstado.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            cmbEstado.Size = new Size(79, 35);
+            cmbEstado.Size = new Size(118, 35);
             cmbEstado.TabIndex = 5;
             cmbEstado.TextAlign = HorizontalAlignment.Center;
+            cmbEstado.SelectedIndexChanged += cmbEstado_SelectedIndexChanged;
             // 
             // lblQuantDisp
             // 
@@ -115,9 +116,10 @@
             lblQuantDisp.Dock = DockStyle.Fill;
             lblQuantDisp.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblQuantDisp.ForeColor = Color.FromArgb(64, 64, 64);
-            lblQuantDisp.Location = new Point(418, 0);
+            lblQuantDisp.Location = new Point(414, 0);
+            lblQuantDisp.Margin = new Padding(0);
             lblQuantDisp.Name = "lblQuantDisp";
-            lblQuantDisp.Size = new Size(83, 40);
+            lblQuantDisp.Size = new Size(89, 40);
             lblQuantDisp.TabIndex = 2;
             lblQuantDisp.Text = "Quant";
             lblQuantDisp.TextAlign = ContentAlignment.MiddleCenter;
@@ -128,9 +130,10 @@
             lblTamanho.Dock = DockStyle.Fill;
             lblTamanho.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblTamanho.ForeColor = Color.FromArgb(64, 64, 64);
-            lblTamanho.Location = new Point(240, 0);
+            lblTamanho.Location = new Point(207, 0);
+            lblTamanho.Margin = new Padding(0);
             lblTamanho.Name = "lblTamanho";
-            lblTamanho.Size = new Size(83, 40);
+            lblTamanho.Size = new Size(89, 40);
             lblTamanho.TabIndex = 1;
             lblTamanho.Text = "Tamanho";
             lblTamanho.TextAlign = ContentAlignment.MiddleCenter;
@@ -143,7 +146,7 @@
             lblModelo.ForeColor = Color.FromArgb(64, 64, 64);
             lblModelo.Location = new Point(3, 0);
             lblModelo.Name = "lblModelo";
-            lblModelo.Size = new Size(231, 40);
+            lblModelo.Size = new Size(201, 40);
             lblModelo.TabIndex = 0;
             lblModelo.Text = "Modelo";
             lblModelo.TextAlign = ContentAlignment.MiddleCenter;
@@ -164,13 +167,13 @@
             cmbQuant.ForeColor = Color.FromArgb(64, 64, 64);
             cmbQuant.IntegralHeight = false;
             cmbQuant.ItemHeight = 29;
-            cmbQuant.Location = new Point(507, 3);
-            cmbQuant.Margin = new Padding(3, 3, 13, 3);
+            cmbQuant.Location = new Point(516, 3);
+            cmbQuant.Margin = new Padding(13, 3, 13, 5);
             cmbQuant.Name = "cmbQuant";
             cmbQuant.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            cmbQuant.Size = new Size(28, 35);
+            cmbQuant.Size = new Size(18, 35);
             cmbQuant.TabIndex = 3;
-            cmbQuant.TextAlign = HorizontalAlignment.Center;
+            cmbQuant.TextAlign = HorizontalAlignment.Right;
             cmbQuant.SelectedIndexChanged += CmbQuant_SelectedIndexChanged;
             // 
             // chkEntregar
@@ -179,10 +182,10 @@
             chkEntregar.CheckAlign = ContentAlignment.MiddleCenter;
             chkEntregar.Dock = DockStyle.Fill;
             chkEntregar.Font = new Font("Roboto", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            chkEntregar.Location = new Point(548, 0);
+            chkEntregar.Location = new Point(547, 0);
             chkEntregar.Margin = new Padding(0);
             chkEntregar.Name = "chkEntregar";
-            chkEntregar.Size = new Size(46, 40);
+            chkEntregar.Size = new Size(47, 40);
             chkEntregar.TabIndex = 4;
             chkEntregar.UseVisualStyleBackColor = true;
             // 

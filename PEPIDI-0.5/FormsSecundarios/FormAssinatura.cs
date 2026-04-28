@@ -10,8 +10,10 @@ namespace PEPIDI
     {
         // Variáveis para controlar o desenho da assinatura
         private bool isDrawing = false;
+        private bool assinou = false; // Flag para saber se rabiscou
         private Point lastPoint;
         private Bitmap signatureBitmap;
+        EfeitoUI M = new EfeitoUI();
 
         // Propriedade pública para devolver a imagem final ao formulário "pai"
         public Bitmap AssinaturaFinal { get; private set; }
@@ -91,19 +93,17 @@ namespace PEPIDI
         {
             if (isDrawing && picSignature.Image != null)
             {
+                assinou = true;
                 using (Graphics g = Graphics.FromImage(picSignature.Image))
                 {
-                    // AntiAlias para a linha ficar bonita e não "pixelizada"
                     g.SmoothingMode = SmoothingMode.AntiAlias;
-
-                    using (Pen pen = new Pen(Color.Black, 2)) // Caneta preta, espessura 2
+                    using (Pen pen = new Pen(Color.Black, 2))
                     {
-                        pen.StartCap = LineCap.Round;
-                        pen.EndCap = LineCap.Round;
+                        pen.StartCap = LineCap.Round; pen.EndCap = LineCap.Round;
                         g.DrawLine(pen, lastPoint, e.Location);
                     }
                 }
-                picSignature.Invalidate(); // Força a atualização visual imediata
+                picSignature.Invalidate();
                 lastPoint = e.Location;
             }
         }
@@ -120,42 +120,25 @@ namespace PEPIDI
 
         private void btnLimpar_Click(object sender, EventArgs e)
         {
-            InicializarAreaDesenho(); // Reseta a imagem para branco
+            assinou = false; // Reset da flag
+            InicializarAreaDesenho();
             picSignature.Invalidate();
         }
 
         private void btnConfirmar_Click(object sender, EventArgs e)
         {
-            // Validação Obrigatória
             if (!chkAceito.Checked)
             {
-                // 1. Cria o fundo escuro (Overlay)
-                Form overlay = new Form
-                {
-                    BackColor = Color.Black,
-                    Opacity = 0.5,
-                    ShowInTaskbar = false,
-                    FormBorderStyle = FormBorderStyle.None,
-                    WindowState = FormWindowState.Maximized
-                };
-                overlay.Show();
-
-                // 2. Abre a tua MessageBox personalizada por cima do fundo escuro
-                using (var msg = new PEPIDI.FormsSecundarios.MSGBX("É obrigatório aceitar os termos e condições para prosseguir.", "Assinatura Pendente"))
-                {
-                    msg.ShowDialog(overlay); // O '(overlay)' obriga a mensagem a ficar por cima
-                }
-
-                // 3. Fecha e limpa o fundo escuro quando clicas no OK
-                overlay.Close();
-                overlay.Dispose();
-
+                M.AbrirMensagem("Tens de aceitar os termos.", "Aviso");
+                return;
+            }
+            if (!assinou)
+            {
+                M.AbrirMensagem("O funcionário tem de assinar!", "Aviso");
                 return;
             }
 
-            // Guarda a assinatura na propriedade pública
             AssinaturaFinal = new Bitmap(picSignature.Image);
-
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

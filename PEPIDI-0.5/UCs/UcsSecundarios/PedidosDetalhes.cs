@@ -225,20 +225,25 @@ namespace PEPIDI.UCs.UcsSecundarios
 
             foreach (DataRow row in dt.Rows)
             {
-                int idEpi = Convert.ToInt32(row["ID"]);
-                string modelo = row["Modelo"].ToString().Trim();
+                // 1. Usar o nome exato que aparece no teu print do SSMS
+                int idLinha = Convert.ToInt32(row["IDLinhaDevolucao"]);
+                string modelo = row["ModeloComCor"].ToString().Trim();
                 string tamanho = row["Tamanho"].ToString().Trim();
+                string codigoEpi = row["Codigo"].ToString();
 
-                int quantDevolvida = 0;
-                if (dt.Columns.Contains("QuantidadePedida")) quantDevolvida = Convert.ToInt32(row["QuantidadePedida"]);
-                else if (dt.Columns.Contains("Quantidade")) quantDevolvida = Convert.ToInt32(row["Quantidade"]);
-                else if (dt.Columns.Contains("QuantidadeDevolvida")) quantDevolvida = Convert.ToInt32(row["QuantidadeDevolvida"]);
+                // 2. Quantidade (O teu print diz 'QuantidadeDevolvida')
+                int quantDevolvida = Convert.ToInt32(row["QuantidadeDevolvida"]);
                 if (quantDevolvida == 0) quantDevolvida = 1;
 
-                string cena = row["Estado"].ToString().Trim();
-                PEPIDI.UCs.DGVS.LinhaDevolucao novaLinha = new PEPIDI.UCs.DGVS.LinhaDevolucao(idEpi, modelo, tamanho, cena, quantDevolvida);
+                // 3. Estado por defeito
+                string cena = "Usado";
 
-                // ZERO MARGEM NAS LATERAIS
+                PEPIDI.UCs.DGVS.LinhaDevolucao novaLinha = new PEPIDI.UCs.DGVS.LinhaDevolucao(idLinha, modelo, tamanho, cena, quantDevolvida);
+                novaLinha.Tag = codigoEpi;
+
+                // ATRELA O EVENTO AQUI!
+                novaLinha.EstadoAlterado += LinhaDev_EstadoAlterado;
+
                 novaLinha.AutoSize = false;
                 novaLinha.Margin = new Padding(0, 2, 0, 2);
                 novaLinha.Width = flpLinhasDev.ClientSize.Width;
@@ -254,11 +259,35 @@ namespace PEPIDI.UCs.UcsSecundarios
             AjustarLarguras(flpLinhasDev);
         }
 
+        private void LinhaDev_EstadoAlterado(object sender, EventArgs e)
+        {
+            if (this.IsDisposed || this.Disposing) return;
+
+            if (sender is PEPIDI.UCs.DGVS.LinhaDevolucao linhaDev)
+            {
+                // O texto de busca exato que vai aparecer na nota!
+                string logBusca = $"a devolução de '{linhaDev.DescricaoArtigo} ({linhaDev.TamanhoSelecionado})'";
+                List<string> linhasLog = txtObs.Lines.ToList();
+
+                // Limpa notas antigas DESTA devolução específica para não fazer spam (agora já encontra!)
+                linhasLog.RemoveAll(l => l.TrimStart().StartsWith("[") && l.Contains(logBusca) && l.Contains("Classificou"));
+
+                string estadoAtual = linhaDev.EstadoSelecionado;
+
+                // Se o estado for o normal (Usado), não chateia. Mas se forcar a "Novo" ou mandar para o Lixo ("Gasto"), escreve!
+                if (!estadoAtual.Equals("Usado", StringComparison.OrdinalIgnoreCase))
+                {
+                    string novaNota = $"[{NomeGestor}]: Classificou {logBusca} como {estadoAtual.ToUpper()}.";
+                    linhasLog.Add(novaNota);
+                }
+
+                txtObs.Text = string.Join(Environment.NewLine, linhasLog.Where(l => !string.IsNullOrWhiteSpace(l)));
+            }
+        }
+
         public async Task CarregarPPacoteAsync(Panel pnlConteudo, int idPedido, string estado, Panel pnlScroll, FlowLayoutPanel flpLinhas)
         {
-            // O delay ajuda a evitar flicker na UI
             await Task.Delay(100);
-
             flpLinhas.Visible = false;
             flpLinhas.SuspendLayout();
             flpLinhas.Controls.Clear();
@@ -279,47 +308,45 @@ namespace PEPIDI.UCs.UcsSecundarios
 
             foreach (DataRow row in dt.Rows)
             {
-                // --- ATENÇÃO AOS NOMES DAS COLUNAS AQUI ---
-
-                // No SQL novo chamámos 'IDLinhaPedido' ou 'Codigo'. Vou usar o Codigo para o ID do EPI
                 string codigoEpi = row["Codigo"].ToString();
-
-                // Usamos o Modelo que já traz a Cor concatenada pelo SQL
                 string modelo = row["ModeloComCor"].ToString().Trim();
                 string tamanho = row["Tamanho"].ToString().Trim();
 
-                // Agora temos dois stocks. Para a tua 'LinhaItem' antiga, 
-                // vou somar os dois ou escolher o Novo, tu decides:
                 int stockNovo = Convert.ToInt32(row["QtdStockNovo"]);
                 int stockUsado = Convert.ToInt32(row["QtdStockUsado"]);
-                int quantDisp = stockNovo + stockUsado; // Somamos para mostrar o total disponível
-
+                int quantDisp = stockNovo + stockUsado;
                 int quantPedida = Convert.ToInt32(row["QuantidadePedida"]);
 
-                if (quantPedida <= 0) continue;
+                //if (quantPedida <= 0) continue;
 
-                // Criar a linha com os dados corrigidos
                 LinhaItem novaLinha = new LinhaItem(modelo, tamanho, quantDisp, quantPedida, estado);
-
-                // Atribuir o Código (string) ou o ID da linha (int) conforme o que a tua LinhaItem espera
                 novaLinha.Tag = codigoEpi;
+                novaLinha.IDEPI = Convert.ToInt32(row["IDLinhaPedido"]);
                 novaLinha.QuantidadeOriginal = quantPedida;
 
-                // Eventos e Layout
+                // 1º Atrelar os eventos
                 novaLinha.QuantidadeAlterada += Linha_QuantidadeAlterada;
+                novaLinha.EstadoAlterado += Linha_EstadoAlterado;
+
+                // 2º Disparar o da Quantidade (para notas de falta de stock iniciais)
                 Linha_QuantidadeAlterada(novaLinha, EventArgs.Empty);
 
                 novaLinha.AutoSize = false;
                 novaLinha.Margin = new Padding(0, 2, 0, 2);
-                novaLinha.Width = flpLinhas.ClientSize.Width - 10; // Margem para o scroll
+                novaLinha.Width = flpLinhas.ClientSize.Width - 10;
                 novaLinha.Height = 40;
+
+                // 3º CONFIGURAR O CÉREBRO DO STOCK PRIMEIRO!
+                novaLinha.ConfigurarSugestaoStock(stockNovo, stockUsado);
+
+                // 4º AGORA SIM, DISPARAR O EVENTO DO ESTADO (Para ele escrever na TextBox se faltar Novo)
+                Linha_EstadoAlterado(novaLinha, EventArgs.Empty);
 
                 flpLinhas.Controls.Add(novaLinha);
             }
 
             flpLinhas.ResumeLayout(true);
             flpLinhas.Visible = true;
-
             AjustarLarguras(flpLinhas);
         }
 
@@ -340,7 +367,8 @@ namespace PEPIDI.UCs.UcsSecundarios
                 string logBusca = $"{linha.M} ({linha.T})";
                 List<string> linhasLog = txtObs.Lines.ToList();
 
-                linhasLog.RemoveAll(l => l.TrimStart().StartsWith("[") && l.Contains(logBusca));
+                // O SEGREDO ESTÁ AQUI: Só apaga se contiver o nome da peça E a palavra "quantidade"
+                linhasLog.RemoveAll(l => l.TrimStart().StartsWith("[") && l.Contains(logBusca) && l.Contains("quantidade"));
 
                 if (linha.QuantidadeSelecionada != linha.QuantidadeOriginal)
                 {
@@ -356,6 +384,46 @@ namespace PEPIDI.UCs.UcsSecundarios
                     string novaNota = $"[{autor}]: Alterou a quantidade de '{logBusca}' de {linha.QuantidadeOriginal} para {linha.QuantidadeSelecionada}{notaExtra}.";
                     linhasLog.Add(novaNota);
                 }
+
+                txtObs.Text = string.Join(Environment.NewLine, linhasLog.Where(l => !string.IsNullOrWhiteSpace(l)));
+            }
+        }
+
+        private void Linha_EstadoAlterado(object sender, EventArgs e)
+        {
+            if (this.Estado.Equals("Aprovado", StringComparison.OrdinalIgnoreCase) ||
+                this.Estado.Equals("Concluido", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            if (this.IsDisposed || this.Disposing) return;
+
+            if (sender is LinhaItem linha)
+            {
+                if (linha.IsDisposed || linha.Disposing) return;
+
+                string logBusca = $"estado de '{linha.M} ({linha.T})'";
+                List<string> linhasLog = txtObs.Lines.ToList();
+
+                // Limpa notas antigas deste artigo para não fazer spam
+                linhasLog.RemoveAll(l => l.TrimStart().StartsWith("[") && l.Contains(logBusca));
+
+                string estadoAtual = linha.EstadoSelecionado;
+
+                // Se o sistema trancou a combobox em "Usado", foi porque não havia Novo!
+                if (linha.EstadoForcadoPeloSistema && estadoAtual == "Usado")
+                {
+                    string novaNota = $"[PEPIDI]: Definiu o {logBusca} como USADO{linha.ObservacoesAutomaticas}.";
+                    linhasLog.Add(novaNota);
+                }
+                // Se a combobox estiver destrancada e o estado for "Usado", foi o Gestor que mudou à mão!
+                else if (!linha.EstadoForcadoPeloSistema && estadoAtual == "Usado")
+                {
+                    string novaNota = $"[{NomeGestor}]: Definiu o {logBusca} como USADO.";
+                    linhasLog.Add(novaNota);
+                }
+                // Se o estado for "Novo" (que é o normal), apagamos as notas e não dizemos nada para não poluir o ecrã.
 
                 txtObs.Text = string.Join(Environment.NewLine, linhasLog.Where(l => !string.IsNullOrWhiteSpace(l)));
             }
@@ -395,131 +463,103 @@ namespace PEPIDI.UCs.UcsSecundarios
                     {
                         conn.Open();
                         SqlTransaction trans = conn.BeginTransaction();
-
                         try
                         {
                             foreach (Control c in flpLinhas.Controls)
                             {
                                 if (c is LinhaItem linha)
                                 {
-                                    // Em PENDENTE, lê diretamente a Combobox (não há cá checkboxes para ninguém!)
-                                    int qtdReal = linha.QuantidadeSelecionada;
+                                    // Se não houver stock, o sistema agora corta sozinho e não bloqueia!
+                                    int qtdParaAprovar = Math.Min(linha.QuantidadeSelecionada, linha.QD);
+                                    if (qtdParaAprovar <= 0)
+                                    {
+                                        // Se for 0, atualizamos apenas a linha para 0 no pacote
+                                        string sqlZero = "UPDATE PedidoPacote SET Quantidade = 0 WHERE ID = @id";
+                                        using (SqlCommand cmdZ = new SqlCommand(sqlZero, conn, trans))
+                                        {
+                                            cmdZ.Parameters.AddWithValue("@id", linha.IDEPI);
+                                            cmdZ.ExecuteNonQuery();
+                                        }
+                                        continue;
+                                    }
 
-                                    SqlCommand cmdItem = new SqlCommand("sp_AtualizarQuantidadePedidoPacote", conn, trans);
-                                    cmdItem.CommandType = CommandType.StoredProcedure;
-                                    cmdItem.Parameters.AddWithValue("@IDPedido", this.ID);
-                                    cmdItem.Parameters.AddWithValue("@IDEPI", linha.IDEPI);
-                                    cmdItem.Parameters.AddWithValue("@NovaQuantidade", qtdReal);
-                                    cmdItem.ExecuteNonQuery();
+                                    string codEpi = linha.Tag.ToString();
+                                    int idEstado = (linha.EstadoSelecionado == "Novo") ? 1 : 2;
+
+                                    // Buscar gaveta do stock
+                                    int idStockReal = 0;
+                                    using (SqlCommand cmdS = new SqlCommand("SELECT TOP 1 ID FROM Stock WHERE Codigo = @c AND Estado = @e", conn, trans))
+                                    {
+                                        cmdS.Parameters.AddWithValue("@c", codEpi);
+                                        cmdS.Parameters.AddWithValue("@e", idEstado);
+                                        object r = cmdS.ExecuteScalar();
+                                        if (r != null) idStockReal = Convert.ToInt32(r);
+                                    }
+
+                                    if (idStockReal > 0)
+                                    {
+                                        // Atualizar Pedido e Abater Stock
+                                        string sqlUp = "UPDATE PedidoPacote SET Quantidade = @q, IDStock = @is WHERE ID = @id";
+                                        using (SqlCommand cmdUp = new SqlCommand(sqlUp, conn, trans))
+                                        {
+                                            cmdUp.Parameters.AddWithValue("@q", qtdParaAprovar);
+                                            cmdUp.Parameters.AddWithValue("@is", idStockReal);
+                                            cmdUp.Parameters.AddWithValue("@id", linha.IDEPI);
+                                            cmdUp.ExecuteNonQuery();
+                                        }
+                                        using (SqlCommand cmdA = new SqlCommand("UPDATE Stock SET Quant = Quant - @q WHERE ID = @is", conn, trans))
+                                        {
+                                            cmdA.Parameters.AddWithValue("@q", qtdParaAprovar);
+                                            cmdA.Parameters.AddWithValue("@is", idStockReal);
+                                            cmdA.ExecuteNonQuery();
+                                        }
+                                    }
                                 }
                             }
 
-                            string sql = @"UPDATE PedidoRegistos 
-                                   SET Estado = 'Aprovado', Aprovacao = @Gestor, Notas = @Notas, AlteracaoData = GETDATE() 
-                                   WHERE ID = @ID";
-
-                            using (SqlCommand cmd = new SqlCommand(sql, conn, trans))
+                            string sqlFinal = "UPDATE PedidoRegistos SET Estado = 'Aprovado', Aprovacao = @g, AlteradoPor = @g, Notas = @n, AlteracaoData = GETDATE() WHERE ID = @id";
+                            using (SqlCommand cmdF = new SqlCommand(sqlFinal, conn, trans))
                             {
-                                cmd.Parameters.AddWithValue("@ID", this.ID);
-                                cmd.Parameters.AddWithValue("@Gestor", IDGestor);
-                                cmd.Parameters.AddWithValue("@Notas", string.IsNullOrEmpty(notasFinaisParaGravar) ? (object)DBNull.Value : notasFinaisParaGravar);
-                                cmd.ExecuteNonQuery();
+                                cmdF.Parameters.AddWithValue("@id", this.ID);
+                                cmdF.Parameters.AddWithValue("@g", IDGestor);
+                                cmdF.Parameters.AddWithValue("@n", notasFinaisParaGravar);
+                                cmdF.ExecuteNonQuery();
                             }
-
                             trans.Commit();
-                            M.AbrirMensagem("Pedido Aprovado! Agora está pronto para entrega.", "Sucesso");
+                            M.AbrirMensagem("Aprovado! Stock reservado.", "Sucesso");
                             AcaoConcluida?.Invoke(this, EventArgs.Empty);
                         }
-                        catch (Exception ex)
-                        {
-                            trans.Rollback();
-                            throw ex;
-                        }
+                        catch { trans.Rollback(); throw; }
                     }
                 }
-                catch (Exception ex)
-                {
-                    M.AbrirMensagem("Erro ao aprovar: " + ex.Message, "Erro");
-                }
+                catch (Exception ex) { M.AbrirMensagem("Erro: " + ex.Message, "Erro"); }
             }
             else if (estadoAtual.Equals("Aprovado", StringComparison.OrdinalIgnoreCase))
             {
                 CarregarDadosFuncionario(this.ID);
-
                 var listaReceber = new List<(int ID, string Artigo, string Tamanho, int Qtd)>();
                 var listaDevolver = new List<(int ID, string Artigo, string Tamanho, int Qtd)>();
-                var todosOsItens = new List<(int IDEPI, int QtdReal, bool Selecionado)>();
-
-                // 1. LISTA PARA OS CANCELADOS
-                List<string> itensCancelados = new List<string>();
 
                 foreach (Control c in flpLinhas.Controls)
                 {
-                    if (c is LinhaItem linha)
-                    {
-                        int qtdReal = linha.Selecionado ? linha.QuantidadeSelecionada : 0;
-                        todosOsItens.Add((linha.IDEPI, qtdReal, linha.Selecionado));
-
-                        if (linha.Selecionado && linha.QuantidadeSelecionada > 0)
-                        {
-                            listaReceber.Add((linha.IDEPI, linha.DescricaoArtigo, linha.TamanhoSelecionado, linha.QuantidadeSelecionada));
-                        }
-                        else
-                        {
-                            // O Utilizador tirou o visto na hora de entregar! Registamos para a Auditoria.
-                            itensCancelados.Add($"- {linha.DescricaoArtigo} ({linha.TamanhoSelecionado})");
-                        }
-                    }
+                    if (c is LinhaItem l && l.Selecionado && l.QuantidadeSelecionada > 0)
+                        listaReceber.Add((l.IDEPI, $"{l.DescricaoArtigo} [{l.EstadoSelecionado.ToUpper()}]", l.TamanhoSelecionado, l.QuantidadeSelecionada));
                 }
-
-                // 2. GERAR A NOTA DE AUDITORIA
-                if (itensCancelados.Count > 0)
-                {
-                    string aviso = "[Sistema]: Item(ns) cancelado(s) no momento da entrega:\n" + string.Join("\n", itensCancelados);
-                    if (string.IsNullOrEmpty(notasFinaisParaGravar)) notasFinaisParaGravar = aviso;
-                    else notasFinaisParaGravar += "\n\n" + aviso;
-                }
-
                 foreach (Control c in flpDevolucoes.Controls)
                 {
-                    if (c is PEPIDI.UCs.DGVS.LinhaDevolucao linhaDev)
-                    {
-                        if (linhaDev.QuantidadeDevolvida > 0)
-                        {
-                            listaDevolver.Add((linhaDev.IDEPI, linhaDev.DescricaoArtigo, linhaDev.TamanhoSelecionado, linhaDev.QuantidadeDevolvida));
-                        }
-                    }
-                }
-
-                if (listaReceber.Count == 0 && listaDevolver.Count == 0)
-                {
-                    M.AbrirMensagem("Não há itens selecionados para entregar nem para devolver.", "Aviso");
-                    return;
+                    if (c is LinhaDevolucao d && d.QuantidadeDevolvida > 0)
+                        listaDevolver.Add((d.IDEPI, $"{d.DescricaoArtigo} [{d.EstadoSelecionado.ToUpper()}]", d.TamanhoSelecionado, d.QuantidadeDevolvida));
                 }
 
                 using (var frm = new FormAssinatura(NomeFuncionario))
                 {
-                    foreach (var item in listaReceber)
-                        frm.AdicionarItemReceber(item.Artigo, item.Tamanho, item.Qtd);
-
-                    foreach (var item in listaDevolver)
-                        frm.AdicionarItemDevolver(item.Artigo, item.Tamanho, item.Qtd);
-
-                    using (Form overlay = new Form { BackColor = Color.Black, Opacity = 0.5, ShowInTaskbar = false, FormBorderStyle = FormBorderStyle.None, WindowState = FormWindowState.Maximized })
-                    {
-                        overlay.Show();
-                        var result = frm.ShowDialog(overlay);
-                        if (result != DialogResult.OK) return;
-                    }
+                    foreach (var i in listaReceber) frm.AdicionarItemReceber(i.Artigo, i.Tamanho, i.Qtd);
+                    foreach (var i in listaDevolver) frm.AdicionarItemDevolver(i.Artigo, i.Tamanho, i.Qtd);
+                    if (frm.ShowDialog() != DialogResult.OK) return;
 
                     try
                     {
-                        string caminhoPDF = PEPIDI.Organizers.PDFGenerator.GerarComprovativo(
-                            this.ID, NomeFuncionario, NMEC, FuncaoFuncionario, NomeGestor,
-                            listaReceber, listaDevolver,
-                            frm.AssinaturaFinal
-                        );
-
+                        string path = PDFGenerator.GerarComprovativo(this.ID, NomeFuncionario, NMEC, FuncaoFuncionario, NomeGestor, listaReceber, listaDevolver, frm.AssinaturaFinal);
                         using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
                         {
                             conn.Open();
@@ -527,65 +567,45 @@ namespace PEPIDI.UCs.UcsSecundarios
                             {
                                 try
                                 {
-                                    string sqlUpdate = @"UPDATE PedidoRegistos 
-                                                 SET Estado = 'Finalizado', PDF = @PDF, Notas = @Notas, AlteracaoData = GETDATE() 
-                                                 WHERE ID = @ID";
+                                    // Fechar Pedido
+                                    new SqlCommand($"UPDATE PedidoRegistos SET Estado='Finalizado', PDF='{path}', Entrega={IDGestor}, AlteradoPor={IDGestor}, AlteracaoData=GETDATE() WHERE ID={this.ID}", conn, trans).ExecuteNonQuery();
 
-                                    using (SqlCommand cmd = new SqlCommand(sqlUpdate, conn, trans))
+                                    // Tratar Retomas (Inclui Estado 3 - Gasto)
+                                    foreach (Control c in flpDevolucoes.Controls)
                                     {
-                                        cmd.Parameters.AddWithValue("@ID", this.ID);
-                                        cmd.Parameters.AddWithValue("@PDF", caminhoPDF);
-                                        cmd.Parameters.AddWithValue("@Notas", string.IsNullOrEmpty(notasFinaisParaGravar) ? (object)DBNull.Value : notasFinaisParaGravar);
-                                        cmd.ExecuteNonQuery();
-                                    }
-
-                                    foreach (var item in todosOsItens)
-                                    {
-                                        using (SqlCommand cmdItem = new SqlCommand("sp_AtualizarQuantidadePedidoPacote", conn, trans))
+                                        if (c is LinhaDevolucao d && d.QuantidadeDevolvida > 0)
                                         {
-                                            cmdItem.CommandType = CommandType.StoredProcedure;
-                                            cmdItem.Parameters.AddWithValue("@IDPedido", this.ID);
-                                            cmdItem.Parameters.AddWithValue("@IDEPI", item.IDEPI);
-                                            cmdItem.Parameters.AddWithValue("@NovaQuantidade", item.QtdReal);
-                                            cmdItem.ExecuteNonQuery();
-                                        }
-
-                                        if (item.QtdReal > 0)
-                                        {
-                                            string sqlStock = "UPDATE EPI SET Quantidade = Quantidade - @Qtd WHERE ID = @IDEPI";
-                                            using (SqlCommand cmdStock = new SqlCommand(sqlStock, conn, trans))
+                                            int est = (d.EstadoSelecionado == "Novo") ? 1 : (d.EstadoSelecionado == "Usado" ? 2 : 3);
+                                            // 1. Garantir gaveta no stock
+                                            int idS = 0;
+                                            var cmdS = new SqlCommand("SELECT ID FROM Stock WHERE Codigo=@c AND Estado=@e", conn, trans);
+                                            cmdS.Parameters.AddWithValue("@c", d.Tag.ToString()); cmdS.Parameters.AddWithValue("@e", est);
+                                            var res = cmdS.ExecuteScalar();
+                                            if (res == null)
                                             {
-                                                cmdStock.Parameters.AddWithValue("@Qtd", item.QtdReal);
-                                                cmdStock.Parameters.AddWithValue("@IDEPI", item.IDEPI);
-                                                cmdStock.ExecuteNonQuery();
+                                                var cmdI = new SqlCommand("INSERT INTO Stock (Codigo, Estado, Quant) OUTPUT INSERTED.ID VALUES (@c, @e, 0)", conn, trans);
+                                                cmdI.Parameters.AddWithValue("@c", d.Tag.ToString()); cmdI.Parameters.AddWithValue("@e", est);
+                                                idS = Convert.ToInt32(cmdI.ExecuteScalar());
                                             }
+                                            else idS = Convert.ToInt32(res);
+
+                                            // 2. Somar e Vincular
+                                            new SqlCommand($"UPDATE Stock SET Quant=Quant+{d.QuantidadeDevolvida} WHERE ID={idS}", conn, trans).ExecuteNonQuery();
+                                            new SqlCommand($"UPDATE RoupaPacote SET IDStock={idS} WHERE ID={d.IDEPI}", conn, trans).ExecuteNonQuery();
                                         }
                                     }
-
                                     trans.Commit();
-
-                                    M.AbrirMensagem("Entrega e retoma finalizadas com sucesso!\nPDF Gerado.", "Sucesso");
-                                    try { System.Diagnostics.Process.Start("explorer.exe", caminhoPDF); } catch { }
+                                    System.Diagnostics.Process.Start("explorer.exe", path);
                                     AcaoConcluida?.Invoke(this, EventArgs.Empty);
                                 }
-                                catch (Exception)
-                                {
-                                    trans.Rollback();
-                                    throw;
-                                }
+                                catch { trans.Rollback(); throw; }
                             }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        M.AbrirMensagem("Erro ao finalizar: " + ex.Message, "Erro Crítico");
-                    }
+                    catch (Exception ex) { M.AbrirMensagem(ex.Message, "Erro"); }
                 }
             }
-            else
-            {
-                AbrirComprovativoExistente();
-            }
+            else { AbrirComprovativoExistente(); }
         }
 
         private void AbrirComprovativoExistente()
@@ -629,19 +649,22 @@ namespace PEPIDI.UCs.UcsSecundarios
         {
             string justificativaFinal = "";
             List<string> linhasAtuais = txtObs.Lines.ToList();
+
+            // O NOVO FILTRO MÁGICO: É considerado "Manual" se não for vazio E não começar por "["
             var linhasManuais = linhasAtuais.Where(l =>
-                !l.Contains("Alterou") &&
-                !l.Contains("(falta de stock)") &&
-                !string.IsNullOrWhiteSpace(l)
+                !string.IsNullOrWhiteSpace(l) &&
+                !l.TrimStart().StartsWith("[")
             ).ToList();
 
             if (linhasManuais.Count > 0)
             {
-                string textoPuro = string.Join(" ", linhasManuais).Replace($"[{NomeGestor}]:", "").Trim();
+                // Se o gestor escreveu texto livre no meio da confusão, usamos isso!
+                string textoPuro = string.Join(" ", linhasManuais).Trim();
                 justificativaFinal = $"[{NomeGestor}]: MOTIVO REPROVAÇÃO - {textoPuro}";
             }
             else
             {
+                // Se só há notas do sistema, OBRIGA a abrir o popup!
                 using (Form overlay = new Form())
                 {
                     overlay.StartPosition = FormStartPosition.Manual;
@@ -663,7 +686,7 @@ namespace PEPIDI.UCs.UcsSecundarios
                         else
                         {
                             overlay.Close();
-                            return;
+                            return; // Abortar reprovação se ele fechar a janela no X
                         }
                     }
                     overlay.Close();
@@ -680,9 +703,20 @@ namespace PEPIDI.UCs.UcsSecundarios
                 using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("UPDATE PedidoRegistos SET Estado = 'Reprovado', Notas = @Notas WHERE ID = @ID", conn);
-                    cmd.Parameters.AddWithValue("@ID", ID);
+
+                    // O SQL agora preenche a auditoria toda: Quem reprovou (Aprovacao / AlteradoPor) e Quando (AlteracaoData)
+                    string sql = @"UPDATE PedidoRegistos 
+                           SET Estado = 'Reprovado', 
+                               Notas = @Notas, 
+                               Aprovacao = @Gestor, 
+                               AlteracaoData = GETDATE(), 
+                               AlteradoPor = @Gestor 
+                           WHERE ID = @ID";
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
                     cmd.Parameters.AddWithValue("@Notas", notaLimpa);
+                    cmd.Parameters.AddWithValue("@Gestor", this.IDGestor); // O teu ID que vem do Form Principal
 
                     cmd.ExecuteNonQuery();
                     M.AbrirMensagem("Pedido reprovado com sucesso.", "Sucesso");
@@ -690,7 +724,10 @@ namespace PEPIDI.UCs.UcsSecundarios
                     AcaoConcluida?.Invoke(this, EventArgs.Empty);
                 }
             }
-            catch (Exception ex) { M.AbrirMensagem("Erro ao reprovar: " + ex.Message, "Erro"); }
+            catch (Exception ex)
+            {
+                M.AbrirMensagem("Erro ao reprovar: " + ex.Message, "Erro");
+            }
         }
     }
 }
