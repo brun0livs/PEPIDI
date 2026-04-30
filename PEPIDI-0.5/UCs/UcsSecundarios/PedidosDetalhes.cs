@@ -308,38 +308,68 @@ namespace PEPIDI.UCs.UcsSecundarios
 
             foreach (DataRow row in dt.Rows)
             {
-                string codigoEpi = row["Codigo"].ToString();
+                string codigoEpi = row["Codigo"].ToString().Trim(); // Cortei o mal pela raiz!
                 string modelo = row["ModeloComCor"].ToString().Trim();
                 string tamanho = row["Tamanho"].ToString().Trim();
 
                 int stockNovo = Convert.ToInt32(row["QtdStockNovo"]);
                 int stockUsado = Convert.ToInt32(row["QtdStockUsado"]);
-                int quantDisp = stockNovo + stockUsado;
                 int quantPedida = Convert.ToInt32(row["QuantidadePedida"]);
 
-                //if (quantPedida <= 0) continue;
+                // REGRA 2: Se está aprovado e a quantidade ficou a 0 (porque faltou stock), esconde!
+                if ((estado == "Aprovado" || estado == "Finalizado") && quantPedida == 0)
+                {
+                    continue;
+                }
 
-                LinhaItem novaLinha = new LinhaItem(modelo, tamanho, quantDisp, quantPedida, estado);
+                // REGRA 1: Ler o Estado do Stock (Se vier NULL, assumimos 1 - Novo)
+                int estadoGravado = 1;
+                if (row.Table.Columns.Contains("EstadoID") && row["EstadoID"] != DBNull.Value)
+                {
+                    estadoGravado = Convert.ToInt32(row["EstadoID"]);
+                }
+
+                int quantDispParaControlo = (estado == "Aprovado" || estado == "Finalizado")
+                                            ? quantPedida
+                                            : (stockNovo + stockUsado);
+
+                LinhaItem novaLinha = new LinhaItem(modelo, tamanho, quantDispParaControlo, quantPedida, estado);
                 novaLinha.Tag = codigoEpi;
                 novaLinha.IDEPI = Convert.ToInt32(row["IDLinhaPedido"]);
                 novaLinha.QuantidadeOriginal = quantPedida;
 
-                // 1º Atrelar os eventos
                 novaLinha.QuantidadeAlterada += Linha_QuantidadeAlterada;
                 novaLinha.EstadoAlterado += Linha_EstadoAlterado;
-
-                // 2º Disparar o da Quantidade (para notas de falta de stock iniciais)
-                Linha_QuantidadeAlterada(novaLinha, EventArgs.Empty);
 
                 novaLinha.AutoSize = false;
                 novaLinha.Margin = new Padding(0, 2, 0, 2);
                 novaLinha.Width = flpLinhas.ClientSize.Width - 10;
                 novaLinha.Height = 40;
 
-                // 3º CONFIGURAR O CÉREBRO DO STOCK PRIMEIRO!
-                novaLinha.ConfigurarSugestaoStock(stockNovo, stockUsado);
+                if (estado == "Aprovado" || estado == "Finalizado")
+                {
+                    novaLinha.Enabled = true;
+                    novaLinha.Selecionado = (quantPedida > 0);
 
-                // 4º AGORA SIM, DISPARAR O EVENTO DO ESTADO (Para ele escrever na TextBox se faltar Novo)
+                    // A MAGIA ESTÁ AQUI:
+                    // Se a BD diz que tirámos dos Usados (2), passamos a quantidade para o parâmetro dos Usados!
+                    if (estadoGravado == 2)
+                    {
+                        novaLinha.ConfigurarSugestaoStock(0, quantPedida); // 0 Novo, X Usado
+                        novaLinha.EstadoSelecionado = "Usado";
+                    }
+                    else
+                    {
+                        novaLinha.ConfigurarSugestaoStock(quantPedida, 0); // X Novo, 0 Usado
+                        novaLinha.EstadoSelecionado = "Novo";
+                    }
+                }
+                else
+                {
+                    novaLinha.ConfigurarSugestaoStock(stockNovo, stockUsado);
+                }
+
+                Linha_QuantidadeAlterada(novaLinha, EventArgs.Empty);
                 Linha_EstadoAlterado(novaLinha, EventArgs.Empty);
 
                 flpLinhas.Controls.Add(novaLinha);
@@ -471,22 +501,13 @@ namespace PEPIDI.UCs.UcsSecundarios
                                 {
                                     // Se não houver stock, o sistema agora corta sozinho e não bloqueia!
                                     int qtdParaAprovar = Math.Min(linha.QuantidadeSelecionada, linha.QD);
-                                    if (qtdParaAprovar <= 0)
-                                    {
-                                        // Se for 0, atualizamos apenas a linha para 0 no pacote
-                                        string sqlZero = "UPDATE PedidoPacote SET Quantidade = 0 WHERE ID = @id";
-                                        using (SqlCommand cmdZ = new SqlCommand(sqlZero, conn, trans))
-                                        {
-                                            cmdZ.Parameters.AddWithValue("@id", linha.IDEPI);
-                                            cmdZ.ExecuteNonQuery();
-                                        }
-                                        continue;
-                                    }
+                                    if (qtdParaAprovar < 0) qtdParaAprovar = 0;
 
-                                    string codEpi = linha.Tag.ToString();
+                                    // 1º TRIM: Na hora de ir procurar a prateleira para abater
+                                    string codEpi = linha.Tag.ToString().Trim();
                                     int idEstado = (linha.EstadoSelecionado == "Novo") ? 1 : 2;
 
-                                    // Buscar gaveta do stock
+                                    // Buscar gaveta do stock baseada no Estado Selecionado
                                     int idStockReal = 0;
                                     using (SqlCommand cmdS = new SqlCommand("SELECT TOP 1 ID FROM Stock WHERE Codigo = @c AND Estado = @e", conn, trans))
                                     {
@@ -496,7 +517,17 @@ namespace PEPIDI.UCs.UcsSecundarios
                                         if (r != null) idStockReal = Convert.ToInt32(r);
                                     }
 
-                                    if (idStockReal > 0)
+                                    // Se a gaveta não existe ou qtd é 0, liberta o stock
+                                    if (idStockReal == 0 || qtdParaAprovar == 0)
+                                    {
+                                        string sqlZ = "UPDATE PedidoPacote SET Quantidade = 0, IDStock = NULL WHERE ID = @id";
+                                        using (SqlCommand cmdZ = new SqlCommand(sqlZ, conn, trans))
+                                        {
+                                            cmdZ.Parameters.AddWithValue("@id", linha.IDEPI);
+                                            cmdZ.ExecuteNonQuery();
+                                        }
+                                    }
+                                    else
                                     {
                                         // Atualizar Pedido e Abater Stock
                                         string sqlUp = "UPDATE PedidoPacote SET Quantidade = @q, IDStock = @is WHERE ID = @id";
@@ -537,18 +568,33 @@ namespace PEPIDI.UCs.UcsSecundarios
             else if (estadoAtual.Equals("Aprovado", StringComparison.OrdinalIgnoreCase))
             {
                 CarregarDadosFuncionario(this.ID);
-                var listaReceber = new List<(int ID, string Artigo, string Tamanho, int Qtd)>();
-                var listaDevolver = new List<(int ID, string Artigo, string Tamanho, int Qtd)>();
+                // 1. Mudamos de "int ID" para "string Codigo"
+                var listaReceber = new List<(string Codigo, string Artigo, string Tamanho, int Qtd)>();
+                var listaDevolver = new List<(string Codigo, string Artigo, string Tamanho, int Qtd)>();
+                var todosOsItens = new List<(int IDLinha, int QtdFinal, bool ComVisto)>();
 
                 foreach (Control c in flpLinhas.Controls)
                 {
-                    if (c is LinhaItem l && l.Selecionado && l.QuantidadeSelecionada > 0)
-                        listaReceber.Add((l.IDEPI, $"{l.DescricaoArtigo} [{l.EstadoSelecionado.ToUpper()}]", l.TamanhoSelecionado, l.QuantidadeSelecionada));
+                    if (c is LinhaItem l)
+                    {
+                        int qtdFinal = l.Selecionado ? l.QuantidadeSelecionada : 0;
+                        todosOsItens.Add((l.IDEPI, qtdFinal, l.Selecionado));
+
+                        if (l.Selecionado && l.QuantidadeSelecionada > 0)
+                        {
+                            // Enviamos o l.Tag (o código real) em vez do l.IDEPI
+                            listaReceber.Add((l.Tag.ToString().Trim(), $"{l.DescricaoArtigo} [{l.EstadoSelecionado.ToUpper()}]", l.TamanhoSelecionado, l.QuantidadeSelecionada));
+                        }
+                    }
                 }
+
                 foreach (Control c in flpDevolucoes.Controls)
                 {
                     if (c is LinhaDevolucao d && d.QuantidadeDevolvida > 0)
-                        listaDevolver.Add((d.IDEPI, $"{d.DescricaoArtigo} [{d.EstadoSelecionado.ToUpper()}]", d.TamanhoSelecionado, d.QuantidadeDevolvida));
+                    {
+                        // Enviamos o d.Tag (o código real) em vez do d.IDEPI
+                        listaDevolver.Add((d.Tag.ToString().Trim(), $"{d.DescricaoArtigo} [{d.EstadoSelecionado.ToUpper()}]", d.TamanhoSelecionado, d.QuantidadeDevolvida));
+                    }
                 }
 
                 using (var frm = new FormAssinatura(NomeFuncionario))
@@ -570,26 +616,55 @@ namespace PEPIDI.UCs.UcsSecundarios
                                     // Fechar Pedido
                                     new SqlCommand($"UPDATE PedidoRegistos SET Estado='Finalizado', PDF='{path}', Entrega={IDGestor}, AlteradoPor={IDGestor}, AlteracaoData=GETDATE() WHERE ID={this.ID}", conn, trans).ExecuteNonQuery();
 
+                                    // RESTAURADO: Devolver stock se o Gestor desmarcou a checkbox na hora da entrega
+                                    foreach (var item in todosOsItens)
+                                    {
+                                        if (!item.ComVisto)
+                                        {
+                                            using (SqlCommand cmdB = new SqlCommand("SELECT IDStock, Quantidade FROM PedidoPacote WHERE ID = @id", conn, trans))
+                                            {
+                                                cmdB.Parameters.AddWithValue("@id", item.IDLinha);
+                                                using (SqlDataReader dr = cmdB.ExecuteReader())
+                                                {
+                                                    if (dr.Read() && dr["IDStock"] != DBNull.Value)
+                                                    {
+                                                        int idS = Convert.ToInt32(dr["IDStock"]);
+                                                        int q = Convert.ToInt32(dr["Quantidade"]);
+                                                        new SqlCommand($"UPDATE Stock SET Quant=Quant+{q} WHERE ID={idS}", conn, trans).ExecuteNonQuery();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        new SqlCommand($"UPDATE PedidoPacote SET Quantidade={item.QtdFinal} WHERE ID={item.IDLinha}", conn, trans).ExecuteNonQuery();
+                                    }
+
                                     // Tratar Retomas (Inclui Estado 3 - Gasto)
                                     foreach (Control c in flpDevolucoes.Controls)
                                     {
                                         if (c is LinhaDevolucao d && d.QuantidadeDevolvida > 0)
                                         {
                                             int est = (d.EstadoSelecionado == "Novo") ? 1 : (d.EstadoSelecionado == "Usado" ? 2 : 3);
-                                            // 1. Garantir gaveta no stock
                                             int idS = 0;
                                             var cmdS = new SqlCommand("SELECT ID FROM Stock WHERE Codigo=@c AND Estado=@e", conn, trans);
-                                            cmdS.Parameters.AddWithValue("@c", d.Tag.ToString()); cmdS.Parameters.AddWithValue("@e", est);
+
+                                            // 2º TRIM: Na hora de procurar a prateleira da devolução
+                                            cmdS.Parameters.AddWithValue("@c", d.Tag.ToString().Trim());
+                                            cmdS.Parameters.AddWithValue("@e", est);
+
                                             var res = cmdS.ExecuteScalar();
                                             if (res == null)
                                             {
                                                 var cmdI = new SqlCommand("INSERT INTO Stock (Codigo, Estado, Quant) OUTPUT INSERTED.ID VALUES (@c, @e, 0)", conn, trans);
-                                                cmdI.Parameters.AddWithValue("@c", d.Tag.ToString()); cmdI.Parameters.AddWithValue("@e", est);
+
+                                                // 3º TRIM: Se a prateleira não existir e formos criar uma nova
+                                                cmdI.Parameters.AddWithValue("@c", d.Tag.ToString().Trim());
+                                                cmdI.Parameters.AddWithValue("@e", est);
+
                                                 idS = Convert.ToInt32(cmdI.ExecuteScalar());
                                             }
                                             else idS = Convert.ToInt32(res);
 
-                                            // 2. Somar e Vincular
+                                            // Somar à prateleira e registar o histórico
                                             new SqlCommand($"UPDATE Stock SET Quant=Quant+{d.QuantidadeDevolvida} WHERE ID={idS}", conn, trans).ExecuteNonQuery();
                                             new SqlCommand($"UPDATE RoupaPacote SET IDStock={idS} WHERE ID={d.IDEPI}", conn, trans).ExecuteNonQuery();
                                         }

@@ -59,8 +59,8 @@ namespace PEPIDI.Organizers
             string NRFUNC,
             string FUNCAO,
             string NomeGestor, // NOME DO GESTOR ENTRA AQUI
-            List<(int ID, string Artigo, string Tamanho, int Qtd)> listaReceber,
-            List<(int ID, string Artigo, string Tamanho, int Qtd)> listaDevolver,
+            List<(string ID, string Artigo, string Tamanho, int Qtd)> listaReceber,
+            List<(string ID, string Artigo, string Tamanho, int Qtd)> listaDevolver,
             System.Drawing.Image AssinaturaFinal)
         {
             string caminhoBase = ObterCaminhoDoSQL("CaminhoComprovativos", "ComprovativosPEPIDI_Backup");
@@ -180,7 +180,7 @@ namespace PEPIDI.Organizers
                 {
                     linhasFinais--;
                     total += item.Qtd;
-                    tabelaItens.AddCell(new Cell().Add(new Paragraph("EPI" + item.ID.ToString("D4"))).SetFontSize(7).SetMinHeight(7).SetPadding(1).SetBorder(Border.NO_BORDER).SetTextAlignment(TextAlignment.CENTER).SetVerticalAlignment(VerticalAlignment.MIDDLE));
+                    tabelaItens.AddCell(new Cell().Add(new Paragraph("EPI" + item.ID)).SetFontSize(7).SetMinHeight(7).SetPadding(1).SetBorder(Border.NO_BORDER).SetTextAlignment(TextAlignment.CENTER).SetVerticalAlignment(VerticalAlignment.MIDDLE));
                     tabelaItens.AddCell(new Cell().Add(new Paragraph(item.Artigo)).SetMinHeight(13).SetPadding(1).SetBorder(Border.NO_BORDER).SetTextAlignment(TextAlignment.LEFT));
                     tabelaItens.AddCell(new Cell().Add(new Paragraph(item.Tamanho)).SetMinHeight(13).SetPadding(1).SetBorder(Border.NO_BORDER).SetTextAlignment(TextAlignment.CENTER));
                     tabelaItens.AddCell(new Cell().Add(new Paragraph(item.Qtd.ToString())).SetMinHeight(13).SetPadding(1).SetBorder(Border.NO_BORDER).SetTextAlignment(TextAlignment.RIGHT));
@@ -217,7 +217,7 @@ namespace PEPIDI.Organizers
                 {
                     linhasFinais--;
                     total2 += item.Qtd;
-                    tabelaItens2.AddCell(new Cell().Add(new Paragraph("EPI" + item.ID.ToString("D4"))).SetFontSize(7).SetMinHeight(7).SetPadding(1).SetBorder(Border.NO_BORDER).SetTextAlignment(TextAlignment.CENTER).SetVerticalAlignment(VerticalAlignment.MIDDLE));
+                    tabelaItens2.AddCell(new Cell().Add(new Paragraph("EPI" + item.ID)).SetFontSize(7).SetMinHeight(7).SetPadding(1).SetBorder(Border.NO_BORDER).SetTextAlignment(TextAlignment.CENTER).SetVerticalAlignment(VerticalAlignment.MIDDLE));
                     tabelaItens2.AddCell(new Cell().Add(new Paragraph(item.Artigo)).SetMinHeight(13).SetPadding(1).SetBorder(Border.NO_BORDER).SetTextAlignment(TextAlignment.LEFT));
                     tabelaItens2.AddCell(new Cell().Add(new Paragraph(item.Tamanho)).SetMinHeight(13).SetPadding(1).SetBorder(Border.NO_BORDER).SetTextAlignment(TextAlignment.CENTER));
                     tabelaItens2.AddCell(new Cell().Add(new Paragraph(item.Qtd.ToString())).SetMinHeight(13).SetPadding(1).SetBorder(Border.NO_BORDER).SetTextAlignment(TextAlignment.RIGHT));

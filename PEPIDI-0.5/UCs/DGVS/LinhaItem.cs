@@ -36,10 +36,26 @@ namespace PEPIDI.UCs.DGVS
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string ObservacoesAutomaticas { get; set; } = "";
 
+        [System.ComponentModel.Browsable(false)]
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string EstadoSelecionado
         {
-            get { return cmbEstado != null ? cmbEstado.Text : "Novo"; }
+            get
+            {
+                return cmbEstado.Text;
+            }
+            set
+            {
+                // 1. Tenta selecionar o item se ele existir na lista (ex: "Novo" ou "Usado")
+                if (cmbEstado.Items.Contains(value))
+                {
+                    cmbEstado.SelectedItem = value;
+                }
+                // 2. Força o texto para o caso de a lista ainda não ter carregado
+                cmbEstado.Text = value;
+            }
         }
+
         public bool EstadoForcadoPeloSistema
         {
             get { return cmbEstado != null && !cmbEstado.Enabled; }
@@ -64,9 +80,12 @@ namespace PEPIDI.UCs.DGVS
         }
 
         // 3. Se está selecionado (Checkbox)
+        [System.ComponentModel.Browsable(false)]
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public bool Selecionado
         {
             get { return chkEntregar.Checked; }
+            set { chkEntregar.Checked = value; }
         }
 
         // 4. Quantidade Selecionada
@@ -131,9 +150,6 @@ namespace PEPIDI.UCs.DGVS
                 cmbQuant.Visible = false;
                 chkEntregar.Visible = true;
                 chkEntregar.Dock = DockStyle.Fill;
-
-                // Esconde a Combo de Estado (Novo/Usado) porque na entrega não interessa
-                if (cmbEstado != null) cmbEstado.Visible = false;
 
                 // Ajusta layout
                 tableLayoutPanel1.ColumnStyles[4].Width = 0F;  // Coluna da Combo Quantidade (some)
