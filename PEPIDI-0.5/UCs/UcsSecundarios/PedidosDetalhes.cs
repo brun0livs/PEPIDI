@@ -315,6 +315,10 @@ namespace PEPIDI.UCs.UcsSecundarios
                 int stockNovo = Convert.ToInt32(row["QtdStockNovo"]);
                 int stockUsado = Convert.ToInt32(row["QtdStockUsado"]);
                 int quantPedida = Convert.ToInt32(row["QuantidadePedida"]);
+                int estadoGravado = row["EstadoID"] != DBNull.Value ? Convert.ToInt32(row["EstadoID"]) : 1;
+
+                // Define a quantidade disponível BASEADA NO ESTADO GRAVADO (1=Novo, 2=Usado)
+                int quantDispParaControlo = (estadoGravado == 2) ? stockUsado : stockNovo;
 
                 // REGRA 2: Se está aprovado e a quantidade ficou a 0 (porque faltou stock), esconde!
                 if ((estado == "Aprovado" || estado == "Finalizado") && quantPedida == 0)
@@ -322,16 +326,10 @@ namespace PEPIDI.UCs.UcsSecundarios
                     continue;
                 }
 
-                // REGRA 1: Ler o Estado do Stock (Se vier NULL, assumimos 1 - Novo)
-                int estadoGravado = 1;
                 if (row.Table.Columns.Contains("EstadoID") && row["EstadoID"] != DBNull.Value)
                 {
                     estadoGravado = Convert.ToInt32(row["EstadoID"]);
                 }
-
-                int quantDispParaControlo = (estado == "Aprovado" || estado == "Finalizado")
-                                            ? quantPedida
-                                            : (stockNovo + stockUsado);
 
                 LinhaItem novaLinha = new LinhaItem(modelo, tamanho, quantDispParaControlo, quantPedida, estado);
                 novaLinha.Tag = codigoEpi;

@@ -1,7 +1,7 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
-    "net9.0-windows7.0": {
+    "net9.0-windows": {
       "ClosedXML/0.105.0": {
         "type": "package",
         "dependencies": {
@@ -1979,7 +1979,7 @@
         }
       }
     },
-    "net9.0-windows7.0/win-x64": {
+    "net9.0-windows/win-x64": {
       "ClosedXML/0.105.0": {
         "type": "package",
         "dependencies": {
@@ -8529,7 +8529,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net9.0-windows7.0": [
+    "net9.0-windows": [
       "ClosedXML >= 0.105.0",
       "Guna.Charts.WinForms >= 1.1.0",
       "Guna.UI2.WinForms >= 2.0.4.7",
@@ -8570,7 +8570,8 @@
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net9.0-windows7.0": {
+        "net9.0-windows": {
+          "framework": "net9.0-windows7.0",
           "targetAlias": "net9.0-windows",
           "projectReferences": {}
         }
@@ -8585,10 +8586,11 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.200"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
-      "net9.0-windows7.0": {
+      "net9.0-windows": {
+        "framework": "net9.0-windows7.0",
         "targetAlias": "net9.0-windows",
         "dependencies": {
           "ClosedXML": {
@@ -8638,19 +8640,19 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
-            "version": "[9.0.12, 9.0.12]"
+            "version": "[9.0.14, 9.0.14]"
           },
           {
             "name": "Microsoft.NETCore.App.Crossgen2.win-x64",
-            "version": "[9.0.12, 9.0.12]"
+            "version": "[9.0.14, 9.0.14]"
           },
           {
             "name": "Microsoft.NETCore.App.Runtime.win-x64",
-            "version": "[9.0.12, 9.0.12]"
+            "version": "[9.0.14, 9.0.14]"
           },
           {
             "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
-            "version": "[9.0.12, 9.0.12]"
+            "version": "[9.0.14, 9.0.14]"
           }
         ],
         "frameworkReferences": {
@@ -8661,7 +8663,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.200-preview.0.26103.119/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300-preview.0.26177.108/PortableRuntimeIdentifierGraph.json"
       }
     },
     "runtimes": {

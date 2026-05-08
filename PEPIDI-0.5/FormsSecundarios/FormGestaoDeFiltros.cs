@@ -152,6 +152,9 @@ namespace PEPIDI.FormsSecundarios
         {
             List<string> filtros = new List<string>();
 
+            // ADICIONADO: Filtro obrigatório para mostrar apenas stock NOVO
+            filtros.Add("S.Estado = 1");
+
             // 1. Lógica para Funções (AcessoIDs)
             var funcoesSelecionadas = ObterSelecionados(flpFuncoes);
             if (funcoesSelecionadas.Any())
@@ -168,27 +171,24 @@ namespace PEPIDI.FormsSecundarios
             filtros.AddRange(FiltroTexto("E.Modelo", ObterSelecionados(flpModelo)));
             filtros.AddRange(FiltroTexto("E.Tamanho", ObterSelecionados(flpTamanho)));
 
-            // 3. MONTAGEM COM JOIN (Para trazer Nome e Cor da Função)
-            // Usamos STRING_AGG para que, se um EPI tiver várias funções, ele não duplique a linha
-            string sqlBase = @"
-        SELECT 
-            E.Modelo, 
-            E.Tamanho, 
-            E.Quantidade,
-            ISNULL(STRING_AGG(F.Nome, ' | '), 'Sem Função') AS NomeFuncao,
-            ISNULL(STRING_AGG(F.CorHex, ','), '#808080') AS CorFuncao
-        FROM EPI E
-        LEFT JOIN AcessoFuncoes AF ON E.Acesso = AF.AcessoID
-        LEFT JOIN Funcoes F ON AF.FuncaoID = F.ID";
+            // 3. MONTAGEM COM JOIN
+            string sqlBase = @"SELECT 
+                            E.Codigo, 
+                            E.Modelo, 
+                            E.Tamanho, 
+                            ISNULL(STRING_AGG(F.Nome, ' | '), 'Sem Função') AS NomeFuncao, 
+                            ISNULL(STRING_AGG(F.CorHex, ','), '#808080') AS CorFuncao, 
+                            S.Quant 
+                        FROM EPI E 
+                        LEFT JOIN AcessoFuncoes AF ON E.Acesso = AF.AcessoID 
+                        LEFT JOIN Stock S ON E.Codigo = S.Codigo 
+                        LEFT JOIN Funcoes F ON AF.FuncaoID = F.ID";
 
-            string agrupamento = " GROUP BY E.Modelo, E.Tamanho, E.Quantidade, E.Acesso";
+            string agrupamento = " GROUP BY E.Modelo, E.Tamanho, S.Quant, E.Acesso, E.Codigo";
 
-            if (filtros.Count > 0)
-            {
-                return $"{sqlBase} WHERE {string.Join(" AND ", filtros)} {agrupamento}";
-            }
-
-            return sqlBase + agrupamento;
+            // Como agora a lista 'filtros' nunca estará vazia (tem sempre o S.Estado = 1),
+            // podemos simplificar o retorno:
+            return $"{sqlBase} WHERE {string.Join(" AND ", filtros)} {agrupamento}";
         }
 
         private List<string> FiltroTexto(string coluna, List<string> valores)
@@ -293,7 +293,7 @@ namespace PEPIDI.FormsSecundarios
 
             // Forçar a coluna 1 (TextBox) a crescer para 40% (20% original + 20% da combo)
             tlpControlos.ColumnStyles[1].SizeType = SizeType.Percent;
-            tlpControlos.ColumnStyles[1].Width = 40;
+            tlpControlos.ColumnStyles[1].Width = 20;
 
             txtNome.Visible = true;
             cmbVisaoNome.Visible = false;

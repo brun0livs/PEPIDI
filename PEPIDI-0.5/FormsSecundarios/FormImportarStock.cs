@@ -1,6 +1,6 @@
 ﻿using Guna.UI2.WinForms;
 using Microsoft.Data.SqlClient;
-using PEPIDI.Models; // Confirma se o GetConn está neste namespace ou noutro
+using PEPIDI.Models;
 using PEPIDI.Organizers;
 using PEPIDI.Utils;
 using System;
@@ -15,7 +15,7 @@ namespace PEPIDI.FormsSecundarios
 {
     public partial class FormImportarStock : Form
     {
-        // O nosso dicionário RAM para guardar as regras e não massacrar a Base de Dados
+        // Cache local para a IA
         private Dictionary<string, string> regrasFamilia = new Dictionary<string, string>();
 
         public FormImportarStock()
@@ -23,9 +23,10 @@ namespace PEPIDI.FormsSecundarios
             InitializeComponent();
             ConfigurarGrelha();
 
-            // Ativar DoubleBuffered para a grelha não piscar quando colamos 100 linhas
-            typeof(DataGridView).InvokeMember("DoubleBuffered", System.Reflection.BindingFlags.NonPublic |
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.SetProperty, null, dgvImport, new object[] { true });
+            // Otimização de performance para evitar flickering
+            typeof(DataGridView).InvokeMember("DoubleBuffered",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.SetProperty,
+                null, dgvImport, new object[] { true });
         }
 
         private async void FormImportarStock_Load(object sender, EventArgs e)
@@ -36,30 +37,38 @@ namespace PEPIDI.FormsSecundarios
         }
 
         // ==========================================
-        // 1. CONFIGURAR A GRELHA E O "COLAR DO EXCEL"
+        // 1. CONFIGURAR A GRELHA
         // ==========================================
         private void ConfigurarGrelha()
         {
             dgvImport.Columns.Clear();
+            dgvImport.Columns.Add("Codigo", "Código/Ref");
             dgvImport.Columns.Add("Modelo", "Modelo / Artigo");
             dgvImport.Columns.Add("Tamanho", "Tamanho");
-            dgvImport.Columns.Add("Quantidade", "Quantidade");
+            dgvImport.Columns.Add("Quantidade", "Quant.");
+            dgvImport.Columns.Add("Familia", "Família (IA)");
 
-            // Coluna Inteligente
-            dgvImport.Columns.Add("Familia", "Família (Automática)");
+            // --- Inserção da Coluna de Cores (ComboBox) ---
+            DataGridViewComboBoxColumn colCor = new DataGridViewComboBoxColumn();
+            colCor.Name = "Cor";
+            colCor.HeaderText = "Cor";
+            colCor.DataSource = ObterCoresBD();
+            colCor.DisplayMember = "Nome"; // O que o utilizador vê
+            colCor.ValueMember = "ID";     // O ID que gravamos na BD
+            colCor.FlatStyle = FlatStyle.Flat;
+            dgvImport.Columns.Add(colCor);
 
-            // Destacar a coluna automática a Laranja e Cinza claro
+            // Estética da Família IA
             dgvImport.Columns["Familia"].DefaultCellStyle.BackColor = Color.FromArgb(250, 250, 250);
             dgvImport.Columns["Familia"].DefaultCellStyle.ForeColor = Color.FromArgb(242, 103, 34);
             dgvImport.Columns["Familia"].DefaultCellStyle.Font = new Font("Roboto", 11F, FontStyle.Bold);
 
-            // Ajustar larguras
             dgvImport.Columns["Modelo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dgvImport.Columns["Tamanho"].Width = 120;
-            dgvImport.Columns["Quantidade"].Width = 120;
-            dgvImport.Columns["Familia"].Width = 200;
         }
 
+        // ==========================================
+        // 2. COLAR DO EXCEL E INTELIGÊNCIA ARTIFICIAL
+        // ==========================================
         private void DgvImport_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.V)
@@ -75,37 +84,55 @@ namespace PEPIDI.FormsSecundarios
                         string[] celulas = linha.Split('\t');
                         if (linhaAtual >= dgvImport.Rows.Count - 1) dgvImport.Rows.Add();
 
-                        string modeloColado = celulas[0].Trim();
+                        // DENTRO DO FOREACH DAS LINHAS NO FormImportarStock.cs
+
+                        // Assumimos que no Excel copias APENAS: Modelo | Tamanho | Quantidade
+                        string modeloColado = celulas.Length > 0 ? celulas[0].Trim() : "";
+                        string tamanhoColado = celulas.Length > 1 ? celulas[1].Trim() : "";
+                        string quantColada = celulas.Length > 2 ? celulas[2].Trim() : "1";
+
+                        // 1. O Código fica vazio (será gerado automaticamente depois na gravação)
+                        dgvImport["Codigo", linhaAtual].Value = "";
+
+                        // 2. Colocamos os dados nas colunas certas!
                         dgvImport["Modelo", linhaAtual].Value = modeloColado;
-                        dgvImport["Tamanho", linhaAtual].Value = celulas.Length > 1 ? celulas[1].Trim() : "";
-                        dgvImport["Quantidade", linhaAtual].Value = celulas.Length > 2 ? celulas[2].Trim() : "0";
+                        dgvImport["Tamanho", linhaAtual].Value = tamanhoColado;
+                        dgvImport["Quantidade", linhaAtual].Value = quantColada;
 
-                        // 1. TENTATIVA DE DETECÇÃO
+                        // --- IA: Detetar Família ---
                         string familiaIA = MotorIA.CorrigirFamilia(modeloColado);
-
-                        // 2. O TRUQUE: Se a IA não sabe ("Null"), mas o utilizador já preencheu 
-                        // uma linha acima com o mesmo padrão, a IA aprende NA HORA.
                         if (familiaIA == "Null")
                         {
-                            // Procura nas linhas acima se já existe um modelo que contenha a mesma palavra
                             string primeiraPalavra = modeloColado.Split(' ')[0];
                             familiaIA = ProcurarSugestaoNasLinhasAcima(primeiraPalavra, linhaAtual);
                         }
 
                         dgvImport["Familia", linhaAtual].Value = familiaIA;
-
                         if (familiaIA == "Null")
                             dgvImport["Familia", linhaAtual].Style.BackColor = Color.LightGoldenrodYellow;
+
+                        // --- IA: Detetar Cor ---
+                        string sugestaoCor = MotorIA.ExtrairCorDoModelo(modeloColado);
+                        if (!string.IsNullOrEmpty(sugestaoCor))
+                        {
+                            DataGridViewComboBoxColumn comboCol = (DataGridViewComboBoxColumn)dgvImport.Columns["Cor"];
+                            var dtCores = (DataTable)comboCol.DataSource;
+
+                            DataRow[] rows = dtCores.Select($"Nome = '{sugestaoCor}'");
+                            if (rows.Length > 0)
+                            {
+                                dgvImport["Cor", linhaAtual].Value = rows[0]["ID"];
+                            }
+                        }
 
                         linhaAtual++;
                     }
                     dgvImport.ResumeLayout();
                 }
-                catch (Exception ex) { MessageBox.Show(ex.Message); }
+                catch (Exception ex) { MessageBox.Show("Erro ao colar dados: " + ex.Message); }
             }
         }
 
-        // Método auxiliar para a IA "olhar para cima" na grelha
         private string ProcurarSugestaoNasLinhasAcima(string keyword, int linhaLimite)
         {
             for (int i = 0; i < linhaLimite; i++)
@@ -113,13 +140,168 @@ namespace PEPIDI.FormsSecundarios
                 string modAnterior = dgvImport["Modelo", i].Value?.ToString() ?? "";
                 string famAnterior = dgvImport["Familia", i].Value?.ToString() ?? "";
 
-                // Se a linha de cima tem a mesma palavra e já tem família, usamos essa!
                 if (modAnterior.ToLower().Contains(keyword.ToLower()) && famAnterior != "Null")
                 {
                     return famAnterior;
                 }
             }
             return "Null";
+        }
+
+        // ==========================================
+        // 3. GRAVAÇÃO EM MASSA (BULK INSERT EPI + STOCK)
+        // ==========================================
+        private void btnImportar_Click(object sender, EventArgs e)
+        {
+            List<string> funcoesSelecionadas = flpFuncoes.Controls.OfType<Guna2Button>()
+                .Where(btn => btn.Tag is bool isLigado && isLigado)
+                .Select(btn => btn.Text).ToList();
+
+            if (funcoesSelecionadas.Count == 0)
+            {
+                MessageBox.Show("Tens de selecionar pelo menos uma Função!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DialogResult resposta = MessageBox.Show(
+                "Desejas importar estes artigos para o Stock?",
+                "Confirmação de Importação",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (resposta == DialogResult.Yes)
+            {
+                ProcessarImportacao(funcoesSelecionadas);
+            }
+        }
+
+        private void ProcessarImportacao(List<string> funcoes)
+        {
+            try
+            {
+                int acessoID = ObterOuCriarAcessoID(funcoes);
+                int estadoPadrao = 1; // "Novo"
+                int countSucesso = 0;
+
+                using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+                {
+                    conn.Open();
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            foreach (DataGridViewRow row in dgvImport.Rows)
+                            {
+                                if (row.IsNewRow) continue;
+
+                                string codigo = row.Cells["Codigo"].Value?.ToString();
+                                string modelo = row.Cells["Modelo"].Value?.ToString();
+                                string familia = row.Cells["Familia"].Value?.ToString();
+                                string tamanho = row.Cells["Tamanho"].Value?.ToString();
+                                int quant = Convert.ToInt32(row.Cells["Quantidade"].Value ?? 0);
+                                var idCor = row.Cells["Cor"].Value; // Pode ser null
+
+                                if (string.IsNullOrEmpty(codigo) || familia == "Null" || familia == "") continue;
+
+                                // A. Garantir que o EPI existe (Tabela EPI)
+                                string cmdEpi = @"
+                                    IF NOT EXISTS (SELECT 1 FROM EPI WHERE Codigo = @cod)
+                                    INSERT INTO EPI (Codigo, Familia, Modelo, Tamanho, Cor, Acesso, Ativo) 
+                                    VALUES (@cod, @fam, @mod, @tam, @cor, @acc, 1)";
+
+                                using (SqlCommand cmd = new SqlCommand(cmdEpi, conn, trans))
+                                {
+                                    cmd.Parameters.AddWithValue("@cod", codigo);
+                                    cmd.Parameters.AddWithValue("@fam", familia);
+                                    cmd.Parameters.AddWithValue("@mod", modelo);
+                                    cmd.Parameters.AddWithValue("@tam", tamanho ?? (object)DBNull.Value);
+                                    cmd.Parameters.AddWithValue("@cor", idCor ?? (object)DBNull.Value);
+                                    cmd.Parameters.AddWithValue("@acc", acessoID);
+                                    cmd.ExecuteNonQuery();
+                                }
+
+                                // B. Atualizar Stock (Tabela Stock)
+                                string cmdStock = @"
+                                    IF EXISTS (SELECT 1 FROM Stock WHERE Codigo = @cod AND Estado = @est)
+                                        UPDATE Stock SET Quant = Quant + @q WHERE Codigo = @cod AND Estado = @est
+                                    ELSE
+                                        INSERT INTO Stock (Codigo, Estado, Quant) VALUES (@cod, @est, @q)";
+
+                                using (SqlCommand cmd = new SqlCommand(cmdStock, conn, trans))
+                                {
+                                    cmd.Parameters.AddWithValue("@cod", codigo);
+                                    cmd.Parameters.AddWithValue("@est", estadoPadrao);
+                                    cmd.Parameters.AddWithValue("@q", quant);
+                                    cmd.ExecuteNonQuery();
+                                }
+
+                                // C. Ensinar IA
+                                string keyword = modelo.Split(' ')[0].ToLower();
+                                MotorIA.AprenderNovaRegra(keyword, familia, "Familia");
+
+                                countSucesso++;
+                            }
+
+                            trans.Commit();
+                            MotorIA.CarregarRegrasDaBD(); // Recarrega cache da IA
+                            MessageBox.Show($"{countSucesso} artigos importados com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            this.DialogResult = DialogResult.OK;
+                            this.Close();
+                        }
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw ex;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { MessageBox.Show("Erro Crítico: " + ex.Message); }
+        }
+
+        // ==========================================
+        // 4. MÉTODOS AUXILIARES E EVENTOS
+        // ==========================================
+        private DataTable ObterCoresBD()
+        {
+            using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
+            {
+                string query = "SELECT ID, Nome FROM Cor ORDER BY Nome";
+                SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                return dt;
+            }
+        }
+
+        private void dgvImport_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            string nomeColuna = dgvImport.Columns[e.ColumnIndex].Name;
+
+            if (nomeColuna == "Familia" || nomeColuna == "Cor")
+            {
+                string colunaChave = "Modelo";
+
+                var valorChaveOriginal = dgvImport.Rows[e.RowIndex].Cells[colunaChave].Value?.ToString();
+                var novoValorAtribuido = dgvImport.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+
+                if (string.IsNullOrEmpty(valorChaveOriginal)) return;
+
+                dgvImport.CellValueChanged -= dgvImport_CellValueChanged;
+
+                foreach (DataGridViewRow row in dgvImport.Rows)
+                {
+                    if (row.Index != e.RowIndex && row.Cells[colunaChave].Value?.ToString() == valorChaveOriginal)
+                    {
+                        row.Cells[e.ColumnIndex].Value = novoValorAtribuido;
+                        row.Cells[e.ColumnIndex].Style.BackColor = Color.White;
+                    }
+                }
+
+                // Voltar a ligar o evento (estava em falta no teu bloco original)
+                dgvImport.CellValueChanged += dgvImport_CellValueChanged;
+            }
         }
 
         private async Task CarregarFuncoesAsync()
@@ -156,7 +338,6 @@ namespace PEPIDI.FormsSecundarios
                 tag.BorderRadius = 15;
                 tag.Cursor = Cursors.Hand;
                 tag.Animated = true;
-
                 tag.FillColor = Color.FromArgb(230, 232, 235);
                 tag.ForeColor = Color.FromArgb(64, 64, 64);
                 tag.Margin = new Padding(3);
@@ -184,139 +365,6 @@ namespace PEPIDI.FormsSecundarios
             }
 
             flpFuncoes.ResumeLayout(true);
-        }
-
-        // ==========================================
-        // 4. GRAVAÇÃO EM MASSA (BULK INSERT)
-        // ==========================================
-        private void btnImportar_Click(object sender, EventArgs e)
-        {
-            // 1. Validar as Funções
-            List<string> funcoesSelecionadas = flpFuncoes.Controls.OfType<Guna2Button>()
-                .Where(btn => btn.Tag is bool isLigado && isLigado)
-                .Select(btn => btn.Text).ToList();
-
-            if (funcoesSelecionadas.Count == 0)
-            {
-                MessageBox.Show("Tens de selecionar pelo menos uma Função!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // 2. Filtrar linhas válidas e ENSINAR A IA
-            List<DataGridViewRow> linhasValidas = new List<DataGridViewRow>();
-
-            // Lista temporária para não abrir 500 conexões à BD dentro do loop
-            List<(string Key, string Fam)> novasRegras = new List<(string, string)>();
-
-            foreach (DataGridViewRow row in dgvImport.Rows)
-            {
-                if (row.IsNewRow) continue;
-
-                var cellModelo = row.Cells["Modelo"].Value;
-                var cellFamilia = row.Cells["Familia"].Value;
-
-                if (cellModelo != null && cellFamilia != null)
-                {
-                    string modelo = cellModelo.ToString();
-                    string familiaFinal = cellFamilia.ToString();
-
-                    if (familiaFinal != "Null" && familiaFinal != "")
-                    {
-                        linhasValidas.Add(row);
-
-                        // Se a IA não conhecia (estava amarelo ou Tag era Null)
-                        // Vamos preparar para ensinar
-                        string keyword = modelo.Split(' ')[0].ToLower().Trim();
-                        novasRegras.Add((keyword, familiaFinal));
-                    }
-                }
-            }
-
-            if (linhasValidas.Count == 0)
-            {
-                MessageBox.Show("Não existem linhas válidas com Família definida.");
-                return;
-            }
-
-            // 3. Pergunta duplicados
-            DialogResult resposta = MessageBox.Show(
-                "Desejas somar as quantidades ao stock já existente?",
-                "Tratamento de Duplicados",
-                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-
-            if (resposta == DialogResult.Cancel) return;
-            bool somarAosExistentes = (resposta == DialogResult.Yes);
-
-            // 4. Processar a Gravação
-            try
-            {
-                int acessoID = ObterOuCriarAcessoID(funcoesSelecionadas);
-                int countSucesso = 0;
-
-                using (SqlConnection conn = GetConn.GetConnection())
-                {
-                    conn.Open();
-                    using (SqlTransaction trans = conn.BeginTransaction())
-                    {
-                        try
-                        {
-                            // A. GUARDAR REGRAS NA BD (APRENDER)
-                            foreach (var regra in novasRegras.Distinct())
-                            {
-                                // Chamamos o método que criámos no MotorIA
-                                MotorIA.AprenderNovaRegra(regra.Key, regra.Fam, "Familia");
-                            }
-
-                            // B. GUARDAR STOCK
-                            string query = somarAosExistentes
-                                ? @"IF EXISTS (SELECT 1 FROM EPI WHERE Modelo = @Modelo AND Tamanho = @Tamanho AND Acesso = @Acesso)
-                                UPDATE EPI SET Quantidade = Quantidade + @Quantidade 
-                                WHERE Modelo = @Modelo AND Tamanho = @Tamanho AND Acesso = @Acesso
-                            ELSE
-                                INSERT INTO EPI (Familia, Modelo, Tamanho, Acesso, Quantidade) 
-                                VALUES (@Familia, @Modelo, @Tamanho, @Acesso, @Quantidade)"
-                                : @"INSERT INTO EPI (Familia, Modelo, Tamanho, Acesso, Quantidade) 
-                            VALUES (@Familia, @Modelo, @Tamanho, @Acesso, @Quantidade)";
-
-                            using (SqlCommand cmd = new SqlCommand(query, conn, trans))
-                            {
-                                cmd.Parameters.Add("@Familia", SqlDbType.NVarChar, 100);
-                                cmd.Parameters.Add("@Modelo", SqlDbType.NVarChar, 100);
-                                cmd.Parameters.Add("@Tamanho", SqlDbType.NVarChar, 50);
-                                cmd.Parameters.Add("@Acesso", SqlDbType.Int);
-                                cmd.Parameters.Add("@Quantidade", SqlDbType.Int);
-
-                                foreach (DataGridViewRow row in linhasValidas)
-                                {
-                                    cmd.Parameters["@Familia"].Value = row.Cells["Familia"].Value;
-                                    cmd.Parameters["@Modelo"].Value = row.Cells["Modelo"].Value;
-                                    cmd.Parameters["@Tamanho"].Value = row.Cells["Tamanho"].Value;
-                                    cmd.Parameters["@Acesso"].Value = acessoID;
-                                    cmd.Parameters["@Quantidade"].Value = Convert.ToInt32(row.Cells["Quantidade"].Value ?? 0);
-
-                                    cmd.ExecuteNonQuery();
-                                    countSucesso++;
-                                }
-                            }
-
-                            trans.Commit();
-
-                            // RECARREGAR A RAM DA IA PARA A PRÓXIMA VEZ
-                            MotorIA.CarregarRegrasDaBD();
-
-                            MessageBox.Show($"{countSucesso} artigos importados e IA atualizada!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            this.DialogResult = DialogResult.OK;
-                            this.Close();
-                        }
-                        catch (Exception ex)
-                        {
-                            trans.Rollback();
-                            MessageBox.Show("Erro na transação: " + ex.Message);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex) { MessageBox.Show("Erro Fatal: " + ex.Message); }
         }
 
         private int ObterOuCriarAcessoID(List<string> funcoesSelecionadas)
@@ -371,46 +419,6 @@ namespace PEPIDI.FormsSecundarios
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void dgvImport_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            // 1. Evita erros no cabeçalho ou em grelhas vazias
-            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-
-            // 2. Identifica em que coluna estamos (Familia no Stock / Funcao nos Funcionarios)
-            string nomeColuna = dgvImport.Columns[e.ColumnIndex].Name;
-
-            if (nomeColuna == "Familia" || nomeColuna == "Funcao")
-            {
-                // 3. Descobre qual é a base da comparação (Modelo ou Nome)
-                string colunaChave = dgvImport.Columns.Contains("Modelo") ? "Modelo" : "Nome";
-
-                var valorChaveOriginal = dgvImport.Rows[e.RowIndex].Cells[colunaChave].Value?.ToString();
-                var novoValorAtribuido = dgvImport.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString();
-
-                if (string.IsNullOrEmpty(valorChaveOriginal)) return;
-
-                // --- INÍCIO DA MAGIA ---
-                // Desativamos temporariamente o evento para não entrar em loop infinito
-                dgvImport.CellValueChanged -= dgvImport_CellValueChanged;
-
-                foreach (DataGridViewRow row in dgvImport.Rows)
-                {
-                    // Se o modelo/nome for igual ao que acabaste de mudar...
-                    if (row.Index != e.RowIndex && row.Cells[colunaChave].Value?.ToString() == valorChaveOriginal)
-                    {
-                        // ...então adapta o resto!
-                        row.Cells[e.ColumnIndex].Value = novoValorAtribuido;
-
-                        // Limpa o amarelo (feedback visual de que agora está OK)
-                        row.Cells[e.ColumnIndex].Style.BackColor = Color.White;
-                    }
-                }
-
-                // Voltamos a ligar o evento
-                dgvImport.CellValueChanged += dgvImport_CellValueChanged;
-            }
         }
     }
 }

@@ -167,16 +167,17 @@ namespace PEPIDI.UCs
             if (sql == "ACTION_USADO")
             {
                 // Se for a ação "Stock Usado", aplica a lógica correspondente
-                AplicarQueryNaDgv("SELECT * FROM Roupa");
+                AplicarQueryNaDgv("SELECT E.Codigo, E.Modelo, E.Tamanho, ISNULL(STRING_AGG(F.Nome, ' | '), 'Sem Função') AS NomeFuncao, ISNULL(STRING_AGG(F.CorHex, ','), '#808080') AS CorFuncao, S.Quant FROM EPI E LEFT JOIN AcessoFuncoes AF ON E.Acesso = AF.AcessoID LEFT JOIN Stock S ON E.Codigo = S.Codigo LEFT JOIN Funcoes F ON AF.FuncaoID = F.ID WHERE S.Estado = 2 GROUP BY E.Modelo, E.Tamanho, S.Quant, E.Acesso, E.Codigo", Funcao);
                 return;
             }
 
             // Se for uma Query normal, aplica na grelha!
-            AplicarQueryNaDgv(sql);
+            AplicarQueryNaDgv(sql, Funcao);
         }
 
-        private void AplicarQueryNaDgv(string sql)
+        private void AplicarQueryNaDgv(string sql, string funcao)
         {
+            dgvStock.DataSource = null; // Limpa o DataSource antes de aplicar a nova query
             try
             {
                 using (var con = new SqlConnection(_cs))
@@ -188,18 +189,18 @@ namespace PEPIDI.UCs
                     dgvStock.AutoGenerateColumns = true;
                     dgvStock.DataSource = dt;
 
-                    if(Funcao == "Programador")
+                    if(funcao == "Programador")
                     {
-                        if (dgvStock.Columns.Contains("ID"))
+                        if (dgvStock.Columns.Contains("Codigo"))
                         {
-                            dgvStock.Columns["ID"].Visible =true; // Mostra a coluna ID para os Programadores
+                            dgvStock.Columns["Codigo"].Visible =true; // Mostra a coluna ID para os Programadores
                         }
                     }
                     else
                     {
-                        if (dgvStock.Columns.Contains("ID"))
+                        if (dgvStock.Columns.Contains("Codigo"))
                         {
-                            dgvStock.Columns["ID"].Visible = false; // Esconde a coluna ID para os outros
+                            dgvStock.Columns["Codigo"].Visible = false; // Esconde a coluna ID para os outros
                         }
                     }
 
@@ -213,11 +214,11 @@ namespace PEPIDI.UCs
                         // Escondemos o texto para a pílula aparecer limpa
                         dgvStock.Columns["NomeFuncao"].DefaultCellStyle.ForeColor = Color.Transparent;
                         dgvStock.Columns["NomeFuncao"].DefaultCellStyle.SelectionForeColor = Color.Transparent;
-                    }
-                    dgvStock.BadgeColumnName = "Departamento";
+                        dgvStock.BadgeColumnName = "Departamento";
 
-                    // O BadgeColorColumnName tem de ser igual ao NOME da coluna que traz o HEX (#RRGGBB)
-                    dgvStock.BadgeColorColumnName = "CorFuncao";
+                        // O BadgeColorColumnName tem de ser igual ao NOME da coluna que traz o HEX (#RRGGBB)
+                        dgvStock.BadgeColorColumnName = "CorFuncao";
+                    }
 
                     if (dgvStock.Columns.Contains("Departamento"))
                     {
@@ -245,11 +246,11 @@ namespace PEPIDI.UCs
             if (dgvStock.Columns.Contains("ID"))
             {
                 dgvStock.Columns["ID"].FillWeight = 7; // Quantidade
-                dgvStock.Columns["Quantidade"].FillWeight = 8; // Quantidade
+                dgvStock.Columns["Quant"].FillWeight = 8; // Quantidade
             }
             else
             {
-                dgvStock.Columns["Quantidade"].FillWeight = 15; // Quantidade
+                dgvStock.Columns["Quant"].FillWeight = 15; // Quantidade
             }
         }
 

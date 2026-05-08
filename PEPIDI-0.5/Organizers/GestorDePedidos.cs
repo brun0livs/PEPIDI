@@ -121,12 +121,7 @@ namespace PEPIDI.Organizers
                     }
 
                     // Atualizar PedidoRegistos com observações
-                    SqlCommand aprova = new SqlCommand(@"
-                UPDATE PedidoRegistos 
-                SET Estado = 'Aprovado',
-                    Aprovacao = @Aprovador,
-                    Notas = @Notas
-                WHERE ID = @ID", conn, tran);
+                    SqlCommand aprova = new SqlCommand(@"UPDATE PedidoRegistos SET Estado = 'Aprovado', Aprovacao = @Aprovador, Notas = @Notas WHERE ID = @ID", conn, tran);
 
                     aprova.Parameters.AddWithValue("@ID", idPedido);
                     aprova.Parameters.AddWithValue("@Aprovador", idAprovador);
@@ -259,14 +254,7 @@ namespace PEPIDI.Organizers
             {
                 conn.Open();
 
-                using (SqlCommand cmd = new SqlCommand(@"
-            UPDATE PedidoRegistos
-            SET Estado = 'Rejeitado',
-                Aprovacao = @Reprovador,
-                Entrega = '-',
-                PDF = '-',
-                Notas = @Notas
-            WHERE ID = @ID", conn))
+                using (SqlCommand cmd = new SqlCommand(@"UPDATE PedidoRegistos SET Estado = 'Rejeitado', Aprovacao = @Reprovador, Entrega = '-', PDF = '-', Notas = @Notas WHERE ID = @ID", conn))
                 {
                     cmd.Parameters.AddWithValue("@ID", idPedido);
                     cmd.Parameters.AddWithValue("@Reprovador", idReprovador);

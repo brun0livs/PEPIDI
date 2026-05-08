@@ -7,20 +7,23 @@ namespace PEPIDI.Organizers
 {
     public static class MotorIA
     {
-        // Mudámos para LISTA para garantir que o ORDER BY LEN do SQL seja respeitado no loop
         private static List<KeyValuePair<string, string>> _regrasFamilia = new List<KeyValuePair<string, string>>();
         private static List<KeyValuePair<string, string>> _regrasFuncao = new List<KeyValuePair<string, string>>();
+
+        // --- NOVA LISTA PARA CACHE DAS CORES ---
+        private static List<string> _coresConhecidas = new List<string>();
 
         public static void CarregarRegrasDaBD()
         {
             _regrasFamilia.Clear();
             _regrasFuncao.Clear();
+            _coresConhecidas.Clear(); // Limpar a cache de cores
 
             using (SqlConnection conn = GetConn.GetConnection())
             {
                 conn.Open();
 
-                // FAMÍLIA (STOCK) - Mais compridas primeiro!
+                // 1. FAMÍLIA (STOCK)
                 string sqlFam = "SELECT PalavraChave, FamiliaDestino FROM RegrasFamilia ORDER BY LEN(PalavraChave) DESC";
                 using (SqlCommand cmd = new SqlCommand(sqlFam, conn))
                 using (SqlDataReader rdr = cmd.ExecuteReader())
@@ -33,9 +36,8 @@ namespace PEPIDI.Organizers
                     }
                 }
 
-                // FUNÇÃO (FUNCIONÁRIOS) - Mais compridas primeiro!
+                // 2. FUNÇÃO (FUNCIONÁRIOS)
                 string sqlFunc = "SELECT PalavraChave, FuncaoDestino FROM RegrasFuncao ORDER BY LEN(PalavraChave) DESC";
-
                 using (SqlCommand cmd = new SqlCommand(sqlFunc, conn))
                 using (SqlDataReader rdr = cmd.ExecuteReader())
                 {
@@ -47,15 +49,27 @@ namespace PEPIDI.Organizers
                         ));
                     }
                 }
+
+                // --- 3. CARREGAR AS CORES OFICIAIS ---
+                // O ORDER BY LEN DESC garante que "Azul Escuro" é testado antes de "Azul"
+                string sqlCor = "SELECT Nome FROM Cor ORDER BY LEN(Nome) DESC";
+                using (SqlCommand cmd = new SqlCommand(sqlCor, conn))
+                using (SqlDataReader rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        _coresConhecidas.Add(rdr["Nome"].ToString().Trim());
+                    }
+                }
             }
         }
 
+        // ... (CorrigirFamilia e CorrigirFuncao mantêm-se iguais)
         public static string CorrigirFamilia(string texto)
         {
             if (string.IsNullOrWhiteSpace(texto)) return "Verificar Colagem";
             string busca = texto.ToLower().Trim();
 
-            // O Loop agora respeita a ordem: testa "Polo Manga Comprida" ANTES de "Polo"
             foreach (var regra in _regrasFamilia)
             {
                 if (busca.Contains(regra.Key)) return regra.Value;
@@ -75,20 +89,36 @@ namespace PEPIDI.Organizers
             return "Verificar Colagem";
         }
 
+        // --- NOVO MÉTODO PARA EXTRAIR A COR ---
+        public static string ExtrairCorDoModelo(string texto)
+        {
+            if (string.IsNullOrWhiteSpace(texto)) return "";
+            string busca = texto.ToLower().Trim();
+
+            // Varre as cores conhecidas carregadas da BD
+            foreach (string cor in _coresConhecidas)
+            {
+                // Se a string do excel (ex: "T-Shirt Azul Escuro") contiver a cor da BD
+                if (busca.Contains(cor.ToLower()))
+                {
+                    return cor; // Retorna o nome oficial (útil para selecionar na ComboBox)
+                }
+            }
+
+            return ""; // Retorna vazio se não encontrar menção a cores
+        }
+
         public static void AprenderNovaRegra(string errado, string certo, string tipo, bool recarregar = true)
         {
-            // 1. Validação básica para não guardar lixo
             if (string.IsNullOrWhiteSpace(errado) || string.IsNullOrWhiteSpace(certo)) return;
 
             using (SqlConnection conn = GetConn.GetConnection())
             {
                 conn.Open();
 
-                // 2. Define dinamicamente a tabela e a coluna alvo
                 string tabela = (tipo == "Familia") ? "RegrasFamilia" : "RegrasFuncao";
                 string colDestino = (tipo == "Familia") ? "FamiliaDestino" : "FuncaoDestino";
 
-                // 3. UPSERT: Se a palavra-chave já existe, atualiza o destino. Se não, insere nova.
                 string sql = $@"
             IF EXISTS (SELECT 1 FROM {tabela} WHERE PalavraChave = @e)
                 UPDATE {tabela} SET {colDestino} = @c WHERE PalavraChave = @e
@@ -97,15 +127,12 @@ namespace PEPIDI.Organizers
 
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
-                    // Limpamos e pomos em lowercase para a IA não ser sensível a Caps Lock
                     cmd.Parameters.AddWithValue("@e", errado.ToLower().Trim());
                     cmd.Parameters.AddWithValue("@c", certo.Trim());
                     cmd.ExecuteNonQuery();
                 }
             }
 
-            // 4. A MAGIA DA PERFORMANCE:
-            // Só recarrega a lista da RAM se o utilizador pedir (padrão é sim)
             if (recarregar)
             {
                 CarregarRegrasDaBD();

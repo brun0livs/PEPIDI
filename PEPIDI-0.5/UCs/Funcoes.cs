@@ -28,7 +28,7 @@ namespace PEPIDI.UCs
 
         private void Funcoes_Load(object sender, EventArgs e)
         {
-            CarregarDGV(dgvFuncoes);
+            CarregarDGV(dgvFuncoes, funcao);
             TouchScrollHelper.AtivarScrollPorArrasto(dgvFuncoes);
             GestorTema.AplicarEstilos(this);
 
@@ -42,7 +42,7 @@ namespace PEPIDI.UCs
         }
 
 
-        private DataTable CarregarDGV(PEPIDIDataGridView dgv)
+        private DataTable CarregarDGV(PEPIDIDataGridView dgv, string Funcao)
         {
             dgv.AutoGenerateColumns = false;
 
@@ -73,7 +73,13 @@ namespace PEPIDI.UCs
 
             // --- ACTIVAR BADGES COLORIDAS ---
             // Isto diz à tua classe personalizada para procurar a coluna com HeaderText "Função"
-            dgv.Columns["ID"].Visible = true;
+            if (Funcao == "Programador")
+            {
+                dgv.Columns["ID"].Visible = true;
+            }else 
+            {
+                dgv.Columns["ID"].Visible = false;
+            }
             dgv.BadgeColumnName = "Nome";
             dgv.BadgeColorColumnName = "CorHex";
             dgv.Columns["CorHex"].Visible = false; // Esconder a coluna que tem o código da cor, já que a cor vai ser mostrada no badge  
@@ -155,7 +161,7 @@ namespace PEPIDI.UCs
                 {
                     if (frm.ShowDialog() == DialogResult.OK)
                     {
-                        CarregarDGV(dgvFuncoes);
+                        CarregarDGV(dgvFuncoes, funcao);
                     }
                 }
             }
@@ -202,7 +208,7 @@ namespace PEPIDI.UCs
 
                     if (frm.ShowDialog(overlay) == DialogResult.OK)
                     {
-                        CarregarDGV(dgvFuncoes);
+                        CarregarDGV(dgvFuncoes, funcao);
                     }
                 }
 

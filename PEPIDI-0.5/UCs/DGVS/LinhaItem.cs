@@ -211,11 +211,15 @@ namespace PEPIDI.UCs.DGVS
             QuantidadeAlterada?.Invoke(this, EventArgs.Empty);
         }
 
-        private void cmbEstado_SelectedIndexChanged(object sender, EventArgs e)
+        private int stockNovo;
+        private int stockUsado;
+
+        public void AtualizarLabels(int novo, int usado)
         {
-            // Avisa o Form Principal que o estado mudou!
-            EstadoAlterado?.Invoke(this, EventArgs.Empty);
+            this.stockNovo = novo;
+            this.stockUsado = usado;
         }
+
 
         private void ChkEntregar_CheckedChanged(object sender, EventArgs e)
         {
@@ -228,12 +232,18 @@ namespace PEPIDI.UCs.DGVS
         // =========================================================================
         // O CÉREBRO DA SUGESTÃO DE STOCK (Chamado pelo Formulário Pai)
         // =========================================================================
+        // Variáveis globais dentro da classe LinhaItem
+        private int memoriaStockNovo;
+        private int memoriaStockUsado;
+
         public void ConfigurarSugestaoStock(int qtdNovo, int qtdUsado)
         {
             if (cmbEstado == null) return;
 
-            // Desliga os eventos temporariamente se necessário, mas aqui a ordem resolve.
-            cmbEstado.DataSource = null;
+            // GUARDAR OS VALORES PARA USO POSTERIOR
+            this.memoriaStockNovo = qtdNovo;
+            this.memoriaStockUsado = qtdUsado;
+
             cmbEstado.Items.Clear();
             this.ObservacoesAutomaticas = "";
 
@@ -242,37 +252,49 @@ namespace PEPIDI.UCs.DGVS
 
             if (temNovo && temUsado)
             {
-                // CASO 1: Existem os dois tipos (Padrão Novo)
                 cmbEstado.Items.Add("Novo");
                 cmbEstado.Items.Add("Usado");
-                cmbEstado.Enabled = true;    // 1º Define o estado (Destrancado)
-                cmbEstado.SelectedIndex = 0; // 2º Dispara o evento
+                cmbEstado.Enabled = true;
+                cmbEstado.SelectedIndex = 0;
             }
             else if (temNovo)
             {
-                // CASO 2: Só existe Novo
                 cmbEstado.Items.Add("Novo");
-                cmbEstado.Enabled = false;   // 1º Tranca
-                cmbEstado.SelectedIndex = 0; // 2º Dispara o evento
+                cmbEstado.Enabled = false;
+                cmbEstado.SelectedIndex = 0;
             }
             else if (temUsado)
             {
-                // CASO 3: Só existe Usado
                 cmbEstado.Items.Add("Usado");
-
-                cmbEstado.Enabled = false; // 1º TRANCA LOGO!
-                this.ObservacoesAutomaticas = " (sem stock de novo)"; // 2º PREPARA A MENSAGEM!
-
-                cmbEstado.SelectedIndex = 0; // 3º AGORA SIM, DISPARA O EVENTO! (Ele já vai ler que está trancado)
+                cmbEstado.Enabled = false;
+                this.ObservacoesAutomaticas = " (sem stock de novo)";
+                cmbEstado.SelectedIndex = 0;
             }
-            else
+
+            // Forçar a label a mostrar o valor inicial correto
+            AtualizarLabelQuantidade();
+        }
+
+        // NOVO MÉTODO: Para atualizar o que o utilizador vê
+        private void AtualizarLabelQuantidade()
+        {
+            if (cmbEstado.Text == "Novo")
             {
-                // CASO 4: Não há stock de nenhum!
-                cmbEstado.Items.Add("SEM STOCK");
-                this.BackColor = Color.MistyRose;
-
-                if (cmbEstado.Items.Count > 0) cmbEstado.SelectedIndex = 0;
+                lblQuantDisp.Text = memoriaStockNovo.ToString();
+                this.QD = memoriaStockNovo; // Atualiza a propriedade de controlo
             }
+            else if (cmbEstado.Text == "Usado")
+            {
+                lblQuantDisp.Text = memoriaStockUsado.ToString();
+                this.QD = memoriaStockUsado; // Atualiza a propriedade de controlo
+            }
+        }
+
+        // Certifica-te que este evento está ligado à cmbEstado no Designer!
+        private void cmbEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AtualizarLabelQuantidade();
+            EstadoAlterado?.Invoke(this, EventArgs.Empty);
         }
     }
 }

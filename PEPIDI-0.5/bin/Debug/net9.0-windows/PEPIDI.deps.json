@@ -195,9 +195,7 @@
           "Microsoft.Extensions.Caching.Memory": "9.0.13",
           "Microsoft.IdentityModel.JsonWebTokens": "8.16.0",
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "8.16.0",
-          "Microsoft.SqlServer.Server": "1.0.0",
-          "System.Configuration.ConfigurationManager": "9.0.13",
-          "System.Security.Cryptography.Pkcs": "9.0.13"
+          "Microsoft.SqlServer.Server": "1.0.0"
         },
         "runtime": {
           "lib/net9.0/Microsoft.Data.SqlClient.dll": {
@@ -540,18 +538,6 @@
           }
         }
       },
-      "System.Configuration.ConfigurationManager/9.0.13": {
-        "dependencies": {
-          "System.Diagnostics.EventLog": "9.0.13",
-          "System.Security.Cryptography.ProtectedData": "9.0.13"
-        },
-        "runtime": {
-          "lib/net9.0/System.Configuration.ConfigurationManager.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.1326.6317"
-          }
-        }
-      },
       "System.Data.SqlClient/4.9.1": {
         "dependencies": {
           "runtime.native.System.Data.SqlClient.sni": "4.4.0"
@@ -574,22 +560,6 @@
             "assetType": "runtime",
             "assemblyVersion": "4.6.1.6",
             "fileVersion": "4.900.126.11103"
-          }
-        }
-      },
-      "System.Diagnostics.EventLog/9.0.13": {
-        "runtime": {
-          "lib/net9.0/System.Diagnostics.EventLog.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.1326.6317"
-          }
-        },
-        "runtimeTargets": {
-          "runtimes/win/lib/net9.0/System.Diagnostics.EventLog.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.1326.6317"
           }
         }
       },
@@ -626,30 +596,6 @@
             "assetType": "runtime",
             "assemblyVersion": "4.0.0.0",
             "fileVersion": "7.0.22.51805"
-          }
-        }
-      },
-      "System.Security.Cryptography.Pkcs/9.0.13": {
-        "runtime": {
-          "lib/net9.0/System.Security.Cryptography.Pkcs.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.1326.6317"
-          }
-        },
-        "runtimeTargets": {
-          "runtimes/win/lib/net9.0/System.Security.Cryptography.Pkcs.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.1326.6317"
-          }
-        }
-      },
-      "System.Security.Cryptography.ProtectedData/9.0.13": {
-        "runtime": {
-          "lib/net9.0/System.Security.Cryptography.ProtectedData.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.1326.6317"
           }
         }
       },
@@ -968,26 +914,12 @@
       "path": "sixlabors.fonts/1.0.0",
       "hashPath": "sixlabors.fonts.1.0.0.nupkg.sha512"
     },
-    "System.Configuration.ConfigurationManager/9.0.13": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-GbBrJq9S/gYpHzm7Pxx6Y5tDyfSfyxW6tlP5oiKJV38uf19Wp+GIIAnWfyL1zmNiz1+EjwVapw2WkBFvvqKQzg==",
-      "path": "system.configuration.configurationmanager/9.0.13",
-      "hashPath": "system.configuration.configurationmanager.9.0.13.nupkg.sha512"
-    },
     "System.Data.SqlClient/4.9.1": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-A7RK9I4UaVHJ407GTfy37S4ABHt1+lZ+/uoA54zTv0XaaWgHO5BtXSMzMVqB6socIHEeeK5K1YRgaxCEfD79wQ==",
       "path": "system.data.sqlclient/4.9.1",
       "hashPath": "system.data.sqlclient.4.9.1.nupkg.sha512"
-    },
-    "System.Diagnostics.EventLog/9.0.13": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-675Rk4RwaVrWo09wrR2rpDVKixtgtnhd5NhPrn6O21uj92JvE61KTGupn76M2N6Ff/xJjY3SHSfSg0MIanEzGw==",
-      "path": "system.diagnostics.eventlog/9.0.13",
-      "hashPath": "system.diagnostics.eventlog.9.0.13.nupkg.sha512"
     },
     "System.IdentityModel.Tokens.Jwt/8.16.0": {
       "type": "package",
@@ -1009,20 +941,6 @@
       "sha512": "sha512-A4jed4QUviDOm7fJNKAJObEAEkEUXmkGL/w0iyCYTzrl1rezTj8LGFHfsVst4Vb9JwFcTpboiDrvdST48avBpw==",
       "path": "system.management/7.0.0",
       "hashPath": "system.management.7.0.0.nupkg.sha512"
-    },
-    "System.Security.Cryptography.Pkcs/9.0.13": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-dxJhkuoaelvWy588wPXjShNks+ZMiSgXnN75/u+DPbER5PqKrLPDftE0BvGM7nDK/scQAVlD+gRXlCAAjWi58Q==",
-      "path": "system.security.cryptography.pkcs/9.0.13",
-      "hashPath": "system.security.cryptography.pkcs.9.0.13.nupkg.sha512"
-    },
-    "System.Security.Cryptography.ProtectedData/9.0.13": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-t8S9IDpjJKsLpLkeBdW8cWtcPyYqrGu93Dej1RO6WwuL/lkFSqWlan3rMJfortqz1mRIh+sys2AFsSA6jWJ3Jg==",
-      "path": "system.security.cryptography.protecteddata/9.0.13",
-      "hashPath": "system.security.cryptography.protecteddata.9.0.13.nupkg.sha512"
     },
     "System.Text.Encodings.Web/10.0.2": {
       "type": "package",

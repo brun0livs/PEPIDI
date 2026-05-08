@@ -70,6 +70,7 @@ namespace PEPIDI.UCs
                 lblTituloPedidos.Text = "PEDIDOS FINALIZADOS";
                 lblTituloPedidos.ForeColor = Color.Black;
                 if (dgvPedidos.Columns.Contains("Check")) dgvPedidos.Columns["Check"].Visible = false;
+                if (dgvPedidos.Columns.Contains("Funcao")) dgvPedidos.Columns["Funcao"].Visible = false;
             }
 
             CarregarPedidosPorEstado(dgvPedidos, estado);
@@ -79,11 +80,11 @@ namespace PEPIDI.UCs
         {
             if (funcao == "Programador")
             {
-                dgvPedidos.Columns["ID"].Visible = true;
-                dgvPedidos.Columns["NomeAprovador"].Visible = true;
-                dgvPedidos.Columns["NomeEntrega"].Visible = true;
-                dgvPedidos.Columns["PDF"].Visible = true;
-                dgvPedidos.Columns["PedidoEstado"].Visible = true;
+                if (dgvPedidos.Columns.Contains("ID")) dgvPedidos.Columns["ID"].Visible = true;
+                if (dgvPedidos.Columns.Contains("NomeAprovador")) dgvPedidos.Columns["NomeAprovador"].Visible = true;
+                if (dgvPedidos.Columns.Contains("NomeEntrega")) dgvPedidos.Columns["NomeEntrega"].Visible = true;
+                if (dgvPedidos.Columns.Contains("PDF")) dgvPedidos.Columns["PDF"].Visible = true;
+                // Removido o PedidoEstado daqui para não dar conflito com o CarregarPedidosPorEstado
             }
         }
 
@@ -124,44 +125,45 @@ namespace PEPIDI.UCs
             if (gdp == null) return;
 
             DataTable dt = gdp.CarregarPedidosPorEstado(estado);
-            dgv.DataSource = null;
+            dgv.DataSource = null; // Limpa para resetar o binding
 
             if (dt == null || dt.Rows.Count == 0) return;
 
             // 1. CONFIGURAÇÃO DOS BADGES
-            dgv.BadgeColumnName = "Estado"; // HeaderText da coluna PedidoEstado
+            dgv.BadgeColumnName = "Estado";
             dgv.BadgeColorColumnName = "CorHex";
 
-            // 2. MAPEAMENTO TOTAL (SQL -> Designer)
-            // Básicos
+            // 2. MAPEAMENTO LIMPO (Removi as duplicatas que tinhas no PedidoEstado)
             if (dgv.Columns.Contains("ID")) dgv.Columns["ID"].DataPropertyName = "ID";
             if (dgv.Columns.Contains("Data")) dgv.Columns["Data"].DataPropertyName = "Data";
             if (dgv.Columns.Contains("NrFunc")) dgv.Columns["NrFunc"].DataPropertyName = "NrFunc";
             if (dgv.Columns.Contains("NomeFunc")) dgv.Columns["NomeFunc"].DataPropertyName = "NomeFunc";
 
-            // O QUE FALTA (Baseado no teu Designer)
-            if (dgv.Columns.Contains("PedidoEstado")) dgv.Columns["PedidoEstado"].DataPropertyName = "Funcao";
-            if (dgv.Columns.Contains("PedidoEstado")) dgv.Columns["PedidoEstado"].DataPropertyName = "Funcao1";
+            // Mapeia a coluna PedidoEstado apenas para o campo "Estado" do SQL
             if (dgv.Columns.Contains("PedidoEstado")) dgv.Columns["PedidoEstado"].DataPropertyName = "Estado";
+
             if (dgv.Columns.Contains("NomeAprovador")) dgv.Columns["NomeAprovador"].DataPropertyName = "NomeAprovador";
             if (dgv.Columns.Contains("NomeEntrega")) dgv.Columns["NomeEntrega"].DataPropertyName = "NomeEntrega";
             if (dgv.Columns.Contains("PDF")) dgv.Columns["PDF"].DataPropertyName = "PDF";
-
-            // Coluna da cor (Lógica)
             if (dgv.Columns.Contains("CorHex")) dgv.Columns["CorHex"].DataPropertyName = "Funcao1";
 
             // 3. ATRIBUIÇÃO
             dgv.DataSource = dt;
 
-            // 4. AJUSTES VISUAIS
-            if (dgv.Columns.Contains("PedidoEstado"))
+            // A REGRA DE OURO:
+            // Só mostramos a "Funcao" se NÃO for um pedido Finalizado.
+            if (dgv.Columns.Contains("Funcao"))
             {
-                // Transparência para o badge da classe PEPIDIDataGridView
-                dgv.Columns["PedidoEstado"].DefaultCellStyle.ForeColor = Color.Transparent;
-                dgv.Columns["PedidoEstado"].DefaultCellStyle.SelectionForeColor = Color.Transparent;
+                dgv.Columns["Funcao"].Visible = (estado != "Finalizado");
             }
 
-            if (dgv.Columns.Contains("CorHex")) dgv.Columns["CorHex"].Visible = false;
+            // Se a coluna no Designer se chamar "PedidoEstado", fazemos o mesmo:
+            if (dgv.Columns.Contains("PedidoEstado"))
+            {
+                // Se fores Programador, ela aparece sempre. Se não, segue a regra do estado.
+                bool eProgramador = (this.funcao == "Programador");
+                dgv.Columns["PedidoEstado"].Visible = eProgramador || (estado != "Finalizado");
+            }
         }
 
         private async void DgvPedidos_CellClick(object sender, DataGridViewCellEventArgs e)

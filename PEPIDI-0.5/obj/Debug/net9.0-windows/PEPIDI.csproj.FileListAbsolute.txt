@@ -236,15 +236,9 @@ C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\M
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\Microsoft.Data.SqlClient.Internal.Logging.dll
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\RBush.dll
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\SixLabors.Fonts.dll
-C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\System.Configuration.ConfigurationManager.dll
-C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\System.Diagnostics.EventLog.dll
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\System.IO.Pipelines.dll
-C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\System.Security.Cryptography.Pkcs.dll
-C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\System.Security.Cryptography.ProtectedData.dll
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\System.Text.Encodings.Web.dll
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\System.Text.Json.dll
-C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\runtimes\win\lib\net9.0\System.Diagnostics.EventLog.dll
-C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\runtimes\win\lib\net9.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\bin\Debug\net9.0-windows\runtimes\win\lib\net9.0\System.Text.Encodings.Web.dll
 C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\PEPIDI-0.5\obj\Debug\net9.0-windows\PEPIDI.FormsSecundarios.FormNovaPasse.resources
