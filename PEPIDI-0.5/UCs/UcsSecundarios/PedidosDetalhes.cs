@@ -387,12 +387,14 @@ namespace PEPIDI.UCs.UcsSecundarios
                             {
                                 if (c is LinhaItem linha)
                                 {
-                                    SqlCommand cmdItem = new SqlCommand("sp_AtualizarQuantidadePedidoPacote", conn, trans);
-                                    cmdItem.CommandType = CommandType.StoredProcedure;
-                                    cmdItem.Parameters.AddWithValue("@IDPedido", this.ID);
-                                    cmdItem.Parameters.AddWithValue("@IDEPI", linha.IDEPI);
-                                    cmdItem.Parameters.AddWithValue("@NovaQuantidade", linha.QuantidadeSelecionada);
-                                    cmdItem.ExecuteNonQuery();
+                                    using (SqlCommand cmdItem = new SqlCommand("sp_AtualizarQuantidadePedidoPacote", conn, trans))
+                                    {
+                                        cmdItem.CommandType = CommandType.StoredProcedure;
+                                        cmdItem.Parameters.AddWithValue("@IDPedido", this.ID);
+                                        cmdItem.Parameters.AddWithValue("@IDEPI", linha.IDEPI);
+                                        cmdItem.Parameters.AddWithValue("@NovaQuantidade", linha.QuantidadeSelecionada);
+                                        cmdItem.ExecuteNonQuery();
+                                    }
                                 }
                             }
 
@@ -411,13 +413,16 @@ namespace PEPIDI.UCs.UcsSecundarios
                             trans.Commit();
                             M.AbrirMensagem("Pedido Aprovado! Agora está pronto para entrega.", "Sucesso");
 
-                            this.Parent.Controls.Remove(this);
-                            this.Dispose();
+                            if (this.Parent != null)
+                            {
+                                this.Parent.Controls.Remove(this);
+                                this.Dispose();
+                            }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             trans.Rollback();
-                            throw ex;
+                            throw;
                         }
                     }
                 }
@@ -535,8 +540,11 @@ namespace PEPIDI.UCs.UcsSecundarios
                                     M.AbrirMensagem("Entrega e retoma finalizadas com sucesso!\nPDF Gerado.", "Sucesso");
                                     try { System.Diagnostics.Process.Start("explorer.exe", caminhoPDF); } catch { }
 
-                                    this.Parent.Controls.Remove(this);
-                                    this.Dispose();
+                                    if (this.Parent != null)
+                                    {
+                                        this.Parent.Controls.Remove(this);
+                                        this.Dispose();
+                                    }
                                 }
                                 catch (Exception)
                                 {
