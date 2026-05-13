@@ -604,6 +604,8 @@ namespace PEPIDI.UCs.UcsSecundarios
                     try
                     {
                         string path = PDFGenerator.GerarComprovativo(this.ID, NomeFuncionario, NMEC, FuncaoFuncionario, NomeGestor, listaReceber, listaDevolver, frm.AssinaturaFinal);
+                        string notas = txtObs.Text.Trim() + Environment.NewLine + $"[Finalizado por {NomeGestor} com assinatura de {NomeFuncionario}]";
+
                         using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
                         {
                             conn.Open();
@@ -611,10 +613,21 @@ namespace PEPIDI.UCs.UcsSecundarios
                             {
                                 try
                                 {
-                                    // Fechar Pedido
-                                    new SqlCommand($"UPDATE PedidoRegistos SET Estado='Finalizado', PDF='{path}', Entrega={IDGestor}, AlteradoPor={IDGestor}, AlteracaoData=GETDATE() WHERE ID={this.ID}", conn, trans).ExecuteNonQuery();
+                                    // 1. Fechar Pedido (Parametrizado para evitar erro de sintaxe nas notas)
+                                    string sqlFechar = @"UPDATE PedidoRegistos 
+                                       SET Estado = 'Finalizado', PDF = @path, Entrega = @gestor, 
+                                           AlteradoPor = @gestor, AlteracaoData = GETDATE(), Notas = @notas 
+                                       WHERE ID = @id";
+                                    using (SqlCommand cmdF = new SqlCommand(sqlFechar, conn, trans))
+                                    {
+                                        cmdF.Parameters.AddWithValue("@path", path);
+                                        cmdF.Parameters.AddWithValue("@gestor", IDGestor);
+                                        cmdF.Parameters.AddWithValue("@notas", notas);
+                                        cmdF.Parameters.AddWithValue("@id", this.ID);
+                                        cmdF.ExecuteNonQuery();
+                                    }
 
-                                    // RESTAURADO: Devolver stock se o Gestor desmarcou a checkbox na hora da entrega
+                                    // 2. Devolver stock se o Gestor desmarcou a checkbox
                                     foreach (var item in todosOsItens)
                                     {
                                         if (!item.ComVisto)
@@ -628,45 +641,72 @@ namespace PEPIDI.UCs.UcsSecundarios
                                                     {
                                                         int idS = Convert.ToInt32(dr["IDStock"]);
                                                         int q = Convert.ToInt32(dr["Quantidade"]);
-                                                        new SqlCommand($"UPDATE Stock SET Quant=Quant+{q} WHERE ID={idS}", conn, trans).ExecuteNonQuery();
+
+                                                        using (SqlCommand cmdUpStock = new SqlCommand("UPDATE Stock SET Quant = Quant + @q WHERE ID = @ids", conn, trans))
+                                                        {
+                                                            cmdUpStock.Parameters.AddWithValue("@q", q);
+                                                            cmdUpStock.Parameters.AddWithValue("@ids", idS);
+                                                            cmdUpStock.ExecuteNonQuery();
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
-                                        new SqlCommand($"UPDATE PedidoPacote SET Quantidade={item.QtdFinal} WHERE ID={item.IDLinha}", conn, trans).ExecuteNonQuery();
+
+                                        // Atualiza a quantidade final no pacote
+                                        using (SqlCommand cmdUpPP = new SqlCommand("UPDATE PedidoPacote SET Quantidade = @q WHERE ID = @id", conn, trans))
+                                        {
+                                            cmdUpPP.Parameters.AddWithValue("@q", item.QtdFinal);
+                                            cmdUpPP.Parameters.AddWithValue("@id", item.IDLinha);
+                                            cmdUpPP.ExecuteNonQuery();
+                                        }
                                     }
 
-                                    // Tratar Retomas (Inclui Estado 3 - Gasto)
+                                    // 3. Tratar Retomas
                                     foreach (Control c in flpDevolucoes.Controls)
                                     {
                                         if (c is LinhaDevolucao d && d.QuantidadeDevolvida > 0)
                                         {
                                             int est = (d.EstadoSelecionado == "Novo") ? 1 : (d.EstadoSelecionado == "Usado" ? 2 : 3);
                                             int idS = 0;
-                                            var cmdS = new SqlCommand("SELECT ID FROM Stock WHERE Codigo=@c AND Estado=@e", conn, trans);
+                                            string codEpi = d.Tag.ToString().Trim();
 
-                                            // 2º TRIM: Na hora de procurar a prateleira da devolução
-                                            cmdS.Parameters.AddWithValue("@c", d.Tag.ToString().Trim());
-                                            cmdS.Parameters.AddWithValue("@e", est);
-
-                                            var res = cmdS.ExecuteScalar();
-                                            if (res == null)
+                                            using (SqlCommand cmdS = new SqlCommand("SELECT ID FROM Stock WHERE Codigo = @c AND Estado = @e", conn, trans))
                                             {
-                                                var cmdI = new SqlCommand("INSERT INTO Stock (Codigo, Estado, Quant) OUTPUT INSERTED.ID VALUES (@c, @e, 0)", conn, trans);
+                                                cmdS.Parameters.AddWithValue("@c", codEpi);
+                                                cmdS.Parameters.AddWithValue("@e", est);
+                                                var res = cmdS.ExecuteScalar();
 
-                                                // 3º TRIM: Se a prateleira não existir e formos criar uma nova
-                                                cmdI.Parameters.AddWithValue("@c", d.Tag.ToString().Trim());
-                                                cmdI.Parameters.AddWithValue("@e", est);
-
-                                                idS = Convert.ToInt32(cmdI.ExecuteScalar());
+                                                if (res == null)
+                                                {
+                                                    using (SqlCommand cmdI = new SqlCommand("INSERT INTO Stock (Codigo, Estado, Quant) OUTPUT INSERTED.ID VALUES (@c, @e, 0)", conn, trans))
+                                                    {
+                                                        cmdI.Parameters.AddWithValue("@c", codEpi);
+                                                        cmdI.Parameters.AddWithValue("@e", est);
+                                                        idS = Convert.ToInt32(cmdI.ExecuteScalar());
+                                                    }
+                                                }
+                                                else idS = Convert.ToInt32(res);
                                             }
-                                            else idS = Convert.ToInt32(res);
 
-                                            // Somar à prateleira e registar o histórico
-                                            new SqlCommand($"UPDATE Stock SET Quant=Quant+{d.QuantidadeDevolvida} WHERE ID={idS}", conn, trans).ExecuteNonQuery();
-                                            new SqlCommand($"UPDATE RoupaPacote SET IDStock={idS} WHERE ID={d.IDEPI}", conn, trans).ExecuteNonQuery();
+                                            // Somar à prateleira
+                                            using (SqlCommand cmdSum = new SqlCommand("UPDATE Stock SET Quant = Quant + @q WHERE ID = @ids", conn, trans))
+                                            {
+                                                cmdSum.Parameters.AddWithValue("@q", d.QuantidadeDevolvida);
+                                                cmdSum.Parameters.AddWithValue("@ids", idS);
+                                                cmdSum.ExecuteNonQuery();
+                                            }
+
+                                            // Registar no pacote de roupa
+                                            using (SqlCommand cmdUpRP = new SqlCommand("UPDATE RoupaPacote SET IDStock = @ids WHERE ID = @id", conn, trans))
+                                            {
+                                                cmdUpRP.Parameters.AddWithValue("@ids", idS);
+                                                cmdUpRP.Parameters.AddWithValue("@id", d.IDEPI);
+                                                cmdUpRP.ExecuteNonQuery();
+                                            }
                                         }
                                     }
+
                                     trans.Commit();
                                     System.Diagnostics.Process.Start("explorer.exe", path);
                                     AcaoConcluida?.Invoke(this, EventArgs.Empty);
@@ -675,7 +715,7 @@ namespace PEPIDI.UCs.UcsSecundarios
                             }
                         }
                     }
-                    catch (Exception ex) { M.AbrirMensagem(ex.Message, "Erro"); }
+                    catch (Exception ex) { M.AbrirMensagem("Erro ao finalizar: " + ex.Message, "Erro"); }
                 }
             }
             else { AbrirComprovativoExistente(); }
