@@ -471,6 +471,7 @@
             dtpInicio.TabIndex = 7;
             dtpInicio.TextAlign = HorizontalAlignment.Center;
             dtpInicio.Value = new DateTime(2026, 3, 19, 0, 0, 0, 0);
+            dtpInicio.ValueChanged += Filtros_Changed;
             dtpInicio.DataContextChanged += Filtros_Changed;
             // 
             // dtpFim
@@ -498,6 +499,7 @@
             dtpFim.TabIndex = 7;
             dtpFim.TextAlign = HorizontalAlignment.Center;
             dtpFim.Value = new DateTime(2026, 3, 19, 0, 0, 0, 0);
+            dtpFim.ValueChanged += Filtros_Changed;
             dtpFim.CursorChanged += Filtros_Changed;
             // 
             // tableLayoutPanel2

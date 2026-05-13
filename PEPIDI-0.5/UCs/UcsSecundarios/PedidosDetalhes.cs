@@ -156,12 +156,17 @@ namespace PEPIDI.UCs.UcsSecundarios
             {
                 btnAprovar.Text = "Comprovativo";
                 btnReprovar.Enabled = false;
+                // A MARRETA VISUAL: Protege o histórico!
+                txtObs.ReadOnly = true;
+                txtObs.BackColor = Color.WhiteSmoke; // Dá um aspeto de "bloqueado"
+
             }
 
-            VerComentario(ID);
 
             await CarregarPPacoteAsync(pnlConteudo, ID, estado, pnlScroll, flpLinhas);
             await CarregarDPacoteAsync(flpDevolucoes, pnlScroll2, ID, estado);
+
+            VerComentario(ID);
         }
 
         private void CarregarDadosFuncionario(int idPedido)
@@ -380,8 +385,7 @@ namespace PEPIDI.UCs.UcsSecundarios
 
         private void Linha_QuantidadeAlterada(object sender, EventArgs e)
         {
-            if (this.Estado.Equals("Aprovado", StringComparison.OrdinalIgnoreCase) ||
-                this.Estado.Equals("Concluido", StringComparison.OrdinalIgnoreCase))
+            if (this.Estado != "Pendente")
             {
                 return;
             }

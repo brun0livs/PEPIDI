@@ -60,7 +60,7 @@
             guna2Panel1.Margin = new Padding(5);
             guna2Panel1.Name = "guna2Panel1";
             guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            guna2Panel1.Size = new Size(908, 788);
+            guna2Panel1.Size = new Size(1114, 788);
             guna2Panel1.TabIndex = 5;
             // 
             // dgvStock
@@ -108,15 +108,15 @@
             dgvStock.RowTemplate.Height = 54;
             dgvStock.ScrollBars = ScrollBars.None;
             dgvStock.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvStock.Size = new Size(908, 788);
+            dgvStock.Size = new Size(1114, 788);
             dgvStock.TabIndex = 4;
             dgvStock.CellClick += dgvStock_CellClick;
             // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 61.186718F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 38.813282F));
             tableLayoutPanel1.Controls.Add(guna2Panel1, 0, 1);
             tableLayoutPanel1.Controls.Add(pnlDetails, 1, 1);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 1, 0);
@@ -134,10 +134,10 @@
             // pnlDetails
             // 
             pnlDetails.Dock = DockStyle.Fill;
-            pnlDetails.Location = new Point(923, 60);
+            pnlDetails.Location = new Point(1129, 60);
             pnlDetails.Margin = new Padding(5, 0, 5, 10);
             pnlDetails.Name = "pnlDetails";
-            pnlDetails.Size = new Size(909, 788);
+            pnlDetails.Size = new Size(703, 788);
             pnlDetails.TabIndex = 7;
             // 
             // tableLayoutPanel2
@@ -148,12 +148,12 @@
             tableLayoutPanel2.Controls.Add(btnImportarEPI, 1, 0);
             tableLayoutPanel2.Controls.Add(btnCriarEPI, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(918, 0);
+            tableLayoutPanel2.Location = new Point(1124, 0);
             tableLayoutPanel2.Margin = new Padding(0);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.Size = new Size(919, 60);
+            tableLayoutPanel2.Size = new Size(713, 60);
             tableLayoutPanel2.TabIndex = 8;
             // 
             // btnImportarEPI
@@ -171,11 +171,11 @@
             btnImportarEPI.Font = new Font("Roboto", 15F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnImportarEPI.ForeColor = Color.White;
             btnImportarEPI.Image = (Image)resources.GetObject("btnImportarEPI.Image");
-            btnImportarEPI.Location = new Point(469, 12);
+            btnImportarEPI.Location = new Point(366, 12);
             btnImportarEPI.Margin = new Padding(10, 12, 10, 12);
             btnImportarEPI.Name = "btnImportarEPI";
             btnImportarEPI.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            btnImportarEPI.Size = new Size(440, 36);
+            btnImportarEPI.Size = new Size(337, 36);
             btnImportarEPI.TabIndex = 12;
             btnImportarEPI.Text = "Importar";
             btnImportarEPI.Visible = false;
@@ -198,7 +198,7 @@
             btnCriarEPI.Margin = new Padding(10, 12, 10, 12);
             btnCriarEPI.Name = "btnCriarEPI";
             btnCriarEPI.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            btnCriarEPI.Size = new Size(439, 36);
+            btnCriarEPI.Size = new Size(336, 36);
             btnCriarEPI.TabIndex = 11;
             btnCriarEPI.Text = "Adicionar Novo Artigo";
             btnCriarEPI.Visible = false;
@@ -217,7 +217,7 @@
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 1;
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel3.Size = new Size(918, 60);
+            tableLayoutPanel3.Size = new Size(1124, 60);
             tableLayoutPanel3.TabIndex = 9;
             // 
             // cmbEstado
@@ -234,11 +234,11 @@
             cmbEstado.ForeColor = Color.FromArgb(64, 64, 64);
             cmbEstado.HoverState.BorderColor = Color.FromArgb(242, 103, 34);
             cmbEstado.ItemHeight = 31;
-            cmbEstado.Location = new Point(469, 12);
+            cmbEstado.Location = new Point(572, 12);
             cmbEstado.Margin = new Padding(10, 12, 10, 12);
             cmbEstado.Name = "cmbEstado";
             cmbEstado.ShadowDecoration.CustomizableEdges = customizableEdges8;
-            cmbEstado.Size = new Size(439, 37);
+            cmbEstado.Size = new Size(542, 37);
             cmbEstado.TabIndex = 29;
             cmbEstado.TextAlign = HorizontalAlignment.Center;
             cmbEstado.SelectedIndexChanged += cmbEstado_SelectedIndexChanged;
@@ -250,7 +250,7 @@
             lblTituloCriarEPI.Font = new Font("Roboto", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblTituloCriarEPI.Location = new Point(3, 0);
             lblTituloCriarEPI.Name = "lblTituloCriarEPI";
-            lblTituloCriarEPI.Size = new Size(453, 60);
+            lblTituloCriarEPI.Size = new Size(556, 60);
             lblTituloCriarEPI.TabIndex = 7;
             lblTituloCriarEPI.Text = "GESTÃO DE EPI";
             lblTituloCriarEPI.TextAlign = ContentAlignment.MiddleLeft;

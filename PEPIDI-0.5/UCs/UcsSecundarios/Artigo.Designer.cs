@@ -97,7 +97,7 @@
             Tabela.Margin = new Padding(5);
             Tabela.Name = "Tabela";
             Tabela.ShadowDecoration.CustomizableEdges = customizableEdges20;
-            Tabela.Size = new Size(679, 694);
+            Tabela.Size = new Size(601, 694);
             Tabela.TabIndex = 6;
             // 
             // tableLayoutPanel3
@@ -129,7 +129,7 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 27.5F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tableLayoutPanel3.Size = new Size(679, 694);
+            tableLayoutPanel3.Size = new Size(601, 694);
             tableLayoutPanel3.TabIndex = 3;
             // 
             // lblTituloBaixo
@@ -141,7 +141,7 @@
             lblTituloBaixo.Location = new Point(5, 312);
             lblTituloBaixo.Margin = new Padding(5, 0, 5, 0);
             lblTituloBaixo.Name = "lblTituloBaixo";
-            lblTituloBaixo.Size = new Size(669, 52);
+            lblTituloBaixo.Size = new Size(591, 52);
             lblTituloBaixo.TabIndex = 44;
             lblTituloBaixo.Text = "FUNÇÕES AUTORIZADAS";
             lblTituloBaixo.TextAlign = ContentAlignment.MiddleCenter;
@@ -159,7 +159,7 @@
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(679, 69);
+            tableLayoutPanel2.Size = new Size(601, 69);
             tableLayoutPanel2.TabIndex = 42;
             // 
             // btnEliminar
@@ -175,7 +175,7 @@
             btnEliminar.Margin = new Padding(10);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            btnEliminar.Size = new Size(206, 49);
+            btnEliminar.Size = new Size(180, 49);
             btnEliminar.TabIndex = 3;
             btnEliminar.Text = "Eliminar Artigo";
             btnEliminar.Click += btnEliminar_Click;
@@ -193,7 +193,7 @@
             tableLayoutPanel6.Name = "tableLayoutPanel6";
             tableLayoutPanel6.RowCount = 1;
             tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel6.Size = new Size(679, 71);
+            tableLayoutPanel6.Size = new Size(601, 71);
             tableLayoutPanel6.TabIndex = 38;
             // 
             // btnGuardar
@@ -205,11 +205,11 @@
             btnGuardar.FillColor = Color.FromArgb(242, 103, 34);
             btnGuardar.Font = new Font("Roboto Medium", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnGuardar.ForeColor = Color.White;
-            btnGuardar.Location = new Point(349, 4);
+            btnGuardar.Location = new Point(310, 4);
             btnGuardar.Margin = new Padding(10, 4, 10, 16);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            btnGuardar.Size = new Size(320, 51);
+            btnGuardar.Size = new Size(281, 51);
             btnGuardar.TabIndex = 35;
             btnGuardar.Text = "Guardar";
             btnGuardar.Click += btnGuardar_Click;
@@ -227,7 +227,7 @@
             btnCancelar.Margin = new Padding(10, 4, 10, 16);
             btnCancelar.Name = "btnCancelar";
             btnCancelar.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            btnCancelar.Size = new Size(319, 51);
+            btnCancelar.Size = new Size(280, 51);
             btnCancelar.TabIndex = 34;
             btnCancelar.Text = "Cancelar";
             btnCancelar.Click += btnCancelar_Click;
@@ -238,7 +238,7 @@
             flpFuncoes.Location = new Point(10, 374);
             flpFuncoes.Margin = new Padding(10);
             flpFuncoes.Name = "flpFuncoes";
-            flpFuncoes.Size = new Size(659, 170);
+            flpFuncoes.Size = new Size(581, 170);
             flpFuncoes.TabIndex = 36;
             // 
             // tlpModelo
@@ -254,7 +254,7 @@
             tlpModelo.Name = "tlpModelo";
             tlpModelo.RowCount = 1;
             tlpModelo.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlpModelo.Size = new Size(679, 52);
+            tlpModelo.Size = new Size(601, 52);
             tlpModelo.TabIndex = 33;
             // 
             // txtNovoModeloEPI
@@ -271,13 +271,13 @@
             txtNovoModeloEPI.Font = new Font("Roboto", 11F);
             txtNovoModeloEPI.ForeColor = Color.FromArgb(64, 64, 64);
             txtNovoModeloEPI.HoverState.BorderColor = Color.FromArgb(242, 103, 34);
-            txtNovoModeloEPI.Location = new Point(346, 7);
+            txtNovoModeloEPI.Location = new Point(307, 7);
             txtNovoModeloEPI.Margin = new Padding(7);
             txtNovoModeloEPI.Name = "txtNovoModeloEPI";
             txtNovoModeloEPI.PlaceholderText = "";
             txtNovoModeloEPI.SelectedText = "";
             txtNovoModeloEPI.ShadowDecoration.CustomizableEdges = customizableEdges8;
-            txtNovoModeloEPI.Size = new Size(326, 38);
+            txtNovoModeloEPI.Size = new Size(287, 38);
             txtNovoModeloEPI.TabIndex = 32;
             txtNovoModeloEPI.Visible = false;
             txtNovoModeloEPI.TextChanged += txtNovoModelo_TextChanged;
@@ -301,7 +301,7 @@
             cmbModelo.Margin = new Padding(7);
             cmbModelo.Name = "cmbModelo";
             cmbModelo.ShadowDecoration.CustomizableEdges = customizableEdges10;
-            cmbModelo.Size = new Size(325, 37);
+            cmbModelo.Size = new Size(286, 37);
             cmbModelo.TabIndex = 28;
             cmbModelo.TextAlign = HorizontalAlignment.Center;
             cmbModelo.SelectedIndexChanged += cmbModelo_SelectedIndexChanged;
@@ -325,7 +325,7 @@
             cmbTamanho.Margin = new Padding(7);
             cmbTamanho.Name = "cmbTamanho";
             cmbTamanho.ShadowDecoration.CustomizableEdges = customizableEdges12;
-            cmbTamanho.Size = new Size(665, 37);
+            cmbTamanho.Size = new Size(587, 37);
             cmbTamanho.TabIndex = 30;
             cmbTamanho.TextAlign = HorizontalAlignment.Center;
             // 
@@ -347,7 +347,7 @@
             cmbFamilia.Margin = new Padding(7);
             cmbFamilia.Name = "cmbFamilia";
             cmbFamilia.ShadowDecoration.CustomizableEdges = customizableEdges14;
-            cmbFamilia.Size = new Size(665, 37);
+            cmbFamilia.Size = new Size(587, 37);
             cmbFamilia.TabIndex = 31;
             cmbFamilia.TabStop = false;
             cmbFamilia.TextAlign = HorizontalAlignment.Center;
@@ -367,7 +367,7 @@
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(679, 52);
+            tableLayoutPanel1.Size = new Size(601, 52);
             tableLayoutPanel1.TabIndex = 41;
             // 
             // lblTituloCima
@@ -376,10 +376,10 @@
             lblTituloCima.Dock = DockStyle.Fill;
             lblTituloCima.Font = new Font("Roboto Medium", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblTituloCima.ForeColor = Color.FromArgb(64, 64, 64);
-            lblTituloCima.Location = new Point(89, 0);
+            lblTituloCima.Location = new Point(80, 0);
             lblTituloCima.Margin = new Padding(5, 0, 5, 0);
             lblTituloCima.Name = "lblTituloCima";
-            lblTituloCima.Size = new Size(499, 52);
+            lblTituloCima.Size = new Size(440, 52);
             lblTituloCima.TabIndex = 21;
             lblTituloCima.Text = "EPI";
             lblTituloCima.TextAlign = ContentAlignment.MiddleCenter;
@@ -389,9 +389,9 @@
             lblClose.AutoSize = true;
             lblClose.Dock = DockStyle.Fill;
             lblClose.Image = (Image)resources.GetObject("lblClose.Image");
-            lblClose.Location = new Point(596, 0);
+            lblClose.Location = new Point(528, 0);
             lblClose.Name = "lblClose";
-            lblClose.Size = new Size(80, 52);
+            lblClose.Size = new Size(70, 52);
             lblClose.TabIndex = 22;
             lblClose.Click += btnCancelar_Click;
             // 
@@ -408,7 +408,7 @@
             tableLayoutPanel5.Name = "tableLayoutPanel5";
             tableLayoutPanel5.RowCount = 1;
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel5.Size = new Size(679, 52);
+            tableLayoutPanel5.Size = new Size(601, 52);
             tableLayoutPanel5.TabIndex = 40;
             // 
             // txtQuantidadeEPI
@@ -425,14 +425,14 @@
             txtQuantidadeEPI.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtQuantidadeEPI.ForeColor = Color.FromArgb(64, 64, 64);
             txtQuantidadeEPI.HoverState.BorderColor = Color.FromArgb(242, 103, 34);
-            txtQuantidadeEPI.Location = new Point(132, 7);
+            txtQuantidadeEPI.Location = new Point(118, 7);
             txtQuantidadeEPI.Margin = new Padding(7);
             txtQuantidadeEPI.Name = "txtQuantidadeEPI";
             txtQuantidadeEPI.PlaceholderText = "Não obrigatório";
             txtQuantidadeEPI.RightToLeft = RightToLeft.Yes;
             txtQuantidadeEPI.SelectedText = "";
             txtQuantidadeEPI.ShadowDecoration.CustomizableEdges = customizableEdges16;
-            txtQuantidadeEPI.Size = new Size(540, 38);
+            txtQuantidadeEPI.Size = new Size(476, 38);
             txtQuantidadeEPI.TabIndex = 33;
             txtQuantidadeEPI.TextAlign = HorizontalAlignment.Right;
             // 
@@ -442,7 +442,7 @@
             lblQuant.Dock = DockStyle.Fill;
             lblQuant.Location = new Point(3, 0);
             lblQuant.Name = "lblQuant";
-            lblQuant.Size = new Size(119, 52);
+            lblQuant.Size = new Size(105, 52);
             lblQuant.TabIndex = 0;
             lblQuant.Text = "Quantidade :";
             lblQuant.TextAlign = ContentAlignment.MiddleRight;
@@ -460,7 +460,7 @@
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 1;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel4.Size = new Size(679, 52);
+            tableLayoutPanel4.Size = new Size(601, 52);
             tableLayoutPanel4.TabIndex = 43;
             // 
             // cmbCor
@@ -478,11 +478,11 @@
             cmbCor.ForeColor = Color.FromArgb(64, 64, 64);
             cmbCor.HoverState.BorderColor = Color.FromArgb(242, 103, 34);
             cmbCor.ItemHeight = 31;
-            cmbCor.Location = new Point(132, 7);
+            cmbCor.Location = new Point(118, 7);
             cmbCor.Margin = new Padding(7);
             cmbCor.Name = "cmbCor";
             cmbCor.ShadowDecoration.CustomizableEdges = customizableEdges18;
-            cmbCor.Size = new Size(540, 37);
+            cmbCor.Size = new Size(476, 37);
             cmbCor.TabIndex = 29;
             cmbCor.TextAlign = HorizontalAlignment.Center;
             // 
@@ -492,7 +492,7 @@
             label1.Dock = DockStyle.Fill;
             label1.Location = new Point(3, 0);
             label1.Name = "label1";
-            label1.Size = new Size(119, 52);
+            label1.Size = new Size(105, 52);
             label1.TabIndex = 0;
             label1.Text = "Cor :";
             label1.TextAlign = ContentAlignment.MiddleRight;
@@ -503,7 +503,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(Tabela);
             Name = "Artigo";
-            Size = new Size(679, 694);
+            Size = new Size(601, 694);
             Load += Artigo_Load;
             Tabela.ResumeLayout(false);
             tableLayoutPanel3.ResumeLayout(false);
