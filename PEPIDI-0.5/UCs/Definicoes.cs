@@ -5,6 +5,8 @@ using PEPIDI.Utils;
 using System;
 using System.Data;
 using System.Windows.Forms;
+using System.Diagnostics;
+using System.IO;
 
 namespace PEPIDI.UCs
 {
@@ -19,8 +21,6 @@ namespace PEPIDI.UCs
             InitializeComponent();
             IDGestor = _IDGestor;
         }
-
-
 
         private void Definicoes_Load(object sender, EventArgs e)
         {
@@ -51,16 +51,15 @@ namespace PEPIDI.UCs
             // 4. Tirar o travão de segurança agora que tudo está carregado
             aCarregar = false;
 
-            // 5. Verificar o que está na memória ("Teste" ou "Real")
-            string modoAtual = Properties.Settings.Default.ModoBD;
+            bool modoNotif = Properties.Settings.Default.Notificacao;
 
             // 6. Colocar o Switch na posição correta SEM disparar o evento de mensagem
             // Desativamos o evento temporariamente para não abrir a MessageBox ao carregar o ecrã
-            switchBD.CheckedChanged -= switchBD_CheckedChanged;
+            switchAgent.CheckedChanged -= switchAgent_CheckedChanged;
 
-            switchBD.Checked = (modoAtual == "Real");
+            switchAgent.Checked = modoNotif == true;
 
-            switchBD.CheckedChanged += switchBD_CheckedChanged;
+            switchAgent.CheckedChanged += switchAgent_CheckedChanged;
             CarregarDoSQL();
         }
 
@@ -100,31 +99,6 @@ namespace PEPIDI.UCs
                 // Se ele cancelar, voltamos a meter o travão e revertemos a ComboBox para o que estava guardado
                 aCarregar = true;
                 Definicoes_Load(null, null); // Re-executa o Load para meter o valor antigo
-            }
-        }
-
-        private void switchBD_CheckedChanged(object sender, EventArgs e)
-        {
-            // False = Teste (Local)
-            // True = Real (Azure)
-            string novoModo = switchBD.Checked ? "Real" : "Teste";
-
-            // 1. Grava a preferência nas Settings do projeto
-            Properties.Settings.Default.ModoBD = novoModo;
-            Properties.Settings.Default.Save();
-
-            // 2. Feedback visual para o utilizador
-            if (switchBD.Checked)
-            {
-                M.AbrirMensagem("Modo REAL (Azure) selecionado.\n\n" +
-                               "Atenção: A aplicação precisa de ser reiniciada para estabelecer a ligação à Nuvem.",
-                               "Alteração de Servidor");
-            }
-            else
-            {
-                M.AbrirMensagem("Modo TESTE (Local) selecionado.\n\n" +
-                               "A aplicação precisa de ser reiniciada para ligar ao servidor local.",
-                               "Alteração de Servidor");
             }
         }
 
@@ -234,6 +208,91 @@ namespace PEPIDI.UCs
 
                     }
                 }
+            }
+        }
+
+        private void switchAgent_CheckedChanged(object sender, EventArgs e)
+        {
+            // Grava a preferência do utilizador
+            Properties.Settings.Default.Notificacao = switchAgent.Checked;
+            Properties.Settings.Default.Save();
+
+            if (switchAgent.Checked)
+            {
+                // Regista no Windows para arrancar no futuro
+                StartupHelper.RegistarAgenteNoArranque();
+
+                // E arranca AGORA MESMO!
+                IniciarAgenteImediatamente();
+            }
+            else
+            {
+                // Remove do arranque do Windows
+                StartupHelper.RemoverAgenteDoArranque();
+
+                // E mata o processo que está a correr AGORA MESMO!
+                EncerrarAgenteEmSegundoPlano();
+            }
+        }
+
+        // Método auxiliar para procurar e encerrar o processo do agente
+        private void EncerrarAgenteEmSegundoPlano()
+        {
+            try
+            {
+                // Procura todos os processos a correr com o nome do teu agente (sem o ".exe")
+                Process[] processosAgente = Process.GetProcessesByName("AgentePEPIDI");
+
+                foreach (Process processo in processosAgente)
+                {
+                    processo.Kill(); // Força o encerramento do processo
+                    processo.WaitForExit(); // Aguarda que o encerramento seja concluído com segurança
+                }
+            }
+            catch (Exception ex)
+            {
+                // Em software robusto, nunca deixamos um erro passar em branco.
+                MessageBox.Show("Aviso: Não foi possível encerrar o agente em segundo plano.\nErro: " + ex.Message,
+                                "Gestão de Processos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void IniciarAgenteImediatamente()
+        {
+            try
+            {
+                string nomeAgente = "AgentePEPIDI.exe";
+
+                // 1. Caminho de Produção (Espera-se que no futuro tudo esteja na mesma pasta)
+                string caminhoProducao = Path.Combine(Application.StartupPath, nomeAgente);
+
+                // 2. Caminho de Desenvolvimento (CORRIGIDO para a pasta AgentePEPIDI)
+                string caminhoDesenvolvimento = @"C:\Users\bruno.oliveira\Desktop\PEPIDI-0.5\AgentePEPIDI\bin\Debug\" + nomeAgente;
+
+                // O nosso programa decide qual caminho usar: se existir na mesma pasta, ótimo. Senão, usa o de Dev.
+                string caminhoAgente = File.Exists(caminhoProducao) ? caminhoProducao : caminhoDesenvolvimento;
+
+                // 3. Verifica se o ficheiro do agente foi finalmente encontrado num dos caminhos
+                if (File.Exists(caminhoAgente))
+                {
+                    // CORRIGIDO: Verifica o nome do novo processo ("AgentePEPIDI" sem o .exe) para não abrir instâncias duplicadas!
+                    if (Process.GetProcessesByName("AgentePEPIDI").Length == 0)
+                    {
+                        Process.Start(caminhoAgente);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Não foi possível encontrar o executável do agente.\n\n" +
+                                    "Procurado em:\n" + caminhoProducao + "\n\n" +
+                                    "E também em:\n" + caminhoDesenvolvimento,
+                                    "Agente Não Encontrado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao tentar iniciar o agente em segundo plano:\n" + ex.Message,
+                                "Erro de Execução", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

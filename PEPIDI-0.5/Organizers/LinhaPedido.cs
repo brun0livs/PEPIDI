@@ -42,6 +42,16 @@ namespace PEPIDI.Organizers
         // Tamanho selecionado *no momento*
         public string TamanhoSelecionado => ComboTamanho.SelectedItem?.ToString() ?? string.Empty;
 
+        // Evento personalizado para avisar o FormPedidos
+        public event EventHandler<TamanhoAlteradoEventArgs> TamanhoAlteradoPeloUtilizador;
+
+        // Classe auxiliar para passar os dados para o FormPedidos
+        public class TamanhoAlteradoEventArgs : EventArgs
+        {
+            public string CodigoEpi { get; set; }
+            public string NovoTamanho { get; set; }
+        }
+
         public LinhaPedido()
         {
             InitializeComponent();
@@ -122,6 +132,17 @@ namespace PEPIDI.Organizers
                 if (dr == DialogResult.Yes)
                 {
                     _tamanhoAnterior = novoTamanho; // Atualiza o histórico
+
+                    // Vai buscar o Info que guardaste na Tag ao criar a linha
+                    var info = this.Tag as PEPIDI.Models.LinhaPedidoInfo;
+                    string codigoEpiAtual = info?.CodigoEpi ?? "";
+
+                    // Dispara o evento para o FormPedidos apanhar!
+                    TamanhoAlteradoPeloUtilizador?.Invoke(this, new TamanhoAlteradoEventArgs
+                    {
+                        CodigoEpi = codigoEpiAtual,
+                        NovoTamanho = novoTamanho
+                    });
                 }
                 else
                 {

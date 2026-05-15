@@ -34,10 +34,10 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPedidos));
             splitContainer1 = new SplitContainer();
             tableLayoutPanel1 = new TableLayoutPanel();
@@ -46,12 +46,12 @@
             Nav2 = new Guna.UI2.WinForms.Guna2TileButton();
             Nav1 = new Guna.UI2.WinForms.Guna2TileButton();
             Nav3 = new Guna.UI2.WinForms.Guna2TileButton();
+            NavD = new Guna.UI2.WinForms.Guna2TileButton();
             tableLayoutPanel3 = new TableLayoutPanel();
             tableLayoutPanel4 = new TableLayoutPanel();
             btnSubmeter = new Guna.UI2.WinForms.Guna2TileButton();
             lblNome = new Label();
             flpLinhas = new FlowLayoutPanel();
-            NavD = new Guna.UI2.WinForms.Guna2TileButton();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -222,6 +222,33 @@
             Nav3.TextAlign = HorizontalAlignment.Left;
             Nav3.Click += NavButtons_Click;
             // 
+            // NavD
+            // 
+            NavD.AccessibleRole = AccessibleRole.RadioButton;
+            NavD.CheckedState.FillColor = Color.FromArgb(243, 108, 33);
+            NavD.CheckedState.Font = new Font("Roboto", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NavD.CheckedState.ForeColor = Color.White;
+            NavD.CustomizableEdges = customizableEdges7;
+            NavD.DisabledState.BorderColor = Color.DarkGray;
+            NavD.DisabledState.CustomBorderColor = Color.DarkGray;
+            NavD.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            NavD.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            NavD.FillColor = Color.FromArgb(255, 230, 212);
+            NavD.Font = new Font("Roboto", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NavD.ForeColor = Color.Black;
+            NavD.HoverState.FillColor = Color.FromArgb(249, 160, 90);
+            NavD.HoverState.Font = new Font("Roboto", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NavD.HoverState.ForeColor = Color.Black;
+            NavD.Location = new Point(0, 683);
+            NavD.Margin = new Padding(0, 3, 0, 3);
+            NavD.Name = "NavD";
+            NavD.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            NavD.Size = new Size(380, 79);
+            NavD.TabIndex = 2;
+            NavD.Text = "Alterar Password";
+            NavD.TextAlign = HorizontalAlignment.Left;
+            NavD.Click += NavD_Click;
+            // 
             // tableLayoutPanel3
             // 
             tableLayoutPanel3.ColumnCount = 1;
@@ -301,33 +328,6 @@
             flpLinhas.Name = "flpLinhas";
             flpLinhas.Size = new Size(1536, 766);
             flpLinhas.TabIndex = 2;
-            // 
-            // NavD
-            // 
-            NavD.AccessibleRole = AccessibleRole.RadioButton;
-            NavD.CheckedState.FillColor = Color.FromArgb(243, 108, 33);
-            NavD.CheckedState.Font = new Font("Roboto", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            NavD.CheckedState.ForeColor = Color.White;
-            NavD.CustomizableEdges = customizableEdges7;
-            NavD.DisabledState.BorderColor = Color.DarkGray;
-            NavD.DisabledState.CustomBorderColor = Color.DarkGray;
-            NavD.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
-            NavD.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            NavD.FillColor = Color.FromArgb(255, 230, 212);
-            NavD.Font = new Font("Roboto", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            NavD.ForeColor = Color.Black;
-            NavD.HoverState.FillColor = Color.FromArgb(249, 160, 90);
-            NavD.HoverState.Font = new Font("Roboto", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            NavD.HoverState.ForeColor = Color.Black;
-            NavD.Location = new Point(0, 683);
-            NavD.Margin = new Padding(0, 3, 0, 3);
-            NavD.Name = "NavD";
-            NavD.ShadowDecoration.CustomizableEdges = customizableEdges8;
-            NavD.Size = new Size(380, 79);
-            NavD.TabIndex = 2;
-            NavD.Text = "Alterar Password";
-            NavD.TextAlign = HorizontalAlignment.Left;
-            NavD.Click += NavD_Click;
             // 
             // FormPedidos
             // 

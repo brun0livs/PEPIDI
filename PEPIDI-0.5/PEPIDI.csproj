@@ -15,7 +15,9 @@
 	<TieredCompilation>true</TieredCompilation>
 	<TieredCompilationQuickJit>true</TieredCompilationQuickJit>
 
-	<PublishReadyToRun>true</PublishReadyToRun>   
+	<PublishReadyToRun>true</PublishReadyToRun>
+
+	<ApplicationIcon>logo.ico</ApplicationIcon>   
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,6 +42,10 @@
     <None Remove="Resources\Perfil Funcionário-03.png" />
     <None Remove="Resources\Sair_Black.png" />
     <None Remove="Resources\Stock_Black.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="logo.ico" />
   </ItemGroup>
 
   <ItemGroup>

@@ -45,6 +45,7 @@ namespace PEPIDI
 
         private SessaoPedido _sessao = new SessaoPedido();
 
+
         public FormPedidos(int nrFunc, Form loginForm)
         {
             InitializeComponent();
@@ -117,6 +118,11 @@ namespace PEPIDI
                     Tag = itemPrincipal
                 };
 
+                // -------------------------------------------------------------------
+                // SUBSCREVER O EVENTO QUE ACABÁMOS DE CRIAR
+                linha.TamanhoAlteradoPeloUtilizador += Linha_TamanhoAlteradoPeloUtilizador;
+                // -------------------------------------------------------------------
+
                 // 3. Configura o Layout (Elastic) e o Nome Bonito
                 linha.ConfigurarLayout(variosModelos, itemPrincipal.Familia, itemPrincipal.Modelo);
 
@@ -141,6 +147,40 @@ namespace PEPIDI
                 flpLinhas.Controls.Add(linha);
             }
             flpLinhas.ResumeLayout(true);
+        }
+
+        private void Linha_TamanhoAlteradoPeloUtilizador(object sender, PEPIDI.Organizers.LinhaPedido.TamanhoAlteradoEventArgs e)
+        {
+            if (string.IsNullOrEmpty(e.CodigoEpi)) return;
+
+            try
+            {
+                // Usa o método incrível que já tinhas preparado no MostraRoupa!
+                _mr.AtualizarTamanhoPadraoFuncionario(_nrFunc, e.CodigoEpi, e.NovoTamanho);
+            }
+            catch (Exception ex)
+            {
+                M.AbrirMensagem("Erro ao atualizar o tamanho predefinido do funcionário:\n\n" + ex.Message, "Erro");
+            }
+        }
+
+        // Método de mapeamento (ajusta as strings case seja necessário)
+        private string MapearFamiliaParaColuna(string familia)
+        {
+            switch (familia.ToLower().Trim())
+            {
+                case "tshirt":
+                case "t-shirt": return "TShirt";
+                case "casaco": return "Casaco";
+                case "polo manga curta": return "PoloMCurta"; // Ajusta para a string real da tua BD
+                case "polo manga comprida": return "PoloMCompr"; // Ajusta para a string real da tua BD
+                case "calça":
+                case "calca":
+                case "calças": return "Calca";
+                case "sapato":
+                case "sapatos": return "Sapato";
+                default: return null;
+            }
         }
 
         // Método auxiliar para não repetir código

@@ -2,7 +2,7 @@
 
 namespace PEPIDI.Organizers
 {
-    internal static class GetConn
+    public static class GetConn
     {
         public static string ConnectionString { get; set; }
 

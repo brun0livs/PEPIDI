@@ -1,4 +1,7 @@
 using PEPIDI.Utils;
+using System;
+using System.IO;
+using System.Windows.Forms;
 
 namespace PEPIDI.Organizers
 {
@@ -26,15 +29,9 @@ namespace PEPIDI.Organizers
                 GestorTema.ModoAtual = TipoEcra.MonitorFullHD; // Fallback seguro
             }
 
-            // 3. LÓGICA DE SELEÇÃO DA BASE DE DADOS (TESTE vs REAL)
-            // Lemos a string que criaste nas Settings ("Teste" ou "Real")
-            string modoBDAtivo = Properties.Settings.Default.ModoBD;
-
+            // 3. DEFINIR CAMINHO DA BASE DE DADOS (Exclusivamente conn.bin)
             string pastaApp = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PEPIDI");
-
-            // Se for Teste, lê o 'connteste.bin'. Se for Real (ou qualquer outra coisa), lê o 'conn.bin'
-            string nomeFicheiro = (modoBDAtivo == "Teste") ? "connteste.bin" : "conn.bin";
-            string caminhoArquivoBin = Path.Combine(pastaApp, nomeFicheiro);
+            string caminhoArquivoBin = Path.Combine(pastaApp, "conn.bin");
 
             // Garante que a pasta AppData\PEPIDI existe
             if (!Directory.Exists(pastaApp))
@@ -45,16 +42,16 @@ namespace PEPIDI.Organizers
             // 4. CARREGAR OU CONFIGURAR A STRING DE CONEXÃO
             if (File.Exists(caminhoArquivoBin))
             {
-                // Tenta ler o ficheiro encriptado correspondente ao modo ativo
+                // Lê o ficheiro encriptado de produção
                 connString = Criptografia.DesencriptarDeFicheiro(caminhoArquivoBin);
             }
             else
             {
-                // Se o ficheiro do modo escolhido não existe, pede ao utilizador para configurar
+                // Se o ficheiro não existe, abre o formulário de configuração
                 using FormConfigDB frm = new();
 
-                // Personaliza o título do form para saberes o que estás a configurar
-                frm.Text = $"Configurar Conexão: MODO {modoBDAtivo.ToUpper()}";
+                // Título simplificado
+                frm.Text = "Configurar Conexão com a Base de Dados";
 
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
@@ -63,13 +60,15 @@ namespace PEPIDI.Organizers
                 }
                 else
                 {
-                    M.AbrirMensagem($"Configuração do modo {modoBDAtivo} cancelada.\nA encerrar...", "Erro");
+                    // Mensagem de cancelamento genérica e limpa
+                    M.AbrirMensagem("Configuração da Base de Dados cancelada.\nA encerrar...", "Erro");
                     return;
                 }
             }
 
             // 5. ATRIBUIR A CONEXÃO À CLASSE GLOBAL
             GetConn.ConnectionString = connString;
+
             //int nr = 1077;
             //Application.Run(new FormGestao(nr, PermissoesPerfil.VerPermissoes(nr)));
             Application.Run(new FrmLogIn());

@@ -463,11 +463,10 @@ namespace PEPIDI.UCs.UcsSecundarios
                                 }
 
                                 // 3. Atualizar/Inserir no Stock (Estado = 1 sem plicas)
-                                string sqlUpsertStock = @"
-                            IF EXISTS (SELECT 1 FROM Stock WHERE Codigo = @cod AND Estado = 1)
-                                UPDATE Stock SET Quant = @q WHERE Codigo = @cod AND Estado = 1
-                            ELSE
-                                INSERT INTO Stock (Codigo, Estado, Quant) VALUES (@cod, 1, @q)";
+                                string sqlUpsertStock = @"IF EXISTS (SELECT 1 FROM Stock WHERE Codigo = @cod AND Estado = 1)
+                                                            UPDATE Stock SET Quant = @q WHERE Codigo = @cod AND Estado = 1
+                                                        ELSE
+                                                            INSERT INTO Stock (Codigo, Estado, Quant) VALUES (@cod, 1, @q)";
 
                                 using (SqlCommand cmdStk = new SqlCommand(sqlUpsertStock, conn, tran))
                                 {
@@ -651,9 +650,7 @@ namespace PEPIDI.UCs.UcsSecundarios
 
         private async Task<string> ObterProximoIdModeloAsync(SqlConnection conn, SqlTransaction tran, string familia, string modelo)
         {
-            // Verifica se o modelo já tem um ID atribuído noutra cor/tamanho
-            // SUBSTRING 1-indexed: Posição 2, tamanho 2.
-            string sqlCheck = "SELECT TOP 1 SUBSTRING(Codigo, 2, 2) FROM EPI WHERE Modelo = @m AND LEN(Codigo) >= 7";
+            string sqlCheck = "SELECT TOP 1 SUBSTRING(CAST(Codigo AS VARCHAR(20)), 2, 2) FROM EPI WHERE Modelo = @m AND LEN(CAST(Codigo AS VARCHAR(20))) >= 7";
             using (SqlCommand cmdCheck = new SqlCommand(sqlCheck, conn, tran))
             {
                 cmdCheck.Parameters.AddWithValue("@m", modelo);
@@ -661,8 +658,7 @@ namespace PEPIDI.UCs.UcsSecundarios
                 if (res != null && res != DBNull.Value) return res.ToString();
             }
 
-            // Se é um modelo novo, pega no maior ID de modelo desta família
-            string sqlMax = "SELECT MAX(CAST(SUBSTRING(Codigo, 2, 2) AS INT)) FROM EPI WHERE Familia = @f AND LEN(Codigo) >= 7";
+            string sqlMax = "SELECT MAX(TRY_CAST(SUBSTRING(CAST(Codigo AS VARCHAR(20)), 2, 2) AS INT)) FROM EPI WHERE Familia = @f AND LEN(CAST(Codigo AS VARCHAR(20))) >= 7";
             using (SqlCommand cmdMax = new SqlCommand(sqlMax, conn, tran))
             {
                 cmdMax.Parameters.AddWithValue("@f", familia);
@@ -673,7 +669,7 @@ namespace PEPIDI.UCs.UcsSecundarios
                     return next.ToString("D2");
                 }
             }
-            return "01"; // Primeiro modelo desta família
+            return "01";
         }
 
         private string CalcularIdTamanho(string tamanho)
