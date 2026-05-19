@@ -163,13 +163,6 @@ namespace PEPIDI.UCs
                 dgvFuncs.Columns["CorHex"].Visible = false;
             }
 
-            if (dgvFuncs.Columns.Contains("DtAdmiss"))
-            {
-                dgvFuncs.Columns["DtAdmiss"].HeaderText = "Admissão";
-                dgvFuncs.Columns["DtAdmiss"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                dgvFuncs.Columns["DtAdmiss"].FillWeight = 8;
-            }
-
             if (dgvFuncs.Columns.Contains("Estab"))
             {
                 dgvFuncs.Columns["Estab"].HeaderText = "Estab.";

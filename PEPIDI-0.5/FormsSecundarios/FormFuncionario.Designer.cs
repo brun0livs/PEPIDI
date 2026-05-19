@@ -45,22 +45,17 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFuncionario));
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFuncionario));
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges23 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges24 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges25 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges26 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             tableLayoutPanel1 = new TableLayoutPanel();
             tableLayoutPanel4 = new TableLayoutPanel();
-            tableLayoutPanel8 = new TableLayoutPanel();
-            dtpDataAdmiss = new Guna.UI2.WinForms.Guna2DateTimePicker();
-            label10 = new Label();
             tableLayoutPanel7 = new TableLayoutPanel();
             cmbSapato = new Guna.UI2.WinForms.Guna2ComboBox();
             cmbCalca = new Guna.UI2.WinForms.Guna2ComboBox();
@@ -80,9 +75,6 @@
             label3 = new Label();
             txtNr = new Guna.UI2.WinForms.Guna2TextBox();
             label2 = new Label();
-            tableLayoutPanel9 = new TableLayoutPanel();
-            cmbEstab = new Guna.UI2.WinForms.Guna2ComboBox();
-            label11 = new Label();
             tableLayoutPanel10 = new TableLayoutPanel();
             txtNome = new Guna.UI2.WinForms.Guna2TextBox();
             label1 = new Label();
@@ -93,13 +85,13 @@
             btnGuardar = new Guna.UI2.WinForms.Guna2Button();
             btnCancelar = new Guna.UI2.WinForms.Guna2Button();
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
+            label11 = new Label();
+            cmbEstab = new Guna.UI2.WinForms.Guna2ComboBox();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
-            tableLayoutPanel8.SuspendLayout();
             tableLayoutPanel7.SuspendLayout();
             tableLayoutPanel6.SuspendLayout();
             tableLayoutPanel5.SuspendLayout();
-            tableLayoutPanel9.SuspendLayout();
             tableLayoutPanel10.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
@@ -128,82 +120,23 @@
             // 
             tableLayoutPanel4.ColumnCount = 1;
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel4.Controls.Add(tableLayoutPanel8, 0, 4);
             tableLayoutPanel4.Controls.Add(tableLayoutPanel7, 0, 3);
             tableLayoutPanel4.Controls.Add(tableLayoutPanel6, 0, 2);
             tableLayoutPanel4.Controls.Add(tableLayoutPanel5, 0, 1);
-            tableLayoutPanel4.Controls.Add(tableLayoutPanel9, 0, 5);
             tableLayoutPanel4.Controls.Add(tableLayoutPanel10, 0, 0);
             tableLayoutPanel4.Dock = DockStyle.Fill;
             tableLayoutPanel4.Location = new Point(0, 62);
             tableLayoutPanel4.Margin = new Padding(0);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 6;
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.6661148F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666111F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666111F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666111F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.6661148F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.669445F));
             tableLayoutPanel4.Size = new Size(800, 375);
             tableLayoutPanel4.TabIndex = 0;
-            // 
-            // tableLayoutPanel8
-            // 
-            tableLayoutPanel8.ColumnCount = 2;
-            tableLayoutPanel8.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel8.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel8.Controls.Add(dtpDataAdmiss, 1, 0);
-            tableLayoutPanel8.Controls.Add(label10, 0, 0);
-            tableLayoutPanel8.Dock = DockStyle.Fill;
-            tableLayoutPanel8.Location = new Point(0, 248);
-            tableLayoutPanel8.Margin = new Padding(0);
-            tableLayoutPanel8.Name = "tableLayoutPanel8";
-            tableLayoutPanel8.RowCount = 1;
-            tableLayoutPanel8.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel8.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel8.Size = new Size(800, 62);
-            tableLayoutPanel8.TabIndex = 4;
-            // 
-            // dtpDataAdmiss
-            // 
-            dtpDataAdmiss.AutoRoundedCorners = true;
-            dtpDataAdmiss.BackColor = Color.White;
-            dtpDataAdmiss.BorderColor = Color.FromArgb(213, 218, 223);
-            dtpDataAdmiss.BorderThickness = 1;
-            dtpDataAdmiss.Checked = true;
-            dtpDataAdmiss.CheckedState.BorderColor = Color.FromArgb(243, 108, 33);
-            dtpDataAdmiss.CheckedState.FillColor = Color.White;
-            dtpDataAdmiss.CheckedState.ForeColor = Color.Black;
-            dtpDataAdmiss.CustomizableEdges = customizableEdges1;
-            dtpDataAdmiss.Dock = DockStyle.Fill;
-            dtpDataAdmiss.FillColor = Color.White;
-            dtpDataAdmiss.FocusedColor = Color.FromArgb(255, 128, 0);
-            dtpDataAdmiss.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dtpDataAdmiss.Format = DateTimePickerFormat.Long;
-            dtpDataAdmiss.Location = new Point(405, 13);
-            dtpDataAdmiss.Margin = new Padding(5, 13, 5, 10);
-            dtpDataAdmiss.MaxDate = new DateTime(2026, 12, 31, 0, 0, 0, 0);
-            dtpDataAdmiss.MinDate = new DateTime(1753, 1, 1, 0, 0, 0, 0);
-            dtpDataAdmiss.Name = "dtpDataAdmiss";
-            dtpDataAdmiss.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            dtpDataAdmiss.Size = new Size(390, 39);
-            dtpDataAdmiss.TabIndex = 10;
-            dtpDataAdmiss.TextAlign = HorizontalAlignment.Center;
-            dtpDataAdmiss.Value = new DateTime(2026, 9, 28, 11, 49, 0, 0);
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
-            label10.Dock = DockStyle.Fill;
-            label10.Font = new Font("Roboto", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label10.Location = new Point(3, 0);
-            label10.Name = "label10";
-            label10.Size = new Size(394, 62);
-            label10.TabIndex = 5;
-            label10.Text = "Data de Admissão :";
-            label10.TextAlign = ContentAlignment.MiddleRight;
             // 
             // tableLayoutPanel7
             // 
@@ -235,7 +168,7 @@
             cmbSapato.BackColor = Color.Transparent;
             cmbSapato.BorderColor = Color.FromArgb(213, 218, 223);
             cmbSapato.BorderRadius = 17;
-            cmbSapato.CustomizableEdges = customizableEdges3;
+            cmbSapato.CustomizableEdges = customizableEdges1;
             cmbSapato.DisabledState.BorderColor = Color.FromArgb(254, 107, 0);
             cmbSapato.DisplayMember = "TESTE1";
             cmbSapato.Dock = DockStyle.Fill;
@@ -254,7 +187,7 @@
             cmbSapato.Location = new Point(670, 13);
             cmbSapato.Margin = new Padding(5, 13, 5, 10);
             cmbSapato.Name = "cmbSapato";
-            cmbSapato.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            cmbSapato.ShadowDecoration.CustomizableEdges = customizableEdges2;
             cmbSapato.Size = new Size(125, 36);
             cmbSapato.TabIndex = 9;
             // 
@@ -264,7 +197,7 @@
             cmbCalca.BackColor = Color.Transparent;
             cmbCalca.BorderColor = Color.FromArgb(213, 218, 223);
             cmbCalca.BorderRadius = 17;
-            cmbCalca.CustomizableEdges = customizableEdges5;
+            cmbCalca.CustomizableEdges = customizableEdges3;
             cmbCalca.DisabledState.BorderColor = Color.FromArgb(254, 107, 0);
             cmbCalca.DisplayMember = "TESTE1";
             cmbCalca.Dock = DockStyle.Fill;
@@ -283,7 +216,7 @@
             cmbCalca.Location = new Point(537, 13);
             cmbCalca.Margin = new Padding(5, 13, 5, 10);
             cmbCalca.Name = "cmbCalca";
-            cmbCalca.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            cmbCalca.ShadowDecoration.CustomizableEdges = customizableEdges4;
             cmbCalca.Size = new Size(123, 36);
             cmbCalca.TabIndex = 8;
             // 
@@ -293,7 +226,7 @@
             cmbPolomc.BackColor = Color.Transparent;
             cmbPolomc.BorderColor = Color.FromArgb(213, 218, 223);
             cmbPolomc.BorderRadius = 17;
-            cmbPolomc.CustomizableEdges = customizableEdges7;
+            cmbPolomc.CustomizableEdges = customizableEdges5;
             cmbPolomc.DisabledState.BorderColor = Color.FromArgb(254, 107, 0);
             cmbPolomc.DisplayMember = "TESTE1";
             cmbPolomc.Dock = DockStyle.Fill;
@@ -312,7 +245,7 @@
             cmbPolomc.Location = new Point(404, 13);
             cmbPolomc.Margin = new Padding(5, 13, 5, 10);
             cmbPolomc.Name = "cmbPolomc";
-            cmbPolomc.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            cmbPolomc.ShadowDecoration.CustomizableEdges = customizableEdges6;
             cmbPolomc.Size = new Size(123, 36);
             cmbPolomc.TabIndex = 7;
             // 
@@ -322,7 +255,7 @@
             cmbPolo.BackColor = Color.Transparent;
             cmbPolo.BorderColor = Color.FromArgb(213, 218, 223);
             cmbPolo.BorderRadius = 17;
-            cmbPolo.CustomizableEdges = customizableEdges9;
+            cmbPolo.CustomizableEdges = customizableEdges7;
             cmbPolo.DisabledState.BorderColor = Color.FromArgb(254, 107, 0);
             cmbPolo.DisplayMember = "TESTE1";
             cmbPolo.Dock = DockStyle.Fill;
@@ -341,7 +274,7 @@
             cmbPolo.Location = new Point(271, 13);
             cmbPolo.Margin = new Padding(5, 13, 5, 10);
             cmbPolo.Name = "cmbPolo";
-            cmbPolo.ShadowDecoration.CustomizableEdges = customizableEdges10;
+            cmbPolo.ShadowDecoration.CustomizableEdges = customizableEdges8;
             cmbPolo.Size = new Size(123, 36);
             cmbPolo.TabIndex = 6;
             // 
@@ -351,7 +284,7 @@
             cmbCasaco.BackColor = Color.Transparent;
             cmbCasaco.BorderColor = Color.FromArgb(213, 218, 223);
             cmbCasaco.BorderRadius = 17;
-            cmbCasaco.CustomizableEdges = customizableEdges11;
+            cmbCasaco.CustomizableEdges = customizableEdges9;
             cmbCasaco.DisabledState.BorderColor = Color.FromArgb(254, 107, 0);
             cmbCasaco.DisplayMember = "TESTE1";
             cmbCasaco.Dock = DockStyle.Fill;
@@ -370,7 +303,7 @@
             cmbCasaco.Location = new Point(138, 13);
             cmbCasaco.Margin = new Padding(5, 13, 5, 10);
             cmbCasaco.Name = "cmbCasaco";
-            cmbCasaco.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            cmbCasaco.ShadowDecoration.CustomizableEdges = customizableEdges10;
             cmbCasaco.Size = new Size(123, 36);
             cmbCasaco.TabIndex = 5;
             // 
@@ -380,7 +313,7 @@
             cmbTshirt.BackColor = Color.Transparent;
             cmbTshirt.BorderColor = Color.FromArgb(213, 218, 223);
             cmbTshirt.BorderRadius = 17;
-            cmbTshirt.CustomizableEdges = customizableEdges13;
+            cmbTshirt.CustomizableEdges = customizableEdges11;
             cmbTshirt.DisabledState.BorderColor = Color.FromArgb(254, 107, 0);
             cmbTshirt.DisplayMember = "TESTE1";
             cmbTshirt.Dock = DockStyle.Fill;
@@ -399,7 +332,7 @@
             cmbTshirt.Location = new Point(5, 13);
             cmbTshirt.Margin = new Padding(5, 13, 5, 10);
             cmbTshirt.Name = "cmbTshirt";
-            cmbTshirt.ShadowDecoration.CustomizableEdges = customizableEdges14;
+            cmbTshirt.ShadowDecoration.CustomizableEdges = customizableEdges12;
             cmbTshirt.Size = new Size(123, 36);
             cmbTshirt.TabIndex = 4;
             // 
@@ -528,7 +461,7 @@
             cmbFuncoes.BackColor = Color.Transparent;
             cmbFuncoes.BorderColor = Color.FromArgb(213, 218, 223);
             cmbFuncoes.BorderRadius = 17;
-            cmbFuncoes.CustomizableEdges = customizableEdges15;
+            cmbFuncoes.CustomizableEdges = customizableEdges13;
             cmbFuncoes.DisabledState.BorderColor = Color.FromArgb(254, 107, 0);
             cmbFuncoes.DisplayMember = "TESTE1";
             cmbFuncoes.Dock = DockStyle.Fill;
@@ -546,7 +479,7 @@
             cmbFuncoes.Location = new Point(349, 13);
             cmbFuncoes.Margin = new Padding(5, 13, 5, 10);
             cmbFuncoes.Name = "cmbFuncoes";
-            cmbFuncoes.ShadowDecoration.CustomizableEdges = customizableEdges16;
+            cmbFuncoes.ShadowDecoration.CustomizableEdges = customizableEdges14;
             cmbFuncoes.Size = new Size(446, 36);
             cmbFuncoes.TabIndex = 3;
             // 
@@ -565,7 +498,7 @@
             // txtNr
             // 
             txtNr.AutoRoundedCorners = true;
-            txtNr.CustomizableEdges = customizableEdges17;
+            txtNr.CustomizableEdges = customizableEdges15;
             txtNr.DefaultText = "";
             txtNr.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             txtNr.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
@@ -583,7 +516,7 @@
             txtNr.PlaceholderForeColor = Color.Silver;
             txtNr.PlaceholderText = "";
             txtNr.SelectedText = "";
-            txtNr.ShadowDecoration.CustomizableEdges = customizableEdges18;
+            txtNr.ShadowDecoration.CustomizableEdges = customizableEdges16;
             txtNr.Size = new Size(187, 39);
             txtNr.TabIndex = 1;
             txtNr.TextOffset = new Point(10, 0);
@@ -602,67 +535,15 @@
             label2.Text = "NMEC :";
             label2.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // tableLayoutPanel9
-            // 
-            tableLayoutPanel9.ColumnCount = 2;
-            tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel9.Controls.Add(cmbEstab, 1, 0);
-            tableLayoutPanel9.Controls.Add(label11, 0, 0);
-            tableLayoutPanel9.Dock = DockStyle.Fill;
-            tableLayoutPanel9.Location = new Point(0, 310);
-            tableLayoutPanel9.Margin = new Padding(0);
-            tableLayoutPanel9.Name = "tableLayoutPanel9";
-            tableLayoutPanel9.RowCount = 1;
-            tableLayoutPanel9.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel9.Size = new Size(800, 65);
-            tableLayoutPanel9.TabIndex = 5;
-            // 
-            // cmbEstab
-            // 
-            cmbEstab.AutoRoundedCorners = true;
-            cmbEstab.BackColor = Color.Transparent;
-            cmbEstab.BorderColor = Color.FromArgb(213, 218, 223);
-            cmbEstab.BorderRadius = 17;
-            cmbEstab.CustomizableEdges = customizableEdges19;
-            cmbEstab.DisabledState.BorderColor = Color.FromArgb(254, 107, 0);
-            cmbEstab.DisplayMember = "TESTE1";
-            cmbEstab.Dock = DockStyle.Fill;
-            cmbEstab.DrawMode = DrawMode.OwnerDrawFixed;
-            cmbEstab.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbEstab.FocusedColor = Color.FromArgb(255, 128, 0);
-            cmbEstab.FocusedState.BorderColor = Color.FromArgb(255, 128, 0);
-            cmbEstab.FocusedState.ForeColor = Color.Black;
-            cmbEstab.Font = new Font("Roboto", 15.25F);
-            cmbEstab.ForeColor = Color.Black;
-            cmbEstab.HoverState.BorderColor = Color.FromArgb(254, 107, 0);
-            cmbEstab.HoverState.FillColor = Color.White;
-            cmbEstab.HoverState.ForeColor = Color.Black;
-            cmbEstab.ItemHeight = 30;
-            cmbEstab.Location = new Point(405, 13);
-            cmbEstab.Margin = new Padding(5, 13, 5, 10);
-            cmbEstab.Name = "cmbEstab";
-            cmbEstab.ShadowDecoration.CustomizableEdges = customizableEdges20;
-            cmbEstab.Size = new Size(390, 36);
-            cmbEstab.TabIndex = 11;
-            // 
-            // label11
-            // 
-            label11.AutoSize = true;
-            label11.Dock = DockStyle.Fill;
-            label11.Font = new Font("Roboto", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label11.Location = new Point(3, 0);
-            label11.Name = "label11";
-            label11.Size = new Size(394, 65);
-            label11.TabIndex = 10;
-            label11.Text = "Estabelecimento :";
-            label11.TextAlign = ContentAlignment.MiddleRight;
-            // 
             // tableLayoutPanel10
             // 
-            tableLayoutPanel10.ColumnCount = 2;
-            tableLayoutPanel10.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 8.625F));
-            tableLayoutPanel10.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 91.375F));
+            tableLayoutPanel10.ColumnCount = 4;
+            tableLayoutPanel10.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 8.5F));
+            tableLayoutPanel10.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 41.5F));
+            tableLayoutPanel10.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 18.375F));
+            tableLayoutPanel10.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 31.625F));
+            tableLayoutPanel10.Controls.Add(cmbEstab, 3, 0);
+            tableLayoutPanel10.Controls.Add(label11, 2, 0);
             tableLayoutPanel10.Controls.Add(txtNome, 1, 0);
             tableLayoutPanel10.Controls.Add(label1, 0, 0);
             tableLayoutPanel10.Dock = DockStyle.Fill;
@@ -670,14 +551,14 @@
             tableLayoutPanel10.Margin = new Padding(0);
             tableLayoutPanel10.Name = "tableLayoutPanel10";
             tableLayoutPanel10.RowCount = 1;
-            tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel10.Size = new Size(800, 62);
             tableLayoutPanel10.TabIndex = 9;
             // 
             // txtNome
             // 
             txtNome.AutoRoundedCorners = true;
-            txtNome.CustomizableEdges = customizableEdges21;
+            txtNome.CustomizableEdges = customizableEdges19;
             txtNome.DefaultText = "";
             txtNome.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             txtNome.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
@@ -688,15 +569,15 @@
             txtNome.Font = new Font("Roboto", 18.75F);
             txtNome.ForeColor = Color.Black;
             txtNome.HoverState.BorderColor = Color.Gray;
-            txtNome.Location = new Point(74, 13);
+            txtNome.Location = new Point(73, 13);
             txtNome.Margin = new Padding(5, 13, 5, 10);
             txtNome.MaxLength = 64;
             txtNome.Name = "txtNome";
             txtNome.PlaceholderForeColor = Color.Silver;
             txtNome.PlaceholderText = "";
             txtNome.SelectedText = "";
-            txtNome.ShadowDecoration.CustomizableEdges = customizableEdges22;
-            txtNome.Size = new Size(721, 39);
+            txtNome.ShadowDecoration.CustomizableEdges = customizableEdges20;
+            txtNome.Size = new Size(322, 39);
             txtNome.TabIndex = 2;
             txtNome.TextOffset = new Point(10, 0);
             // 
@@ -707,7 +588,7 @@
             label1.Font = new Font("Roboto", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.Location = new Point(3, 0);
             label1.Name = "label1";
-            label1.Size = new Size(63, 62);
+            label1.Size = new Size(62, 62);
             label1.TabIndex = 8;
             label1.Text = "Nome :";
             label1.TextAlign = ContentAlignment.MiddleLeft;
@@ -780,7 +661,7 @@
             // btnGuardar
             // 
             btnGuardar.BorderRadius = 10;
-            btnGuardar.CustomizableEdges = customizableEdges23;
+            btnGuardar.CustomizableEdges = customizableEdges21;
             btnGuardar.DisabledState.BorderColor = Color.DarkGray;
             btnGuardar.DisabledState.CustomBorderColor = Color.DarkGray;
             btnGuardar.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -792,7 +673,7 @@
             btnGuardar.Location = new Point(610, 10);
             btnGuardar.Margin = new Padding(10);
             btnGuardar.Name = "btnGuardar";
-            btnGuardar.ShadowDecoration.CustomizableEdges = customizableEdges24;
+            btnGuardar.ShadowDecoration.CustomizableEdges = customizableEdges22;
             btnGuardar.Size = new Size(180, 43);
             btnGuardar.TabIndex = 12;
             btnGuardar.Text = "Guardar";
@@ -801,7 +682,7 @@
             // btnCancelar
             // 
             btnCancelar.BorderRadius = 10;
-            btnCancelar.CustomizableEdges = customizableEdges25;
+            btnCancelar.CustomizableEdges = customizableEdges23;
             btnCancelar.DisabledState.BorderColor = Color.DarkGray;
             btnCancelar.DisabledState.CustomBorderColor = Color.DarkGray;
             btnCancelar.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -813,7 +694,7 @@
             btnCancelar.Location = new Point(10, 10);
             btnCancelar.Margin = new Padding(10);
             btnCancelar.Name = "btnCancelar";
-            btnCancelar.ShadowDecoration.CustomizableEdges = customizableEdges26;
+            btnCancelar.ShadowDecoration.CustomizableEdges = customizableEdges24;
             btnCancelar.Size = new Size(180, 43);
             btnCancelar.TabIndex = 13;
             btnCancelar.Text = "Cancelar";
@@ -825,6 +706,46 @@
             guna2BorderlessForm1.ContainerControl = this;
             guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
             guna2BorderlessForm1.TransparentWhileDrag = true;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Dock = DockStyle.Fill;
+            label11.Font = new Font("Roboto", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label11.Location = new Point(403, 0);
+            label11.Name = "label11";
+            label11.Size = new Size(141, 62);
+            label11.TabIndex = 11;
+            label11.Text = "Estabelecimento :";
+            label11.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // cmbEstab
+            // 
+            cmbEstab.AutoRoundedCorners = true;
+            cmbEstab.BackColor = Color.Transparent;
+            cmbEstab.BorderColor = Color.FromArgb(213, 218, 223);
+            cmbEstab.BorderRadius = 17;
+            cmbEstab.CustomizableEdges = customizableEdges17;
+            cmbEstab.DisabledState.BorderColor = Color.FromArgb(254, 107, 0);
+            cmbEstab.DisplayMember = "TESTE1";
+            cmbEstab.Dock = DockStyle.Fill;
+            cmbEstab.DrawMode = DrawMode.OwnerDrawFixed;
+            cmbEstab.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbEstab.FocusedColor = Color.FromArgb(255, 128, 0);
+            cmbEstab.FocusedState.BorderColor = Color.FromArgb(255, 128, 0);
+            cmbEstab.FocusedState.ForeColor = Color.Black;
+            cmbEstab.Font = new Font("Roboto", 15.25F);
+            cmbEstab.ForeColor = Color.Black;
+            cmbEstab.HoverState.BorderColor = Color.FromArgb(254, 107, 0);
+            cmbEstab.HoverState.FillColor = Color.White;
+            cmbEstab.HoverState.ForeColor = Color.Black;
+            cmbEstab.ItemHeight = 30;
+            cmbEstab.Location = new Point(552, 13);
+            cmbEstab.Margin = new Padding(5, 13, 5, 10);
+            cmbEstab.Name = "cmbEstab";
+            cmbEstab.ShadowDecoration.CustomizableEdges = customizableEdges18;
+            cmbEstab.Size = new Size(243, 36);
+            cmbEstab.TabIndex = 12;
             // 
             // FormFuncionario
             // 
@@ -842,15 +763,11 @@
             KeyPress += FormFuncionario_KeyPress;
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel4.ResumeLayout(false);
-            tableLayoutPanel8.ResumeLayout(false);
-            tableLayoutPanel8.PerformLayout();
             tableLayoutPanel7.ResumeLayout(false);
             tableLayoutPanel6.ResumeLayout(false);
             tableLayoutPanel6.PerformLayout();
             tableLayoutPanel5.ResumeLayout(false);
             tableLayoutPanel5.PerformLayout();
-            tableLayoutPanel9.ResumeLayout(false);
-            tableLayoutPanel9.PerformLayout();
             tableLayoutPanel10.ResumeLayout(false);
             tableLayoutPanel10.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
@@ -884,12 +801,6 @@
         private Guna.UI2.WinForms.Guna2ComboBox cmbCasaco;
         private Guna.UI2.WinForms.Guna2ComboBox cmbTshirt;
         private Guna.UI2.WinForms.Guna2ComboBox cmbFuncoes;
-        private Guna.UI2.WinForms.Guna2DateTimePicker dtpDataAdmiss;
-        private TableLayoutPanel tableLayoutPanel9;
-        private Guna.UI2.WinForms.Guna2ComboBox cmbEstab;
-        private TableLayoutPanel tableLayoutPanel8;
-        private Label label11;
-        private Label label10;
         private TableLayoutPanel tableLayoutPanel3;
         private Guna.UI2.WinForms.Guna2Button btnGuardar;
         private Guna.UI2.WinForms.Guna2Button btnCancelar;
@@ -897,5 +808,7 @@
         private Guna.UI2.WinForms.Guna2TextBox txtNome;
         private Label label1;
         private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
+        private Guna.UI2.WinForms.Guna2ComboBox cmbEstab;
+        private Label label11;
     }
 }

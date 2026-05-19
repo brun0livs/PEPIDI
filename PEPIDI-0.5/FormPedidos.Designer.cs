@@ -1,6 +1,6 @@
 ﻿namespace PEPIDI
 {
-    partial class FormPedidos
+    partial class FormPedidos : Form
     {
         /// <summary>
         /// Required designer variable.

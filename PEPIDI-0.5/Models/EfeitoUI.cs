@@ -1,15 +1,14 @@
-﻿public class EfeitoUI // Removido o 'static'
+﻿public class EfeitoUI
 {
-    // Método para abrir a mensagem a partir de qualquer formulário
-    public DialogResult AbrirMensagem(string mensagem, string titulo)
+    // Método principal que devolve texto (InputBox)
+    public DialogResult AbrirMensagem(string mensagem, string titulo, bool txt, out string valorInserido)
     {
-        // Obtém automaticamente o formulário que está ativo no momento
         Form pai = Form.ActiveForm;
         DialogResult resultado = DialogResult.None;
+        valorInserido = string.Empty; // Inicialização obrigatória para parâmetros 'out'
 
         using (Form overlay = new Form())
         {
-            // Configuração da sombra
             overlay.StartPosition = FormStartPosition.Manual;
             overlay.FormBorderStyle = FormBorderStyle.None;
             overlay.Opacity = 0.50d;
@@ -28,15 +27,27 @@
                 overlay.Show();
             }
 
-            using (PEPIDI.FormsSecundarios.MSGBX frm = new PEPIDI.FormsSecundarios.MSGBX(mensagem, titulo))
+            using (PEPIDI.FormsSecundarios.MSGBX frm = new PEPIDI.FormsSecundarios.MSGBX(mensagem, titulo, txt))
             {
                 frm.StartPosition = FormStartPosition.CenterParent;
                 frm.TopMost = true;
 
-                // O ShowDialog(overlay) bloqueia o fundo e foca a MSGBX automaticamente
                 resultado = frm.ShowDialog(overlay);
+
+                // O form fechou. Se foi um sucesso e era modo Input, extraímos o valor
+                if (txt && resultado == DialogResult.OK)
+                {
+                    valorInserido = frm.ValorInserido;
+                }
             }
         }
         return resultado;
+    }
+
+    // Overload para mensagens simples (Message Box normal)
+    public DialogResult AbrirMensagem(string mensagem, string titulo)
+    {
+        // Chama o método principal, mas ignora o valor de saída ('out _')
+        return AbrirMensagem(mensagem, titulo, false, out _);
     }
 }

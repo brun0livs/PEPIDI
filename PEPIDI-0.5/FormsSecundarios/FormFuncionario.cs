@@ -89,7 +89,6 @@ namespace PEPIDI.FormsSecundarios
                         string calca = rd["Calca"]?.ToString() ?? "-";
                         string sapato = rd["Sapato"]?.ToString() ?? "-";
 
-                        DateTime? dtAdmiss = rd["DtAdmiss"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(rd["DtAdmiss"]);
                         int? estab = rd["Estab"] == DBNull.Value ? (int?)null : Convert.ToInt32(rd["Estab"]);
                         string nomeEstab = rd["NomeEstab"]?.ToString() ?? "";
 
@@ -105,16 +104,6 @@ namespace PEPIDI.FormsSecundarios
                         SelectByText(cmbPolomc, poloCompr);
                         SelectByText(cmbCalca, calca);
                         SelectByText(cmbSapato, sapato);
-
-                        if (dtAdmiss.HasValue)
-                        {
-                            dtpDataAdmiss.Value = dtAdmiss.Value;
-                            dtpDataAdmiss.Checked = true;
-                        }
-                        else
-                        {
-                            dtpDataAdmiss.Checked = false;
-                        }
 
                         SelectByText(cmbEstab, nomeEstab);
 
@@ -173,12 +162,6 @@ namespace PEPIDI.FormsSecundarios
                     cmd.Parameters.AddWithValue("@FuncaoId", cmbFuncoes.SelectedValue ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@EstabId", cmbEstab.SelectedValue ?? (object)DBNull.Value);
 
-                    // Tratamento da Data de Admissão (pode ser nula?)
-                    if (dtpDataAdmiss.Checked)
-                        cmd.Parameters.AddWithValue("@DtAdmiss", dtpDataAdmiss.Value);
-                    else
-                        cmd.Parameters.AddWithValue("@DtAdmiss", DBNull.Value);
-
                     // 5. Fardamento (Tratamento de Strings Vazias vs Nulos)
                     // Função auxiliar para limpar a tralha das combos
                     object GetParam(string text) => string.IsNullOrWhiteSpace(text) ? (object)DBNull.Value : text;
@@ -200,11 +183,11 @@ namespace PEPIDI.FormsSecundarios
                     else
                         cmd.Parameters.AddWithValue("@Sapato", DBNull.Value);
 
-                    // 6. Auditoria
-                    if (isEdicao)
-                        cmd.Parameters.AddWithValue("@AlteradoPor", this.IDGestor ?? (object)DBNull.Value);
-                    else
-                        cmd.Parameters.AddWithValue("@CriadoPor", this.IDGestor ?? (object)DBNull.Value);
+                    //// 6. Auditoria
+                    //if (isEdicao)
+                    //    cmd.Parameters.AddWithValue("@AlteradoPor", this.IDGestor ?? (object)DBNull.Value);
+                    //else
+                    //    cmd.Parameters.AddWithValue("@CriadoPor", this.IDGestor ?? (object)DBNull.Value);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();

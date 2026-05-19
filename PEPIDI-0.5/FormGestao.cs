@@ -16,6 +16,7 @@ namespace PEPIDI
         private static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
         private const int WM_SETREDRAW = 11;
         string funcao;
+        EfeitoUI M = new ();
 
         int IDGestor;
         private readonly PermissoesPerfil permissoes;
@@ -58,6 +59,7 @@ namespace PEPIDI
             SetDoubleBuffered(tlpMenu);
             SetDoubleBuffered(tableLayoutPanel3);
             SetDoubleBuffered(pnlConteudo);
+            SetDoubleBuffered(tableLayoutPanel2);
 
             this.KeyPreview = true;
 
@@ -218,11 +220,11 @@ namespace PEPIDI
                 await Task.Yield();
                 UserControl controlParaAbrir = key.ToLowerInvariant() switch
                 {
-                    "stock" => new UCs.Stock(permissoes,funcao),
+                    "stock" => new UCs.Stock(permissoes, funcao),
                     "definições" => new UCs.Definicoes(IDGestor),
                     "pedidos pendentes" => new UCs.Pedidos(IDGestor, "Pendente", funcao),
                     "pedidos aprovados" => new UCs.Pedidos(IDGestor, "Aprovado", funcao),
-                    "gestao" or "gestão"=> new UCs.CriarStock(IDGestor, permissoes.PodeCriarStock, funcao),
+                    "gestao" or "gestão" => new UCs.CriarStock(IDGestor, permissoes.PodeCriarStock, funcao),
                     "funções" or "funcoes" => new UCs.Funcoes(IDGestor, funcao),
                     "historico" or "histórico" => new UCs.Pedidos(IDGestor, "Finalizado", funcao),
                     "funcionarios" or "funcionários" => new UCs.Funcionarios(IDGestor),
@@ -253,7 +255,7 @@ namespace PEPIDI
             pnlConteudo.Refresh();
         }
 
-        // O MOTOR DA ANIMAÇÃO DO TEU SPLITCONTAINER
+        // O MOTOR DA ANIMAÇÃO DO SPLITCONTAINER
         private void timerMenu_Tick(object sender, EventArgs e)
         {
             if (menuAberto) // ANIMAR PARA ABRIR
@@ -357,6 +359,22 @@ namespace PEPIDI
             Nav8.ImageSize = novoTamanhoGuna;
             Nav9.ImageSize = novoTamanhoGuna;
             Nav10.ImageSize = novoTamanhoGuna;
+        }
+
+        private void btnAcessRapido_Click(object sender, EventArgs e)
+        {
+            // Declara a variável que vai receber o texto
+            string codigoAcesso;
+
+            // O método devolve o DialogResult E preenche a string 'codigoAcesso'
+            DialogResult res = M.AbrirMensagem("Número de Funcionário:", "PEPIDI - Acesso Rápido", true, out codigoAcesso);
+
+            // Validamos se o utilizador clicou em OK e se efetivamente escreveu algo
+            if (res == DialogResult.OK && !string.IsNullOrWhiteSpace(codigoAcesso))
+            {
+                // Aqui já tens a string pronta a usar!
+                MessageBox.Show($"O código inserido foi: {codigoAcesso}");
+            }
         }
     }
 }

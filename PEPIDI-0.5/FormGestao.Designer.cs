@@ -50,6 +50,8 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlMenu = new SplitContainer();
             tableLayoutPanel1 = new TableLayoutPanel();
             panel1 = new Panel();
@@ -65,8 +67,10 @@
             Nav8 = new Guna.UI2.WinForms.Guna2Button();
             Nav9 = new Guna.UI2.WinForms.Guna2Button();
             tableLayoutPanel3 = new TableLayoutPanel();
-            lblNome = new Label();
             pnlConteudo = new Panel();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            btnAcessRapido = new Guna.UI2.WinForms.Guna2Button();
+            lblNome = new Label();
             timerMenu = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)pnlMenu).BeginInit();
             pnlMenu.Panel1.SuspendLayout();
@@ -75,6 +79,7 @@
             tableLayoutPanel1.SuspendLayout();
             tlpMenu.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
             SuspendLayout();
             // 
             // pnlMenu
@@ -461,8 +466,8 @@
             // 
             tableLayoutPanel3.ColumnCount = 1;
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Controls.Add(lblNome, 0, 0);
             tableLayoutPanel3.Controls.Add(pnlConteudo, 0, 1);
+            tableLayoutPanel3.Controls.Add(tableLayoutPanel2, 0, 0);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(0, 0);
             tableLayoutPanel3.Margin = new Padding(0);
@@ -474,19 +479,6 @@
             tableLayoutPanel3.Size = new Size(1686, 1009);
             tableLayoutPanel3.TabIndex = 1;
             // 
-            // lblNome
-            // 
-            lblNome.AutoSize = true;
-            lblNome.Dock = DockStyle.Fill;
-            lblNome.Font = new Font("Roboto", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblNome.Location = new Point(10, 0);
-            lblNome.Margin = new Padding(10, 0, 0, 0);
-            lblNome.Name = "lblNome";
-            lblNome.Size = new Size(1676, 56);
-            lblNome.TabIndex = 2;
-            lblNome.Text = "lblNome";
-            lblNome.TextAlign = ContentAlignment.MiddleLeft;
-            // 
             // pnlConteudo
             // 
             pnlConteudo.Dock = DockStyle.Fill;
@@ -495,6 +487,57 @@
             pnlConteudo.Name = "pnlConteudo";
             pnlConteudo.Size = new Size(1686, 953);
             pnlConteudo.TabIndex = 1;
+            // 
+            // tableLayoutPanel2
+            // 
+            tableLayoutPanel2.ColumnCount = 2;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 83.33F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.67F));
+            tableLayoutPanel2.Controls.Add(btnAcessRapido, 1, 0);
+            tableLayoutPanel2.Controls.Add(lblNome, 0, 0);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(0, 0);
+            tableLayoutPanel2.Margin = new Padding(0);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 1;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.Size = new Size(1686, 56);
+            tableLayoutPanel2.TabIndex = 2;
+            // 
+            // btnAcessRapido
+            // 
+            btnAcessRapido.BorderRadius = 10;
+            btnAcessRapido.CustomizableEdges = customizableEdges21;
+            btnAcessRapido.DisabledState.BorderColor = Color.DarkGray;
+            btnAcessRapido.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnAcessRapido.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnAcessRapido.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnAcessRapido.Dock = DockStyle.Fill;
+            btnAcessRapido.Enabled = false;
+            btnAcessRapido.FillColor = Color.FromArgb(243, 108, 33);
+            btnAcessRapido.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnAcessRapido.ForeColor = Color.White;
+            btnAcessRapido.Location = new Point(1433, 12);
+            btnAcessRapido.Margin = new Padding(29, 12, 29, 12);
+            btnAcessRapido.Name = "btnAcessRapido";
+            btnAcessRapido.ShadowDecoration.CustomizableEdges = customizableEdges22;
+            btnAcessRapido.Size = new Size(224, 32);
+            btnAcessRapido.TabIndex = 3;
+            btnAcessRapido.Text = "Acessórios";
+            btnAcessRapido.Visible = false;
+            btnAcessRapido.Click += btnAcessRapido_Click;
+            // 
+            // lblNome
+            // 
+            lblNome.AutoSize = true;
+            lblNome.Dock = DockStyle.Fill;
+            lblNome.Font = new Font("Roboto", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblNome.Location = new Point(3, 0);
+            lblNome.Name = "lblNome";
+            lblNome.Size = new Size(1398, 56);
+            lblNome.TabIndex = 0;
+            lblNome.Text = "label1";
+            lblNome.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // timerMenu
             // 
@@ -523,7 +566,8 @@
             tableLayoutPanel1.ResumeLayout(false);
             tlpMenu.ResumeLayout(false);
             tableLayoutPanel3.ResumeLayout(false);
-            tableLayoutPanel3.PerformLayout();
+            tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel2.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -536,7 +580,6 @@
         private TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.Timer timerMenu;
         private Panel pnlConteudo;
-        private Label lblNome;
         private Guna.UI2.WinForms.Guna2Button Nav9;
         private Guna.UI2.WinForms.Guna2Button Nav2;
         private Guna.UI2.WinForms.Guna2Button Nav3;
@@ -547,5 +590,8 @@
         private Guna.UI2.WinForms.Guna2Button Nav1;
         private Guna.UI2.WinForms.Guna2Button Nav10;
         private Guna.UI2.WinForms.Guna2Button Nav8;
+        private TableLayoutPanel tableLayoutPanel2;
+        private Label lblNome;
+        private Guna.UI2.WinForms.Guna2Button btnAcessRapido;
     }
 }

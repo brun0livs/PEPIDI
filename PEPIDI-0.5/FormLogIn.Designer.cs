@@ -205,7 +205,7 @@
             btnLogIn.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
             btnLogIn.Dock = DockStyle.Bottom;
             btnLogIn.FillColor = Color.FromArgb(243, 108, 33);
-            btnLogIn.Font = new Font("Segoe UI", 9F);
+            btnLogIn.Font = new Font("Roboto", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnLogIn.ForeColor = Color.White;
             btnLogIn.Location = new Point(0, 147);
             btnLogIn.Margin = new Padding(0);

@@ -151,7 +151,7 @@ namespace PEPIDI.FormsSecundarios
         // ==========================================
         // 3. GRAVAÇÃO EM MASSA (BULK INSERT EPI + STOCK)
         // ==========================================
-        private void btnImportar_Click(object sender, EventArgs e)
+        private async void btnImportar_Click(object sender, EventArgs e)
         {
             List<string> funcoesSelecionadas = flpFuncoes.Controls.OfType<Guna2Button>()
                 .Where(btn => btn.Tag is bool isLigado && isLigado)
@@ -169,22 +169,20 @@ namespace PEPIDI.FormsSecundarios
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (resposta == DialogResult.Yes)
-            {
-                ProcessarImportacao(funcoesSelecionadas);
-            }
+                await ProcessarImportacao(funcoesSelecionadas);
         }
 
-        private void ProcessarImportacao(List<string> funcoes)
+        private async Task ProcessarImportacao(List<string> funcoes)
         {
             try
             {
                 int acessoID = ObterOuCriarAcessoID(funcoes);
-                int estadoPadrao = 1; // "Novo"
+                int estadoPadrao = 1;
                 int countSucesso = 0;
 
                 using (SqlConnection conn = new SqlConnection(GetConn.ConnectionString))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
                     using (SqlTransaction trans = conn.BeginTransaction())
                     {
                         try
@@ -193,69 +191,146 @@ namespace PEPIDI.FormsSecundarios
                             {
                                 if (row.IsNewRow) continue;
 
-                                string codigo = row.Cells["Codigo"].Value?.ToString();
                                 string modelo = row.Cells["Modelo"].Value?.ToString();
                                 string familia = row.Cells["Familia"].Value?.ToString();
                                 string tamanho = row.Cells["Tamanho"].Value?.ToString();
                                 int quant = Convert.ToInt32(row.Cells["Quantidade"].Value ?? 0);
-                                var idCor = row.Cells["Cor"].Value; // Pode ser null
+                                string idCor = row.Cells["Cor"].Value?.ToString() ?? "00";
 
-                                if (string.IsNullOrEmpty(codigo) || familia == "Null" || familia == "") continue;
+                                // Linhas inválidas: sem modelo ou família por resolver
+                                if (string.IsNullOrEmpty(modelo) || familia == "Null" || familia == "") continue;
 
-                                // A. Garantir que o EPI existe (Tabela EPI)
-                                string cmdEpi = @"
-                                    IF NOT EXISTS (SELECT 1 FROM EPI WHERE Codigo = @cod)
-                                    INSERT INTO EPI (Codigo, Familia, Modelo, Tamanho, Cor, Acesso, Ativo) 
-                                    VALUES (@cod, @fam, @mod, @tam, @cor, @acc, 1)";
+                                // ─── GERAÇÃO AUTOMÁTICA DO CÓDIGO ───────────────────────────
+                                string codigo = row.Cells["Codigo"].Value?.ToString();
+                                if (string.IsNullOrEmpty(codigo))
+                                    codigo = await GerarCodigoEPIAsync(conn, trans, familia, modelo, tamanho, idCor);
+                                // ─────────────────────────────────────────────────────────────
 
-                                using (SqlCommand cmd = new SqlCommand(cmdEpi, conn, trans))
+                                // A. Garantir que o EPI existe na tabela EPI
+                                string sqlEpi = @"
+                            IF NOT EXISTS (SELECT 1 FROM EPI WHERE Codigo = @cod)
+                                INSERT INTO EPI (Codigo, Familia, Modelo, Tamanho, Cor, Acesso, Ativo)
+                                VALUES (@cod, @fam, @mod, @tam, @cor, @acc, 1)";
+
+                                using (SqlCommand cmd = new SqlCommand(sqlEpi, conn, trans))
                                 {
                                     cmd.Parameters.AddWithValue("@cod", codigo);
                                     cmd.Parameters.AddWithValue("@fam", familia);
                                     cmd.Parameters.AddWithValue("@mod", modelo);
-                                    cmd.Parameters.AddWithValue("@tam", tamanho ?? (object)DBNull.Value);
-                                    cmd.Parameters.AddWithValue("@cor", idCor ?? (object)DBNull.Value);
+                                    cmd.Parameters.AddWithValue("@tam", (object)tamanho ?? DBNull.Value);
+                                    cmd.Parameters.AddWithValue("@cor", (idCor == "00" || string.IsNullOrEmpty(idCor))
+                                                                            ? (object)DBNull.Value : idCor);
                                     cmd.Parameters.AddWithValue("@acc", acessoID);
-                                    cmd.ExecuteNonQuery();
+                                    await cmd.ExecuteNonQueryAsync();
                                 }
 
-                                // B. Atualizar Stock (Tabela Stock)
-                                string cmdStock = @"
-                                    IF EXISTS (SELECT 1 FROM Stock WHERE Codigo = @cod AND Estado = @est)
-                                        UPDATE Stock SET Quant = Quant + @q WHERE Codigo = @cod AND Estado = @est
-                                    ELSE
-                                        INSERT INTO Stock (Codigo, Estado, Quant) VALUES (@cod, @est, @q)";
+                                // B. Atualizar/Inserir Stock
+                                string sqlStock = @"
+                            IF EXISTS (SELECT 1 FROM Stock WHERE Codigo = @cod AND Estado = @est)
+                                UPDATE Stock SET Quant = Quant + @q WHERE Codigo = @cod AND Estado = @est
+                            ELSE
+                                INSERT INTO Stock (Codigo, Estado, Quant) VALUES (@cod, @est, @q)";
 
-                                using (SqlCommand cmd = new SqlCommand(cmdStock, conn, trans))
+                                using (SqlCommand cmd = new SqlCommand(sqlStock, conn, trans))
                                 {
                                     cmd.Parameters.AddWithValue("@cod", codigo);
                                     cmd.Parameters.AddWithValue("@est", estadoPadrao);
                                     cmd.Parameters.AddWithValue("@q", quant);
-                                    cmd.ExecuteNonQuery();
+                                    await cmd.ExecuteNonQueryAsync();
                                 }
 
-                                // C. Ensinar IA
-                                string keyword = modelo.Split(' ')[0].ToLower();
-                                MotorIA.AprenderNovaRegra(keyword, familia, "Familia");
+                                // C. Ensinar a IA com o modelo desta linha
+                                MotorIA.AprenderNovaRegra(modelo.Split(' ')[0].ToLower(), familia, "Familia");
 
                                 countSucesso++;
                             }
 
                             trans.Commit();
-                            MotorIA.CarregarRegrasDaBD(); // Recarrega cache da IA
-                            MessageBox.Show($"{countSucesso} artigos importados com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MotorIA.CarregarRegrasDaBD();
+                            MessageBox.Show($"{countSucesso} artigos importados com sucesso!", "Sucesso",
+                                            MessageBoxButtons.OK, MessageBoxIcon.Information);
                             this.DialogResult = DialogResult.OK;
                             this.Close();
                         }
-                        catch (Exception ex)
+                        catch
                         {
                             trans.Rollback();
-                            throw ex;
+                            throw;
                         }
                     }
                 }
             }
             catch (Exception ex) { MessageBox.Show("Erro Crítico: " + ex.Message); }
+        }
+
+        // ==========================================
+        // GERAÇÃO DE CÓDIGO (portado do UC Artigo)
+        // ==========================================
+
+        private async Task<string> GerarCodigoEPIAsync(SqlConnection conn, SqlTransaction tran,
+            string familia, string modelo, string tamanho, string idCor)
+        {
+            string idFam = familia switch
+            {
+                "TShirt" => "1",
+                "PoloMCurta" => "2",
+                "PoloMCompr" => "3",
+                "Casaco" => "4",
+                "Bata" => "5",
+                "Calca" => "6",
+                "Sapato" => "7",
+                _ => "9"
+            };
+
+            string idMod = await ObterProximoIdModeloAsync(conn, tran, familia, modelo);
+            string idC = (string.IsNullOrEmpty(idCor) || idCor == "00") ? "00" : idCor.PadLeft(2, '0');
+            string idTam = CalcularIdTamanho(tamanho);
+
+            return $"{idFam}{idMod}{idC}{idTam}";
+        }
+
+        private async Task<string> ObterProximoIdModeloAsync(SqlConnection conn, SqlTransaction tran,
+            string familia, string modelo)
+        {
+            // 1. Se o modelo já existe, reutiliza o mesmo ID de modelo
+            string sqlCheck = @"SELECT TOP 1 SUBSTRING(CAST(Codigo AS VARCHAR(20)), 2, 2) 
+                        FROM EPI 
+                        WHERE Modelo = @m AND LEN(CAST(Codigo AS VARCHAR(20))) >= 7";
+
+            using (SqlCommand cmd = new SqlCommand(sqlCheck, conn, tran))
+            {
+                cmd.Parameters.AddWithValue("@m", modelo);
+                object res = await cmd.ExecuteScalarAsync();
+                if (res != null && res != DBNull.Value) return res.ToString();
+            }
+
+            // 2. Novo modelo → próximo ID disponível dentro da família
+            string sqlMax = @"SELECT MAX(TRY_CAST(SUBSTRING(CAST(Codigo AS VARCHAR(20)), 2, 2) AS INT)) 
+                      FROM EPI 
+                      WHERE Familia = @f AND LEN(CAST(Codigo AS VARCHAR(20))) >= 7";
+
+            using (SqlCommand cmd = new SqlCommand(sqlMax, conn, tran))
+            {
+                cmd.Parameters.AddWithValue("@f", familia);
+                object resMax = await cmd.ExecuteScalarAsync();
+                if (resMax != null && resMax != DBNull.Value)
+                    return (Convert.ToInt32(resMax) + 1).ToString("D2");
+            }
+
+            return "01"; // Primeira entrada da família
+        }
+
+        private string CalcularIdTamanho(string tamanho)
+        {
+            var letras = new Dictionary<string, string>
+    {
+        {"XXS","01"}, {"XS","02"}, {"S","03"}, {"M","04"},
+        {"L","05"}, {"XL","06"}, {"XXL","07"}, {"XXXL","08"}, {"3XL","08"}
+    };
+
+            if (letras.TryGetValue(tamanho ?? "", out string id)) return id;
+            if (int.TryParse(tamanho, out int num)) return (num - 27).ToString("D2");
+            return "00";
         }
 
         // ==========================================
